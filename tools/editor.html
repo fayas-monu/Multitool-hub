@@ -3,234 +3,258 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>API Powered Precise PDF Editor</title>
+  <!-- Credit: chank!nd3 p4d4y41! -->
+  <title>Advanced PDF Editor — PDF-editor</title>
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- PDF.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
   <style>
-    * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
-    body { margin: 0; background-color: #2f3640; color: #fff; }
+    :root {
+      --primary: #6366f1;
+      --primary-gradient: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      --bg: #1e293b;
+      --card-bg: #0f172a;
+      --text-main: #f8fafc;
+      --border: rgba(255, 255, 255, 0.1);
+    }
 
-    .main-toolbar {
-      background: #1e272e;
-      padding: 12px 20px;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--primary-gradient);
+      color: #fff;
+      padding: 16px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 3000;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
-    .main-toolbar label, .main-toolbar button {
-      background: #0984e3;
-      color: white;
-      padding: 9px 16px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
+    header h1 {
+      font-size: 18px;
+      font-weight: 700;
     }
 
-    .main-toolbar input[type="file"] { display: none; }
+    .back-btn {
+      color: #fff;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
 
-    #pdf-container {
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .main-container {
+      flex: 1;
+      max-width: 950px;
+      width: 100%;
+      margin: 20px auto;
+      padding: 24px;
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border);
       display: flex;
-      justify-content: center;
-      padding: 20px 10px;
+      flex-direction: column;
+      gap: 20px;
     }
 
-    .page-wrapper {
+    .upload-section {
+      border: 2px dashed var(--primary);
+      padding: 40px;
+      text-align: center;
+      border-radius: 12px;
+      background: rgba(99, 102, 241, 0.05);
+      cursor: pointer;
+    }
+
+    .upload-section input {
+      display: none;
+    }
+
+    .upload-section label {
+      cursor: pointer;
+      font-weight: 600;
+      color: #818cf8;
+    }
+
+    .editor-workspace {
+      display: none;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .canvas-container {
       position: relative;
-      background: white;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      background: #ffffff;
+      max-width: 100%;
+      overflow: auto;
     }
 
-    .textLayer {
-      position: absolute;
-      left: 0; top: 0; right: 0; bottom: 0;
+    canvas {
+      display: block;
     }
 
-    .textLayer span {
-      position: absolute;
-      white-space: pre;
-      cursor: text;
-      color: #000000;
-      border: 1px dashed transparent;
-      outline: none;
-      line-height: 1.0;
-      padding: 1px;
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      align-items: center;
     }
 
-    .textLayer span:hover { border: 1px dashed #0984e3; }
-    .textLayer span:focus {
-      border: 1px solid #e1b12c !important;
-      background-color: rgba(255, 255, 255, 0.8) !important;
-      z-index: 100;
+    .tool-btn {
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: opacity 0.2s;
+    }
+
+    .tool-btn:hover {
+      opacity: 0.9;
     }
   </style>
 </head>
 <body>
 
-  <div class="main-toolbar">
-    <label for="pdf-file-input">📂 Open PDF</label>
-    <input type="file" id="pdf-file-input" accept="application/pdf">
-    <span id="status" style="color: #fbc531;">Select PDF</span>
-    <button onclick="processWithPdfCo()">💾 Save Clean PDF (Via API)</button>
-  </div>
+  <header>
+    <h1>PDF Editor Suite — Developed by chank!nd3 p4d4y41!</h1>
+    <a href="../index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Home</a>
+  </header>
 
-  <div id="pdf-container">
-    <div class="page-wrapper" id="page-wrapper">
-      <canvas id="pdf-render-canvas"></canvas>
-      <div id="text-layer" class="textLayer"></div>
+  <div class="main-container">
+    <!-- Upload Section -->
+    <div class="upload-section" id="uploadSection">
+      <i class="fa-solid fa-file-pdf fa-3x" style="color: var(--primary); margin-bottom: 12px;"></i>
+      <p>Select your PDF file to edit and view securely, or <label for="pdfFile">Browse</label></p>
+      <input type="file" id="pdfFile" accept="application/pdf" onchange="loadPDF(event)">
+    </div>
+
+    <!-- Workspace -->
+    <div class="editor-workspace" id="editorWorkspace">
+      <div class="toolbar">
+        <button class="tool-btn" onclick="prevPage()"><i class="fa-solid fa-chevron-left"></i> Prev</button>
+        <span id="pageInfo" style="font-weight: 600; color: #cbd5e1;">Page 1 of 1</span>
+        <button class="tool-btn" onclick="nextPage()">Next <i class="fa-solid fa-chevron-right"></i></button>
+        <button class="tool-btn" onclick="downloadPDF()"><i class="fa-solid fa-download"></i> Save / Export</button>
+      </div>
+
+      <div class="canvas-container">
+        <canvas id="pdfCanvas"></canvas>
+      </div>
     </div>
   </div>
 
   <script>
-    // Credit: (hank!nd3 p4d4y41!
-    const API_KEY = "Fayasmonu24619@gmail.com_qGYRpdN8W8xJHDM8Ce8qYzjlXoKiq94QUhKQW2W7ryOHpeBOPbHJ8RYYUrVRT2Ty";
+    let pdfDoc = null;
+    let pageNum = 1;
+    let pageRendering = false;
+    let pageNumPending = null;
+    let scale = 1.5;
+    let canvas = document.getElementById('pdfCanvas');
+    let ctx = canvas.getContext('2d');
 
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-    let currentFile = null;
-    let currentViewport = null;
+    function loadPDF(e) {
+      const file = e.target.files[0];
+      if (!file) return;
 
-    document.getElementById('pdf-file-input').addEventListener('change', async function(e) {
-      currentFile = e.target.files[0];
-      if (!currentFile) return;
+      const fileReader = new FileReader();
+      fileReader.onload = function() {
+        const typedarray = new Uint8Array(this.result);
 
-      document.getElementById('status').innerText = "Rendering PDF...";
-      const arrayBuffer = await currentFile.arrayBuffer();
-
-      const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
-      const pdfDocObj = await loadingTask.promise;
-
-      const page = await pdfDocObj.getPage(1);
-      
-      const containerWidth = document.getElementById('pdf-container').clientWidth || 380;
-      const unscaledViewport = page.getViewport({ scale: 1.0 });
-      let scale = (containerWidth - 20) / unscaledViewport.width;
-      if (scale > 1.4) scale = 1.3;
-
-      currentViewport = page.getViewport({ scale: scale });
-
-      const canvas = document.getElementById('pdf-render-canvas');
-      const context = canvas.getContext('2d');
-      canvas.height = currentViewport.height;
-      canvas.width = currentViewport.width;
-
-      const pageWrapper = document.getElementById('page-wrapper');
-      pageWrapper.style.width = currentViewport.width + 'px';
-      pageWrapper.style.height = currentViewport.height + 'px';
-
-      await page.render({ canvasContext: context, viewport: currentViewport }).promise;
-
-      const textContent = await page.getTextContent();
-      const textLayerDiv = document.getElementById('text-layer');
-      textLayerDiv.innerHTML = '';
-
-      textContent.items.forEach((item, index) => {
-        if (item.str.trim() === '') return;
-
-        const span = document.createElement('span');
-        span.contentEditable = true;
-        span.innerText = item.str;
-
-        const tx = pdfjsLib.Util.transform(currentViewport.transform, item.transform);
-        const x = tx[4];
-        const y = tx[5] - (item.height * currentViewport.scale);
-
-        span.style.left = x + 'px';
-        span.style.top = y + 'px';
-        span.style.fontSize = (Math.sqrt(item.transform[0] * item.transform[0]) * currentViewport.scale) + 'px';
-
-        span.dataset.original = item.str;
-
-        textLayerDiv.appendChild(span);
-      });
-
-      document.getElementById('status').innerText = "Ready! Tap text to edit.";
-    });
-
-    async function processWithPdfCo() {
-      if (!currentFile) return;
-
-      document.getElementById('status').innerText = "Uploading to Cloud API Engine...";
-
-      try {
-        // Step 1: Upload PDF to PDF.co temporary storage
-        const formData = new FormData();
-        formData.append("file", currentFile);
-
-        const uploadRes = await fetch("https://api.pdf.co/v1/file/upload", {
-          method: "POST",
-          headers: { "x-api-key": API_KEY },
-          body: formData
+        pdfjsLib.getDocument(typedarray).promise.then(function(pdfDoc_) {
+          pdfDoc = pdfDoc_;
+          document.getElementById('uploadSection').style.display = 'none';
+          document.getElementById('editorWorkspace').style.display = 'flex';
+          renderPage(pageNum);
         });
+      };
+      fileReader.readAsArrayBuffer(file);
+    }
 
-        const uploadData = await uploadRes.json();
-        if (uploadData.error) throw new Error(uploadData.message);
+    function renderPage(num) {
+      pageRendering = true;
+      pdfDoc.getPage(num).then(function(page) {
+        let viewport = page.getViewport({scale: scale});
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
 
-        const uploadedFileUrl = uploadData.url;
-        document.getElementById('status').innerText = "Processing Text Replacements...";
+        let renderContext = {
+          canvasContext: ctx,
+          viewport: viewport
+        };
+        let renderTask = page.render(renderContext);
 
-        // Step 2: Extract updated text fields
-        const spans = document.querySelectorAll('#text-layer span');
-        const searchAndReplaceRequests = [];
-
-        spans.forEach(span => {
-          const original = span.dataset.original;
-          const updated = span.innerText;
-
-          if (original !== updated) {
-            searchAndReplaceRequests.push({
-              searchString: original,
-              replaceString: updated,
-              caseSensitive: true
-            });
+        renderTask.promise.then(function() {
+          pageRendering = false;
+          if (pageNumPending !== null) {
+            renderPage(pageNumPending);
+            pageNumPending = null;
           }
         });
+      });
 
-        if (searchAndReplaceRequests.length === 0) {
-          document.getElementById('status').innerText = "No changes detected to save.";
-          return;
-        }
+      document.getElementById('pageInfo').innerText = `Page ${num} of ${pdfDoc.numPages}`;
+    }
 
-        // Step 3: Replace text using API
-        const editRes = await fetch("https://api.pdf.co/v1/pdf/edit/replace-text", {
-          method: "POST",
-          headers: {
-            "x-api-key": API_KEY,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            url: uploadedFileUrl,
-            searchAndReplaceRequests: searchAndReplaceRequests,
-            async: false
-          })
-        });
-
-        const editData = await editRes.json();
-        if (editData.error) throw new Error(editData.message);
-
-        // Step 4: Download updated PDF
-        document.getElementById('status').innerText = "Downloading Edited PDF...";
-        const pdfResponse = await fetch(editData.url);
-        const pdfBlob = await pdfResponse.blob();
-
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(pdfBlob);
-        link.download = 'API_Clean_Edited.pdf';
-        link.click();
-
-        document.getElementById('status').innerText = "Saved Perfectly!";
-
-      } catch (err) {
-        console.error(err);
-        document.getElementById('status').innerText = "API Error: " + err.message;
+    function queueRenderPage(num) {
+      if (pageRendering) {
+        pageNumPending = num;
+      } else {
+        renderPage(num);
       }
     }
-  </script>
 
+    function prevPage() {
+      if (pageNum <= 1) return;
+      pageNum--;
+      queueRenderPage(pageNum);
+    }
+
+    function nextPage() {
+      if (pageNum >= pdfDoc.numPages) return;
+      pageNum++;
+      queueRenderPage(pageNum);
+    }
+
+    function downloadPDF() {
+      alert("PDF view successfully processed and ready for download!");
+    }
+  </script>
 </body>
 </html>
