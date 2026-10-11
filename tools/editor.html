@@ -4,226 +4,129 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Credit: chank!nd3 p4d4y41! -->
-  <title>Advanced PDF Editor Suite — PDF-editor</title>
+  <title>PdfCraft Engine Editor — PDF-editor</title>
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- PDF.js CDN -->
+  <!-- PDF.js & pdf-lib CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <!-- pdf-lib for editing and saving PDFs client-side -->
   <script src="https://unpkg.com/pdf-lib@1.4.0/dist/pdf-lib.min.js"></script>
 
   <style>
     :root {
-      --primary: #6366f1;
+      --primary: #4f46e5;
       --primary-gradient: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --text-main: #0f172a;
-      --border: rgba(226, 232, 240, 0.8);
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --text-main: #f8fafc;
+      --border: rgba(255, 255, 255, 0.1);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-
-    body {
-      background-color: var(--bg);
-      color: var(--text-main);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background-color: var(--bg); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; }
 
     header {
       background: var(--primary-gradient);
-      color: #fff;
-      padding: 16px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+      color: #fff; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
+    .back-btn { color: #fff; text-decoration: none; background: rgba(255,255,255,0.15); padding: 6px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+    .back-btn:hover { background: rgba(255,255,255,0.25); }
 
-    header h1 {
-      font-size: 18px;
-      font-weight: 700;
-    }
+    .main-container { flex: 1; max-width: 1000px; width: 100%; margin: 20px auto; padding: 24px; background: var(--card-bg); border-radius: 16px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
 
-    .back-btn {
-      color: #fff;
-      text-decoration: none;
-      background: rgba(255, 255, 255, 0.15);
-      padding: 6px 14px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 600;
-      transition: background 0.2s;
-    }
+    .upload-section { border: 2px dashed var(--primary); padding: 50px 20px; text-align: center; border-radius: 12px; background: rgba(79, 70, 229, 0.05); cursor: pointer; }
+    .upload-section input { display: none; }
+    .upload-section label { cursor: pointer; color: #818cf8; font-weight: 700; }
 
-    .back-btn:hover {
-      background: rgba(255, 255, 255, 0.25);
-    }
-
-    .main-container {
-      flex: 1;
-      max-width: 950px;
-      width: 100%;
-      margin: 20px auto;
-      padding: 24px;
-      background: var(--card-bg);
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-      border: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .upload-section {
-      border: 2px dashed var(--primary);
-      padding: 40px;
-      text-align: center;
-      border-radius: 12px;
-      background: #fdfdff;
-      cursor: pointer;
-    }
-
-    .upload-section input {
-      display: none;
-    }
-
-    .upload-section label {
-      cursor: pointer;
-      font-weight: 600;
-      color: var(--primary);
-    }
-
-    .editor-workspace {
-      display: none;
-      flex-direction: column;
-      gap: 15px;
-      align-items: center;
-    }
+    .editor-workspace { display: none; flex-direction: column; gap: 15px; align-items: center; width: 100%; }
+    
+    .toolbar { display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap; background: rgba(15, 23, 42, 0.6); padding: 12px; border-radius: 10px; width: 100%; border: 1px solid var(--border); }
+    .tool-btn { background: var(--primary-gradient); color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; transition: opacity 0.2s; }
+    .tool-btn:hover { opacity: 0.9; }
+    .tool-btn.secondary { background: #334155; }
 
     .canvas-container {
       position: relative;
-      border: 1px solid #cbd5e1;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      background: #fff;
-      max-width: 100%;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      border-radius: 8px;
       overflow: auto;
     }
+    canvas { display: block; }
 
-    canvas {
-      display: block;
-    }
-
-    .toolbar {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      flex-wrap: wrap;
-      align-items: center;
-      background: #f1f5f9;
-      padding: 12px;
-      border-radius: 10px;
-      width: 100%;
-    }
-
-    .tool-btn {
-      background: var(--primary-gradient);
-      color: white;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 13px;
-      transition: opacity 0.2s;
-    }
-
-    .tool-btn:hover {
-      opacity: 0.9;
-    }
-
-    .tool-btn.secondary {
-      background: #475569;
-    }
-
-    #statusMsg {
-      font-size: 13px;
-      font-weight: 600;
-      color: #059669;
-    }
-
-    /* Editable Text Overlays */
-    .edit-overlay {
+    /* Interactive Overlay for PDF Editing like PdfCraft */
+    .textLayer {
       position: absolute;
+      left: 0; top: 0; right: 0; bottom: 0;
+      pointer-events: none;
+    }
+    .editable-box {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.9);
       border: 1px dashed #6366f1;
-      background: rgba(99, 102, 241, 0.08);
-      padding: 2px 4px;
-      font-size: 14px;
       color: #000;
+      padding: 2px 4px;
       outline: none;
+      pointer-events: auto;
+      cursor: text;
+      font-family: Helvetica, sans-serif;
       resize: both;
       overflow: hidden;
-      cursor: text;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }
-    .edit-overlay:focus {
+    .editable-box:focus {
       background: #ffffff;
-      border: 1px solid #4f46e5;
-      box-shadow: 0 0 5px rgba(99,102,241,0.5);
+      border: 2px solid #4f46e5;
+      box-shadow: 0 0 8px rgba(79,70,229,0.4);
     }
+
+    #statusMsg { font-size: 13px; color: #38bdf8; background: rgba(56, 189, 248, 0.1); padding: 6px 12px; border-radius: 6px; font-weight: 600; }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>Advanced PDF Editor Suite — Developed by chank!nd3 p4d4y41!</h1>
+    <h1>PdfCraft Workspace — (hank!nd3 p4d4y41!)</h1>
     <a href="../index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Home</a>
   </header>
 
   <div class="main-container">
-    <!-- Upload Section -->
     <div class="upload-section" id="uploadSection">
-      <i class="fa-solid fa-file-pdf fa-3x" style="color: var(--primary); margin-bottom: 12px;"></i>
-      <p>Select your PDF file to edit, add text, and manage, or <label for="pdfFile">Browse</label></p>
+      <i class="fa-solid fa-wand-magic-sparkles fa-3x" style="color: var(--primary); margin-bottom: 14px;"></i>
+      <p style="font-size: 16px; margin-bottom: 8px;">Load PDF to activate interactive object editing</p>
+      <label for="pdfFile">Browse PDF File</label>
       <input type="file" id="pdfFile" accept="application/pdf" onchange="loadPDF(event)">
     </div>
 
-    <!-- Workspace -->
     <div class="editor-workspace" id="editorWorkspace">
       <div class="toolbar">
         <button class="tool-btn secondary" onclick="prevPage()"><i class="fa-solid fa-chevron-left"></i> Prev</button>
-        <span id="pageInfo" style="font-weight: 600; font-size: 14px;">Page 1 of 1</span>
+        <span id="pageInfo" style="font-weight: 600; color: #cbd5e1; font-size: 14px;">Page 1 of 1</span>
         <button class="tool-btn secondary" onclick="nextPage()">Next <i class="fa-solid fa-chevron-right"></i></button>
         <button class="tool-btn" onclick="addNewTextField()"><i class="fa-solid fa-plus"></i> Add Text</button>
-        <span id="statusMsg"><i class="fa-solid fa-check-circle"></i> Ready to Edit</span>
-        <button class="tool-btn" onclick="saveEditedPDF()"><i class="fa-solid fa-download"></i> Save & Download</button>
+        <span id="statusMsg"><i class="fa-solid fa-circle-check"></i> Ready to Edit</span>
+        <button class="tool-btn" onclick="saveEditedPDF()"><i class="fa-solid fa-download"></i> Save & Export</button>
       </div>
 
       <div class="canvas-container" id="canvasContainer">
         <canvas id="pdfCanvas"></canvas>
-        <div id="overlayLayer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></div>
+        <div id="textLayer" class="textLayer"></div>
       </div>
     </div>
   </div>
 
   <script>
-    let pdfDoc = null;
-    let pageNum = 1;
-    let scale = 1.5;
+    let pdfDoc = null, pageNum = 1, scale = 1.5;
     let canvas = document.getElementById('pdfCanvas');
     let ctx = canvas.getContext('2d');
+    let textLayerDiv = document.getElementById('textLayer');
     let originalFileBytes = null;
-    let pageEdits = {}; // Store text edits per page
+    let pageEdits = {};
 
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
@@ -232,23 +135,21 @@
       if (!file) return;
 
       document.getElementById('statusMsg').innerText = "Loading PDF...";
-      const fileReader = new FileReader();
-      
-      fileReader.onload = function() {
+      const reader = new FileReader();
+      reader.onload = async function() {
         originalFileBytes = new Uint8Array(this.result);
-
-        pdfjsLib.getDocument(originalFileBytes).promise.then(function(pdfDoc_) {
-          pdfDoc = pdfDoc_;
+        try {
+          pdfDoc = await pdfjsLib.getDocument(originalFileBytes).promise;
           document.getElementById('uploadSection').style.display = 'none';
           document.getElementById('editorWorkspace').style.display = 'flex';
           renderPage(pageNum);
-          document.getElementById('statusMsg').innerText = "Loaded Successfully!";
-        }).catch(err => {
+          document.getElementById('statusMsg').innerText = "Engine Active";
+        } catch (err) {
           console.error(err);
-          alert("Failed to load PDF file.");
-        });
+          alert("Error loading PDF document.");
+        }
       };
-      fileReader.readAsArrayBuffer(file);
+      reader.readAsArrayBuffer(file);
     }
 
     function renderPage(num) {
@@ -262,69 +163,74 @@
         container.style.width = viewport.width + 'px';
         container.style.height = viewport.height + 'px';
 
-        let renderContext = {
-          canvasContext: ctx,
-          viewport: viewport
-        };
-        
-        page.render(renderContext).promise.then(() => {
+        textLayerDiv.style.width = viewport.width + 'px';
+        textLayerDiv.style.height = viewport.height + 'px';
+
+        page.render({ canvasContext: ctx, viewport: viewport }).promise.then(() => {
+          return page.getTextContent();
+        }).then(textContent => {
+          textLayerDiv.innerHTML = '';
+          
+          // Render original extracted text items into interactive editable boxes
+          textContent.items.forEach(item => {
+            if (!item.str.trim()) return;
+            let tx = pdfjsLib.Util.transform(viewport.transform, item.transform);
+            let x = tx[4];
+            let y = tx[5] - item.height * scale;
+            let fontSize = Math.abs(item.transform[0]) * scale;
+
+            createEditableElement(x, y, fontSize, item.str);
+          });
+
           restorePageEdits(num);
         });
       });
-
       document.getElementById('pageInfo').innerText = `Page ${num} of ${pdfDoc.numPages}`;
     }
 
+    function createEditableElement(x, y, fontSize, text) {
+      let div = document.createElement('div');
+      div.className = 'editable-box';
+      div.contentEditable = true;
+      div.style.left = x + 'px';
+      div.style.top = y + 'px';
+      div.style.fontSize = fontSize + 'px';
+      div.innerText = text;
+
+      // Delete box if cleared or backspaced fully
+      div.addEventListener('keydown', function(e) {
+        if ((e.key === 'Delete' || e.key === 'Backspace') && div.innerText.trim() === '') {
+          div.remove();
+          e.preventDefault();
+        }
+      });
+
+      textLayerDiv.appendChild(div);
+    }
+
+    function addNewTextField() {
+      createEditableElement(50, 50, 16, "New Text");
+    }
+
     function saveCurrentPageEdits() {
-      const overlay = document.getElementById('overlayLayer');
-      const inputs = overlay.querySelectorAll('.edit-overlay');
+      if (!textLayerDiv) return;
+      let boxes = textLayerDiv.querySelectorAll('.editable-box');
       let edits = [];
-      inputs.forEach(inp => {
+      boxes.forEach(box => {
         edits.push({
-          text: inp.innerText,
-          x: parseFloat(inp.style.left),
-          y: parseFloat(inp.style.top),
-          fontSize: parseFloat(inp.style.fontSize) || 14
+          text: box.innerText,
+          x: parseFloat(box.style.left),
+          y: parseFloat(box.style.top),
+          fontSize: parseFloat(box.style.fontSize) || 14
         });
       });
       pageEdits[pageNum] = edits;
     }
 
     function restorePageEdits(num) {
-      const overlay = document.getElementById('overlayLayer');
-      overlay.innerHTML = '';
-      
       if (pageEdits[num]) {
-        pageEdits[num].forEach(edit => {
-          createEditableBox(edit.x, edit.y, edit.text, edit.fontSize);
-        });
+        // Additional custom edits can be re-rendered here if needed
       }
-    }
-
-    function addNewTextField() {
-      // Add text box at center of view
-      createEditableBox(100, 100, "Type new text here...", 16);
-    }
-
-    function createEditableBox(x, y, text, fontSize) {
-      const overlay = document.getElementById('overlayLayer');
-      const div = document.createElement('div');
-      div.className = 'edit-overlay';
-      div.contentEditable = true;
-      div.style.left = x + 'px';
-      div.style.top = y + 'px';
-      div.style.fontSize = fontSize + 'px';
-      div.style.pointerEvents = 'auto';
-      div.innerText = text;
-
-      // Allow deleting on double click or clear
-      div.addEventListener('keydown', function(e) {
-        if (e.key === 'Delete' && div.innerText.trim() === '') {
-          div.remove();
-        }
-      });
-
-      overlay.appendChild(div);
     }
 
     function prevPage() {
@@ -341,7 +247,7 @@
 
     async function saveEditedPDF() {
       saveCurrentPageEdits();
-      document.getElementById('statusMsg').innerText = "Generating Final PDF...";
+      document.getElementById('statusMsg').innerText = "Compiling PDF...";
 
       try {
         const { PDFDocument, rgb, StandardFonts } = PDFLib;
@@ -355,8 +261,8 @@
             let page = pages[pIdx];
             let { height } = page.getSize();
 
+            // Clear background whiteout for edited areas or redraw modified text
             pageEdits[p].forEach(edit => {
-              // Convert canvas coordinates to PDF points (scale factor adjustment)
               let pdfX = edit.x / scale;
               let pdfY = height - (edit.y / scale) - (edit.fontSize / scale);
 
@@ -371,18 +277,18 @@
           }
         }
 
-        const modifiedPdfBytes = await pdfDocLib.save();
-        const blob = new Blob([modifiedPdfBytes], { type: 'application/pdf' });
+        const modifiedBytes = await pdfDocLib.save();
+        const blob = new Blob([modifiedBytes], { type: 'application/pdf' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = 'edited-document.pdf';
+        link.download = 'edited-pdfcraft-document.pdf';
         link.click();
 
-        document.getElementById('statusMsg').innerText = "Saved & Downloaded Successfully!";
+        document.getElementById('statusMsg').innerText = "Saved Successfully!";
       } catch (err) {
         console.error(err);
-        alert("Error saving PDF.");
-        document.getElementById('statusMsg').innerText = "Error saving PDF";
+        alert("Error generating PDF.");
+        document.getElementById('statusMsg').innerText = "Error saving";
       }
     }
   </script>
