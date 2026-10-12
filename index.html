@@ -343,7 +343,7 @@
     .ic-teal { background: linear-gradient(135deg, #ccfbf1 0%, #99f6e4 100%); color: #0d9488; }
     .ic-blue { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); color: #2563eb; }
 
-    /* Animated Cute Monster Chat Floating Button */
+    /* Animated Cute Monster Floating Chat Button (Links to chatbot/index.html) */
     .chat-widget-btn {
       position: fixed;
       bottom: 24px;
@@ -372,91 +372,6 @@
     .chat-widget-btn:hover {
       transform: scale(1.1) rotate(-3deg);
       box-shadow: 0 18px 35px rgba(59, 130, 246, 0.6);
-    }
-
-    /* Popup Chat Modal Styles */
-    .chat-popup-modal {
-      display: none;
-      position: fixed;
-      bottom: 104px;
-      right: 24px;
-      width: 380px;
-      height: 520px;
-      background: #ffffff;
-      border-radius: 20px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-      z-index: 4000;
-      flex-direction: column;
-      overflow: hidden;
-      border: 1px solid var(--border);
-    }
-
-    .chat-popup-header {
-      background: var(--primary-gradient);
-      color: #fff;
-      padding: 16px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: 700;
-    }
-
-    .chat-popup-body {
-      flex: 1;
-      padding: 16px;
-      overflow-y: auto;
-      background: #f8fafc;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .chat-bubble {
-      max-width: 80%;
-      padding: 10px 14px;
-      border-radius: 14px;
-      font-size: 13.5px;
-      line-height: 1.4;
-    }
-
-    .chat-bubble.bot {
-      background: #ffffff;
-      color: var(--text-main);
-      align-self: flex-start;
-      border: 1px solid var(--border);
-    }
-
-    .chat-bubble.user {
-      background: var(--primary);
-      color: #ffffff;
-      align-self: flex-end;
-    }
-
-    .chat-popup-footer {
-      padding: 12px 16px;
-      background: #ffffff;
-      border-top: 1px solid var(--border);
-      display: flex;
-      gap: 8px;
-    }
-
-    .chat-popup-footer input {
-      flex: 1;
-      padding: 10px 14px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      outline: none;
-      font-size: 13.5px;
-    }
-
-    .chat-popup-footer button {
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      padding: 0 16px;
-      border-radius: 10px;
-      font-weight: 600;
-      cursor: pointer;
     }
 
     footer {
@@ -568,7 +483,7 @@
     </a>
     <nav>
       <a href="#all-tools">Tools</a>
-      <a onclick="toggleChatPopup()">AI Assistant</a>
+      <a href="chatbot/index.html">AI Assistant</a>
     </nav>
   </header>
 
@@ -605,7 +520,7 @@
     </div>
   </div>
 
-  <!-- Tools Grid Section (Working Tools First, Coming Soon at Bottom) -->
+  <!-- Tools Grid Section -->
   <div class="tools-section" id="all-tools">
     <div class="tools-grid" id="toolsGrid">
 
@@ -664,7 +579,7 @@
         <div class="tool-desc">Download public online video and audio streams quickly and easily.</div>
       </a>
 
-      <!-- Coming Soon Tools (Placed at Bottom) -->
+      <!-- Coming Soon Tools -->
       <div class="tool-card" data-category="edit" onclick="openComingSoon('PDF Editor')">
         <span class="badge badge-soon">Coming Soon</span>
         <div class="icon-wrapper ic-indigo"><i class="fa-solid fa-pen-to-square"></i></div>
@@ -696,28 +611,20 @@
     </div>
   </div>
 
-  <!-- Animated Cute Monster Floating Chat Button -->
-  <div class="chat-widget-btn" onclick="toggleChatPopup()" title="Chat with PDF Tool Assistant">
-    <!-- SVG Animated Cute Monster Character (Matching your uploaded image style) -->
+  <!-- Floating Chat Button Linked directly to chatbot/index.html -->
+  <a href="chatbot/index.html" class="chat-widget-btn" title="Chat with PDF Tool Assistant">
     <svg viewBox="0 0 100 100" width="46" height="46" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));">
-      <!-- Horns -->
       <path d="M 22 35 Q 10 15 28 22 Z" fill="#1e40af"/>
       <path d="M 78 35 Q 90 15 72 22 Z" fill="#1e40af"/>
-      <!-- Body -->
       <path d="M 20 40 Q 50 25 80 40 L 85 85 Q 50 95 15 85 Z" fill="#3b82f6"/>
-      <!-- Eyes Background -->
       <circle cx="36" cy="50" r="14" fill="#ffffff"/>
       <circle cx="64" cy="50" r="14" fill="#ffffff"/>
-      <!-- Rainbow Eyes Iris -->
       <circle cx="36" cy="50" r="10" fill="url(#rainbowGrad)"/>
       <circle cx="64" cy="50" r="10" fill="url(#rainbowGrad)"/>
-      <!-- Sparkle Highlights in Eyes -->
       <polygon points="36,44 38,48 42,50 38,52 36,56 34,52 30,50 34,48" fill="#ffffff"/>
       <polygon points="64,44 66,48 70,50 66,52 64,56 62,52 58,50 62,48" fill="#ffffff"/>
-      <!-- Cute Mouth & Teeth -->
       <path d="M 44 68 Q 50 74 56 68" fill="none" stroke="#1e3a8a" stroke-width="3" stroke-linecap="round"/>
       <polygon points="48,70 50,73 52,70" fill="#ffffff"/>
-      <!-- Rainbow Gradient Definition -->
       <defs>
         <linearGradient id="rainbowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stop-color="#ef4444"/>
@@ -727,22 +634,7 @@
         </linearGradient>
       </defs>
     </svg>
-  </div>
-
-  <!-- Popup Chat Window -->
-  <div class="chat-popup-modal" id="chatPopup">
-    <div class="chat-popup-header">
-      <span><i class="fa-solid fa-robot"></i> PDF Tool Assistant</span>
-      <span style="cursor:pointer;" onclick="toggleChatPopup()">&times;</span>
-    </div>
-    <div class="chat-popup-body" id="chatBody">
-      <div class="chat-bubble bot">Hello! I'm your PDF Tool Assistant. How can I help you manage your files today?</div>
-    </div>
-    <div class="chat-popup-footer">
-      <input type="text" id="chatInput" placeholder="Type a message..." onkeypress="handleChatEnter(event)">
-      <button onclick="sendChatMessage()">Send</button>
-    </div>
-  </div>
+  </a>
 
   <!-- Footer -->
   <footer>
@@ -766,29 +658,22 @@
     </div>
   </div>
 
-  <!-- Professional Terms & Conditions Modal -->
   <div class="modal" id="termsModal">
     <div class="modal-content">
       <span class="close-btn" onclick="closeModal('termsModal')">&times;</span>
       <h2>Terms & Conditions</h2>
-      <p><strong>1. Acceptance of Terms:</strong> By accessing and using PDF EDIT TOOL, you agree to comply with and be bound by these professional Terms & Conditions. If you do not agree, please refrain from using our web application.</p>
-      <p><strong>2. Client-Side Processing & Scope:</strong> All file conversions, compressions, and edits are executed entirely within your browser environment using secure client-side technologies. No files are uploaded to external servers unless specified explicitly.</p>
-      <p><strong>3. User Responsibility:</strong> Users maintain absolute ownership and full legal responsibility for all content, documents, and data processed through our platform. You agree not to upload or manipulate copyrighted materials unlawfully.</p>
-      <p><strong>4. Intellectual Property:</strong> All interface designs, source architecture, branding elements, and layout codes remain protected under intellectual property rights. Unauthorized redistribution or commercial replication is strictly prohibited.</p>
-      <p><strong>5. Limitation of Liability:</strong> The service is provided on an "as-is" and "as-available" basis without warranties of any kind. We shall not be held liable for any data loss, formatting errors, or damages arising from tool usage.</p>
+      <p><strong>1. Acceptance of Terms:</strong> By accessing and using PDF EDIT TOOL, you agree to comply with and be bound by these professional Terms & Conditions.</p>
+      <p><strong>2. Client-Side Processing:</strong> All file conversions and edits execute securely within your browser environment without server uploads.</p>
+      <p><strong>3. User Responsibility:</strong> Users maintain absolute legal responsibility for all content and documents processed through our platform.</p>
     </div>
   </div>
 
-  <!-- Professional Privacy Policy Modal -->
   <div class="modal" id="privacyModal">
     <div class="modal-content">
       <span class="close-btn" onclick="closeModal('privacyModal')">&times;</span>
       <h2>Privacy Policy</h2>
-      <p><strong>1. Absolute Data Confidentiality:</strong> At PDF EDIT TOOL, your privacy is our core priority. Because our utilities operate locally in your device memory, we never read, view, collect, or store your personal documents.</p>
-      <p><strong>2. Information We Do Not Track:</strong> We do not track personal document contents, password keys, or sensitive text strings. Your workflow remains strictly private between your browser session and your local device.</p>
-      <p><strong>3. Cookies and Analytics:</strong> We may utilize minimal, non-intrusive storage mechanisms solely for interface preferences and tool performance optimization. No invasive tracking cookies or third-party ad profiling data are gathered.</p>
-      <p><strong>4. Security Measures:</strong> We employ high-standard web security policies to guarantee that your client-side workspace remains protected against unauthorized script interference.</p>
-      <p><strong>5. Policy Updates:</strong> We reserve the right to modify this Privacy Policy periodically to reflect technological improvements. Continued use signifies your acceptance of updated provisions.</p>
+      <p><strong>1. Data Confidentiality:</strong> Your privacy is our priority. Because our tools run locally in your browser memory, we never store or read your personal documents.</p>
+      <p><strong>2. Security:</strong> We employ high-standard web security policies to guarantee a protected client-side workspace.</p>
     </div>
   </div>
 
@@ -831,44 +716,6 @@
     function openComingSoon(toolName) {
       document.getElementById('comingSoonTitle').innerText = toolName;
       openModal('comingSoonModal');
-    }
-
-    // Popup Chat Functions
-    function toggleChatPopup() {
-      const popup = document.getElementById('chatPopup');
-      popup.style.display = (popup.style.display === 'flex') ? 'none' : 'flex';
-    }
-
-    function handleChatEnter(e) {
-      if (e.key === 'Enter') {
-        sendChatMessage();
-      }
-    }
-
-    function sendChatMessage() {
-      const input = document.getElementById('chatInput');
-      const text = input.value.trim();
-      if (!text) return;
-
-      const body = document.getElementById('chatBody');
-      
-      // User bubble
-      const userBubble = document.createElement('div');
-      userBubble.className = 'chat-bubble user';
-      userBubble.innerText = text;
-      body.appendChild(userBubble);
-      
-      input.value = '';
-      body.scrollTop = body.scrollHeight;
-
-      // Simulated Bot Response
-      setTimeout(() => {
-        const botBubble = document.createElement('div');
-        botBubble.className = 'chat-bubble bot';
-        botBubble.innerText = "I'm here to help! Which PDF tool would you like to use?";
-        body.appendChild(botBubble);
-        body.scrollTop = body.scrollHeight;
-      }, 600);
     }
   </script>
 </body>
