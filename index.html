@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Credit: FAYAS - MONU -->
-  <title>PDF EDIT TOOL — Ultra Modern & Secure PDF Suite</title>
+  <title>PDF Tool Assistant — Support Workspace</title>
   
   <!-- FontAwesome Icons & Google Fonts -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -16,14 +16,10 @@
     :root {
       --primary: #6366f1;
       --primary-gradient: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-      --accent: #06b6d4;
       --bg: #f8fafc;
-      --card-bg: #ffffff;
       --text-main: #0f172a;
       --text-muted: #64748b;
       --border: rgba(226, 232, 240, 0.8);
-      --shadow-soft: 0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
-      --shadow-hover: 0 20px 35px -10px rgba(99, 102, 241, 0.2);
     }
 
     * {
@@ -31,691 +27,332 @@
       margin: 0;
       padding: 0;
       font-family: 'Plus Jakarta Sans', sans-serif;
-      scroll-behavior: smooth;
     }
 
     body {
       background-color: var(--bg);
       color: var(--text-main);
       display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
-    header {
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-      padding: 16px 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-
-    .logo-container {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 20px;
-      font-weight: 800;
-      color: var(--text-main);
-      text-decoration: none;
-      letter-spacing: -0.5px;
-    }
-
-    .logo-icon {
-      width: 42px;
-      height: 42px;
-      background: var(--primary-gradient);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
       justify-content: center;
-      color: #ffffff;
-      font-size: 20px;
-      box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
-      animation: pulseLogo 3s infinite ease-in-out;
-    }
-
-    @keyframes pulseLogo {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
-
-    nav {
-      display: flex;
-      gap: 24px;
       align-items: center;
-    }
-
-    nav a {
-      text-decoration: none;
-      color: var(--text-muted);
-      font-weight: 600;
-      font-size: 14px;
-      transition: all 0.2s;
-      cursor: pointer;
-    }
-
-    nav a:hover {
-      color: var(--primary);
-    }
-
-    .hero {
-      text-align: center;
-      padding: 60px 20px 40px 20px;
-      background: radial-gradient(circle at 50% 0%, #eef2ff 0%, var(--bg) 75%);
-    }
-
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: #ffffff;
-      color: var(--primary);
-      padding: 8px 18px;
-      border-radius: 30px;
-      font-size: 13px;
-      font-weight: 700;
-      margin-bottom: 20px;
-      border: 1px solid rgba(99, 102, 241, 0.2);
-      box-shadow: var(--shadow-soft);
-    }
-
-    .hero h1 {
-      font-size: 44px;
-      font-weight: 800;
-      color: var(--text-main);
-      margin-bottom: 16px;
-      letter-spacing: -1.2px;
-      line-height: 1.2;
-    }
-
-    .hero h1 span {
-      background: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .hero p {
-      font-size: 16px;
-      color: var(--text-muted);
-      max-width: 680px;
-      margin: 0 auto 32px auto;
-      line-height: 1.6;
-    }
-
-    .search-wrapper {
-      max-width: 560px;
-      margin: 0 auto 30px auto;
-      position: relative;
-    }
-
-    .search-wrapper input {
-      width: 100%;
-      padding: 16px 20px 16px 52px;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      background: #ffffff;
-      font-size: 15px;
-      outline: none;
-      box-shadow: var(--shadow-soft);
-      transition: all 0.25s;
-    }
-
-    .search-wrapper input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
-    }
-
-    .search-wrapper i {
-      position: absolute;
-      left: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #94a3b8;
-      font-size: 18px;
-    }
-
-    .filter-tabs {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .tab-btn {
-      background: #ffffff;
-      border: 1px solid var(--border);
-      padding: 9px 20px;
-      border-radius: 30px;
-      font-size: 13.5px;
-      font-weight: 600;
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: all 0.25s;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-    }
-
-    .tab-btn.active, .tab-btn:hover {
-      background: var(--primary-gradient);
-      color: #ffffff;
-      border-color: transparent;
-      box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
-    }
-
-    .features-ribbon {
-      background: #ffffff;
-      padding: 22px;
-      margin-bottom: 45px;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .ribbon-container {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      text-align: center;
-    }
-
-    .ribbon-item {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--text-main);
-    }
-
-    .ribbon-item i {
-      font-size: 18px;
-      color: var(--primary);
-    }
-
-    .tools-section {
-      max-width: 1320px;
-      margin: 0 auto;
-      padding: 0 20px 80px 20px;
-      width: 100%;
-    }
-
-    .tools-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-      gap: 20px;
-    }
-
-    .tool-card {
-      background: var(--card-bg);
-      border-radius: 20px;
-      padding: 26px 22px;
-      text-decoration: none;
-      color: inherit;
-      border: 1px solid var(--border);
-      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      box-shadow: var(--shadow-soft);
-      cursor: pointer;
+      height: 100vh;
       overflow: hidden;
     }
 
-    .tool-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), transparent);
-      opacity: 0;
-      transition: opacity 0.4s ease;
+    .chat-container {
+      width: 100%;
+      max-width: 460px;
+      height: 100%;
+      max-height: 680px;
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid var(--border);
     }
 
-    .tool-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.3);
-      border-color: rgba(99, 102, 241, 0.5);
-    }
-
-    .tool-card:hover::before {
-      opacity: 1;
-    }
-
-    .icon-wrapper {
-      width: 56px;
-      height: 56px;
-      border-radius: 16px;
+    .chat-header {
+      background: #ffffff;
+      padding: 16px 20px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      margin-bottom: 18px;
-      font-size: 24px;
-      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.04);
-      position: relative;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
     }
 
-    .tool-card:hover .icon-wrapper {
-      transform: scale(1.15) translateY(-3px) rotate(-5deg);
-      box-shadow: 0 12px 25px rgba(99, 102, 241, 0.3);
+    .chat-header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
-    .tool-title {
-      font-size: 17px;
+    .back-btn {
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 18px;
+      transition: color 0.2s;
+    }
+
+    .back-btn:hover {
+      color: var(--primary);
+    }
+
+    .chat-title {
+      font-size: 16px;
       font-weight: 700;
       color: var(--text-main);
-      margin-bottom: 8px;
     }
 
-    .tool-desc {
+    .chat-body {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      background: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .chat-welcome-box {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      padding: 18px;
+      border-radius: 14px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      margin-bottom: 4px;
+    }
+
+    .chat-welcome-box h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .chat-welcome-box p {
       font-size: 13px;
       color: var(--text-muted);
       line-height: 1.5;
     }
 
-    .badge {
-      position: absolute;
-      top: 18px;
-      right: 18px;
-      font-size: 9.5px;
-      font-weight: 800;
-      padding: 4px 10px;
-      border-radius: 20px;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-    }
-
-    .badge-soon { background: #fffbe3; color: #d97706; border: 1px solid #fef3c7; }
-
-    .ic-indigo { background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%); color: #4338ca; }
-    .ic-cyan { background: linear-gradient(135deg, #cffafe 0%, #a5f3fc 100%); color: #0891b2; }
-    .ic-emerald { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); color: #059669; }
-    .ic-amber { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); color: #d97706; }
-    .ic-rose { background: linear-gradient(135deg, #ffe4e6 0%, #fecdd3 100%); color: #e11d48; }
-    .ic-purple { background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%); color: #9333ea; }
-    .ic-teal { background: linear-gradient(135deg, #ccfbf1 0%, #99f6e4 100%); color: #0d9488; }
-    .ic-blue { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); color: #2563eb; }
-
-    /* Animated Cute Monster Floating Chat Button (Links to chatbot/index.html) */
-    .chat-widget-btn {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      width: 68px;
-      height: 68px;
-      background: radial-gradient(circle, #60a5fa 0%, #3b82f6 100%);
-      border-radius: 50%;
+    .quick-actions {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 12px 30px rgba(59, 130, 246, 0.4);
-      z-index: 3000;
-      text-decoration: none;
-      animation: monsterFloat 3s ease-in-out infinite;
-      border: 3px solid #ffffff;
-      overflow: hidden;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
     }
 
-    @keyframes monsterFloat {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-8px) rotate(2deg); }
-    }
-
-    .chat-widget-btn:hover {
-      transform: scale(1.1) rotate(-3deg);
-      box-shadow: 0 18px 35px rgba(59, 130, 246, 0.6);
-    }
-
-    footer {
-      background: #ffffff;
-      border-top: 1px solid var(--border);
-      margin-top: auto;
-      padding: 30px 20px;
-      text-align: center;
-    }
-
-    .footer-links {
-      display: flex;
-      justify-content: center;
-      gap: 24px;
-      margin-bottom: 14px;
-    }
-
-    .footer-links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 13.5px;
-      cursor: pointer;
-      transition: color 0.2s;
-    }
-
-    .footer-links a:hover { color: var(--primary); }
-
-    .copyright { 
-      font-size: 13.5px; 
-      color: #64748b; 
-      line-height: 1.6;
-    }
-
-    .copyright a {
+    .quick-chip {
+      background: #eef2ff;
       color: var(--primary);
-      text-decoration: none;
-      font-weight: 700;
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
       transition: all 0.2s;
     }
 
-    .copyright a:hover {
-      text-decoration: underline;
+    .quick-chip:hover {
+      background: var(--primary);
+      color: #ffffff;
     }
 
-    .credit-divider {
-      margin: 0 6px;
-      color: #cbd5e1;
+    .chat-bubble {
+      max-width: 88%;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 13.5px;
+      line-height: 1.5;
+      white-space: pre-line;
     }
 
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(15, 23, 42, 0.5);
-      backdrop-filter: blur(5px);
-      justify-content: center;
-      align-items: center;
-      z-index: 4000;
-    }
-
-    .modal-content {
+    .chat-bubble.bot {
       background: #ffffff;
-      border-radius: 20px;
-      max-width: 620px;
-      width: 90%;
-      max-height: 85vh;
-      overflow-y: auto;
-      padding: 32px;
-      position: relative;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      color: var(--text-main);
+      align-self: flex-start;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
     }
 
-    .close-btn {
-      position: absolute;
-      top: 20px; right: 24px;
-      font-size: 22px;
-      cursor: pointer;
-      color: #94a3b8;
+    .chat-bubble.user {
+      background: var(--primary);
+      color: #ffffff;
+      align-self: flex-end;
     }
 
-    .close-btn:hover { color: var(--text-main); }
-    .modal-content h2 { margin-bottom: 16px; color: var(--text-main); font-size: 22px; font-weight: 800; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
-    .modal-content p, .modal-content li { font-size: 13.5px; line-height: 1.6; color: var(--text-muted); margin-bottom: 10px; }
-    .modal-content ul { padding-left: 20px; margin-bottom: 12px; }
+    .chat-footer {
+      padding: 14px 18px;
+      background: #ffffff;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+    }
 
-    .modal-btn {
-      width: 100%;
-      background: var(--primary-gradient);
+    .chat-footer input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .chat-footer input:focus {
+      border-color: var(--primary);
+    }
+
+    .chat-footer button {
+      background: var(--primary);
       color: #fff;
       border: none;
-      padding: 12px;
+      padding: 0 20px;
       border-radius: 12px;
-      font-weight: 700;
-      font-size: 15px;
+      font-weight: 600;
       cursor: pointer;
-      margin-top: 24px;
+      transition: background 0.2s;
+    }
+
+    .chat-footer button:hover {
+      background: #4f46e5;
+    }
+
+    @keyframes monsterFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-3px); }
     }
   </style>
 </head>
 <body>
 
-  <!-- Navigation Header -->
-  <header>
-    <a href="index.html" class="logo-container">
-      <div class="logo-icon"><i class="fa-solid fa-layer-group"></i></div>
-      <span>PDF EDIT TOOL</span>
-    </a>
-    <nav>
-      <a href="#all-tools">Tools</a>
-      <a href="chatbot/index.html">AI Assistant</a>
-    </nav>
-  </header>
-
-  <!-- Hero Section -->
-  <div class="hero">
-    <div class="hero-badge">
-      <i class="fa-solid fa-shield-halved"></i> 100% Private Client-Side Workspace
-    </div>
-    <h1>Professional Online PDF Tools<br><span>Fast, Secure & Simple.</span></h1>
-    <p>Complete document toolkit to edit, convert, merge, compress, protect, and organize your files safely inside your web browser.</p>
-    
-    <div class="search-wrapper">
-      <i class="fa-solid fa-magnifying-glass"></i>
-      <input type="text" id="toolSearch" placeholder="Search tools (e.g., Merge, Crop, Watermark)..." onkeyup="searchTools()">
-    </div>
-
-    <div class="filter-tabs">
-      <button class="tab-btn active" onclick="filterTools('all', this)">All Utilities</button>
-      <button class="tab-btn" onclick="filterTools('organize', this)">Organize</button>
-      <button class="tab-btn" onclick="filterTools('optimize', this)">Optimize</button>
-      <button class="tab-btn" onclick="filterTools('convert', this)">Convert</button>
-      <button class="tab-btn" onclick="filterTools('edit', this)">Edit & Watermark</button>
-      <button class="tab-btn" onclick="filterTools('security', this)">Security</button>
-      <button class="tab-btn" onclick="filterTools('media', this)">Media</button>
-    </div>
-  </div>
-
-  <div class="features-ribbon">
-    <div class="ribbon-container">
-      <div class="ribbon-item"><i class="fa-solid fa-lock"></i> Zero File Uploads</div>
-      <div class="ribbon-item"><i class="fa-solid fa-bolt"></i> Client-Side Processing</div>
-      <div class="ribbon-item"><i class="fa-solid fa-infinity"></i> Free Forever</div>
-      <div class="ribbon-item"><i class="fa-solid fa-user-shield"></i> Complete Privacy</div>
-    </div>
-  </div>
-
-  <!-- Tools Grid Section -->
-  <div class="tools-section" id="all-tools">
-    <div class="tools-grid" id="toolsGrid">
-
-      <!-- Working Tools -->
-      <a href="tools/compress-pdf.html" class="tool-card" data-category="optimize">
-        <div class="icon-wrapper ic-emerald"><i class="fa-solid fa-compress"></i></div>
-        <div class="tool-title">Compress PDF</div>
-        <div class="tool-desc">Reduce PDF file size while keeping high visual quality and readable text.</div>
-      </a>
-
-      <a href="tools/crop-pdf.html" class="tool-card" data-category="edit">
-        <div class="icon-wrapper ic-amber"><i class="fa-solid fa-crop-simple"></i></div>
-        <div class="tool-title">Crop PDF</div>
-        <div class="tool-desc">Trim page margins or set custom frame crop dimensions easily.</div>
-      </a>
-
-      <a href="tools/jpg-to-pdf.html" class="tool-card" data-category="convert">
-        <div class="icon-wrapper ic-amber"><i class="fa-solid fa-images"></i></div>
-        <div class="tool-title">JPG to PDF</div>
-        <div class="tool-desc">Convert JPG, PNG, and WebP images into standard PDF documents.</div>
-      </a>
-
-      <a href="tools/merge-pdf.html" class="tool-card" data-category="organize">
-        <div class="icon-wrapper ic-indigo"><i class="fa-solid fa-object-group"></i></div>
-        <div class="tool-title">Merge PDF</div>
-        <div class="tool-desc">Combine multiple PDF files into one single organized document.</div>
-      </a>
-
-      <a href="tools/pdf-to-jpg.html" class="tool-card" data-category="convert">
-        <div class="icon-wrapper ic-purple"><i class="fa-solid fa-file-image"></i></div>
-        <div class="tool-title">PDF to JPG</div>
-        <div class="tool-desc">Extract embedded images or export all PDF pages into high-res JPG files.</div>
-      </a>
-
-      <a href="tools/rotate-pdf.html" class="tool-card" data-category="organize">
-        <div class="icon-wrapper ic-purple"><i class="fa-solid fa-rotate-right"></i></div>
-        <div class="tool-title">Rotate PDF</div>
-        <div class="tool-desc">Rotate pages to portrait or landscape orientations smoothly.</div>
-      </a>
-
-      <a href="tools/video-to-mp3.html" class="tool-card" data-category="media">
-        <div class="icon-wrapper ic-amber"><i class="fa-solid fa-file-audio"></i></div>
-        <div class="tool-title">Video to MP3</div>
-        <div class="tool-desc">Extract high-quality audio tracks from video files in your browser.</div>
-      </a>
-
-      <a href="tools/watermark.html" class="tool-card" data-category="edit">
-        <div class="icon-wrapper ic-teal"><i class="fa-solid fa-stamp"></i></div>
-        <div class="tool-title">Watermark</div>
-        <div class="tool-desc">Add image or custom text watermarks onto PDF pages for protection.</div>
-      </a>
-
-      <a href="tools/youtube-downloader.html" class="tool-card" data-category="media">
-        <div class="icon-wrapper ic-rose"><i class="fa-brands fa-youtube"></i></div>
-        <div class="tool-title">YouTube Downloader</div>
-        <div class="tool-desc">Download public online video and audio streams quickly and easily.</div>
-      </a>
-
-      <!-- Coming Soon Tools -->
-      <div class="tool-card" data-category="edit" onclick="openComingSoon('PDF Editor')">
-        <span class="badge badge-soon">Coming Soon</span>
-        <div class="icon-wrapper ic-indigo"><i class="fa-solid fa-pen-to-square"></i></div>
-        <div class="tool-title">PDF Editor</div>
-        <div class="tool-desc">View, manage, and edit your PDF files securely directly in your browser.</div>
+  <div class="chat-container">
+    <!-- Header -->
+    <div class="chat-header">
+      <div class="chat-header-left">
+        <a href="../index.html" class="back-btn" title="Go Back"><i class="fa-solid fa-arrow-left"></i></a>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <!-- Animated Cute Monster SVG Icon -->
+          <svg viewBox="0 0 100 100" width="34" height="34" style="animation: monsterFloat 3s ease-in-out infinite;">
+            <path d="M 22 35 Q 10 15 28 22 Z" fill="#1e40af"/>
+            <path d="M 78 35 Q 90 15 72 22 Z" fill="#1e40af"/>
+            <path d="M 20 40 Q 50 25 80 40 L 85 85 Q 50 95 15 85 Z" fill="#3b82f6"/>
+            <circle cx="36" cy="50" r="14" fill="#ffffff"/>
+            <circle cx="64" cy="50" r="14" fill="#ffffff"/>
+            <circle cx="36" cy="50" r="10" fill="url(#rainbowGrad)"/>
+            <circle cx="64" cy="50" r="10" fill="url(#rainbowGrad)"/>
+            <polygon points="36,44 38,48 42,50 38,52 36,56 34,52 30,50 34,48" fill="#ffffff"/>
+            <polygon points="64,44 66,48 70,50 66,52 64,56 62,52 58,50 62,48" fill="#ffffff"/>
+            <path d="M 44 68 Q 50 74 56 68" fill="none" stroke="#1e3a8a" stroke-width="3" stroke-linecap="round"/>
+            <polygon points="48,70 50,73 52,70" fill="#ffffff"/>
+            <defs>
+              <linearGradient id="rainbowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ef4444"/>
+                <stop offset="33%" stop-color="#eab308"/>
+                <stop offset="66%" stop-color="#10b981"/>
+                <stop offset="100%" stop-color="#3b82f6"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <span class="chat-title">PDF Tool Assistant</span>
+        </div>
       </div>
+      <a href="../index.html" style="color: var(--text-muted); font-size: 18px; text-decoration: none;"><i class="fa-solid fa-xmark"></i></a>
+    </div>
 
-      <div class="tool-card" data-category="convert" onclick="openComingSoon('PDF to Word')">
-        <span class="badge badge-soon">Coming Soon</span>
-        <div class="icon-wrapper ic-cyan"><i class="fa-solid fa-file-word"></i></div>
-        <div class="tool-title">PDF to Word</div>
-        <div class="tool-desc">Convert PDF files into editable DOCX Microsoft Word documents.</div>
+    <!-- Chat Body -->
+    <div class="chat-body" id="chatBody">
+      <div class="chat-welcome-box">
+        <h3>Welcome to Support!</h3>
+        <p>How can we assist you today? Select a topic or type your query below to get instant answers about our PDF tools, guides, and privacy practices.</p>
+        
+        <!-- Quick Option Buttons -->
+        <div class="quick-actions">
+          <span class="quick-chip" onclick="quickSend('Tools Info')">🛠️ Tools Info</span>
+          <span class="quick-chip" onclick="quickSend('How to Use')">📖 How to Use</span>
+          <span class="quick-chip" onclick="quickSend('Contact Support')">📩 Contact Support</span>
+          <span class="quick-chip" onclick="quickSend('Privacy & Security')">🔒 Privacy & Security</span>
+        </div>
       </div>
-
-      <div class="tool-card" data-category="organize" onclick="openComingSoon('Split PDF')">
-        <span class="badge badge-soon">Coming Soon</span>
-        <div class="icon-wrapper ic-rose"><i class="fa-solid fa-scissors"></i></div>
-        <div class="tool-title">Split PDF</div>
-        <div class="tool-desc">Separate single pages or specific ranges into independent files.</div>
-      </div>
-
-      <div class="tool-card" data-category="security" onclick="openComingSoon('Protect PDF')">
-        <span class="badge badge-soon">Coming Soon</span>
-        <div class="icon-wrapper ic-indigo"><i class="fa-solid fa-shield-halved"></i></div>
-        <div class="tool-title">Protect PDF</div>
-        <div class="tool-desc">Encrypt sensitive PDF documents with custom secure passwords.</div>
-      </div>
-
+      <div class="chat-bubble bot">Hello! I am your PDF Tool Assistant. Ask me anything about our browser utilities, tools guidelines, or support!</div>
     </div>
-  </div>
 
-  <!-- Floating Chat Button Linked directly to chatbot/index.html -->
-  <a href="chatbot/index.html" class="chat-widget-btn" title="Chat with PDF Tool Assistant">
-    <svg viewBox="0 0 100 100" width="46" height="46" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));">
-      <path d="M 22 35 Q 10 15 28 22 Z" fill="#1e40af"/>
-      <path d="M 78 35 Q 90 15 72 22 Z" fill="#1e40af"/>
-      <path d="M 20 40 Q 50 25 80 40 L 85 85 Q 50 95 15 85 Z" fill="#3b82f6"/>
-      <circle cx="36" cy="50" r="14" fill="#ffffff"/>
-      <circle cx="64" cy="50" r="14" fill="#ffffff"/>
-      <circle cx="36" cy="50" r="10" fill="url(#rainbowGrad)"/>
-      <circle cx="64" cy="50" r="10" fill="url(#rainbowGrad)"/>
-      <polygon points="36,44 38,48 42,50 38,52 36,56 34,52 30,50 34,48" fill="#ffffff"/>
-      <polygon points="64,44 66,48 70,50 66,52 64,56 62,52 58,50 62,48" fill="#ffffff"/>
-      <path d="M 44 68 Q 50 74 56 68" fill="none" stroke="#1e3a8a" stroke-width="3" stroke-linecap="round"/>
-      <polygon points="48,70 50,73 52,70" fill="#ffffff"/>
-      <defs>
-        <linearGradient id="rainbowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#ef4444"/>
-          <stop offset="33%" stop-color="#eab308"/>
-          <stop offset="66%" stop-color="#10b981"/>
-          <stop offset="100%" stop-color="#3b82f6"/>
-        </linearGradient>
-      </defs>
-    </svg>
-  </a>
-
-  <!-- Footer -->
-  <footer>
-    <div class="footer-links">
-      <a onclick="openModal('termsModal')">Terms & Conditions</a>
-      <a onclick="openModal('privacyModal')">Privacy Policy</a>
-    </div>
-    <div class="copyright">
-      &copy; 2026 PDF EDIT TOOL. All rights reserved. <span class="credit-divider">|</span> Created by <a href="https://www.instagram.com/____fa_y_as_____?stkn=Mm9ncTF3Z21iejgz" target="_blank"><i class="fa-brands fa-instagram"></i> FAYAS - MONU</a>
-    </div>
-  </footer>
-
-  <!-- Modals -->
-  <div class="modal" id="comingSoonModal">
-    <div class="modal-content" style="text-align: center;">
-      <span class="close-btn" onclick="closeModal('comingSoonModal')">&times;</span>
-      <div style="font-size: 42px; color: var(--primary); margin-bottom: 12px;"><i class="fa-solid fa-rocket"></i></div>
-      <h2 id="comingSoonTitle">Feature Under Development</h2>
-      <p>We are fine-tuning this engine for high performance. It will be released soon in our upcoming updates!</p>
-      <button class="modal-btn" onclick="closeModal('comingSoonModal')">Understood</button>
-    </div>
-  </div>
-
-  <div class="modal" id="termsModal">
-    <div class="modal-content">
-      <span class="close-btn" onclick="closeModal('termsModal')">&times;</span>
-      <h2>Terms & Conditions</h2>
-      <p><strong>1. Acceptance of Terms:</strong> By accessing and using PDF EDIT TOOL, you agree to comply with and be bound by these professional Terms & Conditions.</p>
-      <p><strong>2. Client-Side Processing:</strong> All file conversions and edits execute securely within your browser environment without server uploads.</p>
-      <p><strong>3. User Responsibility:</strong> Users maintain absolute legal responsibility for all content and documents processed through our platform.</p>
-    </div>
-  </div>
-
-  <div class="modal" id="privacyModal">
-    <div class="modal-content">
-      <span class="close-btn" onclick="closeModal('privacyModal')">&times;</span>
-      <h2>Privacy Policy</h2>
-      <p><strong>1. Data Confidentiality:</strong> Your privacy is our priority. Because our tools run locally in your browser memory, we never store or read your personal documents.</p>
-      <p><strong>2. Security:</strong> We employ high-standard web security policies to guarantee a protected client-side workspace.</p>
+    <!-- Footer Input -->
+    <div class="chat-footer">
+      <input type="text" id="chatInput" placeholder="Type your message here..." onkeypress="handleChatEnter(event)">
+      <button onclick="sendChatMessage()">Send</button>
     </div>
   </div>
 
   <script>
-    // Live Search
-    function searchTools() {
-      const input = document.getElementById('toolSearch').value.toLowerCase();
-      const cards = document.querySelectorAll('.tool-card');
+    function handleChatEnter(e) {
+      if (e.key === 'Enter') {
+        sendChatMessage();
+      }
+    }
 
-      cards.forEach(card => {
-        const title = card.querySelector('.tool-title').innerText.toLowerCase();
-        const desc = card.querySelector('.tool-desc').innerText.toLowerCase();
+    function quickSend(text) {
+      document.getElementById('chatInput').value = text;
+      sendChatMessage();
+    }
+
+    function sendChatMessage() {
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const body = document.getElementById('chatBody');
+      
+      // User Message Bubble
+      const userBubble = document.createElement('div');
+      userBubble.className = 'chat-bubble user';
+      userBubble.innerText = text;
+      body.appendChild(userBubble);
+      
+      input.value = '';
+      body.scrollTop = body.scrollHeight;
+
+      // Complete Smart Response Engine
+      setTimeout(() => {
+        const botBubble = document.createElement('div');
+        botBubble.className = 'chat-bubble bot';
         
-        if (title.includes(input) || desc.includes(input)) {
-          card.style.display = 'flex';
+        const q = text.toLowerCase();
+        
+        // 1. Creator & Contact Information
+        if (q.includes('creator') || q.includes('who made') || q.includes('owner') || q.includes('developer') || q.includes('fayas') || q.includes('monu') || q.includes('contact') || q.includes('support') || q.includes('help')) {
+          botBubble.innerText = "👨‍💻 Creator & Contact Support:\n\nThis platform is created and maintained by FAYAS - MONU.\n\nFor support, inquiries, or feedback, you can connect directly via Instagram:\nhttps://www.instagram.com/____fa_y_as_____";
+        
+        // 2. Overview of Available Tools
+        } else if (q.includes('tools info') || q.includes('tools') || q.includes('list') || q.includes('utilities')) {
+          botBubble.innerText = "🛠️ Available Tools Overview:\n\n1. Compress PDF - Reduce file size efficiently.\n2. Crop PDF - Trim and adjust page margins.\n3. JPG to PDF - Convert images to PDF format.\n4. Merge PDF - Combine multiple files into one.\n5. PDF to JPG - Extract high-res images from PDF.\n6. Rotate PDF - Change page orientations.\n7. Video to MP3 - Extract audio tracks from video.\n8. Watermark - Protect documents with text/image stamps.\n9. YouTube Downloader - Stream & download public media.\n\n⏳ Upcoming: PDF Editor, PDF to Word, Split PDF, Protect PDF.";
+        
+        // 3. General How to Use Guide
+        } else if (q.includes('how to use') || q.includes('guide') || q.includes('instructions') || q.includes('method')) {
+          botBubble.innerText = "📖 How to Use Our Tools:\n\n1. Select any active tool from the home page grid.\n2. Choose or drop your file directly into the local workspace.\n3. Adjust settings (margins, rotation, compression ratio, etc.).\n4. Click 'Process' or 'Download' to save the file instantly!\n\nAll operations are handled 100% inside your browser memory.";
+        
+        // 4. YouTube Downloader
+        } else if (q.includes('youtube') || q.includes('video') || q.includes('mp3')) {
+          botBubble.innerText = "🎬 YouTube Downloader & Video to MP3:\n\n• YouTube Downloader: Paste any public video URL on the YouTube Downloader page to download public streams.\n• Video to MP3: Drag and drop video files from your device to extract high-quality MP3 audio locally.";
+        
+        // 5. Compress PDF
+        } else if (q.includes('compress') || q.includes('reduce') || q.includes('size')) {
+          botBubble.innerText = "🗜️ Compress PDF Tool:\n\nReduces the file size of your PDF documents while preserving clear text and image quality. Ideal for email attachments and web uploads.";
+        
+        // 6. Crop & Edit Tools
+        } else if (q.includes('crop') || q.includes('margin') || q.includes('trim')) {
+          botBubble.innerText = "✂️ Crop PDF Tool:\n\nAllows you to trim unwanted page borders or set custom frame dimensions for a clean document view.";
+        
+        // 7. Conversion Tools
+        } else if (q.includes('jpg') || q.includes('image') || q.includes('convert')) {
+          botBubble.innerText = "🖼️ Conversion Utilities:\n\n• JPG to PDF: Turn JPG, PNG, or WebP pictures into a clean PDF.\n• PDF to JPG: Extract embedded pages or images from PDF as high-resolution image files.";
+        
+        // 8. Merge & Rotate
+        } else if (q.includes('merge') || q.includes('combine') || q.includes('rotate')) {
+          botBubble.innerText = "📑 Organize Utilities:\n\n• Merge PDF: Join multiple PDF documents together into a single file.\n• Rotate PDF: Fix orientation by rotating pages 90, 180, or 270 degrees.";
+        
+        // 9. Watermark Tool
+        } else if (q.includes('watermark') || q.includes('stamp') || q.includes('protect')) {
+          botBubble.innerText = "🏷️ Watermark Tool:\n\nAdd custom text or visual watermark stamps onto your PDF pages to safeguard your documents from unauthorized copies.";
+        
+        // 10. Privacy & Security Information
+        } else if (q.includes('privacy') || q.includes('security') || q.includes('safe') || q.includes('lock')) {
+          botBubble.innerText = "🔒 Complete Privacy Guarantee:\n\nAll document processing happens entirely inside your local web browser session. No files are uploaded, viewed, or stored on any remote server.";
+        
+        // 11. Greetings
+        } else if (q.includes('hi') || q.includes('hello') || q.includes('hey') || q.includes('start')) {
+          botBubble.innerText = "Hello! 👋 Welcome to PDF Tool Support. How can I help you today?";
+        
+        // Default Answer
         } else {
-          card.style.display = 'none';
+          botBubble.innerText = "Thank you for reaching out! You can easily convert, compress, crop, merge, or watermark your PDF files for free. Type 'Tools Info', 'Contact Support', or 'How to Use' for details.";
         }
-      });
-    }
 
-    // Category Filter
-    function filterTools(category, element) {
-      const tabs = document.querySelectorAll('.tab-btn');
-      tabs.forEach(tab => tab.classList.remove('active'));
-      element.classList.add('active');
-
-      const cards = document.querySelectorAll('.tool-card');
-      cards.forEach(card => {
-        if (category === 'all' || card.getAttribute('data-category') === category) {
-          card.style.display = 'flex';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-    }
-
-    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-    function openComingSoon(toolName) {
-      document.getElementById('comingSoonTitle').innerText = toolName;
-      openModal('comingSoonModal');
+        body.appendChild(botBubble);
+        body.scrollTop = body.scrollHeight;
+      }, 500);
     }
   </script>
 </body>
