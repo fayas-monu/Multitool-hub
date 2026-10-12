@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Credit: chank!nd3 p4d4y41! -->
+  <!-- Credit: FAYAS - MONU -->
   <title>PDF EDIT TOOL — Ultra Modern & Secure PDF Suite</title>
   
   <!-- FontAwesome Icons & Google Fonts -->
@@ -78,6 +78,12 @@
       color: #ffffff;
       font-size: 20px;
       box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
+      animation: pulseLogo 3s infinite ease-in-out;
+    }
+
+    @keyframes pulseLogo {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
     }
 
     nav {
@@ -263,9 +269,9 @@
     }
 
     .tool-card:hover {
-      transform: translateY(-6px);
+      transform: translateY(-8px);
       box-shadow: var(--shadow-hover);
-      border-color: rgba(99, 102, 241, 0.3);
+      border-color: rgba(99, 102, 241, 0.4);
     }
 
     .icon-wrapper {
@@ -277,12 +283,13 @@
       justify-content: center;
       margin-bottom: 18px;
       font-size: 22px;
-      transition: transform 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
       box-shadow: inset 0 1px 1px rgba(255,255,255,0.6);
     }
 
     .tool-card:hover .icon-wrapper {
-      transform: scale(1.1) rotate(-3deg);
+      transform: scale(1.15) rotate(5deg);
+      box-shadow: 0 8px 20px rgba(99, 102, 241, 0.25);
     }
 
     .tool-title {
@@ -494,12 +501,13 @@
   <div class="tools-section" id="all-tools">
     <div class="tools-grid" id="toolsGrid">
 
-      <!-- Active PDF Editor Tool linked correctly to tools/editor.html -->
-      <a href="tools/editor.html" class="tool-card" data-category="edit">
+      <!-- PDF Editor Tool marked as Coming Soon -->
+      <div class="tool-card" data-category="edit" onclick="openComingSoon('PDF Editor')">
+        <span class="badge badge-soon">Coming Soon</span>
         <div class="icon-wrapper ic-indigo"><i class="fa-solid fa-pen-to-square"></i></div>
         <div class="tool-title">PDF Editor</div>
         <div class="tool-desc">View, manage, and edit your PDF files securely directly in your browser.</div>
-      </a>
+      </div>
 
       <a href="tools/compress-pdf.html" class="tool-card" data-category="optimize">
         <div class="icon-wrapper ic-emerald"><i class="fa-solid fa-compress"></i></div>
@@ -592,7 +600,7 @@
       <a onclick="openModal('privacyModal')">Privacy Policy</a>
     </div>
     <div class="copyright">
-      &copy; 2026 PDF EDIT TOOL. All rights reserved. <span class="credit-divider">|</span> Created by <a href="https://www.instagram.com/____fa_y_as_____?stkn=Mm9ncTF3Z21iejgz" target="_blank"><i class="fa-brands fa-instagram"></i> chank!nd3 p4d4y41!</a>
+      &copy; 2026 PDF EDIT TOOL. All rights reserved. <span class="credit-divider">|</span> Created by <a href="https://www.instagram.com/____fa_y_as_____?stkn=Mm9ncTF3Z21iejgz" target="_blank"><i class="fa-brands fa-instagram"></i> FAYAS - MONU</a>
     </div>
   </footer>
 
