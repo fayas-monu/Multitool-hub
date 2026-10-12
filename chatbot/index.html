@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Credit: FAYAS - MONU -->
-  <title>PDF Tool Assistant — AI Chat Support</title>
+  <title>PDF Tool Assistant — Support Workspace</title>
   
   <!-- FontAwesome Icons & Google Fonts -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -35,18 +35,17 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      overflow: hidden;
+      min-height: 100vh;
+      padding: 20px;
     }
 
     .chat-container {
       width: 100%;
-      max-width: 440px;
-      height: 100%;
-      max-height: 650px;
+      max-width: 600px;
+      height: 85vh;
       background: #ffffff;
-      border-radius: 20px;
-      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+      border-radius: 24px;
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08);
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -55,7 +54,7 @@
 
     .chat-header {
       background: #ffffff;
-      padding: 16px 20px;
+      padding: 18px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -65,7 +64,7 @@
     .chat-header-left {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
     }
 
     .back-btn {
@@ -73,56 +72,88 @@
       color: var(--text-muted);
       font-size: 18px;
       transition: color 0.2s;
+      background: #f1f5f9;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
     }
 
     .back-btn:hover {
       color: var(--primary);
+      background: #eef2ff;
     }
 
     .chat-title {
-      font-size: 16px;
+      font-size: 18px;
       font-weight: 700;
       color: var(--text-main);
     }
 
     .chat-body {
       flex: 1;
-      padding: 20px;
+      padding: 24px;
       overflow-y: auto;
       background: #f8fafc;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 16px;
     }
 
     .chat-welcome-box {
       background: #ffffff;
       border: 1px solid var(--border);
-      padding: 18px;
-      border-radius: 14px;
+      padding: 20px;
+      border-radius: 16px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-      margin-bottom: 6px;
     }
 
     .chat-welcome-box h3 {
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 700;
       color: var(--text-main);
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     .chat-welcome-box p {
-      font-size: 13px;
+      font-size: 13.5px;
       color: var(--text-muted);
-      line-height: 1.5;
+      line-height: 1.6;
+    }
+
+    .quick-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .quick-chip {
+      background: #eef2ff;
+      color: var(--primary);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .quick-chip:hover {
+      background: var(--primary);
+      color: #ffffff;
     }
 
     .chat-bubble {
       max-width: 85%;
-      padding: 12px 16px;
-      border-radius: 14px;
-      font-size: 13.5px;
-      line-height: 1.5;
+      padding: 14px 18px;
+      border-radius: 16px;
+      font-size: 14px;
+      line-height: 1.6;
+      white-space: pre-line;
     }
 
     .chat-bubble.bot {
@@ -140,32 +171,33 @@
     }
 
     .chat-footer {
-      padding: 14px 18px;
+      padding: 16px 24px;
       background: #ffffff;
       border-top: 1px solid var(--border);
       display: flex;
-      gap: 10px;
+      gap: 12px;
     }
 
     .chat-footer input {
       flex: 1;
-      padding: 12px 16px;
+      padding: 14px 18px;
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: 14px;
       outline: none;
-      font-size: 14px;
+      font-size: 14.5px;
     }
 
     .chat-footer input:focus {
       border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
     }
 
     .chat-footer button {
       background: var(--primary);
       color: #fff;
       border: none;
-      padding: 0 20px;
-      border-radius: 12px;
+      padding: 0 24px;
+      border-radius: 14px;
       font-weight: 600;
       cursor: pointer;
       transition: background 0.2s;
@@ -173,6 +205,11 @@
 
     .chat-footer button:hover {
       background: #4f46e5;
+    }
+
+    @keyframes monsterFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-3px); }
     }
   </style>
 </head>
@@ -182,10 +219,10 @@
     <!-- Header -->
     <div class="chat-header">
       <div class="chat-header-left">
-        <a href="../index.html" class="back-btn" title="Go Back"><i class="fa-solid fa-arrow-left"></i></a>
-        <div style="display: flex; align-items: center; gap: 8px;">
+        <a href="../index.html" class="back-btn" title="Go Back to Home"><i class="fa-solid fa-arrow-left"></i></a>
+        <div style="display: flex; align-items: center; gap: 10px;">
           <!-- Animated Cute Monster SVG Icon -->
-          <svg viewBox="0 0 100 100" width="34" height="34" style="animation: monsterFloat 3s ease-in-out infinite;">
+          <svg viewBox="0 0 100 100" width="38" height="38" style="animation: monsterFloat 3s ease-in-out infinite;">
             <path d="M 22 35 Q 10 15 28 22 Z" fill="#1e40af"/>
             <path d="M 78 35 Q 90 15 72 22 Z" fill="#1e40af"/>
             <path d="M 20 40 Q 50 25 80 40 L 85 85 Q 50 95 15 85 Z" fill="#3b82f6"/>
@@ -209,16 +246,24 @@
           <span class="chat-title">PDF Tool Assistant</span>
         </div>
       </div>
-      <a href="../index.html" style="color: var(--text-muted); font-size: 18px; text-decoration: none;"><i class="fa-solid fa-xmark"></i></a>
+      <a href="../index.html" class="back-btn" title="Close"><i class="fa-solid fa-xmark"></i></a>
     </div>
 
     <!-- Chat Body -->
     <div class="chat-body" id="chatBody">
       <div class="chat-welcome-box">
-        <h3>Welcome! We're here to help</h3>
-        <p>Start a conversation. Ask anything about our PDF tools, features, privacy policy, or creators (FAYAS - MONU)!</p>
+        <h3>Welcome to Support</h3>
+        <p>How can we assist you today? Select a topic below or type your message to get instant guidance on tools, usage, or privacy policies.</p>
+
+        <!-- Quick Action Chips -->
+        <div class="quick-actions">
+          <span class="quick-chip" onclick="quickSend('Tools Info')">Tools Info</span>
+          <span class="quick-chip" onclick="quickSend('How to Use')">How to Use</span>
+          <span class="quick-chip" onclick="quickSend('Contact Support')">Contact Support</span>
+          <span class="quick-chip" onclick="quickSend('Privacy & Security')">Privacy & Security</span>
+        </div>
       </div>
-      <div class="chat-bubble bot">Hello! How can I assist you with your document tasks today?</div>
+      <div class="chat-bubble bot">Hello! I am your PDF Tool Assistant. Feel free to ask any question regarding our browser utilities and instructions.</div>
     </div>
 
     <!-- Footer Input -->
@@ -228,18 +273,16 @@
     </div>
   </div>
 
-  <style>
-    @keyframes monsterFloat {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-3px); }
-    }
-  </style>
-
   <script>
     function handleChatEnter(e) {
       if (e.key === 'Enter') {
         sendChatMessage();
       }
+    }
+
+    function quickSend(text) {
+      document.getElementById('chatInput').value = text;
+      sendChatMessage();
     }
 
     function sendChatMessage() {
@@ -258,25 +301,60 @@
       input.value = '';
       body.scrollTop = body.scrollHeight;
 
-      // Smart Assistant Response Logic
+      // Smart Assistant Logic
       setTimeout(() => {
         const botBubble = document.createElement('div');
         botBubble.className = 'chat-bubble bot';
         
-        const query = text.toLowerCase();
+        const q = text.toLowerCase();
         
-        if (query.includes('creator') || query.includes('who made') || query.includes('owner') || query.includes('fayas') || query.includes('monu')) {
-          botBubble.innerText = "This website (PDF Edit Tool) was proudly created and developed by FAYAS - MONU!";
-        } else if (query.includes('pdf editor') || query.includes('edit')) {
-          botBubble.innerText = "The advanced PDF Editor is currently under development and will be available soon! Meanwhile, you can use our other tools like Compress, Merge, Crop, and Watermark.";
-        } else if (query.includes('privacy') || query.includes('secure') || query.includes('safe')) {
-          botBubble.innerText = "All processing happens 100% locally inside your browser memory. We do not upload or store any of your private files on external servers.";
-        } else if (query.includes('tools') || query.includes('features')) {
-          botBubble.innerText = "We offer fast and free client-side tools including Compress PDF, Crop PDF, JPG to PDF, Merge PDF, Rotate, Watermark, and YouTube Downloader.";
-        } else if (query.includes('hi') || query.includes('hello') || query.includes('hey')) {
-          botBubble.innerText = "Hello there! How can I help you with your documents today?";
+        // 1. Contact & Developer Info
+        if (q.includes('creator') || q.includes('who made') || q.includes('owner') || q.includes('developer') || q.includes('fayas') || q.includes('monu') || q.includes('contact') || q.includes('support') || q.includes('help')) {
+          botBubble.innerText = "Creator & Contact Support:\n\nThis platform is created and maintained by FAYAS - MONU.\n\nFor technical support, inquiries, or feedback, connect directly via Instagram:\nhttps://www.instagram.com/____fa_y_as_____";
+        
+        // 2. Overview of Available Tools
+        } else if (q.includes('tools info') || q.includes('tools') || q.includes('list') || q.includes('utilities')) {
+          botBubble.innerText = "Available Utilities Overview:\n\n1. Compress PDF - Reduce file size efficiently.\n2. Crop PDF - Trim and adjust page margins.\n3. JPG to PDF - Convert images to PDF format.\n4. Merge PDF - Combine multiple files into one.\n5. PDF to JPG - Extract high-res images from PDF.\n6. Rotate PDF - Change page orientations.\n7. Video to MP3 - Extract audio tracks from video.\n8. Watermark - Protect documents with text/image stamps.\n9. YouTube Downloader - Stream & download public media.\n\nUpcoming: PDF Editor, PDF to Word, Split PDF, Protect PDF.";
+        
+        // 3. General How to Use Guide
+        } else if (q.includes('how to use') || q.includes('guide') || q.includes('instructions') || q.includes('method')) {
+          botBubble.innerText = "How to Use Our Tools:\n\n1. Select any active tool from the home page grid.\n2. Choose or drag your file directly into the local workspace.\n3. Adjust settings (margins, rotation, compression ratio, etc.).\n4. Click Process or Download to save the file instantly.\n\nAll operations are handled 100% inside your browser memory.";
+        
+        // 4. YouTube & Media Tools
+        } else if (q.includes('youtube') || q.includes('video') || q.includes('mp3') || q.includes('download')) {
+          botBubble.innerText = "YouTube Downloader & Video to MP3:\n\n- YouTube Downloader: Paste any public video URL on the YouTube Downloader page to download public streams.\n- Video to MP3: Drag and drop video files from your device to extract high-quality MP3 audio locally.";
+        
+        // 5. Compress PDF
+        } else if (q.includes('compress') || q.includes('reduce') || q.includes('size')) {
+          botBubble.innerText = "Compress PDF Tool:\n\nReduces the file size of your PDF documents while preserving clear text and image quality. Ideal for email attachments and web uploads.";
+        
+        // 6. Crop & Edit Tools
+        } else if (q.includes('crop') || q.includes('margin') || q.includes('trim')) {
+          botBubble.innerText = "Crop PDF Tool:\n\nAllows you to trim unwanted page borders or set custom frame dimensions for a clean document view.";
+        
+        // 7. Conversion Tools
+        } else if (q.includes('jpg') || q.includes('image') || q.includes('convert')) {
+          botBubble.innerText = "Conversion Utilities:\n\n- JPG to PDF: Turn JPG, PNG, or WebP pictures into a clean PDF.\n- PDF to JPG: Extract embedded pages or images from PDF as high-resolution image files.";
+        
+        // 8. Merge & Rotate
+        } else if (q.includes('merge') || q.includes('combine') || q.includes('rotate')) {
+          botBubble.innerText = "Organize Utilities:\n\n- Merge PDF: Join multiple PDF documents together into a single file.\n- Rotate PDF: Fix orientation by rotating pages 90, 180, or 270 degrees.";
+        
+        // 9. Watermark Tool
+        } else if (q.includes('watermark') || q.includes('stamp') || q.includes('protect')) {
+          botBubble.innerText = "Watermark Tool:\n\nAdd custom text or visual watermark stamps onto your PDF pages to safeguard your documents from unauthorized copies.";
+        
+        // 10. Privacy & Security Information
+        } else if (q.includes('privacy') || q.includes('security') || q.includes('safe') || q.includes('lock')) {
+          botBubble.innerText = "Complete Privacy Guarantee:\n\nAll document processing happens entirely inside your local web browser session. No files are uploaded, viewed, or stored on any remote server.";
+        
+        // 11. Greetings
+        } else if (q.includes('hi') || q.includes('hello') || q.includes('hey') || q.includes('start')) {
+          botBubble.innerText = "Hello! Welcome to PDF Tool Support. How can I help you today?";
+        
+        // Default Response
         } else {
-          botBubble.innerText = "That's a great question! You can easily manage, compress, convert, or organize your PDF files directly in your browser using our free tools.";
+          botBubble.innerText = "Thank you for reaching out! You can easily convert, compress, crop, merge, or watermark your PDF files for free. Type 'Tools Info', 'Contact Support', or 'How to Use' for details.";
         }
 
         body.appendChild(botBubble);
