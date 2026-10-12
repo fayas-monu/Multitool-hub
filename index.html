@@ -260,36 +260,51 @@
       text-decoration: none;
       color: inherit;
       border: 1px solid var(--border);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       display: flex;
       flex-direction: column;
       position: relative;
       box-shadow: var(--shadow-soft);
       cursor: pointer;
+      overflow: hidden;
+    }
+
+    .tool-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), transparent);
+      opacity: 0;
+      transition: opacity 0.4s ease;
     }
 
     .tool-card:hover {
       transform: translateY(-8px);
-      box-shadow: var(--shadow-hover);
-      border-color: rgba(99, 102, 241, 0.4);
+      box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.3);
+      border-color: rgba(99, 102, 241, 0.5);
+    }
+
+    .tool-card:hover::before {
+      opacity: 1;
     }
 
     .icon-wrapper {
-      width: 52px;
-      height: 52px;
-      border-radius: 14px;
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
       margin-bottom: 18px;
-      font-size: 22px;
+      font-size: 24px;
       transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-      box-shadow: inset 0 1px 1px rgba(255,255,255,0.6);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.04);
+      position: relative;
     }
 
     .tool-card:hover .icon-wrapper {
-      transform: scale(1.15) rotate(5deg);
-      box-shadow: 0 8px 20px rgba(99, 102, 241, 0.25);
+      transform: scale(1.15) translateY(-3px) rotate(-5deg);
+      box-shadow: 0 12px 25px rgba(99, 102, 241, 0.3);
     }
 
     .tool-title {
@@ -350,6 +365,98 @@
     .chat-widget-btn:hover {
       transform: scale(1.1);
       box-shadow: 0 15px 30px rgba(99, 102, 241, 0.6);
+    }
+
+    /* Gemini Icon Custom Style */
+    .gemini-sparkle {
+      background: linear-gradient(135deg, #4285f4, #9b72cb, #d96570);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Popup Chat Modal Styles */
+    .chat-popup-modal {
+      display: none;
+      position: fixed;
+      bottom: 100px;
+      right: 24px;
+      width: 380px;
+      height: 520px;
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      z-index: 4000;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .chat-popup-header {
+      background: var(--primary-gradient);
+      color: #fff;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+    }
+
+    .chat-popup-body {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      background: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .chat-bubble {
+      max-width: 80%;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 13.5px;
+      line-height: 1.4;
+    }
+
+    .chat-bubble.bot {
+      background: #ffffff;
+      color: var(--text-main);
+      align-self: flex-start;
+      border: 1px solid var(--border);
+    }
+
+    .chat-bubble.user {
+      background: var(--primary);
+      color: #ffffff;
+      align-self: flex-end;
+    }
+
+    .chat-popup-footer {
+      padding: 12px 16px;
+      background: #ffffff;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+    }
+
+    .chat-popup-footer input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      outline: none;
+      font-size: 13.5px;
+    }
+
+    .chat-popup-footer button {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 0 16px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
     }
 
     footer {
@@ -415,7 +522,7 @@
     .modal-content {
       background: #ffffff;
       border-radius: 20px;
-      max-width: 580px;
+      max-width: 620px;
       width: 90%;
       max-height: 85vh;
       overflow-y: auto;
@@ -434,7 +541,8 @@
 
     .close-btn:hover { color: var(--text-main); }
     .modal-content h2 { margin-bottom: 16px; color: var(--text-main); font-size: 22px; font-weight: 800; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
-    .modal-content p { font-size: 13.5px; line-height: 1.6; color: var(--text-muted); }
+    .modal-content p, .modal-content li { font-size: 13.5px; line-height: 1.6; color: var(--text-muted); margin-bottom: 10px; }
+    .modal-content ul { padding-left: 20px; margin-bottom: 12px; }
 
     .modal-btn {
       width: 100%;
@@ -460,7 +568,7 @@
     </a>
     <nav>
       <a href="#all-tools">Tools</a>
-      <a href="chatbot/index.html">AI Assistant</a>
+      <a onclick="toggleChatPopup()">AI Assistant</a>
     </nav>
   </header>
 
@@ -469,12 +577,12 @@
     <div class="hero-badge">
       <i class="fa-solid fa-shield-halved"></i> 100% Private Client-Side Workspace
     </div>
-    <h1>30+ Free Online PDF Tools<br><span>Fast, Secure & Simple.</span></h1>
+    <h1>Professional Online PDF Tools<br><span>Fast, Secure & Simple.</span></h1>
     <p>Complete document toolkit to edit, convert, merge, compress, protect, and organize your files safely inside your web browser.</p>
     
     <div class="search-wrapper">
       <i class="fa-solid fa-magnifying-glass"></i>
-      <input type="text" id="toolSearch" placeholder="Search 30+ tools (e.g., Merge, OCR, Crop, PDF Editor)..." onkeyup="searchTools()">
+      <input type="text" id="toolSearch" placeholder="Search tools (e.g., Merge, Crop, Watermark)..." onkeyup="searchTools()">
     </div>
 
     <div class="filter-tabs">
@@ -492,23 +600,16 @@
     <div class="ribbon-container">
       <div class="ribbon-item"><i class="fa-solid fa-lock"></i> Zero File Uploads</div>
       <div class="ribbon-item"><i class="fa-solid fa-bolt"></i> Client-Side Processing</div>
-      <div class="ribbon-item"><i class="fa-solid fa-infinity"></i> 100% Free Forever</div>
+      <div class="ribbon-item"><i class="fa-solid fa-infinity"></i> Free Forever</div>
       <div class="ribbon-item"><i class="fa-solid fa-user-shield"></i> Complete Privacy</div>
     </div>
   </div>
 
-  <!-- Tools Grid Section -->
+  <!-- Tools Grid Section (Working Tools First, Coming Soon at Bottom) -->
   <div class="tools-section" id="all-tools">
     <div class="tools-grid" id="toolsGrid">
 
-      <!-- PDF Editor Tool marked as Coming Soon -->
-      <div class="tool-card" data-category="edit" onclick="openComingSoon('PDF Editor')">
-        <span class="badge badge-soon">Coming Soon</span>
-        <div class="icon-wrapper ic-indigo"><i class="fa-solid fa-pen-to-square"></i></div>
-        <div class="tool-title">PDF Editor</div>
-        <div class="tool-desc">View, manage, and edit your PDF files securely directly in your browser.</div>
-      </div>
-
+      <!-- Working Tools -->
       <a href="tools/compress-pdf.html" class="tool-card" data-category="optimize">
         <div class="icon-wrapper ic-emerald"><i class="fa-solid fa-compress"></i></div>
         <div class="tool-title">Compress PDF</div>
@@ -563,7 +664,14 @@
         <div class="tool-desc">Download public online video and audio streams quickly and easily.</div>
       </a>
 
-      <!-- Other Coming Soon Tools -->
+      <!-- Coming Soon Tools (Placed at Bottom) -->
+      <div class="tool-card" data-category="edit" onclick="openComingSoon('PDF Editor')">
+        <span class="badge badge-soon">Coming Soon</span>
+        <div class="icon-wrapper ic-indigo"><i class="fa-solid fa-pen-to-square"></i></div>
+        <div class="tool-title">PDF Editor</div>
+        <div class="tool-desc">View, manage, and edit your PDF files securely directly in your browser.</div>
+      </div>
+
       <div class="tool-card" data-category="convert" onclick="openComingSoon('PDF to Word')">
         <span class="badge badge-soon">Coming Soon</span>
         <div class="icon-wrapper ic-cyan"><i class="fa-solid fa-file-word"></i></div>
@@ -588,10 +696,25 @@
     </div>
   </div>
 
-  <!-- Floating Chat Button -->
-  <a href="chatbot/index.html" class="chat-widget-btn" title="Chat with PDF Assistant">
-    <i class="fa-solid fa-robot" style="font-size: 28px;"></i>
-  </a>
+  <!-- Floating Chat Button with Gemini Icon -->
+  <div class="chat-widget-btn" onclick="toggleChatPopup()" title="Chat with Gemini AI Assistant">
+    <i class="fa-solid fa-wand-magic-sparkles gemini-sparkle" style="font-size: 26px;"></i>
+  </div>
+
+  <!-- Popup Chat Window -->
+  <div class="chat-popup-modal" id="chatPopup">
+    <div class="chat-popup-header">
+      <span><i class="fa-solid fa-wand-magic-sparkles"></i> Gemini AI Assistant</span>
+      <span style="cursor:pointer;" onclick="toggleChatPopup()">&times;</span>
+    </div>
+    <div class="chat-popup-body" id="chatBody">
+      <div class="chat-bubble bot">Hello! I'm powered by Gemini. How can I assist you with your documents today?</div>
+    </div>
+    <div class="chat-popup-footer">
+      <input type="text" id="chatInput" placeholder="Type a message..." onkeypress="handleChatEnter(event)">
+      <button onclick="sendChatMessage()">Send</button>
+    </div>
+  </div>
 
   <!-- Footer -->
   <footer>
@@ -610,24 +733,34 @@
       <span class="close-btn" onclick="closeModal('comingSoonModal')">&times;</span>
       <div style="font-size: 42px; color: var(--primary); margin-bottom: 12px;"><i class="fa-solid fa-rocket"></i></div>
       <h2 id="comingSoonTitle">Feature Under Development</h2>
-      <p>We are fine-tuning this client-side engine for high performance. It will be released soon in our upcoming updates!</p>
+      <p>We are fine-tuning this engine for high performance. It will be released soon in our upcoming updates!</p>
       <button class="modal-btn" onclick="closeModal('comingSoonModal')">Understood</button>
     </div>
   </div>
 
+  <!-- Professional Terms & Conditions Modal -->
   <div class="modal" id="termsModal">
     <div class="modal-content">
       <span class="close-btn" onclick="closeModal('termsModal')">&times;</span>
       <h2>Terms & Conditions</h2>
-      <p>All calculations and processing occur directly inside your web browser. Users hold full responsibility for the content of processed documents.</p>
+      <p><strong>1. Acceptance of Terms:</strong> By accessing and using PDF EDIT TOOL, you agree to comply with and be bound by these professional Terms & Conditions. If you do not agree, please refrain from using our web application.</p>
+      <p><strong>2. Client-Side Processing & Scope:</strong> All file conversions, compressions, and edits are executed entirely within your browser environment using secure client-side technologies. No files are uploaded to external servers unless specified explicitly.</p>
+      <p><strong>3. User Responsibility:</strong> Users maintain absolute ownership and full legal responsibility for all content, documents, and data processed through our platform. You agree not to upload or manipulate copyrighted materials unlawfully.</p>
+      <p><strong>4. Intellectual Property:</strong> All interface designs, source architecture, branding elements, and layout codes remain protected under intellectual property rights. Unauthorized redistribution or commercial replication is strictly prohibited.</p>
+      <p><strong>5. Limitation of Liability:</strong> The service is provided on an "as-is" and "as-available" basis without warranties of any kind. We shall not be held liable for any data loss, formatting errors, or damages arising from tool usage.</p>
     </div>
   </div>
 
+  <!-- Professional Privacy Policy Modal -->
   <div class="modal" id="privacyModal">
     <div class="modal-content">
       <span class="close-btn" onclick="closeModal('privacyModal')">&times;</span>
       <h2>Privacy Policy</h2>
-      <p>We respect your confidentiality. We do not collect, transfer, or store any personal document data. All file processing happens locally in your browser memory.</p>
+      <p><strong>1. Absolute Data Confidentiality:</strong> At PDF EDIT TOOL, your privacy is our core priority. Because our utilities operate locally in your device memory, we never read, view, collect, or store your personal documents.</p>
+      <p><strong>2. Information We Do Not Track:</strong> We do not track personal document contents, password keys, or sensitive text strings. Your workflow remains strictly private between your browser session and your local device.</p>
+      <p><strong>3. Cookies and Analytics:</strong> We may utilize minimal, non-intrusive storage mechanisms solely for interface preferences and tool performance optimization. No invasive tracking cookies or third-party ad profiling data are gathered.</p>
+      <p><strong>4. Security Measures:</strong> We employ high-standard web security policies to guarantee that your client-side workspace remains protected against unauthorized script interference.</p>
+      <p><strong>5. Policy Updates:</strong> We reserve the right to modify this Privacy Policy periodically to reflect technological improvements. Continued use signifies your acceptance of updated provisions.</p>
     </div>
   </div>
 
@@ -670,6 +803,44 @@
     function openComingSoon(toolName) {
       document.getElementById('comingSoonTitle').innerText = toolName;
       openModal('comingSoonModal');
+    }
+
+    // Popup Chat Functions
+    function toggleChatPopup() {
+      const popup = document.getElementById('chatPopup');
+      popup.style.display = (popup.style.display === 'flex') ? 'none' : 'flex';
+    }
+
+    function handleChatEnter(e) {
+      if (e.key === 'Enter') {
+        sendChatMessage();
+      }
+    }
+
+    function sendChatMessage() {
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const body = document.getElementById('chatBody');
+      
+      // User bubble
+      const userBubble = document.createElement('div');
+      userBubble.className = 'chat-bubble user';
+      userBubble.innerText = text;
+      body.appendChild(userBubble);
+      
+      input.value = '';
+      body.scrollTop = body.scrollHeight;
+
+      // Simulated Gemini Bot Response
+      setTimeout(() => {
+        const botBubble = document.createElement('div');
+        botBubble.className = 'chat-bubble bot';
+        botBubble.innerText = "I'm processing your request securely. Let me know which PDF tool you need help with!";
+        body.appendChild(botBubble);
+        body.scrollTop = body.scrollHeight;
+      }, 600);
     }
   </script>
 </body>
