@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Credit: FAYAS -->
-  <title>PDF EDIT TOOL — Ultra Modern & Secure PDF Suite</title>
+  <title>EDIT TOOL — Ultra Modern & Secure PDF Suite</title>
   
   <!-- FontAwesome Icons & Google Fonts -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -343,7 +343,7 @@
     .ic-teal { background: linear-gradient(135deg, #ccfbf1 0%, #99f6e4 100%); color: #0d9488; }
     .ic-blue { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); color: #2563eb; }
 
-    /* Animated Cute Monster Floating Chat Button (Links to chatbot/index.html) */
+    /* Animated Cute Monster Floating Chat Button */
     .chat-widget-btn {
       position: fixed;
       bottom: 24px;
@@ -358,7 +358,6 @@
       cursor: pointer;
       box-shadow: 0 12px 30px rgba(59, 130, 246, 0.4);
       z-index: 3000;
-      text-decoration: none;
       animation: monsterFloat 3s ease-in-out infinite;
       border: 3px solid #ffffff;
       overflow: hidden;
@@ -372,6 +371,148 @@
     .chat-widget-btn:hover {
       transform: scale(1.1) rotate(-3deg);
       box-shadow: 0 18px 35px rgba(59, 130, 246, 0.6);
+    }
+
+    /* Notification Dot & Vibration */
+    .notif-dot {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 16px;
+      height: 16px;
+      background: #ef4444;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      display: none;
+    }
+
+    @keyframes vibrateAnim {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      20% { transform: translate(-3px, 2px) rotate(-5deg); }
+      40% { transform: translate(3px, -2px) rotate(5deg); }
+      60% { transform: translate(-3px, -2px) rotate(-3deg); }
+      80% { transform: translate(3px, 2px) rotate(3deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
+    }
+
+    .vibrate {
+      animation: vibrateAnim 0.5s ease-in-out infinite;
+    }
+
+    /* Popup Chat Modal */
+    .chat-popup-modal {
+      display: none;
+      position: fixed;
+      bottom: 104px;
+      right: 24px;
+      width: 380px;
+      height: 520px;
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      z-index: 4000;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .chat-popup-header {
+      background: var(--primary-gradient);
+      color: #fff;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .chat-popup-body {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      background: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .chat-bubble {
+      max-width: 85%;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 13.5px;
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+
+    .chat-bubble.bot {
+      background: #ffffff;
+      color: var(--text-main);
+      align-self: flex-start;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .chat-bubble.user {
+      background: var(--primary);
+      color: #ffffff;
+      align-self: flex-end;
+    }
+
+    .quick-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .chip {
+      background: #eef2ff;
+      color: var(--primary);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      padding: 6px 12px;
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .chip:hover {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .chat-popup-footer {
+      padding: 12px 16px;
+      background: #ffffff;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+    }
+
+    .chat-popup-footer input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      outline: none;
+      font-size: 13.5px;
+    }
+
+    .chat-popup-footer input:focus {
+      border-color: var(--primary);
+    }
+
+    .chat-popup-footer button {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 0 16px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
     }
 
     footer {
@@ -395,10 +536,7 @@
       font-weight: 600;
       font-size: 13.5px;
       cursor: pointer;
-      transition: color 0.2s;
     }
-
-    .footer-links a:hover { color: var(--primary); }
 
     .copyright { 
       font-size: 13.5px; 
@@ -410,16 +548,6 @@
       color: var(--primary);
       text-decoration: none;
       font-weight: 700;
-      transition: all 0.2s;
-    }
-
-    .copyright a:hover {
-      text-decoration: underline;
-    }
-
-    .credit-divider {
-      margin: 0 6px;
-      color: #cbd5e1;
     }
 
     .modal {
@@ -439,11 +567,8 @@
       border-radius: 20px;
       max-width: 620px;
       width: 90%;
-      max-height: 85vh;
-      overflow-y: auto;
       padding: 32px;
       position: relative;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     }
 
     .close-btn {
@@ -453,11 +578,6 @@
       cursor: pointer;
       color: #94a3b8;
     }
-
-    .close-btn:hover { color: var(--text-main); }
-    .modal-content h2 { margin-bottom: 16px; color: var(--text-main); font-size: 22px; font-weight: 800; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
-    .modal-content p, .modal-content li { font-size: 13.5px; line-height: 1.6; color: var(--text-muted); margin-bottom: 10px; }
-    .modal-content ul { padding-left: 20px; margin-bottom: 12px; }
 
     .modal-btn {
       width: 100%;
@@ -483,7 +603,7 @@
     </a>
     <nav>
       <a href="#all-tools">Tools</a>
-      <a href="chatbot/index.html">AI Assistant</a>
+      <a onclick="toggleChatPopup()">AI Assistant</a>
     </nav>
   </header>
 
@@ -523,56 +643,46 @@
   <!-- Tools Grid Section -->
   <div class="tools-section" id="all-tools">
     <div class="tools-grid" id="toolsGrid">
-
-      <!-- Working Tools -->
       <a href="tools/compress-pdf.html" class="tool-card" data-category="optimize">
         <div class="icon-wrapper ic-emerald"><i class="fa-solid fa-compress"></i></div>
         <div class="tool-title">Compress PDF</div>
         <div class="tool-desc">Reduce PDF file size while keeping high visual quality and readable text.</div>
       </a>
-
       <a href="tools/crop-pdf.html" class="tool-card" data-category="edit">
         <div class="icon-wrapper ic-amber"><i class="fa-solid fa-crop-simple"></i></div>
         <div class="tool-title">Crop PDF</div>
         <div class="tool-desc">Trim page margins or set custom frame crop dimensions easily.</div>
       </a>
-
       <a href="tools/jpg-to-pdf.html" class="tool-card" data-category="convert">
         <div class="icon-wrapper ic-amber"><i class="fa-solid fa-images"></i></div>
         <div class="tool-title">JPG to PDF</div>
         <div class="tool-desc">Convert JPG, PNG, and WebP images into standard PDF documents.</div>
       </a>
-
       <a href="tools/merge-pdf.html" class="tool-card" data-category="organize">
         <div class="icon-wrapper ic-indigo"><i class="fa-solid fa-object-group"></i></div>
         <div class="tool-title">Merge PDF</div>
         <div class="tool-desc">Combine multiple PDF files into one single organized document.</div>
       </a>
-
       <a href="tools/pdf-to-jpg.html" class="tool-card" data-category="convert">
         <div class="icon-wrapper ic-purple"><i class="fa-solid fa-file-image"></i></div>
         <div class="tool-title">PDF to JPG</div>
         <div class="tool-desc">Extract embedded images or export all PDF pages into high-res JPG files.</div>
       </a>
-
       <a href="tools/rotate-pdf.html" class="tool-card" data-category="organize">
         <div class="icon-wrapper ic-purple"><i class="fa-solid fa-rotate-right"></i></div>
         <div class="tool-title">Rotate PDF</div>
         <div class="tool-desc">Rotate pages to portrait or landscape orientations smoothly.</div>
       </a>
-
       <a href="tools/video-to-mp3.html" class="tool-card" data-category="media">
         <div class="icon-wrapper ic-amber"><i class="fa-solid fa-file-audio"></i></div>
         <div class="tool-title">Video to MP3</div>
         <div class="tool-desc">Extract high-quality audio tracks from video files in your browser.</div>
       </a>
-
       <a href="tools/watermark.html" class="tool-card" data-category="edit">
         <div class="icon-wrapper ic-teal"><i class="fa-solid fa-stamp"></i></div>
         <div class="tool-title">Watermark</div>
         <div class="tool-desc">Add image or custom text watermarks onto PDF pages for protection.</div>
       </a>
-
       <a href="tools/youtube-downloader.html" class="tool-card" data-category="media">
         <div class="icon-wrapper ic-rose"><i class="fa-brands fa-youtube"></i></div>
         <div class="tool-title">YouTube Downloader</div>
@@ -586,33 +696,30 @@
         <div class="tool-title">PDF Editor</div>
         <div class="tool-desc">View, manage, and edit your PDF files securely directly in your browser.</div>
       </div>
-
       <div class="tool-card" data-category="convert" onclick="openComingSoon('PDF to Word')">
         <span class="badge badge-soon">Coming Soon</span>
         <div class="icon-wrapper ic-cyan"><i class="fa-solid fa-file-word"></i></div>
         <div class="tool-title">PDF to Word</div>
         <div class="tool-desc">Convert PDF files into editable DOCX Microsoft Word documents.</div>
       </div>
-
       <div class="tool-card" data-category="organize" onclick="openComingSoon('Split PDF')">
         <span class="badge badge-soon">Coming Soon</span>
         <div class="icon-wrapper ic-rose"><i class="fa-solid fa-scissors"></i></div>
         <div class="tool-title">Split PDF</div>
         <div class="tool-desc">Separate single pages or specific ranges into independent files.</div>
       </div>
-
       <div class="tool-card" data-category="security" onclick="openComingSoon('Protect PDF')">
         <span class="badge badge-soon">Coming Soon</span>
         <div class="icon-wrapper ic-indigo"><i class="fa-solid fa-shield-halved"></i></div>
         <div class="tool-title">Protect PDF</div>
         <div class="tool-desc">Encrypt sensitive PDF documents with custom secure passwords.</div>
       </div>
-
     </div>
   </div>
 
-  <!-- Floating Chat Button Linked directly to chatbot/index.html -->
-  <a href="chatbot/index.html" class="chat-widget-btn" title="Chat with PDF Tool Assistant">
+  <!-- Floating Chat Widget Button with Notification Dot & Vibration -->
+  <div class="chat-widget-btn" id="chatWidgetBtn" onclick="toggleChatPopup()" title="Chat with PDF Tool Assistant">
+    <div class="notif-dot" id="notifDot"></div>
     <svg viewBox="0 0 100 100" width="46" height="46" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));">
       <path d="M 22 35 Q 10 15 28 22 Z" fill="#1e40af"/>
       <path d="M 78 35 Q 90 15 72 22 Z" fill="#1e40af"/>
@@ -634,7 +741,30 @@
         </linearGradient>
       </defs>
     </svg>
-  </a>
+  </div>
+
+  <!-- Popup Chat Window -->
+  <div class="chat-popup-modal" id="chatPopup">
+    <div class="chat-popup-header">
+      <span>PDF Tool Assistant</span>
+      <span style="cursor:pointer;" onclick="toggleChatPopup()">&times;</span>
+    </div>
+    <div class="chat-popup-body" id="chatBody">
+      <div class="chat-bubble bot">
+        Hello! Welcome to Support. How can I help you today?
+        <div class="quick-chips">
+          <span class="chip" onclick="quickSend('Tools Info')">Tools Info</span>
+          <span class="chip" onclick="quickSend('How to Use')">How to Use</span>
+          <span class="chip" onclick="quickSend('Contact Support')">Contact Support</span>
+          <span class="chip" onclick="quickSend('Privacy & Security')">Privacy & Security</span>
+        </div>
+      </div>
+    </div>
+    <div class="chat-popup-footer">
+      <input type="text" id="chatInput" placeholder="Type a message..." onkeypress="handleChatEnter(event)">
+      <button onclick="sendChatMessage()">Send</button>
+    </div>
+  </div>
 
   <!-- Footer -->
   <footer>
@@ -643,7 +773,7 @@
       <a onclick="openModal('privacyModal')">Privacy Policy</a>
     </div>
     <div class="copyright">
-      &copy; 2026 PDF EDIT TOOL. All rights reserved. <span class="credit-divider">|</span> Created by <a href="https://www.instagram.com/____fa_y_as_____?stkn=Mm9ncTF3Z21iejgz" target="_blank"><i class="fa-brands fa-instagram"></i> FAYAS - MONU</a>
+      &copy; 2026 PDF EDIT TOOL. All rights reserved. <span class="credit-divider">|</span> Created by <a href="https://www.instagram.com/____fa_y_as_____?stkn=Mm9ncTF3Z21iejgz" target="_blank"><i class="fa-brands fa-instagram"></i> FAYAS</a>
     </div>
   </footer>
 
@@ -664,7 +794,6 @@
       <h2>Terms & Conditions</h2>
       <p><strong>1. Acceptance of Terms:</strong> By accessing and using PDF EDIT TOOL, you agree to comply with and be bound by these professional Terms & Conditions.</p>
       <p><strong>2. Client-Side Processing:</strong> All file conversions and edits execute securely within your browser environment without server uploads.</p>
-      <p><strong>3. User Responsibility:</strong> Users maintain absolute legal responsibility for all content and documents processed through our platform.</p>
     </div>
   </div>
 
@@ -673,11 +802,23 @@
       <span class="close-btn" onclick="closeModal('privacyModal')">&times;</span>
       <h2>Privacy Policy</h2>
       <p><strong>1. Data Confidentiality:</strong> Your privacy is our priority. Because our tools run locally in your browser memory, we never store or read your personal documents.</p>
-      <p><strong>2. Security:</strong> We employ high-standard web security policies to guarantee a protected client-side workspace.</p>
     </div>
   </div>
 
   <script>
+    // 10 Seconds Notification & Vibration Trigger
+    setTimeout(() => {
+      const btn = document.getElementById('chatWidgetBtn');
+      const dot = document.getElementById('notifDot');
+      if (btn && dot) {
+        dot.style.display = 'block';
+        btn.classList.add('vibrate');
+        setTimeout(() => {
+          btn.classList.remove('vibrate');
+        }, 3000);
+      }
+    }, 10000);
+
     // Live Search
     function searchTools() {
       const input = document.getElementById('toolSearch').value.toLowerCase();
@@ -716,6 +857,65 @@
     function openComingSoon(toolName) {
       document.getElementById('comingSoonTitle').innerText = toolName;
       openModal('comingSoonModal');
+    }
+
+    // Popup Chat Functions
+    function toggleChatPopup() {
+      const popup = document.getElementById('chatPopup');
+      const dot = document.getElementById('notifDot');
+      popup.style.display = (popup.style.display === 'flex') ? 'none' : 'flex';
+      if (popup.style.display === 'flex') {
+        dot.style.display = 'none';
+      }
+    }
+
+    function quickSend(text) {
+      document.getElementById('chatInput').value = text;
+      sendChatMessage();
+    }
+
+    function handleChatEnter(e) {
+      if (e.key === 'Enter') {
+        sendChatMessage();
+      }
+    }
+
+    function sendChatMessage() {
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const body = document.getElementById('chatBody');
+      
+      const userBubble = document.createElement('div');
+      userBubble.className = 'chat-bubble user';
+      userBubble.innerText = text;
+      body.appendChild(userBubble);
+      
+      input.value = '';
+      body.scrollTop = body.scrollHeight;
+
+      setTimeout(() => {
+        const botBubble = document.createElement('div');
+        botBubble.className = 'chat-bubble bot';
+        
+        const q = text.toLowerCase();
+        
+        if (q.includes('creator') || q.includes('who made') || q.includes('owner') || q.includes('developer') || q.includes('fayas') || q.includes('contact') || q.includes('support') || q.includes('help')) {
+          botBubble.innerText = "Creator & Contact Support:\n\nThis platform is created and maintained by FAYAS.\n\nFor technical support or inquiries, connect directly via Instagram:\nhttps://www.instagram.com/____fa_y_as_____";
+        } else if (q.includes('tools info') || q.includes('tools') || q.includes('list') || q.includes('utilities')) {
+          botBubble.innerText = "Available Utilities Overview:\n\n1. Compress PDF\n2. Crop PDF\n3. JPG to PDF\n4. Merge PDF\n5. PDF to JPG\n6. Rotate PDF\n7. Video to MP3\n8. Watermark\n9. YouTube Downloader\n\nUpcoming: PDF Editor, PDF to Word, Split PDF, Protect PDF.";
+        } else if (q.includes('how to use') || q.includes('guide') || q.includes('instructions')) {
+          botBubble.innerText = "How to Use Our Tools:\n\n1. Select any active tool from the home page.\n2. Drag or drop your file into the local workspace.\n3. Adjust settings and click Process or Download instantly.\n\nAll operations happen 100% inside your browser memory.";
+        } else if (q.includes('privacy') || q.includes('security') || q.includes('safe')) {
+          botBubble.innerText = "Complete Privacy Guarantee:\n\nAll document processing happens entirely inside your local web browser session. No files are uploaded or stored on any remote server.";
+        } else {
+          botBubble.innerText = "Thank you for reaching out! You can easily convert, compress, crop, or merge your PDF files for free. Type 'Tools Info' or 'Contact Support' for details.";
+        }
+
+        body.appendChild(botBubble);
+        body.scrollTop = body.scrollHeight;
+      }, 500);
     }
   </script>
 </body>
