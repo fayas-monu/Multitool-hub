@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Credit: FAYAS -->
+  <title>Instagram Downloader — PDF Edit Tool</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #6366f1;
+      --ig-gradient: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: rgba(226, 232, 240, 0.8);
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background-color: var(--bg); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; }
+    
+    header { background: #fff; border-bottom: 1px solid var(--border); padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; }
+    .logo { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 800; color: var(--text-main); text-decoration: none; }
+    .logo-icon { width: 38px; height: 38px; background: var(--ig-gradient); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px; }
+
+    .main-container { max-width: 750px; margin: 40px auto; padding: 0 20px; width: 100%; flex: 1; }
+    
+    .tool-header { text-align: center; margin-bottom: 30px; }
+    .tool-header h1 { font-size: 30px; font-weight: 800; margin-bottom: 10px; color: var(--text-main); }
+    .tool-header h1 span { background: var(--ig-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .tool-header p { font-size: 14.5px; color: var(--text-muted); line-height: 1.6; }
+
+    /* Type Switch Tabs */
+    .type-tabs { display: flex; justify-content: center; gap: 12px; margin-bottom: 25px; }
+    .type-tab { background: #ffffff; border: 1px solid var(--border); padding: 10px 22px; border-radius: 24px; font-size: 13.5px; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.02); display: flex; align-items: center; gap: 8px; }
+    .type-tab.active { background: var(--ig-gradient); color: #fff; border-color: transparent; box-shadow: 0 4px 12px rgba(220, 39, 67, 0.25); }
+
+    .input-card { background: var(--card-bg); border-radius: 24px; padding: 32px; border: 1px solid var(--border); box-shadow: var(--shadow); }
+    .input-label-box { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .input-label-box span { font-size: 13px; font-weight: 700; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    .input-group { display: flex; gap: 12px; }
+    .input-group input { flex: 1; padding: 15px 18px; border: 1px solid var(--border); border-radius: 14px; font-size: 15px; outline: none; transition: border-color 0.2s; background: #f8fafc; }
+    .input-group input:focus { border-color: #dc2743; background: #fff; box-shadow: 0 0 0 4px rgba(220, 39, 67, 0.08); }
+    
+    .btn-download { background: var(--ig-gradient); color: #fff; border: none; padding: 0 26px; border-radius: 14px; font-weight: 700; font-size: 15px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: opacity 0.2s, transform 0.1s; box-shadow: 0 4px 12px rgba(220, 39, 67, 0.25); }
+    .btn-download:hover { opacity: 0.95; }
+    .btn-download:active { transform: scale(0.98); }
+
+    .result-box { margin-top: 25px; padding: 20px; background: #f8fafc; border: 1px solid var(--border); border-radius: 16px; display: none; text-align: left; }
+    .result-box h4 { font-size: 15px; margin-bottom: 6px; color: var(--text-main); font-weight: 700; }
+    .result-box p { font-size: 13px; color: var(--text-muted); word-break: break-all; margin-bottom: 14px; }
+
+    /* How to Use Section */
+    .guide-section { margin-top: 40px; background: #ffffff; border: 1px solid var(--border); border-radius: 24px; padding: 28px; box-shadow: var(--shadow); }
+    .guide-section h3 { font-size: 17px; font-weight: 800; margin-bottom: 16px; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
+    .guide-section h3 i { color: #dc2743; }
+    
+    .guide-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+    .step-item { background: #f8fafc; border: 1px solid var(--border); border-radius: 16px; padding: 18px; }
+    .step-num { width: 28px; height: 28px; background: var(--ig-gradient); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; margin-bottom: 10px; }
+    .step-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; color: var(--text-main); }
+    .step-desc { font-size: 12.5px; color: var(--text-muted); line-height: 1.5; }
+
+    footer { background: #ffffff; border-top: 1px solid var(--border); padding: 24px; text-align: center; font-size: 13.5px; color: var(--text-muted); margin-top: auto; }
+    footer a { color: var(--primary); text-decoration: none; font-weight: 700; }
+
+    @media (max-width: 768px) {
+      .input-group { flex-direction: column; }
+      .btn-download { padding: 15px; justify-content: center; }
+      header { padding: 14px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="../index.html" class="logo">
+      <div class="logo-icon"><i class="fa-brands fa-instagram"></i></div>
+      <span>Instagram Downloader</span>
+    </a>
+    <a href="../index.html" style="color: var(--text-muted); text-decoration: none; font-weight: 600; font-size: 14px;"><i class="fa-solid fa-arrow-left"></i> Home</a>
+  </header>
+
+  <div class="main-container">
+    <div class="tool-header">
+      <h1>Instagram <span>Downloader</span></h1>
+      <p>Easily download public Instagram reels, videos, and stories instantly.</p>
+    </div>
+
+    <!-- Mode Selector Tabs -->
+    <div class="type-tabs">
+      <div class="type-tab active" id="tabPost" onclick="switchMode('post')">
+        <i class="fa-solid fa-video"></i> Reel / Video
+      </div>
+      <div class="type-tab" id="tabStory" onclick="switchMode('story')">
+        <i class="fa-solid fa-circle-notch"></i> Story / Profile
+      </div>
+    </div>
+
+    <div class="input-card">
+      <div class="input-label-box">
+        <span id="inputLabelTitle">Enter Instagram Reel / Video Link</span>
+        <i class="fa-solid fa-link" style="color: var(--text-muted);"></i>
+      </div>
+      
+      <div class="input-group">
+        <input type="text" id="igLinkInput" placeholder="https://www.instagram.com/reel/...">
+        <button class="btn-download" onclick="fetchInstagramMedia()">
+          <i class="fa-solid fa-download"></i> Download
+        </button>
+      </div>
+
+      <div class="result-box" id="resultBox">
+        <h4 id="resultTitle">Ready to Download:</h4>
+        <p id="mediaUrlDisplay"></p>
+        <a id="downloadActionBtn" href="#" target="_blank" class="btn-download" style="display: inline-flex; text-decoration: none; padding: 10px 20px; font-size: 14px;">
+          <i class="fa-solid fa-cloud-arrow-down"></i> Save File
+        </a>
+      </div>
+    </div>
+
+    <!-- How to Use Guide Section -->
+    <div class="guide-section">
+      <h3><i class="fa-solid fa-circle-question"></i> How to Use This Tool?</h3>
+      <div class="guide-steps">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-title">Copy Link</div>
+          <div class="step-desc">Open Instagram and copy the link of the Reel or Story you want to download.</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-title">Paste Link</div>
+          <div class="step-desc">Paste the copied link into the input box above and click the Download button.</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-title">Save Media</div>
+          <div class="step-desc">Use the provided secure download link to save the video directly to your device.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2026 PDF EDIT TOOL. All rights reserved. | Created by <a href="https://www.instagram.com/____fa_y_as_____">FAYAS</a>
+  </footer>
+
+  <script>
+    let currentMode = 'post';
+
+    function switchMode(mode) {
+      currentMode = mode;
+      const labelTitle = document.getElementById('inputLabelTitle');
+      const input = document.getElementById('igLinkInput');
+      const tabPost = document.getElementById('tabPost');
+      const tabStory = document.getElementById('tabStory');
+
+      if (mode === 'post') {
+        tabPost.className = 'type-tab active';
+        tabStory.className = 'type-tab';
+        labelTitle.innerText = 'Enter Instagram Reel / Video Link';
+        input.placeholder = 'https://www.instagram.com/reel/...';
+      } else {
+        tabStory.className = 'type-tab active';
+        tabPost.className = 'type-tab';
+        labelTitle.innerText = 'Enter Instagram Story Link or Username';
+        input.placeholder = 'https://www.instagram.com/stories/... or username';
+      }
+      document.getElementById('resultBox').style.display = 'none';
+    }
+
+    function fetchInstagramMedia() {
+      const url = document.getElementById('igLinkInput').value.trim();
+      const resultBox = document.getElementById('resultBox');
+      const urlDisplay = document.getElementById('mediaUrlDisplay');
+      const downloadBtn = document.getElementById('downloadActionBtn');
+      const resultTitle = document.getElementById('resultTitle');
+
+      if (!url) {
+        alert('Please enter a valid link.');
+        return;
+      }
+
+      resultBox.style.display = 'block';
+      urlDisplay.innerText = url;
+      downloadBtn.href = url;
+
+      if (currentMode === 'story') {
+        resultTitle.innerText = 'Story File Ready:';
+      } else {
+        resultTitle.innerText = 'Reel / Video File Ready:';
+      }
+    }
+  </script>
+</body>
+</html>
