@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Credit: FAYAS -->
-  <title>EDIT TOOL — Ultra Modern & Secure PDF Suite</title>
+  <title>PDF EDIT TOOL — Ultra Modern & Secure PDF Suite</title>
   
   <!-- FontAwesome Icons & Google Fonts -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -342,6 +342,7 @@
     .ic-purple { background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%); color: #9333ea; }
     .ic-teal { background: linear-gradient(135deg, #ccfbf1 0%, #99f6e4 100%); color: #0d9488; }
     .ic-blue { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); color: #2563eb; }
+    .ic-ig { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #ffffff; }
 
     /* Animated Cute Monster Floating Chat Button */
     .chat-widget-btn {
@@ -688,6 +689,12 @@
         <div class="tool-title">YouTube Downloader</div>
         <div class="tool-desc">Download public online video and audio streams quickly and easily.</div>
       </a>
+      <!-- Instagram Downloader Tool Card Added -->
+      <a href="tools/instagram-downloader.html" class="tool-card" data-category="media">
+        <div class="icon-wrapper ic-ig"><i class="fa-brands fa-instagram"></i></div>
+        <div class="tool-title">Instagram Downloader</div>
+        <div class="tool-desc">Download public Instagram reels, videos, and stories instantly.</div>
+      </a>
 
       <!-- Coming Soon Tools -->
       <div class="tool-card" data-category="edit" onclick="openComingSoon('PDF Editor')">
@@ -904,7 +911,7 @@
         if (q.includes('creator') || q.includes('who made') || q.includes('owner') || q.includes('developer') || q.includes('fayas') || q.includes('contact') || q.includes('support') || q.includes('help')) {
           botBubble.innerText = "Creator & Contact Support:\n\nThis platform is created and maintained by FAYAS.\n\nFor technical support or inquiries, connect directly via Instagram:\nhttps://www.instagram.com/____fa_y_as_____";
         } else if (q.includes('tools info') || q.includes('tools') || q.includes('list') || q.includes('utilities')) {
-          botBubble.innerText = "Available Utilities Overview:\n\n1. Compress PDF\n2. Crop PDF\n3. JPG to PDF\n4. Merge PDF\n5. PDF to JPG\n6. Rotate PDF\n7. Video to MP3\n8. Watermark\n9. YouTube Downloader\n\nUpcoming: PDF Editor, PDF to Word, Split PDF, Protect PDF.";
+          botBubble.innerText = "Available Utilities Overview:\n\n1. Compress PDF\n2. Crop PDF\n3. JPG to PDF\n4. Merge PDF\n5. PDF to JPG\n6. Rotate PDF\n7. Video to MP3\n8. Watermark\n9. YouTube Downloader\n10. Instagram Downloader\n\nUpcoming: PDF Editor, PDF to Word, Split PDF, Protect PDF.";
         } else if (q.includes('how to use') || q.includes('guide') || q.includes('instructions')) {
           botBubble.innerText = "How to Use Our Tools:\n\n1. Select any active tool from the home page.\n2. Drag or drop your file into the local workspace.\n3. Adjust settings and click Process or Download instantly.\n\nAll operations happen 100% inside your browser memory.";
         } else if (q.includes('privacy') || q.includes('security') || q.includes('safe')) {
