@@ -10,8 +10,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <!-- Instagram Embed Script -->
-  <script async src="//www.instagram.com/embed.js"></script>
 
   <style>
     :root {
@@ -51,9 +49,9 @@
     .btn-download:hover { opacity: 0.95; }
     .btn-download:active { transform: scale(0.98); }
 
-    .result-box { margin-top: 25px; padding: 20px; background: #f8fafc; border: 1px solid var(--border); border-radius: 16px; display: none; text-align: center; }
+    .result-box { margin-top: 25px; padding: 22px; background: #f8fafc; border: 1px solid var(--border); border-radius: 16px; display: none; text-align: center; }
     
-    .action-panel { margin-top: 20px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    .action-panel { margin-top: 15px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
 
     /* How to Use Section */
     .guide-section { margin-top: 40px; background: #ffffff; border: 1px solid var(--border); border-radius: 24px; padding: 28px; box-shadow: var(--shadow); }
@@ -89,7 +87,7 @@
   <div class="main-container">
     <div class="tool-header">
       <h1>Instagram <span>Downloader</span></h1>
-      <p>Stream and download watermark-free Instagram reels and videos in high quality.</p>
+      <p>Download watermark-free Instagram reels and videos using direct API stream.</p>
     </div>
 
     <div class="input-card">
@@ -100,21 +98,21 @@
       
       <div class="input-group">
         <input type="text" id="igLinkInput" placeholder="https://www.instagram.com/reel/...">
-        <button class="btn-download" onclick="loadInstagramMedia()">
-          <i class="fa-solid fa-download"></i> Fetch & Download
+        <button class="btn-download" onclick="fetchInstagramMedia()">
+          <i class="fa-solid fa-cloud-arrow-down"></i> Fetch & Download
         </button>
       </div>
 
       <div class="result-box" id="resultBox">
-        <h4 style="margin-bottom: 12px; color: var(--text-main);">Video Stream Preview:</h4>
-        <div id="embedContainer" style="display: flex; justify-content: center;"></div>
+        <h4 style="margin-bottom: 10px; color: var(--text-main);">Download Options Ready:</h4>
+        <p id="displayUrl" style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px; word-break: break-all;"></p>
         
         <div class="action-panel">
           <button class="btn-download" onclick="copyLink()" style="background: #0f172a; font-size: 14px; padding: 12px 20px;">
             <i class="fa-solid fa-copy"></i> Copy Link
           </button>
-          <a id="directDownloadBtn" href="#" target="_blank" class="btn-download" style="font-size: 14px; padding: 12px 20px;">
-            <i class="fa-solid fa-cloud-arrow-down"></i> High-Quality HD Download (No Watermark)
+          <a id="apiDownloadLink" href="#" target="_blank" class="btn-download" style="font-size: 14px; padding: 12px 20px;">
+            <i class="fa-solid fa-download"></i> Download HD MP4
           </a>
         </div>
       </div>
@@ -127,57 +125,43 @@
         <div class="step-item">
           <div class="step-num">1</div>
           <div class="step-title">Copy Link</div>
-          <div class="step-desc">Open Instagram and copy the link of the Reel or Video you want to save[span_2](start_span)[span_2](end_span)[span_3](start_span)[span_3](end_span).</div>
+          <div class="step-desc">Open Instagram and copy the link of the Reel or Video you want to download.</div>
         </div>
         <div class="step-item">
           <div class="step-num">2</div>
-          <div class="step-title">Fetch Video</div>
-          <div class="step-desc">Paste the link above and click 'Fetch & Download' to view the preview[span_4](start_span)[span_4](end_span)[span_5](start_span)[span_5](end_span).</div>
+          <div class="step-title">Fetch API</div>
+          <div class="step-desc">Paste the link above and click 'Fetch & Download' to generate download links.</div>
         </div>
         <div class="step-item">
           <div class="step-num">3</div>
-          <div class="step-title">Save HD Video</div>
-          <div class="step-desc">Click 'High-Quality HD Download' to save the original video directly without watermark[span_6](start_span)[span_6](end_span)[span_7](start_span)[span_7](end_span).</div>
+          <div class="step-title">Save Video</div>
+          <div class="step-desc">Click 'Download HD MP4' to save the original video directly to your device without watermark.</div>
         </div>
       </div>
     </div>
   </div>
 
   <footer>
-    &copy; 2026 PDF EDIT TOOL. All rights reserved. | Created by chank!nd3 p4d4y41!
+    &copy; 2026 PDF EDIT TOOL. All rights reserved. | Created by (chank!nd3 p4d4y41!
   </footer>
 
   <script>
-    function loadInstagramMedia() {
-      let url = document.getElementById('igLinkInput').value.trim();
+    function fetchInstagramMedia() {
+      const url = document.getElementById('igLinkInput').value.trim();
       const resultBox = document.getElementById('resultBox');
-      const embedContainer = document.getElementById('embedContainer');
-      const downloadBtn = document.getElementById('directDownloadBtn');
+      const displayUrl = document.getElementById('displayUrl');
+      const apiDownloadLink = document.getElementById('apiDownloadLink');
 
       if (!url || !url.includes('instagram.com')) {
         alert('Please enter a valid Instagram link.');
         return;
       }
 
-      if (url.includes('?')) {
-        url = url.split('?')[0];
-      }
-      if (!url.endsWith('/')) {
-        url += '/';
-      }
-
       resultBox.style.display = 'block';
-      embedContainer.innerHTML = `
-        <blockquote class="instagram-media" data-instgrm-permalink="${url}" data-instgrm-version="14" style="background:#FFF; border:0; border-radius:12px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);">
-        </blockquote>
-      `;
-
-      // Set direct secure high-definition stream link
-      downloadBtn.href = `https://snapinsta.app/`;
-
-      if (window.instgrm) {
-        window.instgrm.Embeds.process();
-      }
+      displayUrl.innerText = url;
+      
+      // Connecting with the video download API endpoint
+      apiDownloadLink.href = `https://video-download-api.com/instagram-download-api?url=${encodeURIComponent(url)}`;
     }
 
     function copyLink() {
