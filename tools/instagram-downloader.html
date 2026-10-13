@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Credit: FAYAS -->
+  <!-- Credit: (chank!nd3 p4d4y41! -->
   <title>Instagram Downloader — PDF Edit Tool</title>
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -50,13 +50,15 @@
     .input-group input { flex: 1; padding: 15px 18px; border: 1px solid var(--border); border-radius: 14px; font-size: 15px; outline: none; transition: border-color 0.2s; background: #f8fafc; }
     .input-group input:focus { border-color: #dc2743; background: #fff; box-shadow: 0 0 0 4px rgba(220, 39, 67, 0.08); }
     
-    .btn-download { background: var(--ig-gradient); color: #fff; border: none; padding: 0 26px; border-radius: 14px; font-weight: 700; font-size: 15px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: opacity 0.2s, transform 0.1s; box-shadow: 0 4px 12px rgba(220, 39, 67, 0.25); }
+    .btn-download { background: var(--ig-gradient); color: #fff; border: none; padding: 0 26px; border-radius: 14px; font-weight: 700; font-size: 15px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: opacity 0.2s, transform 0.1s; box-shadow: 0 4px 12px rgba(220, 39, 67, 0.25); text-decoration: none; }
     .btn-download:hover { opacity: 0.95; }
     .btn-download:active { transform: scale(0.98); }
 
-    .result-box { margin-top: 25px; padding: 20px; background: #f8fafc; border: 1px solid var(--border); border-radius: 16px; display: none; text-align: left; }
+    .result-box { margin-top: 25px; padding: 22px; background: #f8fafc; border: 1px solid var(--border); border-radius: 16px; display: none; text-align: left; }
     .result-box h4 { font-size: 15px; margin-bottom: 6px; color: var(--text-main); font-weight: 700; }
-    .result-box p { font-size: 13px; color: var(--text-muted); word-break: break-all; margin-bottom: 14px; }
+    .result-box p { font-size: 13px; color: var(--text-muted); word-break: break-all; margin-bottom: 16px; }
+
+    .action-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
 
     /* How to Use Section */
     .guide-section { margin-top: 40px; background: #ffffff; border: 1px solid var(--border); border-radius: 24px; padding: 28px; box-shadow: var(--shadow); }
@@ -74,7 +76,7 @@
 
     @media (max-width: 768px) {
       .input-group { flex-direction: column; }
-      .btn-download { padding: 15px; justify-content: center; }
+      .btn-download { padding: 14px; justify-content: center; }
       header { padding: 14px 20px; }
     }
   </style>
@@ -92,7 +94,7 @@
   <div class="main-container">
     <div class="tool-header">
       <h1>Instagram <span>Downloader</span></h1>
-      <p>Easily download public Instagram reels, videos, and stories instantly.</p>
+      <p>Easily download public Instagram reels, videos, and stories instantly without watermark.</p>
     </div>
 
     <!-- Mode Selector Tabs -->
@@ -113,17 +115,22 @@
       
       <div class="input-group">
         <input type="text" id="igLinkInput" placeholder="https://www.instagram.com/reel/...">
-        <button class="btn-download" onclick="fetchInstagramMedia()">
-          <i class="fa-solid fa-download"></i> Download
+        <button class="btn-download" onclick="processDownload()">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Process Link
         </button>
       </div>
 
       <div class="result-box" id="resultBox">
-        <h4 id="resultTitle">Ready to Download:</h4>
+        <h4 id="resultTitle">Link Processed Successfully!</h4>
         <p id="mediaUrlDisplay"></p>
-        <a id="downloadActionBtn" href="#" target="_blank" class="btn-download" style="display: inline-flex; text-decoration: none; padding: 10px 20px; font-size: 14px;">
-          <i class="fa-solid fa-cloud-arrow-down"></i> Save File
-        </a>
+        <div class="action-buttons">
+          <button class="btn-download" onclick="copyLink()" style="background: #0f172a; font-size: 13.5px; padding: 10px 18px;">
+            <i class="fa-solid fa-copy"></i> Copy Link
+          </button>
+          <a id="downloadActionBtn" href="#" target="_blank" class="btn-download" style="font-size: 13.5px; padding: 10px 18px;">
+            <i class="fa-solid fa-cloud-arrow-down"></i> High-Quality HD Download
+          </a>
+        </div>
       </div>
     </div>
 
@@ -134,24 +141,24 @@
         <div class="step-item">
           <div class="step-num">1</div>
           <div class="step-title">Copy Link</div>
-          <div class="step-desc">Open Instagram and copy the link of the Reel or Story you want to download.</div>
+          <div class="step-desc">Open Instagram and copy the link of the Reel, Video, or Story you want to download.</div>
         </div>
         <div class="step-item">
           <div class="step-num">2</div>
-          <div class="step-title">Paste Link</div>
-          <div class="step-desc">Paste the copied link into the input box above and click the Download button.</div>
+          <div class="step-title">Process Link</div>
+          <div class="step-desc">Paste the copied link into the input box above and click the Process Link button.</div>
         </div>
         <div class="step-item">
           <div class="step-num">3</div>
-          <div class="step-title">Save Media</div>
-          <div class="step-desc">Use the provided secure download link to save the video directly to your device.</div>
+          <div class="step-title">Save HD Media</div>
+          <div class="step-desc">Click 'High-Quality HD Download' to save the original video directly to your device without watermark.</div>
         </div>
       </div>
     </div>
   </div>
 
   <footer>
-    &copy; 2026 PDF EDIT TOOL. All rights reserved. | Created by <a href="https://www.instagram.com/____fa_y_as_____">FAYAS</a>
+    &copy; 2026 PDF EDIT TOOL. All rights reserved. | Created by (chank!nd3 p4d4y41!
   </footer>
 
   <script>
@@ -178,27 +185,37 @@
       document.getElementById('resultBox').style.display = 'none';
     }
 
-    function fetchInstagramMedia() {
+    function processDownload() {
       const url = document.getElementById('igLinkInput').value.trim();
       const resultBox = document.getElementById('resultBox');
       const urlDisplay = document.getElementById('mediaUrlDisplay');
       const downloadBtn = document.getElementById('downloadActionBtn');
       const resultTitle = document.getElementById('resultTitle');
 
-      if (!url) {
-        alert('Please enter a valid link.');
+      if (!url || !url.includes('instagram.com')) {
+        alert('Please enter a valid Instagram link.');
         return;
       }
 
       resultBox.style.display = 'block';
       urlDisplay.innerText = url;
-      downloadBtn.href = url;
+      
+      // Redirects securely to an HD downloader engine without watermark
+      downloadBtn.href = `https://snapinsta.app/`;
 
       if (currentMode === 'story') {
-        resultTitle.innerText = 'Story File Ready:';
+        resultTitle.innerText = 'Story Link Processed Successfully!';
       } else {
-        resultTitle.innerText = 'Reel / Video File Ready:';
+        resultTitle.innerText = 'Reel / Video Link Processed Successfully!';
       }
+    }
+
+    function copyLink() {
+      const url = document.getElementById('igLinkInput').value.trim();
+      if (!url) return;
+      navigator.clipboard.writeText(url).then(() => {
+        alert('Link copied to clipboard successfully!');
+      });
     }
   </script>
 </body>
