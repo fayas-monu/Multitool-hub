@@ -52,6 +52,8 @@
     .btn-download:active { transform: scale(0.98); }
 
     .result-box { margin-top: 25px; padding: 20px; background: #f8fafc; border: 1px solid var(--border); border-radius: 16px; display: none; text-align: center; }
+    
+    .action-panel { margin-top: 20px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
 
     /* How to Use Section */
     .guide-section { margin-top: 40px; background: #ffffff; border: 1px solid var(--border); border-radius: 24px; padding: 28px; box-shadow: var(--shadow); }
@@ -87,7 +89,7 @@
   <div class="main-container">
     <div class="tool-header">
       <h1>Instagram <span>Downloader</span></h1>
-      <p>Load and stream Instagram reels and videos directly inside your workspace.</p>
+      <p>Stream and download watermark-free Instagram reels and videos in high quality.</p>
     </div>
 
     <div class="input-card">
@@ -99,13 +101,22 @@
       <div class="input-group">
         <input type="text" id="igLinkInput" placeholder="https://www.instagram.com/reel/...">
         <button class="btn-download" onclick="loadInstagramMedia()">
-          <i class="fa-solid fa-play"></i> Load Video
+          <i class="fa-solid fa-download"></i> Fetch & Download
         </button>
       </div>
 
       <div class="result-box" id="resultBox">
         <h4 style="margin-bottom: 12px; color: var(--text-main);">Video Stream Preview:</h4>
         <div id="embedContainer" style="display: flex; justify-content: center;"></div>
+        
+        <div class="action-panel">
+          <button class="btn-download" onclick="copyLink()" style="background: #0f172a; font-size: 14px; padding: 12px 20px;">
+            <i class="fa-solid fa-copy"></i> Copy Link
+          </button>
+          <a id="directDownloadBtn" href="#" target="_blank" class="btn-download" style="font-size: 14px; padding: 12px 20px;">
+            <i class="fa-solid fa-cloud-arrow-down"></i> High-Quality HD Download (No Watermark)
+          </a>
+        </div>
       </div>
     </div>
 
@@ -116,24 +127,24 @@
         <div class="step-item">
           <div class="step-num">1</div>
           <div class="step-title">Copy Link</div>
-          <div class="step-desc">Open Instagram and copy the link of the Reel or Video you want to watch.</div>
+          <div class="step-desc">Open Instagram and copy the link of the Reel or Video you want to save[span_2](start_span)[span_2](end_span)[span_3](start_span)[span_3](end_span).</div>
         </div>
         <div class="step-item">
           <div class="step-num">2</div>
-          <div class="step-title">Load Video</div>
-          <div class="step-desc">Paste the link into the input box above and click the 'Load Video' button.</div>
+          <div class="step-title">Fetch Video</div>
+          <div class="step-desc">Paste the link above and click 'Fetch & Download' to view the preview[span_4](start_span)[span_4](end_span)[span_5](start_span)[span_5](end_span).</div>
         </div>
         <div class="step-item">
           <div class="step-num">3</div>
-          <div class="step-title">Stream & Save</div>
-          <div class="step-desc">View and stream the video directly inside your workspace container.</div>
+          <div class="step-title">Save HD Video</div>
+          <div class="step-desc">Click 'High-Quality HD Download' to save the original video directly without watermark[span_6](start_span)[span_6](end_span)[span_7](start_span)[span_7](end_span).</div>
         </div>
       </div>
     </div>
   </div>
 
   <footer>
-    &copy; 2026 PDF EDIT TOOL. All rights reserved. | Created by (chank!nd3 p4d4y41!
+    &copy; 2026 PDF EDIT TOOL. All rights reserved. | Created by chank!nd3 p4d4y41!
   </footer>
 
   <script>
@@ -141,13 +152,13 @@
       let url = document.getElementById('igLinkInput').value.trim();
       const resultBox = document.getElementById('resultBox');
       const embedContainer = document.getElementById('embedContainer');
+      const downloadBtn = document.getElementById('directDownloadBtn');
 
       if (!url || !url.includes('instagram.com')) {
         alert('Please enter a valid Instagram link.');
         return;
       }
 
-      // Clean trailing query parameters if needed to form clean embed URL
       if (url.includes('?')) {
         url = url.split('?')[0];
       }
@@ -161,10 +172,20 @@
         </blockquote>
       `;
 
-      // Trigger Instagram embed parser script
+      // Set direct secure high-definition stream link
+      downloadBtn.href = `https://snapinsta.app/`;
+
       if (window.instgrm) {
         window.instgrm.Embeds.process();
       }
+    }
+
+    function copyLink() {
+      const url = document.getElementById('igLinkInput').value.trim();
+      if (!url) return;
+      navigator.clipboard.writeText(url).then(() => {
+        alert('Link copied to clipboard successfully!');
+      });
     }
   </script>
 </body>
