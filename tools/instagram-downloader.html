@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Credit: (chank!nd3 p4d4y41! -->
+  <!-- Credit: chank!nd3 p4d4y41! -->
   <title>Instagram Downloader — PDF Edit Tool</title>
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Instagram Embed Script -->
+  <script async src="//www.instagram.com/embed.js"></script>
 
   <style>
     :root {
@@ -37,11 +39,6 @@
     .tool-header h1 span { background: var(--ig-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .tool-header p { font-size: 14.5px; color: var(--text-muted); line-height: 1.6; }
 
-    /* Type Switch Tabs */
-    .type-tabs { display: flex; justify-content: center; gap: 12px; margin-bottom: 25px; }
-    .type-tab { background: #ffffff; border: 1px solid var(--border); padding: 10px 22px; border-radius: 24px; font-size: 13.5px; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.02); display: flex; align-items: center; gap: 8px; }
-    .type-tab.active { background: var(--ig-gradient); color: #fff; border-color: transparent; box-shadow: 0 4px 12px rgba(220, 39, 67, 0.25); }
-
     .input-card { background: var(--card-bg); border-radius: 24px; padding: 32px; border: 1px solid var(--border); box-shadow: var(--shadow); }
     .input-label-box { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
     .input-label-box span { font-size: 13px; font-weight: 700; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px; }
@@ -54,11 +51,7 @@
     .btn-download:hover { opacity: 0.95; }
     .btn-download:active { transform: scale(0.98); }
 
-    .result-box { margin-top: 25px; padding: 22px; background: #f8fafc; border: 1px solid var(--border); border-radius: 16px; display: none; text-align: left; }
-    .result-box h4 { font-size: 15px; margin-bottom: 6px; color: var(--text-main); font-weight: 700; }
-    .result-box p { font-size: 13px; color: var(--text-muted); word-break: break-all; margin-bottom: 16px; }
-
-    .action-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+    .result-box { margin-top: 25px; padding: 20px; background: #f8fafc; border: 1px solid var(--border); border-radius: 16px; display: none; text-align: center; }
 
     /* How to Use Section */
     .guide-section { margin-top: 40px; background: #ffffff; border: 1px solid var(--border); border-radius: 24px; padding: 28px; box-shadow: var(--shadow); }
@@ -76,7 +69,7 @@
 
     @media (max-width: 768px) {
       .input-group { flex-direction: column; }
-      .btn-download { padding: 14px; justify-content: center; }
+      .btn-download { padding: 15px; justify-content: center; }
       header { padding: 14px 20px; }
     }
   </style>
@@ -94,43 +87,25 @@
   <div class="main-container">
     <div class="tool-header">
       <h1>Instagram <span>Downloader</span></h1>
-      <p>Easily download public Instagram reels, videos, and stories instantly without watermark.</p>
-    </div>
-
-    <!-- Mode Selector Tabs -->
-    <div class="type-tabs">
-      <div class="type-tab active" id="tabPost" onclick="switchMode('post')">
-        <i class="fa-solid fa-video"></i> Reel / Video
-      </div>
-      <div class="type-tab" id="tabStory" onclick="switchMode('story')">
-        <i class="fa-solid fa-circle-notch"></i> Story / Profile
-      </div>
+      <p>Load and stream Instagram reels and videos directly inside your workspace.</p>
     </div>
 
     <div class="input-card">
       <div class="input-label-box">
-        <span id="inputLabelTitle">Enter Instagram Reel / Video Link</span>
+        <span>Enter Instagram Reel / Video Link</span>
         <i class="fa-solid fa-link" style="color: var(--text-muted);"></i>
       </div>
       
       <div class="input-group">
         <input type="text" id="igLinkInput" placeholder="https://www.instagram.com/reel/...">
-        <button class="btn-download" onclick="processDownload()">
-          <i class="fa-solid fa-wand-magic-sparkles"></i> Process Link
+        <button class="btn-download" onclick="loadInstagramMedia()">
+          <i class="fa-solid fa-play"></i> Load Video
         </button>
       </div>
 
       <div class="result-box" id="resultBox">
-        <h4 id="resultTitle">Link Processed Successfully!</h4>
-        <p id="mediaUrlDisplay"></p>
-        <div class="action-buttons">
-          <button class="btn-download" onclick="copyLink()" style="background: #0f172a; font-size: 13.5px; padding: 10px 18px;">
-            <i class="fa-solid fa-copy"></i> Copy Link
-          </button>
-          <a id="downloadActionBtn" href="#" target="_blank" class="btn-download" style="font-size: 13.5px; padding: 10px 18px;">
-            <i class="fa-solid fa-cloud-arrow-down"></i> High-Quality HD Download
-          </a>
-        </div>
+        <h4 style="margin-bottom: 12px; color: var(--text-main);">Video Stream Preview:</h4>
+        <div id="embedContainer" style="display: flex; justify-content: center;"></div>
       </div>
     </div>
 
@@ -141,17 +116,17 @@
         <div class="step-item">
           <div class="step-num">1</div>
           <div class="step-title">Copy Link</div>
-          <div class="step-desc">Open Instagram and copy the link of the Reel, Video, or Story you want to download.</div>
+          <div class="step-desc">Open Instagram and copy the link of the Reel or Video you want to watch.</div>
         </div>
         <div class="step-item">
           <div class="step-num">2</div>
-          <div class="step-title">Process Link</div>
-          <div class="step-desc">Paste the copied link into the input box above and click the Process Link button.</div>
+          <div class="step-title">Load Video</div>
+          <div class="step-desc">Paste the link into the input box above and click the 'Load Video' button.</div>
         </div>
         <div class="step-item">
           <div class="step-num">3</div>
-          <div class="step-title">Save HD Media</div>
-          <div class="step-desc">Click 'High-Quality HD Download' to save the original video directly to your device without watermark.</div>
+          <div class="step-title">Stream & Save</div>
+          <div class="step-desc">View and stream the video directly inside your workspace container.</div>
         </div>
       </div>
     </div>
@@ -162,60 +137,34 @@
   </footer>
 
   <script>
-    let currentMode = 'post';
-
-    function switchMode(mode) {
-      currentMode = mode;
-      const labelTitle = document.getElementById('inputLabelTitle');
-      const input = document.getElementById('igLinkInput');
-      const tabPost = document.getElementById('tabPost');
-      const tabStory = document.getElementById('tabStory');
-
-      if (mode === 'post') {
-        tabPost.className = 'type-tab active';
-        tabStory.className = 'type-tab';
-        labelTitle.innerText = 'Enter Instagram Reel / Video Link';
-        input.placeholder = 'https://www.instagram.com/reel/...';
-      } else {
-        tabStory.className = 'type-tab active';
-        tabPost.className = 'type-tab';
-        labelTitle.innerText = 'Enter Instagram Story Link or Username';
-        input.placeholder = 'https://www.instagram.com/stories/... or username';
-      }
-      document.getElementById('resultBox').style.display = 'none';
-    }
-
-    function processDownload() {
-      const url = document.getElementById('igLinkInput').value.trim();
+    function loadInstagramMedia() {
+      let url = document.getElementById('igLinkInput').value.trim();
       const resultBox = document.getElementById('resultBox');
-      const urlDisplay = document.getElementById('mediaUrlDisplay');
-      const downloadBtn = document.getElementById('downloadActionBtn');
-      const resultTitle = document.getElementById('resultTitle');
+      const embedContainer = document.getElementById('embedContainer');
 
       if (!url || !url.includes('instagram.com')) {
         alert('Please enter a valid Instagram link.');
         return;
       }
 
-      resultBox.style.display = 'block';
-      urlDisplay.innerText = url;
-      
-      // Redirects securely to an HD downloader engine without watermark
-      downloadBtn.href = `https://snapinsta.app/`;
-
-      if (currentMode === 'story') {
-        resultTitle.innerText = 'Story Link Processed Successfully!';
-      } else {
-        resultTitle.innerText = 'Reel / Video Link Processed Successfully!';
+      // Clean trailing query parameters if needed to form clean embed URL
+      if (url.includes('?')) {
+        url = url.split('?')[0];
       }
-    }
+      if (!url.endsWith('/')) {
+        url += '/';
+      }
 
-    function copyLink() {
-      const url = document.getElementById('igLinkInput').value.trim();
-      if (!url) return;
-      navigator.clipboard.writeText(url).then(() => {
-        alert('Link copied to clipboard successfully!');
-      });
+      resultBox.style.display = 'block';
+      embedContainer.innerHTML = `
+        <blockquote class="instagram-media" data-instgrm-permalink="${url}" data-instgrm-version="14" style="background:#FFF; border:0; border-radius:12px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);">
+        </blockquote>
+      `;
+
+      // Trigger Instagram embed parser script
+      if (window.instgrm) {
+        window.instgrm.Embeds.process();
+      }
     }
   </script>
 </body>
