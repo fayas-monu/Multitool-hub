@@ -45,32 +45,31 @@
 
     .container {
       max-width: 700px;
-      margin: 20px auto;
+      margin: 30px auto;
       background: #ffffff;
-      padding: 20px;
+      padding: 30px;
       border-radius: 12px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.06);
       width: 95%;
+      text-align: center;
     }
 
     h1 {
       font-size: 24px;
       color: #1a1a1a;
       margin-bottom: 6px;
-      text-align: center;
     }
 
     p.subtitle {
-      text-align: center;
       color: #666;
       font-size: 14px;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
     }
 
     .input-box {
       display: flex;
       gap: 10px;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
     }
 
     .input-box input {
@@ -93,18 +92,25 @@
       font-size: 15px;
     }
 
-    .download-area {
+    .result-card {
       display: none;
-      margin-top: 10px;
-      width: 100%;
+      background: #fafafa;
+      border: 1px solid #e0e0e0;
+      padding: 25px;
+      border-radius: 10px;
+      margin-top: 15px;
     }
 
-    iframe {
-      width: 100%;
-      height: 520px;
-      border: 1px solid #e0e0e0;
-      border-radius: 10px;
-      background: #fafafa;
+    .result-card a {
+      display: inline-block;
+      background: #25d366;
+      background: linear-gradient(45deg, #f09433 0%, #dc2743 100%);
+      color: white;
+      text-decoration: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      font-weight: 600;
+      margin-top: 10px;
     }
 
     footer {
@@ -136,8 +142,9 @@
       <button onclick="processDownload()">Get Video</button>
     </div>
 
-    <div class="download-area" id="downloadArea">
-      <iframe id="downloadWidget" src="" scrolling="no" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+    <div class="result-card" id="resultCard">
+      <p style="margin-bottom: 10px; font-size: 14px; color: #333;">Your video link is ready for download:</p>
+      <a id="downloadBtn" href="#" target="_blank"><i class="fa-solid fa-download"></i> Download MP4 Video</a>
     </div>
   </div>
 
@@ -154,12 +161,12 @@
         return;
       }
 
-      const widgetFrame = document.getElementById('downloadWidget');
-      const containerArea = document.getElementById('downloadArea');
+      const resultCard = document.getElementById('resultCard');
+      const downloadBtn = document.getElementById('downloadBtn');
 
-      // Using secure embed integration
-      widgetFrame.src = `https://ssbot.com.tr/embed?url=${encodeURIComponent(urlInput)}`;
-      containerArea.style.display = 'block';
+      // Passes the link directly to a secure working download engine
+      downloadBtn.href = `https://ssbot.com.tr/?url=${encodeURIComponent(urlInput)}`;
+      resultCard.style.display = 'block';
     }
   </script>
 </body>
