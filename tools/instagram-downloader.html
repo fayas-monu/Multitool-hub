@@ -137,7 +137,7 @@
     </div>
 
     <div class="download-area" id="downloadArea">
-      <iframe id="downloadWidget" src="" scrolling="no"></iframe>
+      <iframe id="downloadWidget" src="" scrolling="no" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
     </div>
   </div>
 
@@ -157,8 +157,8 @@
       const widgetFrame = document.getElementById('downloadWidget');
       const containerArea = document.getElementById('downloadArea');
 
-      // Embedded widget direct API integration for Instagram download
-      widgetFrame.src = `https://loader.to/api/card/?url=${encodeURIComponent(urlInput)}`;
+      // Clean ad-free secure embedded iframe endpoint
+      widgetFrame.src = `https://saveig.app/en/widget?url=${encodeURIComponent(urlInput)}`;
       containerArea.style.display = 'block';
     }
   </script>
