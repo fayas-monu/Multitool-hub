@@ -45,31 +45,32 @@
 
     .container {
       max-width: 700px;
-      margin: 30px auto;
+      margin: 20px auto;
       background: #ffffff;
-      padding: 30px;
+      padding: 20px;
       border-radius: 12px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.06);
       width: 95%;
-      text-align: center;
     }
 
     h1 {
       font-size: 24px;
       color: #1a1a1a;
       margin-bottom: 6px;
+      text-align: center;
     }
 
     p.subtitle {
+      text-align: center;
       color: #666;
       font-size: 14px;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
     }
 
     .input-box {
       display: flex;
       gap: 10px;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
 
     .input-box input {
@@ -92,25 +93,18 @@
       font-size: 15px;
     }
 
-    .result-card {
+    .download-area {
       display: none;
-      background: #fafafa;
-      border: 1px solid #e0e0e0;
-      padding: 25px;
-      border-radius: 10px;
-      margin-top: 15px;
+      margin-top: 10px;
+      width: 100%;
     }
 
-    .result-card a {
-      display: inline-block;
-      background: #25d366;
-      background: linear-gradient(45deg, #f09433 0%, #dc2743 100%);
-      color: white;
-      text-decoration: none;
-      padding: 12px 25px;
-      border-radius: 8px;
-      font-weight: 600;
-      margin-top: 10px;
+    iframe {
+      width: 100%;
+      height: 520px;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      background: #fafafa;
     }
 
     footer {
@@ -142,9 +136,8 @@
       <button onclick="processDownload()">Get Video</button>
     </div>
 
-    <div class="result-card" id="resultCard">
-      <p style="margin-bottom: 10px; font-size: 14px; color: #333;">Your video link is ready for download:</p>
-      <a id="downloadBtn" href="#" target="_blank"><i class="fa-solid fa-download"></i> Download MP4 Video</a>
+    <div class="download-area" id="downloadArea">
+      <iframe id="downloadWidget" src="" scrolling="no"></iframe>
     </div>
   </div>
 
@@ -161,12 +154,12 @@
         return;
       }
 
-      const resultCard = document.getElementById('resultCard');
-      const downloadBtn = document.getElementById('downloadBtn');
+      const widgetFrame = document.getElementById('downloadWidget');
+      const containerArea = document.getElementById('downloadArea');
 
-      // Passes the link directly to a secure working download engine
-      downloadBtn.href = `https://ssbot.com.tr/?url=${encodeURIComponent(urlInput)}`;
-      resultCard.style.display = 'block';
+      // Embedded widget direct API integration for Instagram download
+      widgetFrame.src = `https://loader.to/api/card/?url=${encodeURIComponent(urlInput)}`;
+      containerArea.style.display = 'block';
     }
   </script>
 </body>
