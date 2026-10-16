@@ -253,6 +253,7 @@
       gap: 20px;
     }
 
+    /* AI / Modern Glowing Icon Card Design */
     .tool-card {
       background: var(--card-bg);
       border-radius: 20px;
@@ -273,15 +274,15 @@
       content: '';
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), transparent);
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(6, 182, 212, 0.05));
       opacity: 0;
       transition: opacity 0.4s ease;
     }
 
     .tool-card:hover {
       transform: translateY(-8px);
-      box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.3);
-      border-color: rgba(99, 102, 241, 0.5);
+      box-shadow: 0 22px 45px -12px rgba(99, 102, 241, 0.35);
+      border-color: rgba(99, 102, 241, 0.6);
     }
 
     .tool-card:hover::before {
@@ -289,22 +290,22 @@
     }
 
     .icon-wrapper {
-      width: 56px;
-      height: 56px;
-      border-radius: 16px;
+      width: 60px;
+      height: 60px;
+      border-radius: 18px;
       display: flex;
       align-items: center;
       justify-content: center;
       margin-bottom: 18px;
-      font-size: 24px;
+      font-size: 26px;
       transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.04);
+      box-shadow: 0 10px 20px rgba(99, 102, 241, 0.15);
       position: relative;
     }
 
     .tool-card:hover .icon-wrapper {
-      transform: scale(1.15) translateY(-3px) rotate(-5deg);
-      box-shadow: 0 12px 25px rgba(99, 102, 241, 0.3);
+      transform: scale(1.12) translateY(-4px) rotate(-4deg);
+      box-shadow: 0 15px 30px rgba(99, 102, 241, 0.4);
     }
 
     .tool-title {
@@ -334,14 +335,15 @@
 
     .badge-soon { background: #fffbe3; color: #d97706; border: 1px solid #fef3c7; }
 
-    .ic-indigo { background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%); color: #4338ca; }
-    .ic-cyan { background: linear-gradient(135deg, #cffafe 0%, #a5f3fc 100%); color: #0891b2; }
-    .ic-emerald { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); color: #059669; }
-    .ic-amber { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); color: #d97706; }
-    .ic-rose { background: linear-gradient(135deg, #ffe4e6 0%, #fecdd3 100%); color: #e11d48; }
-    .ic-purple { background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%); color: #9333ea; }
-    .ic-teal { background: linear-gradient(135deg, #ccfbf1 0%, #99f6e4 100%); color: #0d9488; }
-    .ic-blue { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); color: #2563eb; }
+    /* AI Style Gradients for Icons */
+    .ic-indigo { background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); color: #ffffff; }
+    .ic-cyan { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: #ffffff; }
+    .ic-emerald { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; }
+    .ic-amber { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #ffffff; }
+    .ic-rose { background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%); color: #ffffff; }
+    .ic-purple { background: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%); color: #ffffff; }
+    .ic-teal { background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); color: #ffffff; }
+    .ic-blue { background: linear-gradient(135deg, #3b82f6 100%, #1d4ed8 100%); color: #ffffff; }
     .ic-ig { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #ffffff; }
 
     /* Animated Cute Monster Floating Chat Button */
@@ -374,7 +376,6 @@
       box-shadow: 0 18px 35px rgba(59, 130, 246, 0.6);
     }
 
-    /* Notification Dot & Vibration */
     .notif-dot {
       position: absolute;
       top: 4px;
@@ -459,6 +460,12 @@
       background: var(--primary);
       color: #ffffff;
       align-self: flex-end;
+    }
+
+    .chat-bubble a {
+      color: #ff3366;
+      font-weight: 600;
+      text-decoration: underline;
     }
 
     .quick-chips {
@@ -570,6 +577,8 @@
       width: 90%;
       padding: 32px;
       position: relative;
+      max-height: 85vh;
+      overflow-y: auto;
     }
 
     .close-btn {
@@ -613,7 +622,7 @@
     <div class="hero-badge">
       <i class="fa-solid fa-shield-halved"></i> 100% Private Client-Side Workspace
     </div>
-    <h1>Professional Online PDF Tools<br><span>Fast, Secure & Simple.</span></h1>
+    <h1>Advanced Online PDF Tools<br><span>Fast, Secure & Seamless.</span></h1>
     <p>Complete document toolkit to edit, convert, merge, compress, protect, and organize your files safely inside your web browser.</p>
     
     <div class="search-wrapper">
@@ -641,7 +650,7 @@
     </div>
   </div>
 
-  <!-- Tools Grid Section -->
+  <!-- Tools Grid Section with AI Styled Icons -->
   <div class="tools-section" id="all-tools">
     <div class="tools-grid" id="toolsGrid">
       <a href="tools/compress-pdf.html" class="tool-card" data-category="optimize">
@@ -689,7 +698,6 @@
         <div class="tool-title">YouTube Downloader</div>
         <div class="tool-desc">Download public online video and audio streams quickly and easily.</div>
       </a>
-      <!-- Instagram Downloader Tool Card Added -->
       <a href="tools/instagram-downloader.html" class="tool-card" data-category="media">
         <div class="icon-wrapper ic-ig"><i class="fa-brands fa-instagram"></i></div>
         <div class="tool-title">Instagram Downloader</div>
@@ -717,7 +725,7 @@
       </div>
       <div class="tool-card" data-category="security" onclick="openComingSoon('Protect PDF')">
         <span class="badge badge-soon">Coming Soon</span>
-        <div class="icon-wrapper ic-indigo"><i class="fa-solid fa-shield-halved"></i></div>
+        <div class="icon-wrapper ic-blue"><i class="fa-solid fa-shield-halved"></i></div>
         <div class="tool-title">Protect PDF</div>
         <div class="tool-desc">Encrypt sensitive PDF documents with custom secure passwords.</div>
       </div>
@@ -750,7 +758,7 @@
     </svg>
   </div>
 
-  <!-- Popup Chat Window -->
+  <!-- Popup Chat Window (English Bot Responses) -->
   <div class="chat-popup-modal" id="chatPopup">
     <div class="chat-popup-header">
       <span>PDF Tool Assistant</span>
@@ -762,8 +770,8 @@
         <div class="quick-chips">
           <span class="chip" onclick="quickSend('Tools Info')">Tools Info</span>
           <span class="chip" onclick="quickSend('How to Use')">How to Use</span>
+          <span class="chip" onclick="quickSend('Ads & API Info')">Ads & API Info</span>
           <span class="chip" onclick="quickSend('Contact Support')">Contact Support</span>
-          <span class="chip" onclick="quickSend('Privacy & Security')">Privacy & Security</span>
         </div>
       </div>
     </div>
@@ -799,8 +807,9 @@
     <div class="modal-content">
       <span class="close-btn" onclick="closeModal('termsModal')">&times;</span>
       <h2>Terms & Conditions</h2>
-      <p><strong>1. Acceptance of Terms:</strong> By accessing and using PDF EDIT TOOL, you agree to comply with and be bound by these professional Terms & Conditions.</p>
-      <p><strong>2. Client-Side Processing:</strong> All file conversions and edits execute securely within your browser environment without server uploads.</p>
+      <p><strong>1. Acceptance of Terms:</strong> By accessing and using PDF EDIT TOOL, you agree to comply with and be bound by these Terms & Conditions.</p>
+      <p><strong>2. Client-Side Processing:</strong> All PDF conversions and edits execute securely within your local browser environment without server uploads.</p>
+      <p><strong>3. Downloader Services & External APIs:</strong> Our platform includes YouTube and Instagram download utilities powered by third-party public APIs (such as Loader.to). Because these are external public services, occasional advertisements, pop-ups, or external redirect tabs may appear during media retrieval. Users acknowledge and agree that these ads originate from the public APIs, and simple browser navigation (going back and retrying) resolves any ad-related redirects.</p>
     </div>
   </div>
 
@@ -808,7 +817,8 @@
     <div class="modal-content">
       <span class="close-btn" onclick="closeModal('privacyModal')">&times;</span>
       <h2>Privacy Policy</h2>
-      <p><strong>1. Data Confidentiality:</strong> Your privacy is our priority. Because our tools run locally in your browser memory, we never store or read your personal documents.</p>
+      <p><strong>1. Data Confidentiality:</strong> Your privacy is our top priority. Because our tools run locally in your browser memory, we never store, view, or read your personal documents.</p>
+      <p><strong>2. Third-Party API Interaction:</strong> When utilizing media downloader utilities, requests are handled via external public APIs which may manage their own cookie and ad protocols. We do not track or store your downloaded media links or personal browsing history on any remote server.</p>
     </div>
   </div>
 
@@ -866,7 +876,7 @@
       openModal('comingSoonModal');
     }
 
-    // Popup Chat Functions
+    // Popup Chat Functions (English Responses)
     function toggleChatPopup() {
       const popup = document.getElementById('chatPopup');
       const dot = document.getElementById('notifDot');
@@ -909,7 +919,9 @@
         const q = text.toLowerCase();
         
         if (q.includes('creator') || q.includes('who made') || q.includes('owner') || q.includes('developer') || q.includes('fayas') || q.includes('contact') || q.includes('support') || q.includes('help')) {
-          botBubble.innerText = "Creator & Contact Support:\n\nThis platform is created and maintained by FAYAS.\n\nFor technical support or inquiries, connect directly via Instagram:\nhttps://www.instagram.com/____fa_y_as_____";
+          botBubble.innerHTML = `Creator & Contact Support:<br><br>This platform is created and maintained by <strong>FAYAS</strong>.<br><br>For any support or inquiries, connect directly via Instagram:<br><br><a href="https://www.instagram.com/____fa_y_as_____" target="_blank"><i class="fa-brands fa-instagram" style="color: #e1306c; font-size: 16px;"></i> <strong>____fa_y_as_____ (Click Here)</strong></a>`;
+        } else if (q.includes('ads') || q.includes('ad') || q.includes('api') || q.includes('popup') || q.includes('loader')) {
+          botBubble.innerText = "Ads & API Information:\n\n- We use public APIs (like Loader.to) for YouTube and Instagram downloaders.\n- Because of these public APIs, some external advertisements or new tabs may occasionally open when downloading.\n- If an ad page opens, simply go back to this page, click the download button again, and your video will process successfully!";
         } else if (q.includes('tools info') || q.includes('tools') || q.includes('list') || q.includes('utilities')) {
           botBubble.innerText = "Available Utilities Overview:\n\n1. Compress PDF\n2. Crop PDF\n3. JPG to PDF\n4. Merge PDF\n5. PDF to JPG\n6. Rotate PDF\n7. Video to MP3\n8. Watermark\n9. YouTube Downloader\n10. Instagram Downloader\n\nUpcoming: PDF Editor, PDF to Word, Split PDF, Protect PDF.";
         } else if (q.includes('how to use') || q.includes('guide') || q.includes('instructions')) {
@@ -917,7 +929,7 @@
         } else if (q.includes('privacy') || q.includes('security') || q.includes('safe')) {
           botBubble.innerText = "Complete Privacy Guarantee:\n\nAll document processing happens entirely inside your local web browser session. No files are uploaded or stored on any remote server.";
         } else {
-          botBubble.innerText = "Thank you for reaching out! You can easily convert, compress, crop, or merge your PDF files for free. Type 'Tools Info' or 'Contact Support' for details.";
+          botBubble.innerText = "Thank you for reaching out! You can easily convert, compress, crop, or merge your PDF files for free. Type 'Tools Info', 'Ads & API Info', or 'Contact Support' for details.";
         }
 
         body.appendChild(botBubble);
