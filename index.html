@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Credit: FAYAS -->
+  <!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
   <title>PDF EDIT TOOL — Ultra Modern & Secure PDF Suite</title>
   
   <!-- FontAwesome Icons & Google Fonts -->
@@ -303,9 +303,50 @@
       position: relative;
     }
 
-    .tool-card:hover .icon-wrapper {
-      transform: scale(1.12) translateY(-4px) rotate(-4deg);
-      box-shadow: 0 15px 30px rgba(99, 102, 241, 0.4);
+    /* Specific Unique Icon Animations on Hover */
+    .tool-card:hover .fa-compress { animation: compressAnim 0.8s ease infinite alternate; }
+    .tool-card:hover .fa-crop-simple { animation: cropAnim 0.8s ease infinite alternate; }
+    .tool-card:hover .fa-images, .tool-card:hover .fa-file-image { animation: bounceAnim 0.8s ease infinite; }
+    .tool-card:hover .fa-object-group { animation: pulseAnim 0.8s ease infinite alternate; }
+    .tool-card:hover .fa-rotate-right { animation: spinAnim 1.2s linear infinite; }
+    .tool-card:hover .fa-file-audio { animation: waveAnim 0.8s ease infinite alternate; }
+    .tool-card:hover .fa-stamp { animation: stampAnim 0.6s ease infinite alternate; }
+    .tool-card:hover .fa-youtube, .tool-card:hover .fa-instagram { animation: popAnim 0.6s ease infinite alternate; }
+
+    @keyframes compressAnim {
+      0% { transform: scale(1); }
+      100% { transform: scale(0.82); }
+    }
+    @keyframes cropAnim {
+      0% { transform: translate(0, 0); }
+      50% { transform: translate(-2px, -2px); }
+      100% { transform: translate(2px, 2px); }
+    }
+    @keyframes bounceAnim {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    @keyframes pulseAnim {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.15); }
+    }
+    @keyframes spinAnim {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes waveAnim {
+      0% { transform: skewX(0deg); }
+      50% { transform: skewX(-12deg); }
+      100% { transform: skewX(12deg); }
+    }
+    @keyframes stampAnim {
+      0% { transform: translateY(-4px) scale(1.1); }
+      100% { transform: translateY(0px) scale(1); }
+    }
+    @keyframes popAnim {
+      0% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.18) rotate(-6deg); }
+      100% { transform: scale(1.18) rotate(6deg); }
     }
 
     .tool-title {
@@ -650,7 +691,7 @@
     </div>
   </div>
 
-  <!-- Tools Grid Section with AI Styled Icons -->
+  <!-- Tools Grid Section with Animated AI Icons -->
   <div class="tools-section" id="all-tools">
     <div class="tools-grid" id="toolsGrid">
       <a href="tools/compress-pdf.html" class="tool-card" data-category="optimize">
@@ -788,7 +829,7 @@
       <a onclick="openModal('privacyModal')">Privacy Policy</a>
     </div>
     <div class="copyright">
-      &copy; 2026 PDF EDIT TOOL. All rights reserved. <span class="credit-divider">|</span> Created by <a href="https://www.instagram.com/____fa_y_as_____?stkn=Mm9ncTF3Z21iejgz" target="_blank"><i class="fa-brands fa-instagram"></i> FAYAS</a>
+      &copy; 2026 PDF EDIT TOOL. All rights reserved. <span class="credit-divider">|</span> Created by <a href="https://www.instagram.com/____fa_y_as_____?stkn=Mm9ncTF3Z21iejgz" target="_blank"><i class="fa-brands fa-instagram"></i> (hank!nd3 p4d4y41! | FAYAS MONU</a>
     </div>
   </footer>
 
@@ -919,7 +960,7 @@
         const q = text.toLowerCase();
         
         if (q.includes('creator') || q.includes('who made') || q.includes('owner') || q.includes('developer') || q.includes('fayas') || q.includes('contact') || q.includes('support') || q.includes('help')) {
-          botBubble.innerHTML = `Creator & Contact Support:<br><br>This platform is created and maintained by <strong>FAYAS</strong>.<br><br>For any support or inquiries, connect directly via Instagram:<br><br><a href="https://www.instagram.com/____fa_y_as_____" target="_blank"><i class="fa-brands fa-instagram" style="color: #e1306c; font-size: 16px;"></i> <strong>____fa_y_as_____ (Click Here)</strong></a>`;
+          botBubble.innerHTML = `Creator & Contact Support:<br><br>This platform is created and maintained by <strong>(hank!nd3 p4d4y41! | FAYAS MONU</strong>.<br><br>For any support or inquiries, connect directly via Instagram:<br><br><a href="https://www.instagram.com/____fa_y_as_____" target="_blank"><i class="fa-brands fa-instagram" style="color: #e1306c; font-size: 16px;"></i> <strong>____fa_y_as_____ (Click Here)</strong></a>`;
         } else if (q.includes('ads') || q.includes('ad') || q.includes('api') || q.includes('popup') || q.includes('loader')) {
           botBubble.innerText = "Ads & API Information:\n\n- We use public APIs (like Loader.to) for YouTube and Instagram downloaders.\n- Because of these public APIs, some external advertisements or new tabs may occasionally open when downloading.\n- If an ad page opens, simply go back to this page, click the download button again, and your video will process successfully!";
         } else if (q.includes('tools info') || q.includes('tools') || q.includes('list') || q.includes('utilities')) {
