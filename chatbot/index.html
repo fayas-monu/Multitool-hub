@@ -170,6 +170,12 @@
       align-self: flex-end;
     }
 
+    .chat-bubble a {
+      color: #ff3366;
+      font-weight: 600;
+      text-decoration: underline;
+    }
+
     .chat-footer {
       padding: 16px 24px;
       background: #ffffff;
@@ -253,17 +259,17 @@
     <div class="chat-body" id="chatBody">
       <div class="chat-welcome-box">
         <h3>Welcome to Support</h3>
-        <p>How can we assist you today? Select a topic below or type your message to get instant guidance on tools, usage, or privacy policies.</p>
+        <p>How can we help you today? Click the quick chips below or type your message to learn more about our tools!</p>
 
         <!-- Quick Action Chips -->
         <div class="quick-actions">
           <span class="quick-chip" onclick="quickSend('Tools Info')">Tools Info</span>
           <span class="quick-chip" onclick="quickSend('How to Use')">How to Use</span>
+          <span class="quick-chip" onclick="quickSend('Ads & API Info')">Ads & API Info</span>
           <span class="quick-chip" onclick="quickSend('Contact Support')">Contact Support</span>
-          <span class="quick-chip" onclick="quickSend('Privacy & Security')">Privacy & Security</span>
         </div>
       </div>
-      <div class="chat-bubble bot">Hello! I am your PDF Tool Assistant. Feel free to ask any question regarding our browser utilities and instructions.</div>
+      <div class="chat-bubble bot">Hello! I am your assistant. Feel free to ask any questions regarding our PDF tools, downloaders, or ads!</div>
     </div>
 
     <!-- Footer Input -->
@@ -308,53 +314,41 @@
         
         const q = text.toLowerCase();
         
-        // 1. Contact & Developer Info
+        // 1. Contact & Creator Info (with clickable Instagram link & icon)
         if (q.includes('creator') || q.includes('who made') || q.includes('owner') || q.includes('developer') || q.includes('fayas') || q.includes('monu') || q.includes('contact') || q.includes('support') || q.includes('help')) {
-          botBubble.innerText = "Creator & Contact Support:\n\nThis platform is created and maintained by FAYAS - MONU.\n\nFor technical support, inquiries, or feedback, connect directly via Instagram:\nhttps://www.instagram.com/____fa_y_as_____";
+          botBubble.innerHTML = `Creator & Contact Info:<br><br>This platform is created and maintained by <strong>FAYAS - MONU</strong>.<br><br>For any support, inquiries, or feedback, you can connect directly via Instagram:<br><br><a href="https://www.instagram.com/____fa_y_as_____" target="_blank"><i class="fa-brands fa-instagram" style="color: #e1306c; font-size: 16px;"></i> <strong>____fa_y_as_____ (Click Here)</strong></a>`;
         
-        // 2. Overview of Available Tools
+        // 2. Ads & API Information
+        } else if (q.includes('ads') || q.includes('ad') || q.includes('api') || q.includes('popup') || q.includes('loader')) {
+          botBubble.innerText = "Ads & API Information:\n\n- We use public APIs (like Loader.to) for YouTube and Instagram downloaders.\n- Because of these public APIs, some external advertisements or new tabs may occasionally open when downloading.\n- If an ad page opens, simply go back to this page, click the download button again, and your video will process successfully!";
+        
+        // 3. Overview of Available Tools
         } else if (q.includes('tools info') || q.includes('tools') || q.includes('list') || q.includes('utilities')) {
-          botBubble.innerText = "Available Utilities Overview:\n\n1. Compress PDF - Reduce file size efficiently.\n2. Crop PDF - Trim and adjust page margins.\n3. JPG to PDF - Convert images to PDF format.\n4. Merge PDF - Combine multiple files into one.\n5. PDF to JPG - Extract high-res images from PDF.\n6. Rotate PDF - Change page orientations.\n7. Video to MP3 - Extract audio tracks from video.\n8. Watermark - Protect documents with text/image stamps.\n9. YouTube Downloader - Stream & download public media.\n\nUpcoming: PDF Editor, PDF to Word, Split PDF, Protect PDF.";
+          botBubble.innerText = "Available Tools Overview:\n\n1. Compress PDF: Reduce document file size.\n2. Crop PDF: Trim unwanted page margins.\n3. JPG to PDF: Convert images into PDF format.\n4. Merge PDF: Combine multiple PDF files into one.\n5. PDF to JPG: Extract high-res images from PDF.\n6. Rotate PDF: Fix page orientations.\n7. Video to MP3: Extract audio tracks from video files.\n8. Watermark: Protect documents with text/image stamps.\n9. YouTube Downloader: Download public YouTube videos.\n10. Instagram Downloader: Download Instagram reels and videos.";
         
-        // 3. General How to Use Guide
+        // 4. General How to Use Guide
         } else if (q.includes('how to use') || q.includes('guide') || q.includes('instructions') || q.includes('method')) {
-          botBubble.innerText = "How to Use Our Tools:\n\n1. Select any active tool from the home page grid.\n2. Choose or drag your file directly into the local workspace.\n3. Adjust settings (margins, rotation, compression ratio, etc.).\n4. Click Process or Download to save the file instantly.\n\nAll operations are handled 100% inside your browser memory.";
+          botBubble.innerText = "How to Use Our Tools:\n\n1. Select your desired tool from the home page.\n2. Upload your file or paste the media link.\n3. Adjust settings if needed and click process.\n4. Click download to save your file instantly.\n\n(Note: If any ad opens during downloads, just go back and click again).";
         
-        // 4. YouTube & Media Tools
-        } else if (q.includes('youtube') || q.includes('video') || q.includes('mp3') || q.includes('download')) {
-          botBubble.innerText = "YouTube Downloader & Video to MP3:\n\n- YouTube Downloader: Paste any public video URL on the YouTube Downloader page to download public streams.\n- Video to MP3: Drag and drop video files from your device to extract high-quality MP3 audio locally.";
+        // 5. YouTube & Instagram Downloader
+        } else if (q.includes('youtube') || q.includes('instagram') || q.includes('download') || q.includes('video')) {
+          botBubble.innerText = "Downloader Utilities:\n\n- Paste your link into the YouTube or Instagram Downloader page and click 'Get Video'.\n- Public API services may display occasional ads. If that happens, just go back and click download again to finish the process.";
         
-        // 5. Compress PDF
-        } else if (q.includes('compress') || q.includes('reduce') || q.includes('size')) {
-          botBubble.innerText = "Compress PDF Tool:\n\nReduces the file size of your PDF documents while preserving clear text and image quality. Ideal for email attachments and web uploads.";
+        // 6. Compress PDF
+        } else if (q.includes('compress') || q.includes('reduce')) {
+          botBubble.innerText = "Compress PDF:\nEasily shrink your PDF file size while maintaining clear document readability.";
         
-        // 6. Crop & Edit Tools
-        } else if (q.includes('crop') || q.includes('margin') || q.includes('trim')) {
-          botBubble.innerText = "Crop PDF Tool:\n\nAllows you to trim unwanted page borders or set custom frame dimensions for a clean document view.";
+        // 7. Privacy Info
+        } else if (q.includes('privacy') || q.includes('security') || q.includes('safe')) {
+          botBubble.innerText = "Privacy & Security:\n\nAll file processing happens directly inside your web browser session. No files are ever uploaded or stored on any remote server. 100% safe!";
         
-        // 7. Conversion Tools
-        } else if (q.includes('jpg') || q.includes('image') || q.includes('convert')) {
-          botBubble.innerText = "Conversion Utilities:\n\n- JPG to PDF: Turn JPG, PNG, or WebP pictures into a clean PDF.\n- PDF to JPG: Extract embedded pages or images from PDF as high-resolution image files.";
-        
-        // 8. Merge & Rotate
-        } else if (q.includes('merge') || q.includes('combine') || q.includes('rotate')) {
-          botBubble.innerText = "Organize Utilities:\n\n- Merge PDF: Join multiple PDF documents together into a single file.\n- Rotate PDF: Fix orientation by rotating pages 90, 180, or 270 degrees.";
-        
-        // 9. Watermark Tool
-        } else if (q.includes('watermark') || q.includes('stamp') || q.includes('protect')) {
-          botBubble.innerText = "Watermark Tool:\n\nAdd custom text or visual watermark stamps onto your PDF pages to safeguard your documents from unauthorized copies.";
-        
-        // 10. Privacy & Security Information
-        } else if (q.includes('privacy') || q.includes('security') || q.includes('safe') || q.includes('lock')) {
-          botBubble.innerText = "Complete Privacy Guarantee:\n\nAll document processing happens entirely inside your local web browser session. No files are uploaded, viewed, or stored on any remote server.";
-        
-        // 11. Greetings
-        } else if (q.includes('hi') || q.includes('hello') || q.includes('hey') || q.includes('start')) {
-          botBubble.innerText = "Hello! Welcome to PDF Tool Support. How can I help you today?";
+        // 8. Greetings
+        } else if (q.includes('hi') || q.includes('hello') || q.includes('hey')) {
+          botBubble.innerText = "Hello! What would you like to know? Feel free to ask about our tools or downloaders!";
         
         // Default Response
         } else {
-          botBubble.innerText = "Thank you for reaching out! You can easily convert, compress, crop, merge, or watermark your PDF files for free. Type 'Tools Info', 'Contact Support', or 'How to Use' for details.";
+          botBubble.innerText = "I didn't quite catch that! You can ask about 'Tools Info', 'Ads & API Info', 'How to Use', or 'Contact Support' for detailed guidance.";
         }
 
         body.appendChild(botBubble);
