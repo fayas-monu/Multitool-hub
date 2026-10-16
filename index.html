@@ -23,7 +23,6 @@
       --text-muted: #64748b;
       --border: rgba(226, 232, 240, 0.8);
       --shadow-soft: 0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
-      --shadow-hover: 0 20px 35px -10px rgba(99, 102, 241, 0.2);
     }
 
     * {
@@ -303,61 +302,101 @@
       position: relative;
     }
 
-    /* Custom Functional Task-Specific Hover Animations */
-    .tool-card:hover .anim-compress { animation: compressAction 0.9s ease infinite alternate; }
-    .tool-card:hover .anim-crop { animation: cropAction 0.9s ease infinite alternate; }
-    .tool-card:hover .anim-jpgpdf { animation: convertJpgPdf 1s ease infinite; }
-    .tool-card:hover .anim-merge { animation: mergeAction 0.9s ease infinite alternate; }
-    .tool-card:hover .anim-pdfjpg { animation: convertPdfJpg 1s ease infinite; }
-    .tool-card:hover .anim-rotate { animation: rotateAction 1s linear infinite; }
-    .tool-card:hover .anim-audio { animation: audioWave 0.6s ease infinite alternate; }
-    .tool-card:hover .anim-watermark { animation: watermarkStamp 0.7s ease infinite alternate; }
-    .tool-card:hover .anim-youtube { animation: youtubePop 0.7s ease infinite alternate; }
-    .tool-card:hover .anim-insta { animation: instaPop 0.7s ease infinite alternate; }
+    /* ========================================================
+       TASK-SPECIFIC CUSTOM ANIMATIONS (ടൂളുകളുടെ ഉപയോഗം അനുസരിച്ചുള്ളവ)
+       ======================================================== */
 
-    @keyframes compressAction {
-      0% { transform: scale(1); filter: brightness(1); }
-      100% { transform: scale(0.82) rotate(-5deg); filter: brightness(1.2); }
+    /* 1. Compress PDF: ഫയൽ വലിപ്പം ചുരുങ്ങുന്ന (Shrink/Compress) എഫക്റ്റ് */
+    .tool-card:hover .anim-compress {
+      animation: compressEffect 0.8s ease-in-out infinite alternate;
     }
-    @keyframes cropAction {
-      0% { transform: scale(1) translate(0, 0); }
-      50% { transform: scale(0.95) translate(-3px, -3px); }
-      100% { transform: scale(0.95) translate(3px, 3px); }
+    @keyframes compressEffect {
+      0% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(16,185,129,0)); }
+      100% { transform: scale(0.75) rotate(-8deg); filter: drop-shadow(0 4px 12px rgba(16,185,129,0.5)); }
     }
-    @keyframes convertJpgPdf {
-      0% { transform: translateX(0) scale(1); opacity: 1; }
-      50% { transform: translateX(8px) scale(1.15); color: #0284c7; }
-      100% { transform: translateX(0) scale(1); opacity: 1; }
+
+    /* 2. Crop PDF: ബോർഡർ ക്രോപ്പ്/കട്ട് ആകുന്ന എഫക്റ്റ് */
+    .tool-card:hover .anim-crop {
+      animation: cropEffect 0.7s ease-in-out infinite alternate;
     }
-    @keyframes mergeAction {
+    @keyframes cropEffect {
+      0% { transform: scale(1); clip-path: inset(0 0 0 0); }
+      100% { transform: scale(1.1); clip-path: inset(10% 10% 10% 10%); }
+    }
+
+    /* 3. JPG to PDF: ഇമേജ് ഫയൽ കൺവെർട്ട് ആയി PDF ഫോർമാറ്റിലേക്ക് മാറുന്ന എഫക്റ്റ് */
+    .tool-card:hover .anim-jpgpdf {
+      animation: jpgPdfEffect 1.2s ease infinite;
+    }
+    @keyframes jpgPdfEffect {
+      0% { transform: translateX(0) scale(1); color: #f59e0b; }
+      50% { transform: translateX(12px) scale(1.2); color: #6366f1; }
+      100% { transform: translateX(0) scale(1); color: #f59e0b; }
+    }
+
+    /* 4. Merge PDF: രണ്ടോ അതിലധികമോ ഫയലുകൾ ഒന്നിലേക്ക് ചേരുന്ന (Merge) എഫക്റ്റ് */
+    .tool-card:hover .anim-merge {
+      animation: mergeEffect 0.9s ease-in-out infinite alternate;
+    }
+    @keyframes mergeEffect {
+      0% { transform: scale(1) translateY(0); }
+      100% { transform: scale(1.18) translateY(-4px); filter: drop-shadow(0 6px 12px rgba(99,102,241,0.4)); }
+    }
+
+    /* 5. PDF to JPG: PDF പേജുകൾ വിഭജിക്കപ്പെട്ട് ഇമേജ് ആയി പുറത്തേക്ക് വരുന്ന എഫക്റ്റ് */
+    .tool-card:hover .anim-pdfjpg {
+      animation: pdfJpgEffect 1.2s ease infinite;
+    }
+    @keyframes pdfJpgEffect {
       0% { transform: scale(1); }
-      100% { transform: scale(1.15); filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); }
+      50% { transform: scale(1.2) rotate(12deg); color: #a855f7; }
+      100% { transform: scale(1); }
     }
-    @keyframes convertPdfJpg {
-      0% { transform: scale(1) rotate(0deg); }
-      50% { transform: scale(1.15) rotate(10deg); color: #9333ea; }
-      100% { transform: scale(1) rotate(0deg); }
+
+    /* 6. Rotate PDF: പേജ് 360 ഡിഗ്രി കറങ്ങുന്ന (Rotate) എഫക്റ്റ് */
+    .tool-card:hover .anim-rotate {
+      animation: rotateEffect 1s linear infinite;
     }
-    @keyframes rotateAction {
+    @keyframes rotateEffect {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-    @keyframes audioWave {
-      0% { transform: scaleY(0.8); }
-      100% { transform: scaleY(1.25); }
+
+    /* 7. Video to MP3: സൗണ്ട് വേവ് ഡാൻസ് ചെയ്യുന്ന (Audio Extraction) എഫക്റ്റ് */
+    .tool-card:hover .anim-audio {
+      animation: audioEffect 0.5s ease-in-out infinite alternate;
     }
-    @keyframes watermarkStamp {
-      0% { transform: translateY(-5px) scale(1.1); opacity(0.8); }
-      100% { transform: translateY(2px) scale(1); opacity(1); }
+    @keyframes audioEffect {
+      0% { transform: scaleY(0.7); }
+      100% { transform: scaleY(1.35); filter: drop-shadow(0 0 8px rgba(245,158,11,0.6)); }
     }
-    @keyframes youtubePop {
-      0% { transform: scale(1); color: #ff0000; }
-      100% { transform: scale(1.25); filter: drop-shadow(0 0 10px rgba(255,0,0,0.6)); }
+
+    /* 8. Watermark: ഡോക്യുമെന്റിൽ ഒപ്പിടുന്ന/സ്റ്റാമ്പ് പതിക്കുന്ന (Stamp) എഫക്റ്റ് */
+    .tool-card:hover .anim-watermark {
+      animation: watermarkEffect 0.7s ease-in-out infinite alternate;
     }
-    @keyframes instaPop {
+    @keyframes watermarkEffect {
+      0% { transform: translateY(-6px) scale(1.15); opacity: 0.7; }
+      100% { transform: translateY(2px) scale(1); opacity: 1; }
+    }
+
+    /* 9. YouTube Downloader: യൂട്യൂബ് പ്ലേ ബട്ടൺ പൾസ് ചെയ്ത് ഡൗൺലോഡ് സിഗ്നൽ കാണിക്കുന്ന എഫക്റ്റ് */
+    .tool-card:hover .anim-youtube {
+      animation: youtubeEffect 0.8s ease-in-out infinite alternate;
+    }
+    @keyframes youtubeEffect {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.25); filter: drop-shadow(0 0 12px rgba(255,0,0,0.7)); }
+    }
+
+    /* 10. Instagram Downloader: ഇൻസ്റ്റാഗ്രാം ക്യാമറ/റീൽ ഐക്കൺ വൈബ്രേറ്റ് ചെയ്യുന്ന എഫക്റ്റ് */
+    .tool-card:hover .anim-insta {
+      animation: instaEffect 0.6s ease-in-out infinite alternate;
+    }
+    @keyframes instaEffect {
       0% { transform: scale(1) rotate(0deg); }
-      50% { transform: scale(1.2) rotate(-8deg); }
-      100% { transform: scale(1.2) rotate(8deg); }
+      50% { transform: scale(1.2) rotate(-10deg); }
+      100% { transform: scale(1.2) rotate(10deg); }
     }
 
     .tool-title {
@@ -387,7 +426,7 @@
 
     .badge-soon { background: #fffbe3; color: #d97706; border: 1px solid #fef3c7; }
 
-    /* Real Brand & Tool Icon Gradients */
+    /* Brand Gradients */
     .ic-indigo { background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); color: #ffffff; }
     .ic-cyan { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: #ffffff; }
     .ic-emerald { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; }
@@ -400,7 +439,7 @@
     .ic-yt { background: #ff0000; color: #ffffff; }
     .ic-word { background: #2b579a; color: #ffffff; }
 
-    /* Floating Chat Widget Button */
+    /* Floating Chat Widget */
     .chat-widget-btn {
       position: fixed;
       bottom: 24px;
@@ -704,54 +743,74 @@
     </div>
   </div>
 
-  <!-- Tools Grid Section with Real Logos & Task-Specific Animations -->
+  <!-- Tools Grid Section with Specific Task Animations -->
   <div class="tools-section" id="all-tools">
     <div class="tools-grid" id="toolsGrid">
+      
+      <!-- 1. Compress PDF -->
       <a href="tools/compress-pdf.html" class="tool-card" data-category="optimize">
         <div class="icon-wrapper ic-emerald"><i class="fa-solid fa-file-arrow-down anim-compress"></i></div>
         <div class="tool-title">Compress PDF</div>
         <div class="tool-desc">Reduce PDF file size while keeping high visual quality and readable text.</div>
       </a>
+
+      <!-- 2. Crop PDF -->
       <a href="tools/crop-pdf.html" class="tool-card" data-category="edit">
         <div class="icon-wrapper ic-amber"><i class="fa-solid fa-crop anim-crop"></i></div>
         <div class="tool-title">Crop PDF</div>
         <div class="tool-desc">Trim page margins or set custom frame crop dimensions easily.</div>
       </a>
+
+      <!-- 3. JPG to PDF -->
       <a href="tools/jpg-to-pdf.html" class="tool-card" data-category="convert">
         <div class="icon-wrapper ic-amber"><i class="fa-solid fa-file-image anim-jpgpdf"></i></div>
         <div class="tool-title">JPG to PDF</div>
         <div class="tool-desc">Convert JPG, PNG, and WebP images into standard PDF documents.</div>
       </a>
+
+      <!-- 4. Merge PDF -->
       <a href="tools/merge-pdf.html" class="tool-card" data-category="organize">
         <div class="icon-wrapper ic-indigo"><i class="fa-solid fa-file-circle-plus anim-merge"></i></div>
         <div class="tool-title">Merge PDF</div>
         <div class="tool-desc">Combine multiple PDF files into one single organized document.</div>
       </a>
+
+      <!-- 5. PDF to JPG -->
       <a href="tools/pdf-to-jpg.html" class="tool-card" data-category="convert">
         <div class="icon-wrapper ic-purple"><i class="fa-solid fa-file-lines anim-pdfjpg"></i></div>
         <div class="tool-title">PDF to JPG</div>
         <div class="tool-desc">Extract embedded images or export all PDF pages into high-res JPG files.</div>
       </a>
+
+      <!-- 6. Rotate PDF -->
       <a href="tools/rotate-pdf.html" class="tool-card" data-category="organize">
         <div class="icon-wrapper ic-purple"><i class="fa-solid fa-arrows-rotate anim-rotate"></i></div>
         <div class="tool-title">Rotate PDF</div>
         <div class="tool-desc">Rotate pages to portrait or landscape orientations smoothly.</div>
       </a>
+
+      <!-- 7. Video to MP3 -->
       <a href="tools/video-to-mp3.html" class="tool-card" data-category="media">
         <div class="icon-wrapper ic-amber"><i class="fa-solid fa-file-audio anim-audio"></i></div>
         <div class="tool-title">Video to MP3</div>
         <div class="tool-desc">Extract high-quality audio tracks from video files in your browser.</div>
       </a>
+
+      <!-- 8. Watermark -->
       <a href="tools/watermark.html" class="tool-card" data-category="edit">
         <div class="icon-wrapper ic-teal"><i class="fa-solid fa-certificate anim-watermark"></i></div>
         <div class="tool-title">Watermark</div>
         <div class="tool-desc">Add image or custom text watermarks onto PDF pages for protection.</div>
       </a>
+
+      <!-- 9. YouTube Downloader -->
       <a href="tools/youtube-downloader.html" class="tool-card" data-category="media">
         <div class="icon-wrapper ic-yt"><i class="fa-brands fa-youtube anim-youtube"></i></div>
         <div class="tool-title">YouTube Downloader</div>
         <div class="tool-desc">Download public online video and audio streams quickly and easily.</div>
       </a>
+
+      <!-- 10. Instagram Downloader -->
       <a href="tools/instagram-downloader.html" class="tool-card" data-category="media">
         <div class="icon-wrapper ic-ig"><i class="fa-brands fa-instagram anim-insta"></i></div>
         <div class="tool-title">Instagram Downloader</div>
@@ -783,10 +842,11 @@
         <div class="tool-title">Protect PDF</div>
         <div class="tool-desc">Encrypt sensitive PDF documents with custom secure passwords.</div>
       </div>
+
     </div>
   </div>
 
-  <!-- Floating Chat Widget Button with Notification Dot & Vibration -->
+  <!-- Floating Chat Widget Button -->
   <div class="chat-widget-btn" id="chatWidgetBtn" onclick="toggleChatPopup()" title="Chat with PDF Tool Assistant">
     <div class="notif-dot" id="notifDot"></div>
     <svg viewBox="0 0 100 100" width="46" height="46" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));">
@@ -812,7 +872,7 @@
     </svg>
   </div>
 
-  <!-- Popup Chat Window (English Bot Responses) -->
+  <!-- Popup Chat Window -->
   <div class="chat-popup-modal" id="chatPopup">
     <div class="chat-popup-header">
       <span>PDF Tool Assistant</span>
@@ -877,28 +937,22 @@
   </div>
 
   <script>
-    // 10 Seconds Notification & Vibration Trigger
     setTimeout(() => {
       const btn = document.getElementById('chatWidgetBtn');
       const dot = document.getElementById('notifDot');
       if (btn && dot) {
         dot.style.display = 'block';
         btn.classList.add('vibrate');
-        setTimeout(() => {
-          btn.classList.remove('vibrate');
-        }, 3000);
+        setTimeout(() => { btn.classList.remove('vibrate'); }, 3000);
       }
     }, 10000);
 
-    // Live Search
     function searchTools() {
       const input = document.getElementById('toolSearch').value.toLowerCase();
       const cards = document.querySelectorAll('.tool-card');
-
       cards.forEach(card => {
         const title = card.querySelector('.tool-title').innerText.toLowerCase();
         const desc = card.querySelector('.tool-desc').innerText.toLowerCase();
-        
         if (title.includes(input) || desc.includes(input)) {
           card.style.display = 'flex';
         } else {
@@ -907,7 +961,6 @@
       });
     }
 
-    // Category Filter
     function filterTools(category, element) {
       const tabs = document.querySelectorAll('.tab-btn');
       tabs.forEach(tab => tab.classList.remove('active'));
@@ -930,14 +983,11 @@
       openModal('comingSoonModal');
     }
 
-    // Popup Chat Functions (English Responses)
     function toggleChatPopup() {
       const popup = document.getElementById('chatPopup');
       const dot = document.getElementById('notifDot');
       popup.style.display = (popup.style.display === 'flex') ? 'none' : 'flex';
-      if (popup.style.display === 'flex') {
-        dot.style.display = 'none';
-      }
+      if (popup.style.display === 'flex') { dot.style.display = 'none'; }
     }
 
     function quickSend(text) {
@@ -946,9 +996,7 @@
     }
 
     function handleChatEnter(e) {
-      if (e.key === 'Enter') {
-        sendChatMessage();
-      }
+      if (e.key === 'Enter') { sendChatMessage(); }
     }
 
     function sendChatMessage() {
@@ -957,7 +1005,6 @@
       if (!text) return;
 
       const body = document.getElementById('chatBody');
-      
       const userBubble = document.createElement('div');
       userBubble.className = 'chat-bubble user';
       userBubble.innerText = text;
@@ -969,7 +1016,6 @@
       setTimeout(() => {
         const botBubble = document.createElement('div');
         botBubble.className = 'chat-bubble bot';
-        
         const q = text.toLowerCase();
         
         if (q.includes('creator') || q.includes('who made') || q.includes('owner') || q.includes('developer') || q.includes('fayas') || q.includes('contact') || q.includes('support') || q.includes('help')) {
