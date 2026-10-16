@@ -253,7 +253,7 @@
       gap: 20px;
     }
 
-    /* AI / Modern Glowing Icon Card Design */
+    /* Tool Card Design */
     .tool-card {
       background: var(--card-bg);
       border-radius: 20px;
@@ -299,54 +299,65 @@
       margin-bottom: 18px;
       font-size: 26px;
       transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-      box-shadow: 0 10px 20px rgba(99, 102, 241, 0.15);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
       position: relative;
     }
 
-    /* Specific Unique Icon Animations on Hover */
-    .tool-card:hover .fa-compress { animation: compressAnim 0.8s ease infinite alternate; }
-    .tool-card:hover .fa-crop-simple { animation: cropAnim 0.8s ease infinite alternate; }
-    .tool-card:hover .fa-images, .tool-card:hover .fa-file-image { animation: bounceAnim 0.8s ease infinite; }
-    .tool-card:hover .fa-object-group { animation: pulseAnim 0.8s ease infinite alternate; }
-    .tool-card:hover .fa-rotate-right { animation: spinAnim 1.2s linear infinite; }
-    .tool-card:hover .fa-file-audio { animation: waveAnim 0.8s ease infinite alternate; }
-    .tool-card:hover .fa-stamp { animation: stampAnim 0.6s ease infinite alternate; }
-    .tool-card:hover .fa-youtube, .tool-card:hover .fa-instagram { animation: popAnim 0.6s ease infinite alternate; }
+    /* Custom Functional Task-Specific Hover Animations */
+    .tool-card:hover .anim-compress { animation: compressAction 0.9s ease infinite alternate; }
+    .tool-card:hover .anim-crop { animation: cropAction 0.9s ease infinite alternate; }
+    .tool-card:hover .anim-jpgpdf { animation: convertJpgPdf 1s ease infinite; }
+    .tool-card:hover .anim-merge { animation: mergeAction 0.9s ease infinite alternate; }
+    .tool-card:hover .anim-pdfjpg { animation: convertPdfJpg 1s ease infinite; }
+    .tool-card:hover .anim-rotate { animation: rotateAction 1s linear infinite; }
+    .tool-card:hover .anim-audio { animation: audioWave 0.6s ease infinite alternate; }
+    .tool-card:hover .anim-watermark { animation: watermarkStamp 0.7s ease infinite alternate; }
+    .tool-card:hover .anim-youtube { animation: youtubePop 0.7s ease infinite alternate; }
+    .tool-card:hover .anim-insta { animation: instaPop 0.7s ease infinite alternate; }
 
-    @keyframes compressAnim {
+    @keyframes compressAction {
+      0% { transform: scale(1); filter: brightness(1); }
+      100% { transform: scale(0.82) rotate(-5deg); filter: brightness(1.2); }
+    }
+    @keyframes cropAction {
+      0% { transform: scale(1) translate(0, 0); }
+      50% { transform: scale(0.95) translate(-3px, -3px); }
+      100% { transform: scale(0.95) translate(3px, 3px); }
+    }
+    @keyframes convertJpgPdf {
+      0% { transform: translateX(0) scale(1); opacity: 1; }
+      50% { transform: translateX(8px) scale(1.15); color: #0284c7; }
+      100% { transform: translateX(0) scale(1); opacity: 1; }
+    }
+    @keyframes mergeAction {
       0% { transform: scale(1); }
-      100% { transform: scale(0.82); }
+      100% { transform: scale(1.15); filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); }
     }
-    @keyframes cropAnim {
-      0% { transform: translate(0, 0); }
-      50% { transform: translate(-2px, -2px); }
-      100% { transform: translate(2px, 2px); }
+    @keyframes convertPdfJpg {
+      0% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.15) rotate(10deg); color: #9333ea; }
+      100% { transform: scale(1) rotate(0deg); }
     }
-    @keyframes bounceAnim {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
-    }
-    @keyframes pulseAnim {
-      0% { transform: scale(1); }
-      100% { transform: scale(1.15); }
-    }
-    @keyframes spinAnim {
+    @keyframes rotateAction {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-    @keyframes waveAnim {
-      0% { transform: skewX(0deg); }
-      50% { transform: skewX(-12deg); }
-      100% { transform: skewX(12deg); }
+    @keyframes audioWave {
+      0% { transform: scaleY(0.8); }
+      100% { transform: scaleY(1.25); }
     }
-    @keyframes stampAnim {
-      0% { transform: translateY(-4px) scale(1.1); }
-      100% { transform: translateY(0px) scale(1); }
+    @keyframes watermarkStamp {
+      0% { transform: translateY(-5px) scale(1.1); opacity(0.8); }
+      100% { transform: translateY(2px) scale(1); opacity(1); }
     }
-    @keyframes popAnim {
+    @keyframes youtubePop {
+      0% { transform: scale(1); color: #ff0000; }
+      100% { transform: scale(1.25); filter: drop-shadow(0 0 10px rgba(255,0,0,0.6)); }
+    }
+    @keyframes instaPop {
       0% { transform: scale(1) rotate(0deg); }
-      50% { transform: scale(1.18) rotate(-6deg); }
-      100% { transform: scale(1.18) rotate(6deg); }
+      50% { transform: scale(1.2) rotate(-8deg); }
+      100% { transform: scale(1.2) rotate(8deg); }
     }
 
     .tool-title {
@@ -376,7 +387,7 @@
 
     .badge-soon { background: #fffbe3; color: #d97706; border: 1px solid #fef3c7; }
 
-    /* AI Style Gradients for Icons */
+    /* Real Brand & Tool Icon Gradients */
     .ic-indigo { background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); color: #ffffff; }
     .ic-cyan { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: #ffffff; }
     .ic-emerald { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; }
@@ -386,8 +397,10 @@
     .ic-teal { background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); color: #ffffff; }
     .ic-blue { background: linear-gradient(135deg, #3b82f6 100%, #1d4ed8 100%); color: #ffffff; }
     .ic-ig { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #ffffff; }
+    .ic-yt { background: #ff0000; color: #ffffff; }
+    .ic-word { background: #2b579a; color: #ffffff; }
 
-    /* Animated Cute Monster Floating Chat Button */
+    /* Floating Chat Widget Button */
     .chat-widget-btn {
       position: fixed;
       bottom: 24px;
@@ -691,56 +704,56 @@
     </div>
   </div>
 
-  <!-- Tools Grid Section with Animated AI Icons -->
+  <!-- Tools Grid Section with Real Logos & Task-Specific Animations -->
   <div class="tools-section" id="all-tools">
     <div class="tools-grid" id="toolsGrid">
       <a href="tools/compress-pdf.html" class="tool-card" data-category="optimize">
-        <div class="icon-wrapper ic-emerald"><i class="fa-solid fa-compress"></i></div>
+        <div class="icon-wrapper ic-emerald"><i class="fa-solid fa-file-arrow-down anim-compress"></i></div>
         <div class="tool-title">Compress PDF</div>
         <div class="tool-desc">Reduce PDF file size while keeping high visual quality and readable text.</div>
       </a>
       <a href="tools/crop-pdf.html" class="tool-card" data-category="edit">
-        <div class="icon-wrapper ic-amber"><i class="fa-solid fa-crop-simple"></i></div>
+        <div class="icon-wrapper ic-amber"><i class="fa-solid fa-crop anim-crop"></i></div>
         <div class="tool-title">Crop PDF</div>
         <div class="tool-desc">Trim page margins or set custom frame crop dimensions easily.</div>
       </a>
       <a href="tools/jpg-to-pdf.html" class="tool-card" data-category="convert">
-        <div class="icon-wrapper ic-amber"><i class="fa-solid fa-images"></i></div>
+        <div class="icon-wrapper ic-amber"><i class="fa-solid fa-file-image anim-jpgpdf"></i></div>
         <div class="tool-title">JPG to PDF</div>
         <div class="tool-desc">Convert JPG, PNG, and WebP images into standard PDF documents.</div>
       </a>
       <a href="tools/merge-pdf.html" class="tool-card" data-category="organize">
-        <div class="icon-wrapper ic-indigo"><i class="fa-solid fa-object-group"></i></div>
+        <div class="icon-wrapper ic-indigo"><i class="fa-solid fa-file-circle-plus anim-merge"></i></div>
         <div class="tool-title">Merge PDF</div>
         <div class="tool-desc">Combine multiple PDF files into one single organized document.</div>
       </a>
       <a href="tools/pdf-to-jpg.html" class="tool-card" data-category="convert">
-        <div class="icon-wrapper ic-purple"><i class="fa-solid fa-file-image"></i></div>
+        <div class="icon-wrapper ic-purple"><i class="fa-solid fa-file-lines anim-pdfjpg"></i></div>
         <div class="tool-title">PDF to JPG</div>
         <div class="tool-desc">Extract embedded images or export all PDF pages into high-res JPG files.</div>
       </a>
       <a href="tools/rotate-pdf.html" class="tool-card" data-category="organize">
-        <div class="icon-wrapper ic-purple"><i class="fa-solid fa-rotate-right"></i></div>
+        <div class="icon-wrapper ic-purple"><i class="fa-solid fa-arrows-rotate anim-rotate"></i></div>
         <div class="tool-title">Rotate PDF</div>
         <div class="tool-desc">Rotate pages to portrait or landscape orientations smoothly.</div>
       </a>
       <a href="tools/video-to-mp3.html" class="tool-card" data-category="media">
-        <div class="icon-wrapper ic-amber"><i class="fa-solid fa-file-audio"></i></div>
+        <div class="icon-wrapper ic-amber"><i class="fa-solid fa-file-audio anim-audio"></i></div>
         <div class="tool-title">Video to MP3</div>
         <div class="tool-desc">Extract high-quality audio tracks from video files in your browser.</div>
       </a>
       <a href="tools/watermark.html" class="tool-card" data-category="edit">
-        <div class="icon-wrapper ic-teal"><i class="fa-solid fa-stamp"></i></div>
+        <div class="icon-wrapper ic-teal"><i class="fa-solid fa-certificate anim-watermark"></i></div>
         <div class="tool-title">Watermark</div>
         <div class="tool-desc">Add image or custom text watermarks onto PDF pages for protection.</div>
       </a>
       <a href="tools/youtube-downloader.html" class="tool-card" data-category="media">
-        <div class="icon-wrapper ic-rose"><i class="fa-brands fa-youtube"></i></div>
+        <div class="icon-wrapper ic-yt"><i class="fa-brands fa-youtube anim-youtube"></i></div>
         <div class="tool-title">YouTube Downloader</div>
         <div class="tool-desc">Download public online video and audio streams quickly and easily.</div>
       </a>
       <a href="tools/instagram-downloader.html" class="tool-card" data-category="media">
-        <div class="icon-wrapper ic-ig"><i class="fa-brands fa-instagram"></i></div>
+        <div class="icon-wrapper ic-ig"><i class="fa-brands fa-instagram anim-insta"></i></div>
         <div class="tool-title">Instagram Downloader</div>
         <div class="tool-desc">Download public Instagram reels, videos, and stories instantly.</div>
       </a>
@@ -748,13 +761,13 @@
       <!-- Coming Soon Tools -->
       <div class="tool-card" data-category="edit" onclick="openComingSoon('PDF Editor')">
         <span class="badge badge-soon">Coming Soon</span>
-        <div class="icon-wrapper ic-indigo"><i class="fa-solid fa-pen-to-square"></i></div>
+        <div class="icon-wrapper ic-indigo"><i class="fa-solid fa-pen-nib"></i></div>
         <div class="tool-title">PDF Editor</div>
         <div class="tool-desc">View, manage, and edit your PDF files securely directly in your browser.</div>
       </div>
       <div class="tool-card" data-category="convert" onclick="openComingSoon('PDF to Word')">
         <span class="badge badge-soon">Coming Soon</span>
-        <div class="icon-wrapper ic-cyan"><i class="fa-solid fa-file-word"></i></div>
+        <div class="icon-wrapper ic-word"><i class="fa-solid fa-file-word"></i></div>
         <div class="tool-title">PDF to Word</div>
         <div class="tool-desc">Convert PDF files into editable DOCX Microsoft Word documents.</div>
       </div>
