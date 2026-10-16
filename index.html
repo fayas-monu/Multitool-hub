@@ -46,7 +46,7 @@
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
-      padding: 16px 40px;
+      padding: 16px 30px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -58,8 +58,8 @@
     .logo-container {
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-size: 20px;
+      gap: 10px;
+      font-size: 18px;
       font-weight: 800;
       color: var(--text-main);
       text-decoration: none;
@@ -67,15 +67,15 @@
     }
 
     .logo-icon {
-      width: 42px;
-      height: 42px;
+      width: 38px;
+      height: 38px;
       background: var(--primary-gradient);
-      border-radius: 12px;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #ffffff;
-      font-size: 20px;
+      font-size: 18px;
       box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
       animation: pulseLogo 3s infinite ease-in-out;
     }
@@ -87,7 +87,7 @@
 
     nav {
       display: flex;
-      gap: 24px;
+      gap: 18px;
       align-items: center;
     }
 
@@ -95,7 +95,7 @@
       text-decoration: none;
       color: var(--text-muted);
       font-weight: 600;
-      font-size: 14px;
+      font-size: 13.5px;
       transition: all 0.2s;
       cursor: pointer;
     }
@@ -106,7 +106,7 @@
 
     .hero {
       text-align: center;
-      padding: 60px 20px 40px 20px;
+      padding: 50px 20px 30px 20px;
       background: radial-gradient(circle at 50% 0%, #eef2ff 0%, var(--bg) 75%);
     }
 
@@ -116,21 +116,21 @@
       gap: 8px;
       background: #ffffff;
       color: var(--primary);
-      padding: 8px 18px;
+      padding: 7px 16px;
       border-radius: 30px;
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 700;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
       border: 1px solid rgba(99, 102, 241, 0.2);
       box-shadow: var(--shadow-soft);
     }
 
     .hero h1 {
-      font-size: 44px;
+      font-size: 36px;
       font-weight: 800;
       color: var(--text-main);
-      margin-bottom: 16px;
-      letter-spacing: -1.2px;
+      margin-bottom: 14px;
+      letter-spacing: -1px;
       line-height: 1.2;
     }
 
@@ -141,26 +141,26 @@
     }
 
     .hero p {
-      font-size: 16px;
+      font-size: 15px;
       color: var(--text-muted);
-      max-width: 680px;
-      margin: 0 auto 32px auto;
-      line-height: 1.6;
+      max-width: 620px;
+      margin: 0 auto 28px auto;
+      line-height: 1.5;
     }
 
     .search-wrapper {
-      max-width: 560px;
-      margin: 0 auto 30px auto;
+      max-width: 520px;
+      margin: 0 auto 24px auto;
       position: relative;
     }
 
     .search-wrapper input {
       width: 100%;
-      padding: 16px 20px 16px 52px;
-      border-radius: 16px;
+      padding: 14px 18px 14px 48px;
+      border-radius: 14px;
       border: 1px solid var(--border);
       background: #ffffff;
-      font-size: 15px;
+      font-size: 14.5px;
       outline: none;
       box-shadow: var(--shadow-soft);
       transition: all 0.25s;
@@ -173,26 +173,27 @@
 
     .search-wrapper i {
       position: absolute;
-      left: 20px;
+      left: 18px;
       top: 50%;
       transform: translateY(-50%);
       color: #94a3b8;
-      font-size: 18px;
+      font-size: 16px;
     }
 
     .filter-tabs {
       display: flex;
       justify-content: center;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: wrap;
+      padding: 0 10px;
     }
 
     .tab-btn {
       background: #ffffff;
       border: 1px solid var(--border);
-      padding: 9px 20px;
+      padding: 8px 16px;
       border-radius: 30px;
-      font-size: 13.5px;
+      font-size: 13px;
       font-weight: 600;
       color: var(--text-muted);
       cursor: pointer;
@@ -209,8 +210,8 @@
 
     .features-ribbon {
       background: #ffffff;
-      padding: 22px;
-      margin-bottom: 45px;
+      padding: 18px;
+      margin-bottom: 35px;
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
     }
@@ -219,8 +220,8 @@
       max-width: 1100px;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
       text-align: center;
     }
 
@@ -228,35 +229,35 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      font-size: 14px;
+      gap: 8px;
+      font-size: 13.5px;
       font-weight: 700;
       color: var(--text-main);
     }
 
     .ribbon-item i {
-      font-size: 18px;
+      font-size: 16px;
       color: var(--primary);
     }
 
     .tools-section {
       max-width: 1320px;
       margin: 0 auto;
-      padding: 0 20px 80px 20px;
+      padding: 0 20px 60px 20px;
       width: 100%;
     }
 
     .tools-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
       gap: 20px;
     }
 
     /* Tool Card Design */
     .tool-card {
       background: var(--card-bg);
-      border-radius: 20px;
-      padding: 26px 22px;
+      border-radius: 18px;
+      padding: 22px 18px;
       text-decoration: none;
       color: inherit;
       border: 1px solid var(--border);
@@ -279,8 +280,8 @@
     }
 
     .tool-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 22px 45px -12px rgba(99, 102, 241, 0.35);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px -12px rgba(99, 102, 241, 0.3);
       border-color: rgba(99, 102, 241, 0.6);
     }
 
@@ -289,71 +290,78 @@
     }
 
     .icon-wrapper {
-      width: 60px;
-      height: 60px;
-      border-radius: 18px;
+      width: 55px;
+      height: 55px;
+      border-radius: 15px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 18px;
-      font-size: 26px;
-      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+      margin-bottom: 15px;
+      font-size: 24px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
       position: relative;
     }
 
     /* ========================================================
-       TASK-SPECIFIC CUSTOM ANIMATIONS (ടൂളുകളുടെ ഉപയോഗം അനുസരിച്ചുള്ളവ)
+       REAL TASK-SPECIFIC ACTION ANIMATIONS (ഓരോ ടൂളിന്റെയും പ്രവൃത്തി)
        ======================================================== */
 
-    /* 1. Compress PDF: ഫയൽ വലിപ്പം ചുരുങ്ങുന്ന (Shrink/Compress) എഫക്റ്റ് */
-    .tool-card:hover .anim-compress {
-      animation: compressEffect 0.8s ease-in-out infinite alternate;
+    /* 1. Compress PDF: കട്ടിയുള്ള വലിയ ഡോക്യുമെന്റ് ചെറുതായി ചുരുങ്ങുന്ന ആനിമേഷൻ */
+    .tool-card:hover .anim-compress-box {
+      animation: compressBoxAnim 1.2s ease infinite alternate;
     }
-    @keyframes compressEffect {
-      0% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(16,185,129,0)); }
-      100% { transform: scale(0.75) rotate(-8deg); filter: drop-shadow(0 4px 12px rgba(16,185,129,0.5)); }
+    @keyframes compressBoxAnim {
+      0% { transform: scale(1); background: #10b981; color: #fff; border-radius: 6px; }
+      50% { transform: scale(0.7) skewX(-8deg); background: #059669; color: #fff; border-radius: 14px; }
+      100% { transform: scale(0.55); background: #047857; color: #fff; border-radius: 20px; }
     }
 
-    /* 2. Crop PDF: ബോർഡർ ക്രോപ്പ്/കട്ട് ആകുന്ന എഫക്റ്റ് */
+    /* 2. Crop PDF: ബോർഡർ ക്രോപ്പ്/കട്ട് ആകുന്ന ആനിമേഷൻ */
     .tool-card:hover .anim-crop {
       animation: cropEffect 0.7s ease-in-out infinite alternate;
     }
     @keyframes cropEffect {
       0% { transform: scale(1); clip-path: inset(0 0 0 0); }
-      100% { transform: scale(1.1); clip-path: inset(10% 10% 10% 10%); }
+      100% { transform: scale(1.1); clip-path: inset(12% 12% 12% 12%); }
     }
 
-    /* 3. JPG to PDF: ഇമേജ് ഫയൽ കൺവെർട്ട് ആയി PDF ഫോർമാറ്റിലേക്ക് മാറുന്ന എഫക്റ്റ് */
-    .tool-card:hover .anim-jpgpdf {
-      animation: jpgPdfEffect 1.2s ease infinite;
+    /* 3. JPG to PDF: ചിത്രം (JPG) അകത്തേക്ക് പോയി PDF ഡോക്യുമെന്റ് ആയി മാറുന്ന ആനിമേഷൻ */
+    .tool-card:hover .anim-jpg-pdf {
+      animation: jpgPdfAnim 1.4s ease infinite;
     }
-    @keyframes jpgPdfEffect {
-      0% { transform: translateX(0) scale(1); color: #f59e0b; }
-      50% { transform: translateX(12px) scale(1.2); color: #6366f1; }
-      100% { transform: translateX(0) scale(1); color: #f59e0b; }
-    }
-
-    /* 4. Merge PDF: രണ്ടോ അതിലധികമോ ഫയലുകൾ ഒന്നിലേക്ക് ചേരുന്ന (Merge) എഫക്റ്റ് */
-    .tool-card:hover .anim-merge {
-      animation: mergeEffect 0.9s ease-in-out infinite alternate;
-    }
-    @keyframes mergeEffect {
-      0% { transform: scale(1) translateY(0); }
-      100% { transform: scale(1.18) translateY(-4px); filter: drop-shadow(0 6px 12px rgba(99,102,241,0.4)); }
+    @keyframes jpgPdfAnim {
+      0% { transform: translateX(-10px); opacity: 0.5; color: #f59e0b; }
+      50% { transform: translateX(0px); opacity: 1; color: #6366f1; }
+      100% { transform: translateX(10px); opacity: 0.5; color: #ef4444; }
     }
 
-    /* 5. PDF to JPG: PDF പേജുകൾ വിഭജിക്കപ്പെട്ട് ഇമേജ് ആയി പുറത്തേക്ക് വരുന്ന എഫക്റ്റ് */
+    /* 4. Merge PDF: രണ്ടോ അതിലധികമോ ഫയലുകൾ വശങ്ങളിൽ നിന്ന് വന്ന് ഒന്നായി ഒട്ടിച്ചേരുന്ന ആനിമേഷൻ */
+    .tool-card:hover .anim-merge-left {
+      animation: mergeLeft 0.9s ease infinite alternate;
+    }
+    .tool-card:hover .anim-merge-right {
+      animation: mergeRight 0.9s ease infinite alternate;
+    }
+    @keyframes mergeLeft {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(8px) scale(1.1); color: #4f46e5; }
+    }
+    @keyframes mergeRight {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-8px) scale(1.1); color: #06b6d4; }
+    }
+
+    /* 5. PDF to JPG: പേജുകൾ വിഭജിക്കപ്പെട്ട് ഇമേജ് ആയി പുറത്തേക്ക് വരുന്ന ആനിമേഷൻ */
     .tool-card:hover .anim-pdfjpg {
       animation: pdfJpgEffect 1.2s ease infinite;
     }
     @keyframes pdfJpgEffect {
       0% { transform: scale(1); }
-      50% { transform: scale(1.2) rotate(12deg); color: #a855f7; }
+      50% { transform: scale(1.15) rotate(10deg); color: #a855f7; }
       100% { transform: scale(1); }
     }
 
-    /* 6. Rotate PDF: പേജ് 360 ഡിഗ്രി കറങ്ങുന്ന (Rotate) എഫക്റ്റ് */
+    /* 6. Rotate PDF: പേജ് 360 ഡിഗ്രി കറങ്ങുന്ന ആനിമേഷൻ */
     .tool-card:hover .anim-rotate {
       animation: rotateEffect 1s linear infinite;
     }
@@ -362,71 +370,71 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* 7. Video to MP3: സൗണ്ട് വേവ് ഡാൻസ് ചെയ്യുന്ന (Audio Extraction) എഫക്റ്റ് */
-    .tool-card:hover .anim-audio {
-      animation: audioEffect 0.5s ease-in-out infinite alternate;
-    }
-    @keyframes audioEffect {
-      0% { transform: scaleY(0.7); }
-      100% { transform: scaleY(1.35); filter: drop-shadow(0 0 8px rgba(245,158,11,0.6)); }
+    /* 7. Video to MP3: സൗണ്ട് വേവ് തരംഗങ്ങൾ ഡാൻസ് ചെയ്യുന്ന ആനിമേഷൻ */
+    .tool-card:hover .anim-wave-1 { animation: waveAnim 0.4s ease infinite alternate; }
+    .tool-card:hover .anim-wave-2 { animation: waveAnim 0.7s ease infinite alternate; }
+    .tool-card:hover .anim-wave-3 { animation: waveAnim 0.5s ease infinite alternate; }
+    @keyframes waveAnim {
+      0% { height: 6px; }
+      100% { height: 28px; background: #f59e0b; }
     }
 
-    /* 8. Watermark: ഡോക്യുമെന്റിൽ ഒപ്പിടുന്ന/സ്റ്റാമ്പ് പതിക്കുന്ന (Stamp) എഫക്റ്റ് */
+    /* 8. Watermark: സ്റ്റാമ്പ് പതിക്കുന്ന ആനിമേഷൻ */
     .tool-card:hover .anim-watermark {
       animation: watermarkEffect 0.7s ease-in-out infinite alternate;
     }
     @keyframes watermarkEffect {
-      0% { transform: translateY(-6px) scale(1.15); opacity: 0.7; }
+      0% { transform: translateY(-4px) scale(1.1); opacity: 0.7; }
       100% { transform: translateY(2px) scale(1); opacity: 1; }
     }
 
-    /* 9. YouTube Downloader: യൂട്യൂബ് പ്ലേ ബട്ടൺ പൾസ് ചെയ്ത് ഡൗൺലോഡ് സിഗ്നൽ കാണിക്കുന്ന എഫക്റ്റ് */
+    /* 9. YouTube Downloader: യൂട്യൂബ് ഐക്കൺ പൾസ് ആനിമേഷൻ */
     .tool-card:hover .anim-youtube {
-      animation: youtubeEffect 0.8s ease-in-out infinite alternate;
+      animation: youtubeEffect 0.7s ease-in-out infinite alternate;
     }
     @keyframes youtubeEffect {
-      0% { transform: scale(1); }
-      100% { transform: scale(1.25); filter: drop-shadow(0 0 12px rgba(255,0,0,0.7)); }
+      0% { transform: scale(1); color: #ff0000; }
+      100% { transform: scale(1.2); filter: drop-shadow(0 0 8px rgba(255,0,0,0.6)); }
     }
 
-    /* 10. Instagram Downloader: ഇൻസ്റ്റാഗ്രാം ക്യാമറ/റീൽ ഐക്കൺ വൈബ്രേറ്റ് ചെയ്യുന്ന എഫക്റ്റ് */
+    /* 10. Instagram Downloader: ഇൻസ്റ്റാഗ്രാം ഐക്കൺ വൈബ്രേറ്റ് ആനിമേഷൻ */
     .tool-card:hover .anim-insta {
       animation: instaEffect 0.6s ease-in-out infinite alternate;
     }
     @keyframes instaEffect {
       0% { transform: scale(1) rotate(0deg); }
-      50% { transform: scale(1.2) rotate(-10deg); }
-      100% { transform: scale(1.2) rotate(10deg); }
+      50% { transform: scale(1.15) rotate(-8deg); }
+      100% { transform: scale(1.15) rotate(8deg); }
     }
 
     .tool-title {
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 700;
       color: var(--text-main);
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .tool-desc {
-      font-size: 13px;
+      font-size: 12.5px;
       color: var(--text-muted);
-      line-height: 1.5;
+      line-height: 1.45;
     }
 
     .badge {
       position: absolute;
-      top: 18px;
-      right: 18px;
-      font-size: 9.5px;
+      top: 16px;
+      right: 16px;
+      font-size: 9px;
       font-weight: 800;
-      padding: 4px 10px;
+      padding: 3px 8px;
       border-radius: 20px;
       text-transform: uppercase;
-      letter-spacing: 0.6px;
+      letter-spacing: 0.5px;
     }
 
     .badge-soon { background: #fffbe3; color: #d97706; border: 1px solid #fef3c7; }
 
-    /* Brand Gradients */
+    /* Gradients */
     .ic-indigo { background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); color: #ffffff; }
     .ic-cyan { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: #ffffff; }
     .ic-emerald { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; }
@@ -439,42 +447,84 @@
     .ic-yt { background: #ff0000; color: #ffffff; }
     .ic-word { background: #2b579a; color: #ffffff; }
 
+    /* Mobile Responsive Fixes (മൊബൈൽ വ്യൂ പൂർണ്ണമായി ശരിയാക്കാൻ) */
+    @media (max-width: 600px) {
+      header {
+        padding: 12px 16px;
+      }
+      .logo-container {
+        font-size: 16px;
+      }
+      .logo-icon {
+        width: 34px;
+        height: 34px;
+        font-size: 16px;
+      }
+      .hero {
+        padding: 40px 16px 24px 16px;
+      }
+      .hero h1 {
+        font-size: 26px;
+      }
+      .hero p {
+        font-size: 13.5px;
+      }
+      .tools-grid {
+        grid-template-columns: repeat(2, 1fr); /* മൊബൈലിൽ 2 കോളം ലേഔട്ട് */
+        gap: 12px;
+      }
+      .tool-card {
+        padding: 16px 12px;
+        border-radius: 14px;
+      }
+      .icon-wrapper {
+        width: 44px;
+        height: 44px;
+        font-size: 18px;
+        margin-bottom: 10px;
+      }
+      .tool-title {
+        font-size: 13.5px;
+      }
+      .tool-desc {
+        font-size: 11px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+    }
+
     /* Floating Chat Widget */
     .chat-widget-btn {
       position: fixed;
-      bottom: 24px;
-      right: 24px;
-      width: 68px;
-      height: 68px;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
       background: radial-gradient(circle, #60a5fa 0%, #3b82f6 100%);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 12px 30px rgba(59, 130, 246, 0.4);
+      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
       z-index: 3000;
       animation: monsterFloat 3s ease-in-out infinite;
       border: 3px solid #ffffff;
-      overflow: hidden;
     }
 
     @keyframes monsterFloat {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-8px) rotate(2deg); }
-    }
-
-    .chat-widget-btn:hover {
-      transform: scale(1.1) rotate(-3deg);
-      box-shadow: 0 18px 35px rgba(59, 130, 246, 0.6);
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
     }
 
     .notif-dot {
       position: absolute;
-      top: 4px;
-      right: 4px;
-      width: 16px;
-      height: 16px;
+      top: 3px;
+      right: 3px;
+      width: 14px;
+      height: 14px;
       background: #ef4444;
       border: 2px solid #ffffff;
       border-radius: 50%;
@@ -482,29 +532,27 @@
     }
 
     @keyframes vibrateAnim {
-      0% { transform: translate(0, 0) rotate(0deg); }
-      20% { transform: translate(-3px, 2px) rotate(-5deg); }
-      40% { transform: translate(3px, -2px) rotate(5deg); }
-      60% { transform: translate(-3px, -2px) rotate(-3deg); }
-      80% { transform: translate(3px, 2px) rotate(3deg); }
-      100% { transform: translate(0, 0) rotate(0deg); }
+      0% { transform: translate(0, 0); }
+      20% { transform: translate(-2px, 2px); }
+      40% { transform: translate(2px, -2px); }
+      60% { transform: translate(-2px, -2px); }
+      80% { transform: translate(2px, 2px); }
+      100% { transform: translate(0, 0); }
     }
 
-    .vibrate {
-      animation: vibrateAnim 0.5s ease-in-out infinite;
-    }
+    .vibrate { animation: vibrateAnim 0.4s ease-in-out infinite; }
 
     /* Popup Chat Modal */
     .chat-popup-modal {
       display: none;
       position: fixed;
-      bottom: 104px;
-      right: 24px;
-      width: 380px;
-      height: 520px;
+      bottom: 92px;
+      right: 16px;
+      width: 340px;
+      height: 480px;
       background: #ffffff;
-      border-radius: 20px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      border-radius: 18px;
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.2);
       z-index: 4000;
       flex-direction: column;
       overflow: hidden;
@@ -514,30 +562,30 @@
     .chat-popup-header {
       background: var(--primary-gradient);
       color: #fff;
-      padding: 16px 20px;
+      padding: 14px 18px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       font-weight: 700;
-      font-size: 15px;
+      font-size: 14.5px;
     }
 
     .chat-popup-body {
       flex: 1;
-      padding: 16px;
+      padding: 14px;
       overflow-y: auto;
       background: #f8fafc;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
 
     .chat-bubble {
       max-width: 85%;
-      padding: 12px 16px;
-      border-radius: 14px;
-      font-size: 13.5px;
-      line-height: 1.5;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.4;
       white-space: pre-line;
     }
 
@@ -546,7 +594,6 @@
       color: var(--text-main);
       align-self: flex-start;
       border: 1px solid var(--border);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
     }
 
     .chat-bubble.user {
@@ -555,38 +602,28 @@
       align-self: flex-end;
     }
 
-    .chat-bubble a {
-      color: #ff3366;
-      font-weight: 600;
-      text-decoration: underline;
-    }
+    .chat-bubble a { color: #ff3366; font-weight: 600; text-decoration: underline; }
 
     .quick-chips {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 10px;
+      gap: 5px;
+      margin-top: 8px;
     }
 
     .chip {
       background: #eef2ff;
       color: var(--primary);
       border: 1px solid rgba(99, 102, 241, 0.2);
-      padding: 6px 12px;
-      border-radius: 14px;
-      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 12px;
+      font-size: 11.5px;
       font-weight: 600;
       cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .chip:hover {
-      background: var(--primary);
-      color: #ffffff;
     }
 
     .chat-popup-footer {
-      padding: 12px 16px;
+      padding: 10px 14px;
       background: #ffffff;
       border-top: 1px solid var(--border);
       display: flex;
@@ -595,23 +632,19 @@
 
     .chat-popup-footer input {
       flex: 1;
-      padding: 10px 14px;
+      padding: 9px 12px;
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: 8px;
       outline: none;
-      font-size: 13.5px;
-    }
-
-    .chat-popup-footer input:focus {
-      border-color: var(--primary);
+      font-size: 13px;
     }
 
     .chat-popup-footer button {
       background: var(--primary);
       color: #fff;
       border: none;
-      padding: 0 16px;
-      border-radius: 10px;
+      padding: 0 14px;
+      border-radius: 8px;
       font-weight: 600;
       cursor: pointer;
     }
@@ -620,36 +653,21 @@
       background: #ffffff;
       border-top: 1px solid var(--border);
       margin-top: auto;
-      padding: 30px 20px;
+      padding: 24px 16px;
       text-align: center;
     }
 
     .footer-links {
       display: flex;
       justify-content: center;
-      gap: 24px;
-      margin-bottom: 14px;
+      gap: 20px;
+      margin-bottom: 10px;
     }
 
-    .footer-links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 13.5px;
-      cursor: pointer;
-    }
+    .footer-links a { color: var(--text-muted); text-decoration: none; font-weight: 600; font-size: 13px; cursor: pointer; }
 
-    .copyright { 
-      font-size: 13.5px; 
-      color: #64748b; 
-      line-height: 1.6;
-    }
-
-    .copyright a {
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 700;
-    }
+    .copyright { font-size: 13px; color: #64748b; line-height: 1.5; }
+    .copyright a { color: var(--primary); text-decoration: none; font-weight: 700; }
 
     .modal {
       display: none;
@@ -657,7 +675,7 @@
       top: 0; left: 0;
       width: 100%; height: 100%;
       background: rgba(15, 23, 42, 0.5);
-      backdrop-filter: blur(5px);
+      backdrop-filter: blur(4px);
       justify-content: center;
       align-items: center;
       z-index: 4000;
@@ -665,35 +683,17 @@
 
     .modal-content {
       background: #ffffff;
-      border-radius: 20px;
-      max-width: 620px;
+      border-radius: 18px;
+      max-width: 580px;
       width: 90%;
-      padding: 32px;
+      padding: 28px;
       position: relative;
       max-height: 85vh;
       overflow-y: auto;
     }
 
-    .close-btn {
-      position: absolute;
-      top: 20px; right: 24px;
-      font-size: 22px;
-      cursor: pointer;
-      color: #94a3b8;
-    }
-
-    .modal-btn {
-      width: 100%;
-      background: var(--primary-gradient);
-      color: #fff;
-      border: none;
-      padding: 12px;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 15px;
-      cursor: pointer;
-      margin-top: 24px;
-    }
+    .close-btn { position: absolute; top: 18px; right: 22px; font-size: 20px; cursor: pointer; color: #94a3b8; }
+    .modal-btn { width: 100%; background: var(--primary-gradient); color: #fff; border: none; padding: 11px; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; margin-top: 20px; }
   </style>
 </head>
 <body>
@@ -743,13 +743,15 @@
     </div>
   </div>
 
-  <!-- Tools Grid Section with Specific Task Animations -->
+  <!-- Tools Grid Section with Real Action Animations -->
   <div class="tools-section" id="all-tools">
     <div class="tools-grid" id="toolsGrid">
       
       <!-- 1. Compress PDF -->
       <a href="tools/compress-pdf.html" class="tool-card" data-category="optimize">
-        <div class="icon-wrapper ic-emerald"><i class="fa-solid fa-file-arrow-down anim-compress"></i></div>
+        <div class="icon-wrapper ic-emerald">
+          <div class="anim-compress-box" style="padding: 6px 10px; border-radius: 4px; font-size: 11px; font-weight: 800;">PDF</div>
+        </div>
         <div class="tool-title">Compress PDF</div>
         <div class="tool-desc">Reduce PDF file size while keeping high visual quality and readable text.</div>
       </a>
@@ -763,14 +765,21 @@
 
       <!-- 3. JPG to PDF -->
       <a href="tools/jpg-to-pdf.html" class="tool-card" data-category="convert">
-        <div class="icon-wrapper ic-amber"><i class="fa-solid fa-file-image anim-jpgpdf"></i></div>
+        <div class="icon-wrapper ic-amber" style="display: flex; gap: 3px; align-items: center;">
+          <i class="fa-solid fa-image anim-jpg-pdf" style="font-size: 18px;"></i>
+          <i class="fa-solid fa-arrow-right" style="font-size: 10px; color: #fff;"></i>
+          <i class="fa-solid fa-file-pdf" style="font-size: 18px; color: #ef4444;"></i>
+        </div>
         <div class="tool-title">JPG to PDF</div>
         <div class="tool-desc">Convert JPG, PNG, and WebP images into standard PDF documents.</div>
       </a>
 
       <!-- 4. Merge PDF -->
       <a href="tools/merge-pdf.html" class="tool-card" data-category="organize">
-        <div class="icon-wrapper ic-indigo"><i class="fa-solid fa-file-circle-plus anim-merge"></i></div>
+        <div class="icon-wrapper ic-indigo" style="display: flex; justify-content: center; position: relative; width: 55px;">
+          <i class="fa-solid fa-file-lines anim-merge-left" style="position: absolute; left: 8px; color: #fff; font-size: 18px;"></i>
+          <i class="fa-solid fa-file-pdf anim-merge-right" style="position: absolute; right: 8px; color: #06b6d4; font-size: 18px;"></i>
+        </div>
         <div class="tool-title">Merge PDF</div>
         <div class="tool-desc">Combine multiple PDF files into one single organized document.</div>
       </a>
@@ -791,7 +800,11 @@
 
       <!-- 7. Video to MP3 -->
       <a href="tools/video-to-mp3.html" class="tool-card" data-category="media">
-        <div class="icon-wrapper ic-amber"><i class="fa-solid fa-file-audio anim-audio"></i></div>
+        <div class="icon-wrapper ic-amber" style="display: flex; gap: 3px; align-items: flex-end; padding-bottom: 10px;">
+          <div class="anim-wave-1" style="width: 4px; background: #ffffff; border-radius: 3px;"></div>
+          <div class="anim-wave-2" style="width: 4px; background: #ffffff; border-radius: 3px;"></div>
+          <div class="anim-wave-3" style="width: 4px; background: #ffffff; border-radius: 3px;"></div>
+        </div>
         <div class="tool-title">Video to MP3</div>
         <div class="tool-desc">Extract high-quality audio tracks from video files in your browser.</div>
       </a>
@@ -849,7 +862,7 @@
   <!-- Floating Chat Widget Button -->
   <div class="chat-widget-btn" id="chatWidgetBtn" onclick="toggleChatPopup()" title="Chat with PDF Tool Assistant">
     <div class="notif-dot" id="notifDot"></div>
-    <svg viewBox="0 0 100 100" width="46" height="46" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));">
+    <svg viewBox="0 0 100 100" width="40" height="40" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));">
       <path d="M 22 35 Q 10 15 28 22 Z" fill="#1e40af"/>
       <path d="M 78 35 Q 90 15 72 22 Z" fill="#1e40af"/>
       <path d="M 20 40 Q 50 25 80 40 L 85 85 Q 50 95 15 85 Z" fill="#3b82f6"/>
@@ -910,7 +923,7 @@
   <div class="modal" id="comingSoonModal">
     <div class="modal-content" style="text-align: center;">
       <span class="close-btn" onclick="closeModal('comingSoonModal')">&times;</span>
-      <div style="font-size: 42px; color: var(--primary); margin-bottom: 12px;"><i class="fa-solid fa-rocket"></i></div>
+      <div style="font-size: 38px; color: var(--primary); margin-bottom: 10px;"><i class="fa-solid fa-rocket"></i></div>
       <h2 id="comingSoonTitle">Feature Under Development</h2>
       <p>We are fine-tuning this engine for high performance. It will be released soon in our upcoming updates!</p>
       <button class="modal-btn" onclick="closeModal('comingSoonModal')">Understood</button>
@@ -923,7 +936,7 @@
       <h2>Terms & Conditions</h2>
       <p><strong>1. Acceptance of Terms:</strong> By accessing and using PDF EDIT TOOL, you agree to comply with and be bound by these Terms & Conditions.</p>
       <p><strong>2. Client-Side Processing:</strong> All PDF conversions and edits execute securely within your local browser environment without server uploads.</p>
-      <p><strong>3. Downloader Services & External APIs:</strong> Our platform includes YouTube and Instagram download utilities powered by third-party public APIs (such as Loader.to). Because these are external public services, occasional advertisements, pop-ups, or external redirect tabs may appear during media retrieval. Users acknowledge and agree that these ads originate from the public APIs, and simple browser navigation (going back and retrying) resolves any ad-related redirects.</p>
+      <p><strong>3. Downloader Services & External APIs:</strong> Our platform includes YouTube and Instagram download utilities powered by third-party public APIs (such as Loader.to).</p>
     </div>
   </div>
 
@@ -932,7 +945,7 @@
       <span class="close-btn" onclick="closeModal('privacyModal')">&times;</span>
       <h2>Privacy Policy</h2>
       <p><strong>1. Data Confidentiality:</strong> Your privacy is our top priority. Because our tools run locally in your browser memory, we never store, view, or read your personal documents.</p>
-      <p><strong>2. Third-Party API Interaction:</strong> When utilizing media downloader utilities, requests are handled via external public APIs which may manage their own cookie and ad protocols. We do not track or store your downloaded media links or personal browsing history on any remote server.</p>
+      <p><strong>2. Third-Party API Interaction:</strong> When utilizing media downloader utilities, requests are handled via external public APIs.</p>
     </div>
   </div>
 
@@ -1021,11 +1034,11 @@
         if (q.includes('creator') || q.includes('who made') || q.includes('owner') || q.includes('developer') || q.includes('fayas') || q.includes('contact') || q.includes('support') || q.includes('help')) {
           botBubble.innerHTML = `Creator & Contact Support:<br><br>This platform is created and maintained by <strong>(hank!nd3 p4d4y41! | FAYAS MONU</strong>.<br><br>For any support or inquiries, connect directly via Instagram:<br><br><a href="https://www.instagram.com/____fa_y_as_____" target="_blank"><i class="fa-brands fa-instagram" style="color: #e1306c; font-size: 16px;"></i> <strong>____fa_y_as_____ (Click Here)</strong></a>`;
         } else if (q.includes('ads') || q.includes('ad') || q.includes('api') || q.includes('popup') || q.includes('loader')) {
-          botBubble.innerText = "Ads & API Information:\n\n- We use public APIs (like Loader.to) for YouTube and Instagram downloaders.\n- Because of these public APIs, some external advertisements or new tabs may occasionally open when downloading.\n- If an ad page opens, simply go back to this page, click the download button again, and your video will process successfully!";
+          botBubble.innerText = "Ads & API Information:\n\n- We use public APIs (like Loader.to) for YouTube and Instagram downloaders.\n- Because of these public APIs, some external advertisements or new tabs may occasionally open when downloading.";
         } else if (q.includes('tools info') || q.includes('tools') || q.includes('list') || q.includes('utilities')) {
-          botBubble.innerText = "Available Utilities Overview:\n\n1. Compress PDF\n2. Crop PDF\n3. JPG to PDF\n4. Merge PDF\n5. PDF to JPG\n6. Rotate PDF\n7. Video to MP3\n8. Watermark\n9. YouTube Downloader\n10. Instagram Downloader\n\nUpcoming: PDF Editor, PDF to Word, Split PDF, Protect PDF.";
+          botBubble.innerText = "Available Utilities Overview:\n\n1. Compress PDF\n2. Crop PDF\n3. JPG to PDF\n4. Merge PDF\n5. PDF to JPG\n6. Rotate PDF\n7. Video to MP3\n8. Watermark\n9. YouTube Downloader\n10. Instagram Downloader";
         } else if (q.includes('how to use') || q.includes('guide') || q.includes('instructions')) {
-          botBubble.innerText = "How to Use Our Tools:\n\n1. Select any active tool from the home page.\n2. Drag or drop your file into the local workspace.\n3. Adjust settings and click Process or Download instantly.\n\nAll operations happen 100% inside your browser memory.";
+          botBubble.innerText = "How to Use Our Tools:\n\n1. Select any active tool from the home page.\n2. Drag or drop your file into the local workspace.\n3. Adjust settings and click Process or Download instantly.";
         } else if (q.includes('privacy') || q.includes('security') || q.includes('safe')) {
           botBubble.innerText = "Complete Privacy Guarantee:\n\nAll document processing happens entirely inside your local web browser session. No files are uploaded or stored on any remote server.";
         } else {
