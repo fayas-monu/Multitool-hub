@@ -46,7 +46,7 @@
       max-width: 700px;
       margin: 20px auto;
       background: #ffffff;
-      padding: 20px;
+      padding: 25px;
       border-radius: 12px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.06);
       width: 95%;
@@ -64,6 +64,23 @@
       color: #666;
       font-size: 14px;
       margin-bottom: 20px;
+    }
+
+    /* Usage Note & API Ad Notice */
+    .info-note {
+      background: #fff8e1;
+      border-left: 4px solid #ffc107;
+      padding: 14px;
+      border-radius: 6px;
+      text-align: left;
+      font-size: 13.5px;
+      color: #555;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .info-note strong {
+      color: #333;
     }
 
     .input-box {
@@ -101,7 +118,7 @@
     /* വലിയ വലിപ്പത്തിലുള്ള ഐഫ്രെയിം ബോക്‌സ് */
     iframe {
       width: 100%;
-      height: 520px; /* ഉയരം കൂട്ടി */
+      height: 520px;
       border: 1px solid #e0e0e0;
       border-radius: 10px;
       background: #fafafa;
@@ -130,6 +147,13 @@
   <div class="container">
     <h1><i class="fa-brands fa-youtube" style="color: red;"></i> YouTube Downloader</h1>
     <p class="subtitle">Direct & Working YouTube Video Downloader</p>
+
+    <!-- Usage Note & API Ad Notice -->
+    <div class="info-note">
+      <strong><i class="fa-solid fa-circle-info"></i> Note & Instructions:</strong><br>
+      • Due to the public API service, some external advertisements or new tabs may appear when downloading.<br>
+      • If an ad page opens, simply <strong>go back</strong> to this page, click the download button again, and your video will process successfully.
+    </div>
 
     <div class="input-box">
       <input type="text" id="youtubeUrl" placeholder="Paste YouTube video link here...">
