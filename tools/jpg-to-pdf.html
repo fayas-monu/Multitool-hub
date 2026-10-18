@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
+<title>JPG to PDF — MULTI TOOLS HUB</title>
+<meta name="description" content="Turn JPG, PNG and WebP images into one PDF. Reorder, rotate, then download.">
+<meta name="theme-color" content="#11162b">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+</head>
+<body>
+<header><div class="bar">
+  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="">MULTI TOOLS HUB</a>
+  <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
+</div></header>
+<main>
+<h1>JPG to PDF</h1>
+<p class="lead">Turn JPG, PNG and WebP images into one PDF. Reorder, rotate, then download.</p>
+<label class="drop" id="zone"><i class="fa-solid fa-images" aria-hidden="true"></i><strong>Choose images or drop them here</strong><span>JPG, PNG or WebP</span>
+<input type="file" id="fileInput" accept="image/*" multiple></label>
+<div class="panel" id="panel" hidden>
+  <ul class="files" id="list"></ul>
+  <label class="f" for="pg">Page size</label>
+  <select class="in" id="pg"><option value="fit">Same size as each image</option><option value="a4">A4, image fitted</option></select>
+  <div class="prog" id="prog"><div></div></div>
+  <div class="row"><button class="btn" id="go"><i class="fa-solid fa-file-pdf"></i> Create PDF</button><button class="btn ghost" id="clear">Clear all</button></div>
+</div>
+<div class="status" id="status" role="status" aria-live="polite"></div>
+</main>
+<script src="../assets/app.js"></script>
+<script>
+let items=[];const $=PE.$;
+function render(){
+  $("panel").hidden=!items.length;
+  $("list").innerHTML=items.map((it,i)=>`<li><img src="${it.url}" alt="" style="width:44px;height:44px;object-fit:cover;border-radius:6px;transform:rotate(${it.rot}deg)"><span class="nm">${PE.esc(it.file.name)}</span>
+  <button class="ib" data-a="rot" data-i="${i}" aria-label="Rotate"><i class="fa-solid fa-rotate-right"></i></button>
+  <button class="ib" data-a="up" data-i="${i}" aria-label="Move up" ${i===0?"disabled":""}><i class="fa-solid fa-arrow-up"></i></button>
+  <button class="ib" data-a="down" data-i="${i}" aria-label="Move down" ${i===items.length-1?"disabled":""}><i class="fa-solid fa-arrow-down"></i></button>
+  <button class="ib" data-a="rm" data-i="${i}" aria-label="Remove"><i class="fa-solid fa-xmark"></i></button></li>`).join("");
+}
+PE.drop($("zone"),$("fileInput"),/^image\//i,l=>{l.forEach(f=>items.push({file:f,url:URL.createObjectURL(f),rot:0}));PE.status("");render()});
+$("list").onclick=e=>{const b=e.target.closest("button");if(!b)return;const i=+b.dataset.i,a=b.dataset.a;
+  if(a==="rot")items[i].rot=(items[i].rot+90)%360;
+  else if(a==="rm"){URL.revokeObjectURL(items[i].url);items.splice(i,1)}
+  else{const j=a==="up"?i-1:i+1;[items[i],items[j]]=[items[j],items[i]]}render()};
+$("clear").onclick=()=>{items.forEach(i=>URL.revokeObjectURL(i.url));items=[];render()};
+function toJpeg(it){return new Promise((res,rej)=>{const im=new Image();im.onload=()=>{
+  const q=it.rot%180!==0,w=q?im.height:im.width,h=q?im.width:im.height,c=document.createElement("canvas");c.width=w;c.height=h;
+  const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,w,h);x.translate(w/2,h/2);x.rotate(it.rot*Math.PI/180);x.drawImage(im,-im.width/2,-im.height/2);
+  c.toBlob(async b=>res({bytes:await b.arrayBuffer(),w,h}),"image/jpeg",.92)};im.onerror=()=>rej(new Error(it.file.name+" couldn’t be opened as an image."));im.src=it.url})}
+$("go").onclick=async()=>{
+  $("go").disabled=true;
+  try{
+    const doc=await PDFLib.PDFDocument.create();
+    for(let i=0;i<items.length;i++){
+      PE.status(`Adding image ${i+1} of ${items.length}…`);PE.progress(i/items.length);
+      const r=await toJpeg(items[i]),img=await doc.embedJpg(r.bytes);
+      if($("pg").value==="a4"){
+        const W=595.28,H=841.89,m=24,s=Math.min((W-2*m)/r.w,(H-2*m)/r.h),w=r.w*s,h=r.h*s,p=doc.addPage([W,H]);
+        p.drawImage(img,{x:(W-w)/2,y:(H-h)/2,width:w,height:h});
+      }else{doc.addPage([r.w,r.h]).drawImage(img,{x:0,y:0,width:r.w,height:r.h})}
+    }
+    PE.download(await doc.save(),"images.pdf","application/pdf");
+    PE.progress(1);PE.status(`Created a PDF with ${items.length} pages.`,"ok");PE.toast("Download started");
+  }catch(e){PE.progress(null);PE.status(e.message,"err")}
+  $("go").disabled=false;
+};
+</script>
+</body>
+</html>
