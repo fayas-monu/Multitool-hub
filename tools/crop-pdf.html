@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
+<title>Crop PDF — PDF EDIT TOOL</title>
+<meta name="description" content="Trim the margins from every page. Drag the sliders and watch the preview.">
+<meta name="theme-color" content="#11162b">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+</head>
+<body>
+<header><div class="bar">
+  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="">PDF EDIT TOOL</a>
+  <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
+</div></header>
+<main>
+<h1>Crop PDF</h1>
+<p class="lead">Trim the margins from every page. Drag the sliders and watch the preview.</p>
+<label class="drop" id="zone"><i class="fa-solid fa-crop-simple" aria-hidden="true"></i><strong>Choose a PDF or drop it here</strong><span>One file at a time</span>
+<input type="file" id="fileInput" accept="application/pdf" ></label>
+<div class="panel" id="panel" hidden>
+  <p><strong id="fn"></strong> <span id="pc" style="color:var(--muted)"></span></p>
+  <div id="stage" style="position:relative;display:inline-block;max-width:100%;margin-top:12px;line-height:0;border:1px solid var(--line)">
+    <canvas id="cv" style="max-width:100%;height:auto"></canvas>
+    <div id="keep" style="position:absolute;inset:0;outline:9999px solid rgba(17,22,43,.55);border:2px solid var(--accent);pointer-events:none"></div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0 16px">
+    <div><label class="f" for="mt">Top: <span id="vt">0</span>%</label><input type="range" id="mt" min="0" max="45" value="0" style="width:100%"></div>
+    <div><label class="f" for="mb">Bottom: <span id="vb">0</span>%</label><input type="range" id="mb" min="0" max="45" value="0" style="width:100%"></div>
+    <div><label class="f" for="ml">Left: <span id="vl">0</span>%</label><input type="range" id="ml" min="0" max="45" value="0" style="width:100%"></div>
+    <div><label class="f" for="mr">Right: <span id="vr">0</span>%</label><input type="range" id="mr" min="0" max="45" value="0" style="width:100%"></div>
+  </div>
+  <div class="row"><button class="btn" id="go"><i class="fa-solid fa-crop-simple"></i> Crop &amp; download</button><button class="btn ghost" id="reset">Reset</button></div>
+  <p class="hint">The preview shows page 1. The same margins are applied to every page. Content outside the frame is hidden, not deleted.</p>
+</div>
+<div class="status" id="status" role="status" aria-live="polite"></div>
+</main>
+<script src="../assets/app.js"></script>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+let file=null;const $=PE.$,K=["t","b","l","r"];
+const M=()=>Object.fromEntries(K.map(k=>[k,+$("m"+k).value]));
+function upd(){const m=M();K.forEach(k=>$("v"+k).textContent=m[k]);
+  $("keep").style.inset=`${m.t}% ${m.r}% ${m.b}% ${m.l}%`;$("go").disabled=m.t+m.b>=90||m.l+m.r>=90}
+K.forEach(k=>$("m"+k).oninput=upd);
+$("reset").onclick=()=>{K.forEach(k=>$("m"+k).value=0);upd()};
+PE.drop($("zone"),$("fileInput"),/pdf/i,async l=>{
+  file=l[0];$("fn").textContent=file.name;PE.status("Loading preview…");
+  try{
+    const pdf=await pdfjsLib.getDocument({data:await file.arrayBuffer()}).promise,p=await pdf.getPage(1),vp=p.getViewport({scale:1.2}),cv=$("cv");
+    cv.width=vp.width;cv.height=vp.height;const x=cv.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,cv.width,cv.height);
+    await p.render({canvasContext:x,viewport:vp}).promise;$("pc").textContent="· "+pdf.numPages+" pages";
+    $("panel").hidden=false;$("reset").click();PE.status("");
+  }catch(e){PE.status("Couldn’t read this PDF. It may be damaged or password-protected.","err")}
+});
+$("go").onclick=async()=>{
+  try{
+    const m=M(),doc=await PE.readPdf(file);
+    doc.getPages().forEach(p=>{
+      const mb=p.getMediaBox(),r=((p.getRotation().angle%360)+360)%360,sw=r%180?mb.height:mb.width,sh=r%180?mb.width:mb.height;
+      const t=sh*m.t/100,b=sh*m.b/100,l=sw*m.l/100,rt=sw*m.r/100;
+      const u=r===0?{L:l,R:rt,T:t,B:b}:r===90?{L:t,T:rt,R:b,B:l}:r===180?{L:rt,R:l,T:b,B:t}:{T:l,L:b,B:rt,R:t};
+      const x=mb.x+u.L,y=mb.y+u.B,w=mb.width-u.L-u.R,h=mb.height-u.T-u.B;
+      p.setCropBox(x,y,w,h);p.setMediaBox(x,y,w,h);
+    });
+    PE.download(await doc.save(),"cropped_"+file.name,"application/pdf");
+    PE.status("Cropped "+doc.getPageCount()+" pages.","ok");PE.toast("Download started");
+  }catch(e){PE.status(e.message,"err")}
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
+<title>PDF to Word — PDF EDIT TOOL</title>
+<meta name="description" content="Turn the text in a PDF into a Word document. It runs in your browser, so your file is never uploaded.">
+<meta name="theme-color" content="#11162b">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body>
+<header><div class="bar">
+  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="">PDF EDIT TOOL</a>
+  <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
+</div></header>
+<main>
+<h1>PDF to Word</h1>
+<p class="lead">Turn the text in a PDF into a Word document. It runs in your browser, so your file is never uploaded.</p>
+<label class="drop" id="zone"><i class="fa-solid fa-file-word" aria-hidden="true"></i><strong>Choose a PDF or drop it here</strong><span>One file at a time</span>
+<input type="file" id="fileInput" accept="application/pdf" ></label>
+<div class="panel" id="panel" hidden>
+  <p><strong id="fn"></strong> <span id="sz" style="color:var(--muted)"></span></p>
+  <div class="prog" id="prog"><div></div></div>
+  <div class="row"><button class="btn" id="go"><i class="fa-solid fa-file-word"></i> Convert to Word</button></div>
+  <p class="hint">Text and simple tables are kept. Images and exact layout are not. Scanned PDFs have no text to convert. The file opens in Word as a .doc document.</p>
+</div>
+<div class="status" id="status" role="status" aria-live="polite"></div>
+</main>
+<script src="../assets/app.js"></script>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+let file=null;const $=PE.$,esc=PE.esc;
+PE.drop($("zone"),$("fileInput"),/pdf/i,l=>{file=l[0];$("fn").textContent=file.name;$("sz").textContent=PE.fmt(file.size);$("panel").hidden=false;PE.status("")});
+function tabular(items){for(let i=1;i<items.length;i++){if(items[i].transform[4]-(items[i-1].transform[4]+(items[i-1].width||0))>20)return true}return false}
+$("go").onclick=async()=>{
+  $("go").disabled=true;
+  try{
+    const pdf=await pdfjsLib.getDocument({data:await file.arrayBuffer()}).promise;
+    let html=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><style>body{font-family:Calibri,Arial,sans-serif;font-size:11pt}p{margin:0 0 6pt}table{width:100%;border-collapse:collapse;margin:6pt 0}td{border:1px solid #ccc;padding:4pt;font-size:10pt;vertical-align:top}.pg{page-break-after:always}</style></head><body>`,chars=0;
+    for(let n=1;n<=pdf.numPages;n++){
+      PE.status(`Reading page ${n} of ${pdf.numPages}…`);PE.progress((n-1)/pdf.numPages);
+      const tc=await (await pdf.getPage(n)).getTextContent(),rows=new Map();
+      tc.items.forEach(it=>{if(!it.str.trim())return;const y=Math.round(it.transform[5]/5)*5;(rows.get(y)||rows.set(y,[]).get(y)).push(it)});
+      html+='<div class="pg">';
+      [...rows.keys()].sort((a,b)=>b-a).forEach(y=>{
+        const items=rows.get(y).sort((a,b)=>a.transform[4]-b.transform[4]);chars+=items.reduce((s,i)=>s+i.str.length,0);
+        html+=items.length>2&&tabular(items)?`<table><tr>${items.map(i=>`<td>${esc(i.str)}</td>`).join("")}</tr></table>`:`<p>${esc(items.map(i=>i.str).join(" "))}</p>`;
+      });
+      html+='</div>';
+    }
+    if(chars<5){PE.progress(null);PE.status("This PDF has no selectable text. It looks like a scan, so there is nothing to convert.","err");$("go").disabled=false;return}
+    PE.download(new Blob(["\ufeff"+html+"</body></html>"],{type:"application/msword"}),PE.baseName(file.name)+".doc");
+    PE.progress(1);PE.status("Done. Your Word file is downloading.","ok");PE.toast("Download started");
+  }catch(e){PE.progress(null);PE.status("Couldn’t read this PDF. It may be damaged or password-protected.","err")}
+  $("go").disabled=false;
+};
+</script>
+</body>
+</html>
