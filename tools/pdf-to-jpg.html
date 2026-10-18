@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF to JPG - Convert PDF Pages to Images</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- PDF.js Library for Client-Side Rendering -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: #f3f5f8; color: #333; }
+    header { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 12px 30px; display: flex; justify-content: space-between; align-items: center; }
+    .logo { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 800; color: #e5322d; text-decoration: none; }
+    .container { max-width: 800px; margin: 40px auto; padding: 20px; text-align: center; }
+    .upload-area { background: #fff; border: 2px dashed #f57c00; border-radius: 12px; padding: 50px 20px; cursor: pointer; margin-bottom: 20px; }
+    .upload-area i { font-size: 48px; color: #f57c00; margin-bottom: 15px; }
+    .btn { background: #f57c00; color: #fff; border: none; padding: 12px 30px; font-size: 16px; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 15px; display: none; }
+    .btn:hover { background: #e65100; }
+    #status { font-weight: 600; color: #f57c00; margin: 15px 0; }
+    #canvasContainer { display: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="../index.html" class="logo"><i class="fa-solid fa-file-pdf"></i> PDF Edit Tool</a>
+  </header>
+  <div class="container">
+    <h1>Convert PDF to JPG</h1>
+    <p style="color:#666; margin-bottom: 20px;">Extract all pages from a PDF and save them as high-quality JPG images.</p>
+    
+    <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+      <i class="fa-solid fa-file-image"></i>
+      <h3>Select PDF file</h3>
+      <input type="file" id="fileInput" accept="application/pdf" style="display:none;" onchange="handleFile(this.files[0])">
+    </div>
+    
+    <div id="status"></div>
+    <button class="btn" id="convertBtn" onclick="convertPdfToJpg()">Convert to JPG & Download</button>
+  </div>
+
+  <div id="canvasContainer"></div>
+
+  <script>
+    // Set PDF.js worker path
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    let selectedFile = null;
+
+    function handleFile(file) {
+      if (!file) return;
+      selectedFile = file;
+      document.getElementById('status').innerText = "Selected: " + file.name;
+      document.getElementById('convertBtn').style.display = 'inline-block';
+    }
+
+    async function convertPdfToJpg() {
+      if (!selectedFile) return;
+
+      const statusDiv = document.getElementById('status');
+      statusDiv.innerText = "Processing PDF pages, please wait...";
+
+      const arrayBuffer = await selectedFile.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      
+      const totalPages = pdf.numPages;
+
+      for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+        statusDiv.innerText = `Converting page ${pageNum} of ${totalPages}...`;
+        
+        const page = await pdf.getPage(pageNum);
+        const viewport = page.getViewport({ scale: 2 }); // Scale 2 for HD quality
+
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        await page.render({ canvasContext: context, viewport: viewport }).promise;
+
+        // Convert canvas image to JPG and download
+        const imgData = canvas.toDataURL('image/jpeg', 0.9);
+        const link = document.createElement('a');
+        link.href = imgData;
+        link.download = `page_${pageNum}.jpg`;
+        link.click();
+      }
+
+      statusDiv.innerText = "Successfully converted all pages to JPG!";
+    }
+  </script>
+</body>
+</html>

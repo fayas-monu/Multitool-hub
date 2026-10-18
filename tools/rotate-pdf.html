@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rotate PDF Pages Online</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: #f3f5f8; color: #333; }
+    header { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 12px 30px; display: flex; justify-content: space-between; align-items: center; }
+    .logo { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 800; color: #e5322d; text-decoration: none; }
+    .container { max-width: 800px; margin: 40px auto; padding: 20px; text-align: center; }
+    .upload-area { background: #fff; border: 2px dashed #7b1fa2; border-radius: 12px; padding: 50px 20px; cursor: pointer; margin-bottom: 20px; }
+    .upload-area i { font-size: 48px; color: #7b1fa2; margin-bottom: 15px; }
+    .controls { display: none; margin: 20px 0; gap: 15px; justify-content: center; }
+    .btn { background: #7b1fa2; color: #fff; border: none; padding: 12px 25px; font-size: 15px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+    .btn-secondary { background: #555; }
+    #status { margin-top: 15px; font-weight: bold; color: #7b1fa2; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="../index.html" class="logo"><i class="fa-solid fa-file-pdf"></i> PDF Edit Tool</a>
+  </header>
+  <div class="container">
+    <h1>Rotate PDF File</h1>
+    <p style="color:#666; margin-bottom: 20px;">Rotate your PDF document clockwise or counterclockwise.</p>
+    <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+      <i class="fa-solid fa-rotate-right"></i>
+      <h3>Select PDF file to rotate</h3>
+      <input type="file" id="fileInput" accept="application/pdf" style="display:none;" onchange="handleFile(this.files[0])">
+    </div>
+    <div id="status"></div>
+    <div class="controls" id="controls">
+      <button class="btn btn-secondary" onclick="rotatePDF(90)"><i class="fa-solid fa-rotate-right"></i> Rotate 90° Right</button>
+      <button class="btn btn-secondary" onclick="rotatePDF(180)"><i class="fa-solid fa-arrow-down-up-across-line"></i> Rotate 180°</button>
+      <button class="btn" onclick="saveRotatedPDF()"><i class="fa-solid fa-download"></i> Save & Download</button>
+    </div>
+  </div>
+  <script>
+    let selectedFile = null;
+    let rotationAngle = 0;
+
+    function handleFile(file) {
+      if (!file) return;
+      selectedFile = file;
+      document.getElementById('status').innerText = "Selected: " + file.name;
+      document.getElementById('controls').style.display = 'flex';
+    }
+
+    function rotatePDF(degrees) {
+      rotationAngle = (rotationAngle + degrees) % 360;
+      document.getElementById('status').innerText = `Rotated by ${rotationAngle}°`;
+    }
+
+    async function saveRotatedPDF() {
+      if (!selectedFile) return;
+      const { PDFDocument, degrees } = PDFLib;
+      const bytes = await selectedFile.arrayBuffer();
+      const pdfDoc = await PDFDocument.load(bytes);
+      
+      const pages = pdfDoc.getPages();
+      pages.forEach(page => {
+        const currentRotation = page.getRotation().angle;
+        page.setRotation(degrees((currentRotation + rotationAngle) % 360));
+      });
+
+      const pdfBytes = await pdfDoc.save();
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `rotated_${selectedFile.name}`;
+      link.click();
+    }
+  </script>
+</body>
+</html>

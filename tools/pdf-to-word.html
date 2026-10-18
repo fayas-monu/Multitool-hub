@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF to Word - PDF EDIT TOOL</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- PDF.js Core Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f4f6f9;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: #ffffff;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 14px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 22px;
+      font-weight: 900;
+      color: #e5322d;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .container {
+      max-width: 650px;
+      margin: 30px auto;
+      background: #ffffff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      width: 92%;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 24px;
+      color: #1a1a1a;
+      margin-bottom: 6px;
+    }
+
+    p.subtitle {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 25px;
+    }
+
+    .drop-zone {
+      border: 2px dashed #007bff;
+      padding: 25px 20px;
+      border-radius: 10px;
+      background: #f8f9fa;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-bottom: 20px;
+    }
+
+    .drop-zone:hover {
+      background: #e9ecef;
+    }
+
+    .drop-zone i {
+      font-size: 38px;
+      color: #007bff;
+      margin-bottom: 8px;
+    }
+
+    .drop-zone p {
+      font-size: 15px;
+      color: #555;
+      font-weight: 600;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .file-info {
+      font-size: 14px;
+      font-weight: bold;
+      color: #28a745;
+      margin-bottom: 20px;
+    }
+
+    .mode-selection-container {
+      display: none;
+      text-align: left;
+      margin-bottom: 20px;
+      background: #fafafa;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #eee;
+    }
+
+    .mode-title {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #444;
+    }
+
+    .mode-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      background: #fff;
+      transition: 0.2s;
+    }
+
+    .mode-option:hover {
+      border-color: #007bff;
+    }
+
+    .mode-option input[type="radio"] {
+      margin-top: 3px;
+    }
+
+    .mode-label {
+      font-size: 13px;
+    }
+
+    .mode-label strong {
+      display: block;
+      color: #222;
+      font-size: 14px;
+    }
+
+    .badge-free {
+      background: #28a745;
+      color: white;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: bold;
+      margin-left: 5px;
+    }
+
+    .badge-high {
+      background: #007bff;
+      color: white;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: bold;
+      margin-left: 5px;
+    }
+
+    .alert-banner {
+      display: none;
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .convert-btn {
+      width: 100%;
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      display: none;
+    }
+
+    .convert-btn:hover {
+      background: #0056b3;
+    }
+
+    .status-msg {
+      margin-top: 15px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #555;
+    }
+
+    footer {
+      background: #ffffff;
+      border-top: 1px solid #e0e0e0;
+      margin-top: auto;
+      padding: 20px;
+      text-align: center;
+      font-size: 13px;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="../index.html" class="logo-container">
+      <i class="fa-solid fa-file-pdf"></i>
+      <span>PDF EDIT TOOL</span>
+    </a>
+  </header>
+
+  <div class="container">
+    <div class="alert-banner" id="alertBanner">
+      <i class="fa-solid fa-circle-exclamation"></i> <strong>High Quality Mode Limit Reached:</strong> Switched to Universal Free Engine.
+    </div>
+
+    <h1><i class="fa-solid fa-file-word" style="color: #007bff;"></i> PDF to Word Converter</h1>
+    <p class="subtitle">Convert Invoices, Quotations, Forms & Documents to Editable Word</p>
+
+    <div class="drop-zone" onclick="document.getElementById('pdfInput').click()">
+      <i class="fa-solid fa-cloud-arrow-up"></i>
+      <p>Click here to select any PDF file</p>
+      <input type="file" id="pdfInput" accept="application/pdf" onchange="handleFileSelection(event)">
+    </div>
+
+    <div class="file-info" id="fileInfo"></div>
+
+    <div class="mode-selection-container" id="modeContainer">
+      <div class="mode-title">Select Conversion Quality:</div>
+      
+      <label class="mode-option">
+        <input type="radio" name="conversionMode" value="high" checked>
+        <div class="mode-label">
+          <strong>High Quality Mode <span class="badge-high">Pro Quality</span></strong>
+          Server-side conversion for exact pixel-perfect layouts & fonts.
+        </div>
+      </label>
+
+      <label class="mode-option">
+        <input type="radio" name="conversionMode" value="standard">
+        <div class="mode-label">
+          <strong>Standard Free Mode <span class="badge-free">100% Free</span></strong>
+          Universal Layout Engine for all PDF types (Invoices, Documents, Forms).
+        </div>
+      </label>
+    </div>
+
+    <button class="convert-btn" id="convertBtn" onclick="processConversion()">
+      <i class="fa-solid fa-file-word"></i> Convert & Download Word Document
+    </button>
+
+    <div class="status-msg" id="statusMsg"></div>
+  </div>
+
+  <footer>
+    &copy; 2026 PDF EDIT TOOL. All rights reserved. | Credit: <strong>(hank!nd3 p4d4y41! | FAYAS MONU</strong>
+  </footer>
+
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+    
+    const CONVERT_API_SECRET = "DEt3q3bc9F8xIaIFNW6y1U3F3vNLajP0";
+    let selectedPdfFile = null;
+
+    function handleFileSelection(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      selectedPdfFile = file;
+      document.getElementById('fileInfo').innerText = `Selected: ${file.name}`;
+      document.getElementById('modeContainer').style.display = 'block';
+      document.getElementById('convertBtn').style.display = 'block';
+      document.getElementById('statusMsg').innerText = "Ready to convert!";
+      document.getElementById('alertBanner').style.display = 'none';
+    }
+
+    async function processConversion() {
+      if (!selectedPdfFile) return;
+
+      const selectedMode = document.querySelector('input[name="conversionMode"]:checked').value;
+      const statusMsg = document.getElementById('statusMsg');
+      document.getElementById('alertBanner').style.display = 'none';
+
+      if (selectedMode === 'high') {
+        statusMsg.innerText = "Converting with Pro Server Engine...";
+        try {
+          await convertViaConvertAPI();
+        } catch (error) {
+          console.error(error);
+          document.getElementById('alertBanner').style.display = 'block';
+          statusMsg.innerText = "Switching to Universal Free Engine...";
+          setTimeout(() => convertUniversalFreeEngine(), 1200);
+        }
+      } else {
+        statusMsg.innerText = "Converting with Universal Free Engine...";
+        await convertUniversalFreeEngine();
+      }
+    }
+
+    // High Quality API Mode
+    async function convertViaConvertAPI() {
+      const formData = new FormData();
+      formData.append('File', selectedPdfFile);
+
+      const response = await fetch(`https://v2.convertapi.com/convert/pdf/to/docx?Secret=${CONVERT_API_SECRET}`, {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error("API Limit Reached or Expired");
+      }
+
+      const result = await response.json();
+      const fileUrl = result.Files[0].Url;
+
+      // Reliable Download Trigger
+      const link = document.createElement('a');
+      link.href = fileUrl;
+      link.setAttribute('download', selectedPdfFile.name.replace(/\.pdf$/i, '.docx'));
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      document.getElementById('statusMsg').innerText = "Converted & Downloaded Successfully!";
+    }
+
+    // Universal All-in-One Engine for Free Mode
+    async function convertUniversalFreeEngine() {
+      try {
+        const arrayBuffer = await selectedPdfFile.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+        let wordDocumentHtml = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+        <head><meta charset='utf-8'>
+        <style>
+          body { font-family: Calibri, Arial, sans-serif; font-size: 11pt; line-height: 1.25; }
+          .pdf-page { page-break-after: always; margin-bottom: 20px; position: relative; }
+          .block-line { display: block; margin-bottom: 6px; }
+          table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+          td { border: 1px solid #ccc; padding: 5px; font-size: 10pt; vertical-align: top; }
+        </style>
+        </head><body>`;
+
+        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+          const page = await pdf.getPage(pageNum);
+          const viewport = page.getViewport({ scale: 1.0 });
+          const textContent = await page.getTextContent();
+
+          wordDocumentHtml += `<div class="pdf-page">`;
+
+          // Grouping logic for preserving structured lines and columns
+          let lineMap = new Map();
+
+          textContent.items.forEach(item => {
+            let yCoord = Math.round(item.transform[5] / 5) * 5; // Y-tolerance
+            if (!lineMap.has(yCoord)) {
+              lineMap.set(yCoord, []);
+            }
+            lineMap.get(yCoord).push(item);
+          });
+
+          // Sort Y coordinates top to bottom
+          let sortedY = Array.from(lineMap.keys()).sort((a, b) => b - a);
+
+          sortedY.forEach(y => {
+            let items = lineMap.get(y).sort((a, b) => a.transform[4] - b.transform[4]);
+
+            // Check if this line looks like a multi-column row/table (Invoices, Quotations)
+            if (items.length > 2 && isStructuredRow(items)) {
+              wordDocumentHtml += `<table><tr>`;
+              items.forEach(it => {
+                wordDocumentHtml += `<td>${escapeHtml(it.str)}</td>`;
+              });
+              wordDocumentHtml += `</tr></table>`;
+            } else {
+              // Standard text paragraph / letter / document
+              let lineText = items.map(it => it.str).join(' ');
+              if (lineText.trim().length > 0) {
+                wordDocumentHtml += `<p class="block-line">${escapeHtml(lineText)}</p>`;
+              }
+            }
+          });
+
+          wordDocumentHtml += `</div>`;
+        }
+
+        wordDocumentHtml += `</body></html>`;
+
+        // Create Blob as official MS Word doc
+        const blob = new Blob(['\ufeff' + wordDocumentHtml], {
+          type: 'application/msword'
+        });
+
+        const downloadUrl = URL.createObjectURL(blob);
+        const downloadLink = document.createElement('a');
+        downloadLink.href = downloadUrl;
+        downloadLink.download = selectedPdfFile.name.replace(/\.pdf$/i, '.doc');
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        downloadLink.remove();
+        URL.revokeObjectURL(downloadUrl);
+
+        document.getElementById('statusMsg').innerText = "Converted & Downloaded (Free Engine)!";
+      } catch (err) {
+        console.error(err);
+        document.getElementById('statusMsg').innerText = "Conversion Failed. Try another file.";
+      }
+    }
+
+    function isStructuredRow(items) {
+      // Determines if horizontal items are spaced out like table columns
+      for (let i = 1; i < items.length; i++) {
+        let gap = items[i].transform[4] - (items[i-1].transform[4] + (items[i-1].width || 0));
+        if (gap > 20) return true;
+      }
+      return false;
+    }
+
+    function escapeHtml(text) {
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
+</body>
+</html>

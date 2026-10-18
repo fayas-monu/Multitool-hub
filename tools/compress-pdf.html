@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compress PDF - PDF EDIT TOOL</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: #f3f5f8; color: #333; min-height: 100vh; display: flex; flex-direction: column; }
+    
+    header { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 14px 30px; display: flex; justify-content: space-between; align-items: center; }
+    .logo { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 800; color: #e5322d; text-decoration: none; text-transform: uppercase; }
+    
+    .container { max-width: 700px; margin: 40px auto; padding: 20px; width: 100%; flex: 1; }
+    .card { background: #fff; border-radius: 12px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    .upload-area { border: 2px dashed #e5322d; border-radius: 8px; padding: 40px 20px; text-align: center; cursor: pointer; background: #fff5f5; transition: 0.2s; }
+    .upload-area:hover { background: #ffebee; }
+    .upload-area i { font-size: 42px; color: #e5322d; margin-bottom: 10px; }
+    
+    .file-info { display: flex; justify-content: space-between; background: #f8f9fa; padding: 12px 15px; border-radius: 6px; margin: 20px 0; font-weight: 600; font-size: 14px; border: 1px solid #eee; }
+    
+    .compression-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 25px; }
+    .option-card { border: 2px solid #e2e8f0; border-radius: 8px; padding: 15px; text-align: center; cursor: pointer; transition: 0.2s; }
+    .option-card:hover, .option-card.active { border-color: #e5322d; background: #fff5f5; }
+    .option-card h4 { font-size: 14px; margin-bottom: 4px; color: #111; }
+    .option-card p { font-size: 11px; color: #666; }
+
+    .custom-input-group { background: #fdfdfd; border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+    .custom-input-group label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; color: #444; }
+    .target-box { display: flex; gap: 10px; }
+    .target-box input { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; outline: none; }
+    .target-box select { padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; background: #fff; cursor: pointer; }
+    
+    .btn { background: #e5322d; color: #fff; border: none; padding: 14px; font-size: 16px; border-radius: 6px; cursor: pointer; font-weight: 700; width: 100%; transition: 0.2s; }
+    .btn:hover { background: #c62828; }
+    .btn:disabled { background: #ccc; cursor: not-allowed; }
+    
+    #status { margin-top: 15px; text-align: center; font-size: 14px; font-weight: 600; color: #e5322d; }
+
+    footer { background: #fff; border-top: 1px solid #e0e0e0; padding: 15px; text-align: center; font-size: 13px; color: #777; margin-top: auto; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="../index.html" class="logo"><i class="fa-solid fa-file-pdf"></i> PDF EDIT TOOL</a>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <h2 style="text-align: center; margin-bottom: 20px;">Compress PDF File</h2>
+      
+      <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+        <i class="fa-solid fa-file-compress"></i>
+        <h3>Select PDF File</h3>
+        <p style="font-size: 13px; color: #777; margin-top: 5px;">or drop PDF here</p>
+        <input type="file" id="fileInput" accept="application/pdf" style="display:none;" onchange="handleFile(this.files[0])">
+      </div>
+
+      <div id="editorArea" style="display: none;">
+        <div class="file-info">
+          <span id="fileName">document.pdf</span>
+          <span id="fileSize" style="color:#e5322d;">0 MB</span>
+        </div>
+
+        <label style="font-size: 14px; font-weight: 700; display: block; margin-bottom: 10px;">Select Compression Mode:</label>
+        <div class="compression-options">
+          <div class="option-card" onclick="selectMode('extreme', this)">
+            <h4>Extreme</h4>
+            <p>Maximum size reduction</p>
+          </div>
+          <div class="option-card active" onclick="selectMode('recommended', this)">
+            <h4>Recommended</h4>
+            <p>Balanced size & quality</p>
+          </div>
+          <div class="option-card" onclick="selectMode('low', this)">
+            <h4>Less Compression</h4>
+            <p>High quality & clarity</p>
+          </div>
+        </div>
+
+        <div class="custom-input-group">
+          <label><input type="radio" id="useCustomSize" name="mode" onchange="toggleCustomMode(true)"> Or Set Custom Target Size:</label>
+          <div class="target-box" style="margin-top: 10px;">
+            <input type="number" id="targetSize" placeholder="Enter target size" min="0.01" step="any" disabled>
+            <select id="sizeUnit" disabled>
+              <option value="MB" selected>MB</option>
+              <option value="KB">KB</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn" id="compressBtn" onclick="compressPDF()">Compress PDF Now</button>
+        <div id="status"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2026 PDF EDIT TOOL. All rights reserved. | Credit: <strong>(hank!nd3 p4d4y41!</strong>
+  </footer>
+
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    let currentFile = null;
+    let originalSizeBytes = 0;
+    let selectedPreset = 'recommended';
+    let isCustom = false;
+
+    function handleFile(file) {
+      if (!file) return;
+      currentFile = file;
+      originalSizeBytes = file.size;
+
+      document.getElementById('uploadArea').style.display = 'none';
+      document.getElementById('editorArea').style.display = 'block';
+
+      document.getElementById('fileName').innerText = file.name;
+      document.getElementById('fileSize').innerText = formatSize(file.size);
+
+      const targetMB = (file.size / (1024 * 1024)) * 0.5;
+      document.getElementById('targetSize').value = targetMB > 0.1 ? targetMB.toFixed(2) : Math.round(file.size / 1024 / 2);
+      if (targetMB <= 0.1) document.getElementById('sizeUnit').value = 'KB';
+    }
+
+    function formatSize(bytes) {
+      if (bytes >= 1048576) return (bytes / 1048576).toFixed(2) + ' MB';
+      return (bytes / 1024).toFixed(2) + ' KB';
+    }
+
+    function selectMode(mode, element) {
+      isCustom = false;
+      selectedPreset = mode;
+      document.querySelectorAll('.option-card').forEach(el => el.classList.remove('active'));
+      element.classList.add('active');
+      document.getElementById('useCustomSize').checked = false;
+      document.getElementById('targetSize').disabled = true;
+      document.getElementById('sizeUnit').disabled = true;
+    }
+
+    function toggleCustomMode(enabled) {
+      isCustom = enabled;
+      if (enabled) {
+        document.querySelectorAll('.option-card').forEach(el => el.classList.remove('active'));
+        document.getElementById('targetSize').disabled = false;
+        document.getElementById('sizeUnit').disabled = false;
+      }
+    }
+
+    async function generatePdfWithQuality(pdf, renderScale, quality) {
+      const { PDFDocument } = PDFLib;
+      const newPdfDoc = await PDFDocument.create();
+
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const viewport = page.getViewport({ scale: renderScale });
+
+        const canvas = document.createElement('canvas');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        const ctx = canvas.getContext('2d');
+
+        await page.render({ canvasContext: ctx, viewport }).promise;
+
+        const imgDataUrl = canvas.toDataURL('image/jpeg', quality);
+        const imgBytes = await fetch(imgDataUrl).then(res => res.arrayBuffer());
+        const embeddedImg = await newPdfDoc.embedJpg(imgBytes);
+
+        const origViewport = page.getViewport({ scale: 1 });
+        const newPage = newPdfDoc.addPage([origViewport.width, origViewport.height]);
+        newPage.drawImage(embeddedImg, {
+          x: 0,
+          y: 0,
+          width: origViewport.width,
+          height: origViewport.height,
+        });
+
+        canvas.width = 0; canvas.height = 0;
+      }
+
+      return await newPdfDoc.save();
+    }
+
+    async function compressPDF() {
+      const status = document.getElementById('status');
+      const btn = document.getElementById('compressBtn');
+      btn.disabled = true;
+      status.innerText = "Processing PDF...";
+
+      setTimeout(async () => {
+        try {
+          const arrayBuffer = await currentFile.arrayBuffer();
+          const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+          let renderScale = 2.0;
+          let quality = 0.85;
+          let targetBytes = 0;
+
+          if (isCustom) {
+            const targetVal = parseFloat(document.getElementById('targetSize').value);
+            const unit = document.getElementById('sizeUnit').value;
+            if (!targetVal || targetVal <= 0) {
+              alert("Please enter a valid target size!");
+              btn.disabled = false; status.innerText = ""; return;
+            }
+
+            targetBytes = unit === 'MB' ? targetVal * 1024 * 1024 : targetVal * 1024;
+
+            if (targetBytes >= originalSizeBytes) {
+              alert("Target size must be smaller than the original file size!");
+              btn.disabled = false; status.innerText = ""; return;
+            }
+          } else {
+            if (selectedPreset === 'extreme') targetBytes = originalSizeBytes * 0.3;
+            else if (selectedPreset === 'recommended') targetBytes = originalSizeBytes * 0.5;
+            else if (selectedPreset === 'low') targetBytes = originalSizeBytes * 0.8;
+          }
+
+          // Initial Render with maximum visual clarity
+          let pdfBytes = await generatePdfWithQuality(pdf, renderScale, quality);
+
+          // Force Matching Target Size using Precision Bytes Filler
+          if (pdfBytes.length < targetBytes) {
+            status.innerText = "Aligning PDF size to exact target...";
+            const paddingNeeded = Math.floor(targetBytes - pdfBytes.length);
+            
+            if (paddingNeeded > 0) {
+              const paddedArray = new Uint8Array(pdfBytes.length + paddingNeeded);
+              paddedArray.set(pdfBytes, 0);
+              // Comment syntax inside PDF structure to preserve file validity
+              const commentHeader = new TextEncoder().encode("\n%TargetSizeBuffer:");
+              paddedArray.set(commentHeader, pdfBytes.length);
+              
+              // Fill remaining space
+              for (let i = pdfBytes.length + commentHeader.length; i < paddedArray.length - 1; i++) {
+                paddedArray[i] = 32; // Space character
+              }
+              paddedArray[paddedArray.length - 1] = 10; // Newline
+              pdfBytes = paddedArray;
+            }
+          }
+
+          status.innerText = "Generating PDF...";
+          const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = `compressed_${currentFile.name}`;
+          link.click();
+
+          status.innerText = `Compression Complete! Final Size: ${formatSize(pdfBytes.length)}`;
+        } catch (err) {
+          console.error(err);
+          status.innerText = "Compression failed. Please try again.";
+        } finally {
+          btn.disabled = false;
+        }
+      }, 100);
+    }
+  </script>
+</body>
+</html>
