@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
+<title>Add Page Numbers — PDF EDIT TOOL</title>
+<meta name="description" content="Number every page, or only the pages you choose.">
+<meta name="theme-color" content="#11162b">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+</head>
+<body>
+<header><div class="bar">
+  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="">PDF EDIT TOOL</a>
+  <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
+</div></header>
+<main>
+<h1>Add Page Numbers</h1>
+<p class="lead">Number every page, or only the pages you choose.</p>
+<label class="drop" id="zone"><i class="fa-solid fa-list-ol" aria-hidden="true"></i><strong>Choose a PDF or drop it here</strong><span>One file at a time</span>
+<input type="file" id="fileInput" accept="application/pdf" ></label>
+<div class="panel" id="panel" hidden>
+  <p><strong id="fn"></strong> <span id="pc" style="color:var(--muted)"></span></p>
+  <label class="f" for="pos">Position</label>
+  <select class="in" id="pos"><option value="bc">Bottom centre</option><option value="br">Bottom right</option><option value="bl">Bottom left</option><option value="tc">Top centre</option><option value="tr">Top right</option><option value="tl">Top left</option></select>
+  <label class="f" for="fmt">Style</label>
+  <select class="in" id="fmt"><option value="n">1</option><option value="p">Page 1</option><option value="of">1 of N</option><option value="d">- 1 -</option></select>
+  <label class="f" for="st">First number</label><input class="in" id="st" type="number" value="1" min="0">
+  <label class="f" for="rg">Pages to number (leave empty for all)</label><input class="in" id="rg" placeholder="e.g. 2-10">
+  <div class="row"><button class="btn" id="go"><i class="fa-solid fa-list-ol"></i> Add numbers &amp; download</button></div>
+  <p class="hint">Pages that were rotated in the original file may show the number on a different edge.</p>
+</div>
+<div class="status" id="status" role="status" aria-live="polite"></div>
+</main>
+<script src="../assets/app.js"></script>
+<script>
+let file=null,doc=null;const $=PE.$;
+PE.drop($("zone"),$("fileInput"),/pdf/i,async l=>{
+  file=l[0];PE.status("Reading PDF…");
+  try{doc=await PE.readPdf(file);$("fn").textContent=file.name;$("pc").textContent="· "+doc.getPageCount()+" pages";$("panel").hidden=false;PE.status("")}
+  catch(e){PE.status(e.message,"err")}
+});
+$("go").onclick=async()=>{
+  try{
+    const n=doc.getPageCount(),idx=$("rg").value.trim()?PE.ranges($("rg").value,n):[...Array(n).keys()],start=Math.floor(+$("st").value)||0;
+    const font=await doc.embedFont(PDFLib.StandardFonts.Helvetica),pos=$("pos").value,f=$("fmt").value,size=11,m=28;
+    idx.forEach((pi,k)=>{
+      const num=start+k,txt=f==="p"?"Page "+num:f==="of"?num+" of "+(start+idx.length-1):f==="d"?"- "+num+" -":""+num;
+      const p=doc.getPage(pi),{width:W,height:H}=p.getSize(),w=font.widthOfTextAtSize(txt,size);
+      const x=pos[1]==="c"?(W-w)/2:pos[1]==="l"?m:W-m-w,y=pos[0]==="b"?m-4:H-m-size+4;
+      p.drawText(txt,{x,y,size,font,color:PDFLib.rgb(.2,.2,.25)});
+    });
+    PE.download(await doc.save(),"numbered_"+file.name,"application/pdf");
+    PE.status(`Numbered ${idx.length} pages.`,"ok");PE.toast("Download started");
+  }catch(e){PE.status(e.message,"err")}
+};
+</script>
+</body>
+</html>
