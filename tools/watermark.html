@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
+<title>Watermark PDF — PDF EDIT TOOL</title>
+<meta name="description" content="Stamp diagonal text across every page, centred and sized the way you want.">
+<meta name="theme-color" content="#11162b">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+</head>
+<body>
+<header><div class="bar">
+  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="">PDF EDIT TOOL</a>
+  <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
+</div></header>
+<main>
+<h1>Watermark PDF</h1>
+<p class="lead">Stamp diagonal text across every page, centred and sized the way you want.</p>
+<label class="drop" id="zone"><i class="fa-solid fa-stamp" aria-hidden="true"></i><strong>Choose a PDF or drop it here</strong><span>One file at a time</span>
+<input type="file" id="fileInput" accept="application/pdf" ></label>
+<div class="panel" id="panel" hidden>
+  <p><strong id="fn"></strong></p>
+  <label class="f" for="txt">Watermark text</label>
+  <input class="in" id="txt" value="CONFIDENTIAL" maxlength="40">
+  <label class="f" for="size">Text size: <span id="sv">60</span> pt</label>
+  <input type="range" id="size" min="20" max="120" value="60" style="width:100%">
+  <label class="f" for="op">Opacity: <span id="ov">25</span>%</label>
+  <input type="range" id="op" min="5" max="80" value="25" style="width:100%">
+  <div class="row"><button class="btn" id="go"><i class="fa-solid fa-stamp"></i> Add watermark &amp; download</button></div>
+  <p class="hint">Plain Latin letters, numbers and common symbols are supported.</p>
+</div>
+<div class="status" id="status" role="status" aria-live="polite"></div>
+</main>
+<script src="../assets/app.js"></script>
+<script>
+let file=null;const $=PE.$;
+PE.drop($("zone"),$("fileInput"),/pdf/i,l=>{file=l[0];$("fn").textContent=file.name;$("panel").hidden=false;PE.status("")});
+$("size").oninput=()=>$("sv").textContent=$("size").value;
+$("op").oninput=()=>$("ov").textContent=$("op").value;
+$("go").onclick=async()=>{
+  const text=$("txt").value.trim();if(!text){PE.status("Enter the watermark text first.","err");return}
+  try{
+    const {rgb,degrees,StandardFonts}=PDFLib,doc=await PE.readPdf(file);
+    const font=await doc.embedFont(StandardFonts.HelveticaBold),size=+$("size").value,op=$("op").value/100;
+    const w=font.widthOfTextAtSize(text,size),h=font.heightAtSize(size)*0.7,t=Math.PI/4,c=Math.cos(t),s=Math.sin(t);
+    doc.getPages().forEach(p=>{
+      const b=p.getSize(),cx=b.width/2,cy=b.height/2;
+      p.drawText(text,{x:cx-(w/2)*c+(h/2)*s,y:cy-(w/2)*s-(h/2)*c,size,font,color:rgb(.5,.5,.55),opacity:op,rotate:degrees(45)});
+    });
+    PE.download(await doc.save(),"watermarked_"+file.name,"application/pdf");
+    PE.status("Watermark added to "+doc.getPageCount()+" pages.","ok");PE.toast("Download started");
+  }catch(e){PE.status(/encode|WinAnsi/i.test(e.message)?"That text has characters the font can’t draw. Use Latin letters and numbers.":e.message,"err")}
+};
+</script>
+</body>
+</html>
