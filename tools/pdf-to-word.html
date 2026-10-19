@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
+<title>PDF to Word — PDF EDIT TOOL</title>
+<meta name="description" content="Convert a PDF into an editable Word (.docx) file. Headings, paragraphs and tables are rebuilt, and you can check the result before downloading.">
+<meta name="theme-color" content="#11162b">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.js"></script>
+</head>
+<body>
+<header><div class="bar">
+  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="">PDF EDIT TOOL</a>
+  <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
+</div></header>
+<main>
+<h1>PDF to Word</h1>
+<p class="lead">Convert a PDF into an editable Word (.docx) file. Headings, paragraphs and tables are rebuilt, and you can check the result before downloading.</p>
+<label class="drop" id="zone"><i class="fa-solid fa-file-word" aria-hidden="true"></i><strong>Choose a PDF or drop it here</strong><span>One file at a time</span>
+<input type="file" id="fileInput" accept="application/pdf" ></label>
+<div class="panel" id="panel" hidden>
+  <p><strong id="fn"></strong> <span id="sz" style="color:var(--muted)"></span></p>
+  <div class="prog" id="prog"><div></div></div>
+  <div id="pvw" hidden>
+    <p class="f" style="margin-top:14px;font-weight:700">Preview of what will be in your Word file <span class="live">● Live</span></p>
+    <div id="pbox" style="max-height:340px;overflow:auto;background:#fff;color:#111;border:1px solid var(--line);border-radius:10px;padding:16px;font:14px/1.5 Calibri,Arial,sans-serif"></div>
+    <label style="display:block;margin-top:12px"><input type="checkbox" id="brk" checked> Start each PDF page on a new Word page</label>
+    <div class="row"><button class="btn" id="go"><i class="fa-solid fa-file-word"></i> Download Word file</button></div>
+  </div>
+  <p class="hint">Text, headings, bullet lists and simple tables are rebuilt. Pictures and exact page design are not copied. Scanned PDFs have no text to read.</p>
+</div>
+<div class="status" id="status" role="status" aria-live="polite"></div>
+</main>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB</span></div>
+<script src="../assets/app.js"></script>
+<script src="../assets/chat.js"></script>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+let file=null,pages=[];const $=PE.$,esc=PE.esc;
+function median(a){a=a.slice().sort((x,y)=>x-y);return a.length?a[a.length>>1]:11}
+async function extract(f){
+  const pdf=await pdfjsLib.getDocument({data:await f.arrayBuffer()}).promise,all=[],sizes=[];
+  for(let n=1;n<=pdf.numPages;n++){
+    PE.status(`Reading page ${n} of ${pdf.numPages}…`);PE.progress((n-1)/pdf.numPages);
+    const tc=await (await pdf.getPage(n)).getTextContent(),its=tc.items.filter(i=>i.str&&i.str.trim()).map(i=>({s:i.str,x:i.transform[4],y:i.transform[5],z:Math.hypot(i.transform[0],i.transform[1])||i.height||11,w:i.width||0}));
+    its.forEach(i=>sizes.push(i.z));
+    its.sort((a,b)=>b.y-a.y||a.x-b.x);
+    const lines=[];its.forEach(i=>{const L=lines[lines.length-1];if(L&&Math.abs(L.y-i.y)<=Math.max(L.z,i.z)*0.45)L.it.push(i);else lines.push({y:i.y,z:i.z,it:[i]})});
+    lines.forEach(L=>{L.it.sort((a,b)=>a.x-b.x);L.z=Math.max(...L.it.map(i=>i.z));const cells=[];let cur="",end=null;
+      L.it.forEach(i=>{if(end!==null&&i.x-end>L.z*2.2){cells.push(cur.trim());cur=""}else if(end!==null&&i.x-end>L.z*0.12&&!/\s$/.test(cur)&&!/^\s/.test(i.s))cur+=" ";cur+=i.s;end=i.x+i.w});
+      cells.push(cur.trim());L.cells=cells.filter(Boolean);L.x=L.it[0].x});
+    all.push(lines.filter(L=>L.cells.length));
+  }
+  const body=median(sizes),blocks=[];
+  all.forEach((lines,pi)=>{
+    if(pi)blocks.push({t:"pb"});let prev=null;
+    lines.forEach(L=>{
+      if(L.cells.length>=2){const last=blocks[blocks.length-1];if(last&&last.t==="table")last.rows.push(L.cells);else blocks.push({t:"table",rows:[L.cells]});prev=null;return}
+      const text=L.cells[0],ratio=L.z/body;
+      if(ratio>=1.3){const last=blocks[blocks.length-1];if(last&&last.t==="h"&&Math.abs(last.z-L.z)<0.5)last.text+=" "+text;else blocks.push({t:"h",lvl:ratio>=1.8?1:ratio>=1.45?2:3,z:L.z,text});prev=null;return}
+      const bullet=/^([•●▪◦\-–—*]|\d+[.)]|[a-z][.)])\s+/i.test(text),last=blocks[blocks.length-1];
+      if(last&&last.t==="p"&&prev&&!bullet&&prev.y-L.y<L.z*1.9&&Math.abs(prev.x-L.x)<L.z*4){last.text=/[-‐]$/.test(last.text)?last.text.slice(0,-1)+text:last.text+" "+text}
+      else blocks.push({t:"p",text});
+      prev=L});
+  });
+  PE.progress(1);return blocks;
+}
+function html(blocks){return blocks.map(b=>b.t==="h"?`<h${b.lvl+1} style="margin:12px 0 6px">${esc(b.text)}</h${b.lvl+1}>`:b.t==="p"?`<p style="margin:0 0 8px">${esc(b.text)}</p>`:b.t==="table"?`<table style="border-collapse:collapse;width:100%;margin:8px 0">${b.rows.map(r=>`<tr>${r.map(c=>`<td style="border:1px solid #bbb;padding:4px 6px;vertical-align:top">${esc(c)}</td>`).join("")}</tr>`).join("")}</table>`:`<hr style="border:0;border-top:2px dashed #bbb;margin:14px 0">`).join("")}
+PE.drop($("zone"),$("fileInput"),/pdf/i,async l=>{
+  file=l[0];$("fn").textContent=file.name;$("sz").textContent=PE.fmt(file.size);$("panel").hidden=false;$("pvw").hidden=true;
+  try{pages=await extract(file);
+    if(!pages.some(b=>b.t!=="pb")){PE.progress(null);PE.status("This PDF has no selectable text. It looks like a scan, so there is nothing to convert.","err");return}
+    $("pbox").innerHTML=html(pages);$("pvw").hidden=false;PE.status("Ready. Check the preview, then download.","ok");PE.progress(null)}
+  catch(e){PE.progress(null);PE.status("Couldn’t read this PDF. It may be damaged or password-protected.","err")}
+});
+$("go").onclick=async()=>{
+  const blocks=pages.filter(b=>$("brk").checked||b.t!=="pb"),name=PE.baseName(file.name);
+  try{
+    if(typeof docx==="undefined")throw new Error("lib");
+    const D=docx,kids=blocks.map(b=>{
+      if(b.t==="h")return new D.Paragraph({heading:[D.HeadingLevel.HEADING_1,D.HeadingLevel.HEADING_2,D.HeadingLevel.HEADING_3][b.lvl-1],children:[new D.TextRun(b.text)]});
+      if(b.t==="pb")return new D.Paragraph({children:[new D.PageBreak()]});
+      if(b.t==="table"){const cols=Math.max(...b.rows.map(r=>r.length));
+        return new D.Table({width:{size:100,type:D.WidthType.PERCENTAGE},rows:b.rows.map(r=>new D.TableRow({children:[...Array(cols).keys()].map(i=>new D.TableCell({children:[new D.Paragraph(r[i]||"")]}))}))})}
+      return new D.Paragraph({spacing:{after:120},children:[new D.TextRun({text:b.text,size:22})]})});
+    PE.download(await D.Packer.toBlob(new D.Document({sections:[{children:kids}]})),name+".docx");
+    PE.status("Done. Your .docx file is downloading.","ok");
+  }catch(e){
+    const h=`<html xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"></head><body>${html(blocks)}</body></html>`;
+    PE.download(new Blob(["\ufeff"+h],{type:"application/msword"}),name+".doc");
+    PE.status("The .docx builder didn’t load, so you got a .doc file that Word can open.","ok");
+  }
+  PE.toast("Download started");
+};
+</script>
+</body>
+</html>

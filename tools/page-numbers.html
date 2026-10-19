@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
+<title>Add Page Numbers — PDF EDIT TOOL</title>
+<meta name="description" content="Number your pages and see exactly where the numbers land, live, before you download.">
+<meta name="theme-color" content="#11162b">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+</head>
+<body>
+<header><div class="bar">
+  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="">PDF EDIT TOOL</a>
+  <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
+</div></header>
+<main>
+<h1>Add Page Numbers</h1>
+<p class="lead">Number your pages and see exactly where the numbers land, live, before you download.</p>
+<label class="drop" id="zone"><i class="fa-solid fa-list-ol" aria-hidden="true"></i><strong>Choose a PDF or drop it here</strong><span>One file at a time</span>
+<input type="file" id="fileInput" accept="application/pdf" ></label>
+<div class="panel" id="panel" hidden>
+  <p><strong id="fn"></strong> <span id="pc" style="color:var(--muted)"></span> <span class="live">● Live preview</span></p>
+  <div class="pv"><canvas id="base"></canvas><canvas id="ov" class="ov"></canvas></div>
+  <div class="g2">
+    <div><label class="f" for="pos">Position</label><select class="in" id="pos"><option value="bc">Bottom centre</option><option value="br">Bottom right</option><option value="bl">Bottom left</option><option value="tc">Top centre</option><option value="tr">Top right</option><option value="tl">Top left</option></select></div>
+    <div><label class="f" for="fmt">Style</label><select class="in" id="fmt"><option value="n">1</option><option value="p">Page 1</option><option value="of">1 of N</option><option value="d">- 1 -</option></select></div>
+    <div><label class="f" for="st">First number</label><input class="in" id="st" type="number" value="1" min="0"></div>
+    <div><label class="f" for="col">Colour</label><input type="color" id="col" value="#33334d" style="width:100%;height:42px;border:1px solid var(--line);border-radius:10px;background:var(--bg)"></div>
+  </div>
+  <label class="f" for="size">Size: <span id="sv">12</span> pt</label><input type="range" id="size" min="8" max="28" value="12" style="width:100%">
+  <label class="f" for="mg">Distance from edge: <span id="mv">28</span> pt</label><input type="range" id="mg" min="12" max="80" value="28" style="width:100%">
+  <label class="f" for="rg">Pages to number (leave empty for all)</label><input class="in" id="rg" placeholder="e.g. 2-10">
+  <label style="display:block;margin-top:12px"><input type="checkbox" id="skip"> Skip the first page (cover)</label>
+  <div class="row"><button class="btn" id="go"><i class="fa-solid fa-list-ol"></i> Add numbers &amp; download</button></div>
+</div>
+<div class="status" id="status" role="status" aria-live="polite"></div>
+</main>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB</span></div>
+<script src="../assets/app.js"></script>
+<script src="../assets/chat.js"></script>
+<script>
+let file=null,doc=null,info=null;const $=PE.$;
+const o=()=>({pos:$("pos").value,f:$("fmt").value,st:Math.floor(+$("st").value)||0,col:$("col").value,size:+$("size").value,m:+$("mg").value});
+function label(f,num,last){return f==="p"?"Page "+num:f==="of"?num+" of "+last:f==="d"?"- "+num+" -":""+num}
+function spot(W,H,pos,w,size,m){return{x:pos[1]==="c"?(W-w)/2:pos[1]==="l"?m:W-m-w,y:pos[0]==="b"?H-m+4:m+size-4}} /* y = visual baseline from the top */
+function draw(){
+  if(!info)return;const v=o(),cv=$("ov"),b=$("base");cv.width=b.width;cv.height=b.height;const x=cv.getContext("2d"),s=info.s;
+  x.font=`${v.size*s}px Helvetica,Arial,sans-serif`;x.fillStyle=v.col;
+  const t=label(v.f,v.st+($("skip").checked?0:0),v.st+info.pages-1),w=x.measureText(t).width/s,p=spot(info.pw,info.ph,v.pos,w,v.size,v.m);
+  if($("skip").checked){x.fillStyle="rgba(100,100,120,.9)";x.font="13px system-ui";x.fillText("Page 1 is skipped. Numbers start on page 2.",12,24);return}
+  x.fillText(t,p.x*s,p.y*s)}
+["pos","fmt","st","col","size","mg","skip","rg"].forEach(i=>$(i).addEventListener("input",()=>{$("sv").textContent=$("size").value;$("mv").textContent=$("mg").value;draw()}));
+PE.drop($("zone"),$("fileInput"),/pdf/i,async l=>{
+  file=l[0];PE.status("Loading preview…");
+  try{doc=await PE.readPdf(file);info=await PE.preview(file,$("base"),560);$("fn").textContent=file.name;$("pc").textContent="· "+info.pages+" pages";$("panel").hidden=false;PE.status("");draw()}
+  catch(e){PE.status(e.message||"Couldn’t read this PDF.","err")}
+});
+$("go").onclick=async()=>{
+  try{
+    const v=o(),n=doc.getPageCount();let idx=$("rg").value.trim()?PE.ranges($("rg").value,n):[...Array(n).keys()];
+    if($("skip").checked)idx=idx.filter(i=>i!==0);if(!idx.length)throw new Error("No pages left to number.");
+    const font=await doc.embedFont(PDFLib.StandardFonts.Helvetica),last=v.st+idx.length-1;
+    idx.forEach((pi,k)=>{
+      const t=label(v.f,v.st+k,last),p=doc.getPage(pi),{width:W,height:H}=p.getSize(),w=font.widthOfTextAtSize(t,v.size),sp=spot(W,H,v.pos,w,v.size,v.m);
+      p.drawText(t,{x:sp.x,y:H-sp.y,size:v.size,font,color:PDFLib.rgb(...PE.hex(v.col))});
+    });
+    PE.download(await doc.save(),"numbered_"+file.name,"application/pdf");
+    PE.status(`Numbered ${idx.length} pages.`,"ok");PE.toast("Download started");doc=await PE.readPdf(file);
+  }catch(e){PE.status(e.message,"err")}
+};
+</script>
+</body>
+</html>
