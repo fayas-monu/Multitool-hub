@@ -22,7 +22,7 @@ A fast, privacy-first collection of **17 browser tools** for PDFs, images and me
 
 ### Highlights
 
-- **PDF Editor** — select and edit text, add text, highlight, underline, strike, freehand pen, lines, arrows, rectangles, ellipses, whiteout, true redaction boxes, images, typed or drawn signatures, sticky comments and PDF form fields. Also reorder, duplicate, delete, rotate, insert blank pages, merge another PDF, extract pages and save a flattened copy.
+- **PDF Editor** — select and edit text, add wrapped text boxes with a 19-font picker, bold/italic, alignment, line spacing, text background, highlight, underline, strike, freehand pen, lines, arrows, rectangles, ellipses, solid/dashed/dotted strokes, whiteout, true redaction boxes, images, typed or drawn signatures, sticky comments and PDF form fields. Text-edit covers sample the page background so tinted pages stay clean. Also reorder, duplicate, arrange, delete, rotate, insert blank pages, merge another PDF, extract pages and save a flattened copy.
 - **PDF to Word** — builds a real `.docx` with headings, paragraphs, lists and tables. Uses the correct page viewport, so text lands in the right place, and warns you when a page is scanned instead of silently producing an empty file.
 - **Live previews** — Watermark, Page Numbers, Crop, PDF to JPG, Image Compressor and Video to MP3 show the result before you commit.
 - **Hub Assistant** — a local assistant that finds the right tool from a plain sentence, explains steps, checks file types and sizes, supports voice input, and can switch the theme. It runs entirely in your browser.
@@ -69,7 +69,7 @@ The site is plain HTML, CSS and JavaScript — no build step.
 
 1. **Replace the placeholder domain.** `sitemap.xml` and `robots.txt` use `https://multitoolhub.example/`. Replace it with your real domain. If you do not want a sitemap, delete both files.
 2. **Keep `sw.js` at the site root.** Service workers only control pages at or below their own folder.
-3. **Bump the cache name** in `sw.js` (`const CACHE = "mth-v6";`) whenever you change HTML, CSS or JS. This forces visitors to receive the new files.
+3. **Bump the cache name** in `sw.js` (`const CACHE = "mth-v8";`) whenever you change HTML, CSS or JS. This forces visitors to receive the new files.
 4. **HTTPS is required** for the service worker and installation (localhost is exempt).
 
 ---
@@ -136,7 +136,7 @@ Video to MP3 depends on the browser being able to decode the source codec. If th
 
 - Editing existing text in the PDF Editor places a clean cover over the original glyphs. It looks correct, but the old text can still exist underneath. Use the **Redact** tool when content must be removed, and use **Flatten** when you need a single non-editable result.
 - Scanned PDFs have no text layer. PDF to Word and PDF to Text will report this; OCR is not included.
-- Fonts in the editor are limited to Helvetica, Times and Courier with Latin characters, which keeps exports reliable without embedding font files.
+- The PDF Editor offers Helvetica, Arial, Times New Roman, Courier New, Verdana, Georgia, Comic Sans, Trebuchet MS and other common families. Helvetica/Arial, Times New Roman and Courier New export as real vector text (Arial and Courier New use the metric-compatible PDF standard fonts), so the text stays selectable. Other fonts and characters outside the PDF standard Latin set are rendered into the page at high resolution: they look exactly as designed but are not selectable. The save dialog says how many boxes this affects.
 - Protect PDF (encryption) is intentionally not offered because pdf-lib cannot write encryption. A broken “protection” button would be worse than no button.
 - The legal pages are detailed general templates, not legal advice. Have them reviewed for your jurisdiction if you rely on the site commercially.
 
