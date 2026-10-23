@@ -1,0 +1,81 @@
+{
+  "id": "./",
+  "name": "MULTI TOOL HUB — PDF, image and media tools",
+  "short_name": "Multi Tool Hub",
+  "description": "Free browser-based PDF, image and media tools. Merge, split, compress, edit, sign, watermark and convert — most files never leave your device.",
+  "start_url": "./index.html?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "orientation": "any",
+  "background_color": "#f2f4f9",
+  "theme_color": "#11162b",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["productivity", "utilities", "photo", "business"],
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "assets/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "assets/og-cover.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "MULTI TOOL HUB home page"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "PDF Editor",
+      "short_name": "Edit PDF",
+      "description": "Add text, highlights, shapes, signatures, images and redactions to a PDF",
+      "url": "./tools/editor.html",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Merge PDF",
+      "short_name": "Merge",
+      "description": "Combine PDFs and reorder pages",
+      "url": "./tools/merge-pdf.html",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Compress PDF",
+      "short_name": "Compress",
+      "description": "Shrink PDFs with lossless or raster compression",
+      "url": "./tools/compress-pdf.html",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "PDF to Word",
+      "short_name": "PDF → Word",
+      "description": "Turn a PDF into an editable Word document",
+      "url": "./tools/pdf-to-word.html",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ]
+}

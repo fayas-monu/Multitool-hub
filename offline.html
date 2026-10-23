@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
+<title>You are offline — MULTI TOOL HUB</title>
+<meta name="description" content="MULTI TOOL HUB is offline. Open a page you have already visited, or reconnect to keep working.">
+<meta name="theme-color" content="#11162b">
+<meta name="robots" content="noindex">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .offline{max-width:620px;margin:0 auto;padding:64px 22px 80px;text-align:center;width:100%}
+  .offline .art{width:92px;height:92px;margin:0 auto 22px;display:grid;place-items:center;border-radius:26px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-lg)}
+  .offline .art img{width:62px;height:62px}
+  .offline h1{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(28px,5vw,40px);letter-spacing:-1px;margin-bottom:10px}
+  .offline p{color:var(--muted);margin:0 auto 10px;max-width:46ch}
+  .offline .actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:24px}
+  .offline .links{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:center;margin-top:26px;font-size:14px}
+  .offline .links a{color:var(--accent);font-weight:600;text-decoration:none}
+  .offline .links a:hover{text-decoration:underline}
+  .offline .tip{margin-top:28px;font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:18px}
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <a class="brand" href="index.html"><img src="assets/logo.svg" alt="" width="40" height="40">MULTI TOOL HUB</a>
+  <a class="back" href="index.html">Home</a>
+</div></header>
+<main class="offline">
+  <div class="art"><img src="assets/logo.svg" alt="MULTI TOOL HUB logo"></div>
+  <h1>You&rsquo;re offline</h1>
+  <p>The page you asked for isn&rsquo;t in the offline cache yet. Your internet connection may have dropped, or the site could not be reached.</p>
+  <p>Reconnect and try again, or open a tool you have used before.</p>
+  <div class="actions">
+    <button class="btn" type="button" onclick="location.reload()">Try again</button>
+    <a class="btn ghost" href="index.html">Go to home</a>
+  </div>
+  <div class="links">
+    <a href="tools/editor.html">PDF Editor</a>
+    <a href="tools/merge-pdf.html">Merge PDF</a>
+    <a href="tools/compress-pdf.html">Compress PDF</a>
+    <a href="tools/pdf-to-word.html">PDF to Word</a>
+  </div>
+  <p class="tip">Tip: once a page has loaded successfully it is saved for offline use. Files are still processed on your device.</p>
+</main>
+<div class="foot"><a href="terms.html">Terms &amp; Conditions</a><a href="privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB</span></div>
+<script src="assets/app.js"></script>
+</body>
+</html>
+

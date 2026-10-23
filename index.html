@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
+<title>MULTI TOOL HUB — Free PDF, image and media tools</title>
+<meta name="theme-color" content="#11162b">
+<meta name="description" content="Merge, split, compress, crop, rotate, edit, sign, watermark and convert PDFs, images and audio. Most tools run privately inside your browser — free, no sign-up.">
+<meta name="keywords" content="PDF tools, merge PDF, split PDF, compress PDF, edit PDF, watermark PDF, PDF to Word, JPG to PDF, video to MP3">
+<meta name="author" content="FAYAS MONU">
+<link rel="canonical" href="index.html">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:title" content="MULTI TOOL HUB — every file job, one place">
+<meta property="og:description" content="Free PDF, image and media tools that run inside your browser. No sign-up. No uploads for local tools.">
+<meta property="og:image" content="assets/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MULTI TOOL HUB">
+<meta name="twitter:description" content="Free PDF, image and media tools that run inside your browser.">
+<meta name="twitter:image" content="assets/og-cover.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f4f9;--surface:#fff;--surface-2:#f7f8fc;--ink:#11162b;--muted:#59627c;--line:#d9deea;
+  --accent:#3d3bf3;--accent-2:#7c3aed;--accent-ink:#fff;--mark:#ffd84d;
+  --c-organize:#3d3bf3;--c-optimize:#0f9d6e;--c-convert:#c2410c;--c-edit:#0e7490;--c-images:#b45309;--c-media:#7c3aed;
+  --shadow:0 1px 0 var(--line),0 14px 30px -18px rgba(20,24,70,.35);
+  --shadow-lg:0 26px 60px -26px rgba(20,24,70,.55);
+  --r:16px;
+}
+:root[data-theme="dark"]{
+  --bg:#0d1020;--surface:#161a2f;--surface-2:#1b2039;--ink:#e9ecf7;--muted:#98a1bd;--line:#262c47;
+  --accent:#8b8bff;--accent-2:#b794ff;--accent-ink:#0d1020;
+  --c-organize:#8b8bff;--c-optimize:#3ddc9f;--c-convert:#ff9a62;--c-edit:#4fd1e8;--c-images:#ffc266;--c-media:#b794ff;
+  --shadow:0 1px 0 var(--line),0 14px 30px -18px rgba(0,0,0,.65);
+  --shadow-lg:0 26px 60px -26px rgba(0,0,0,.8);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0d1020;--surface:#161a2f;--surface-2:#1b2039;--ink:#e9ecf7;--muted:#98a1bd;--line:#262c47;
+  --accent:#8b8bff;--accent-2:#b794ff;--accent-ink:#0d1020;
+  --c-organize:#8b8bff;--c-optimize:#3ddc9f;--c-convert:#ff9a62;--c-edit:#4fd1e8;--c-images:#ffc266;--c-media:#b794ff;
+  --shadow:0 1px 0 var(--line),0 14px 30px -18px rgba(0,0,0,.65);
+  --shadow-lg:0 26px 60px -26px rgba(0,0,0,.8);
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;min-height:100vh;display:flex;flex-direction:column;
+  background-image:radial-gradient(900px 460px at 82% -80px,color-mix(in srgb,var(--accent) 17%,transparent),transparent),radial-gradient(700px 360px at -8% 4%,color-mix(in srgb,var(--mark) 15%,transparent),transparent);
+  background-attachment:fixed}
+a{color:inherit}
+button{font:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:8px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px;width:100%}
+.skip{position:fixed;left:-999px;top:8px;z-index:999;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-weight:700}
+.skip:focus{left:12px}
+
+/* Header */
+header{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 84%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;justify-content:space-between;height:68px;gap:14px}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:19px;letter-spacing:-.4px;white-space:nowrap}
+.brand img{width:42px;height:42px;filter:drop-shadow(0 5px 10px rgba(40,40,160,.4))}
+.brand b{background:linear-gradient(100deg,var(--ink) 20%,var(--accent) 80%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.nav{display:flex;align-items:center;gap:4px}
+.nav a,.nav button{font:600 13.5px 'Plus Jakarta Sans',sans-serif;color:var(--muted);text-decoration:none;background:none;border:0;padding:9px 12px;border-radius:10px;cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+.nav a:hover,.nav button:hover{color:var(--ink);background:var(--surface)}
+.nav .cta{background:var(--ink);color:var(--bg);padding:9px 15px}
+.nav .cta:hover{background:var(--accent);color:var(--accent-ink)}
+.icobtn{width:38px;height:38px;display:grid!important;place-items:center;padding:0!important;border:1px solid var(--line)!important}
+
+/* Hero */
+.hero{padding:58px 0 30px;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:52px 52px;opacity:.22;mask-image:radial-gradient(600px 300px at 70% 0,#000,transparent 75%);pointer-events:none}
+.hero .wrap{position:relative;display:grid;grid-template-columns:1.25fr .75fr;gap:36px;align-items:center}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,var(--surface));border:1px solid color-mix(in srgb,var(--accent) 25%,var(--line));padding:7px 12px;border-radius:999px;margin-bottom:16px}
+.eyebrow i{font-size:11px}
+.hero h1{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(36px,5.6vw,64px);line-height:1.02;letter-spacing:-2.2px;max-width:17ch}
+.hero h1 mark{background:linear-gradient(transparent 62%,var(--mark) 62%);color:inherit;padding:0 4px;margin:0 -4px}
+.hero p{margin-top:16px;max-width:54ch;color:var(--muted);font-size:16.5px}
+.cmd{margin-top:26px;display:flex;align-items:center;gap:12px;max-width:600px;background:var(--surface);border:1.5px solid var(--ink);border-radius:14px;padding:0 14px;height:58px;box-shadow:5px 5px 0 var(--ink);transition:box-shadow .15s,border-color .15s}
+.cmd:focus-within{border-color:var(--accent);box-shadow:5px 5px 0 var(--accent)}
+.cmd i{color:var(--muted)}
+.cmd input{flex:1;border:0;outline:0;background:transparent;color:var(--ink);font:500 16px 'Plus Jakarta Sans',sans-serif;min-width:0}
+.cmd kbd{font:700 11.5px 'Plus Jakarta Sans',sans-serif;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:3px 8px;background:var(--surface-2)}
+.hero-stats{display:flex;gap:22px;margin-top:24px;flex-wrap:wrap}
+.hero-stats div{display:flex;flex-direction:column}
+.hero-stats b{font-family:'Bricolage Grotesque',sans-serif;font-size:20px;letter-spacing:-.4px}
+.hero-stats span{font-size:12px;color:var(--muted);font-weight:600}
+.hero-art{position:relative;display:grid;place-items:center;min-height:260px}
+.hero-art .halo{position:absolute;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--accent) 38%,transparent),transparent 68%);filter:blur(6px)}
+.hero-art img{width:min(290px,66vw);height:auto;position:relative;filter:drop-shadow(0 26px 30px rgba(10,12,40,.45));animation:float 6s ease-in-out infinite}
+.hero-art .ring{position:absolute;width:250px;height:92px;border:1px solid color-mix(in srgb,var(--accent) 45%,transparent);border-radius:50%;transform:rotate(-24deg);opacity:.55}
+.hero-art .ring.r2{transform:rotate(24deg);width:230px;height:80px;opacity:.32}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-10px) rotate(1deg)}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+
+/* Category rail */
+.main{display:grid;grid-template-columns:206px 1fr;gap:34px;padding:28px 0 58px;align-items:start}
+.main>*{min-width:0}
+.rail{position:sticky;top:88px;display:flex;flex-direction:column;gap:3px}
+.rail .lab{font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);padding:4px 12px 8px}
+.rail button{display:flex;align-items:center;justify-content:space-between;gap:8px;font:600 13.5px 'Plus Jakarta Sans',sans-serif;color:var(--muted);background:none;border:1px solid transparent;padding:10px 12px;border-radius:10px;cursor:pointer;text-align:left;width:100%}
+.rail button:hover{background:var(--surface);color:var(--ink)}
+.rail button[aria-pressed="true"]{background:var(--ink);color:var(--bg);box-shadow:0 8px 16px -10px var(--ink)}
+.rail .n{font-size:11.5px;opacity:.7;font-weight:700}
+.rail .tip{margin-top:14px;padding:13px;border:1px dashed var(--line);border-radius:12px;font-size:12px;color:var(--muted);background:var(--surface)}
+.rail .tip b{color:var(--ink);display:block;margin-bottom:3px}
+.rail .tip a{color:var(--accent);font-weight:700;text-decoration:none}
+
+/* Cards */
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:14px}
+.section-head h2{font-family:'Bricolage Grotesque',sans-serif;font-size:22px;letter-spacing:-.5px}
+.section-head p{font-size:13px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(252px,1fr));gap:16px}
+.tool{display:flex;flex-direction:column;gap:13px;text-align:left;text-decoration:none;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;font:inherit;cursor:pointer;position:relative;transition:border-color .16s,transform .16s,box-shadow .16s;box-shadow:var(--shadow)}
+.tool:hover{border-color:var(--cat);transform:translateY(-5px);box-shadow:0 24px 38px -20px var(--cat)}
+.tool .top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.tool .ic{width:48px;height:48px;border-radius:13px;display:grid;place-items:center;font-size:20px;color:var(--cat);background:color-mix(in srgb,var(--cat) 13%,transparent);border:1px solid color-mix(in srgb,var(--cat) 20%,transparent)}
+.tool h3{font-family:'Bricolage Grotesque',sans-serif;font-size:18px;letter-spacing:-.3px;line-height:1.2}
+.tool p{font-size:13.5px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.tool .meta{margin-top:auto;font-size:12.5px;font-weight:700;color:var(--cat);display:flex;align-items:center;gap:6px}
+.tool .meta .dot{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.7}
+.badge{font:800 9.5px 'Plus Jakarta Sans',sans-serif;letter-spacing:.8px;text-transform:uppercase;padding:4px 7px;border-radius:5px;background:color-mix(in srgb,var(--cat) 15%,transparent);color:var(--cat);border:1px solid color-mix(in srgb,var(--cat) 25%,transparent);white-space:nowrap}
+.badge.new{background:color-mix(in srgb,#0f9d6e 14%,transparent);color:#0f9d6e;border-color:color-mix(in srgb,#0f9d6e 30%,transparent)}
+.badge.live{background:color-mix(in srgb,#c2410c 12%,transparent);color:#c2410c;border-color:color-mix(in srgb,#c2410c 28%,transparent)}
+.fav{position:absolute;right:14px;bottom:14px;width:30px;height:30px;border:0;background:none;color:var(--muted);cursor:pointer;border-radius:8px;display:grid;place-items:center;font-size:14px;opacity:.6}
+.fav:hover{background:var(--surface-2);color:var(--mark);opacity:1}
+.fav.on{color:#f59e0b;opacity:1}
+.tool .meta{padding-right:30px}
+.empty{display:none;padding:44px 0;color:var(--muted);text-align:center}
+.empty strong{display:block;color:var(--ink);font-size:18px;margin-bottom:4px}
+.recent-wrap{margin-bottom:26px}
+.recent-wrap .section-head{margin-bottom:10px}
+.recent{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 6px}
+.recent a{flex:none;display:flex;align-items:center;gap:8px;text-decoration:none;background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:8px 12px;font-size:13px;font-weight:600;color:var(--muted);box-shadow:0 6px 14px -12px rgba(20,24,70,.4)}
+.recent a:hover{border-color:var(--accent);color:var(--ink)}
+.recent i{color:var(--accent)}
+
+/* Trust + steps */
+.note{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--surface)}
+.note .wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px;padding-top:32px;padding-bottom:32px}
+.note h3{font-family:'Bricolage Grotesque',sans-serif;font-size:17px;margin-bottom:5px;display:flex;align-items:center;gap:8px}
+.note p{font-size:13.5px;color:var(--muted)}
+.note i{color:var(--accent)}
+.note .api{border:1px solid var(--line);border-radius:14px;padding:16px;background:var(--bg);grid-column:span 2}
+.note .api p{margin-top:4px}
+.note .api a{color:var(--accent);font-weight:700;text-decoration:none}
+@media (max-width:780px){.note .api{grid-column:auto}}
+.how{padding:52px 0 48px}
+.how h2{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(24px,4vw,32px);letter-spacing:-.8px;margin-bottom:6px}
+.how>p{color:var(--muted);font-size:14.5px;margin-bottom:22px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.step b{display:grid;place-items:center;width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;font-size:14px;margin-bottom:12px}
+.step h3{font-size:15.5px;margin-bottom:4px}
+.step p{font-size:13px;color:var(--muted)}
+.step::after{content:"";position:absolute;right:-18px;top:-18px;width:74px;height:74px;border-radius:50%;background:color-mix(in srgb,var(--accent) 8%,transparent)}
+@media (max-width:720px){.steps{grid-template-columns:1fr}}
+
+/* FAQ */
+.faq{padding:0 0 58px}
+.faq h2{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(24px,4vw,32px);letter-spacing:-.8px;margin-bottom:16px}
+.faq details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:0 16px;margin-bottom:9px;box-shadow:0 6px 16px -14px rgba(20,24,70,.35)}
+.faq summary{cursor:pointer;font-weight:700;font-size:14.5px;padding:14px 0;list-style:none;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-size:20px;color:var(--accent);font-weight:400;line-height:1}
+.faq details[open] summary::after{content:"−"}
+.faq details p{font-size:14px;color:var(--muted);padding:0 0 14px;max-width:75ch}
+.faq details a{color:var(--accent);font-weight:600}
+
+/* Footer */
+footer{margin-top:auto;padding:30px 0;font-size:13px;color:var(--muted);border-top:1px solid var(--line);background:color-mix(in srgb,var(--surface) 60%,transparent)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:14px 26px;justify-content:space-between;align-items:center}
+footer nav{display:flex;gap:18px;flex-wrap:wrap}
+footer a{font-weight:600;text-decoration:none;color:var(--muted)}
+footer a:hover{color:var(--ink)}
+footer .creator{color:var(--accent);font-weight:700}
+footer .social{display:flex;gap:10px}
+footer .social a{width:32px;height:32px;border:1px solid var(--line);border-radius:9px;display:grid;place-items:center}
+footer .social a:hover{border-color:var(--accent);color:var(--accent)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+@media (max-width:900px){
+  .hero .wrap{grid-template-columns:1fr;gap:14px}
+  .hero-art{min-height:210px;order:-1}
+  .hero-art img{width:190px}
+  .hero-art .halo{width:200px;height:200px}
+  .hero-art .ring{width:170px;height:62px}
+  .hero h1{max-width:20ch}
+}
+@media (max-width:780px){
+  .main{grid-template-columns:minmax(0,1fr);gap:14px;padding-top:20px}
+  .rail{position:static;flex-direction:row;overflow-x:auto;gap:6px;padding-bottom:6px}
+  .rail .lab,.rail .tip{display:none}
+  .rail button{white-space:nowrap;border:1px solid var(--line);width:auto}
+  .rail button .n{display:none}
+  .grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .tool{padding:14px;gap:10px}
+  .tool p{-webkit-line-clamp:3;font-size:12.5px}
+  .tool h3{font-size:16px}
+  .tool .ic{width:40px;height:40px;font-size:17px;border-radius:11px}
+  .cmd kbd{display:none}
+  .nav a:not(.cta){display:none}
+  .fav{right:8px;bottom:8px}
+}
+@media (max-width:480px){
+  .bar{gap:8px}
+  .brand{font-size:16px;gap:8px;letter-spacing:-.3px}
+  .brand img{width:34px;height:34px}
+  .nav{gap:2px}
+  .nav .cta{padding:8px 11px;font-size:12.5px}
+  .hero{padding-top:38px}
+}
+@media (max-width:390px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<a class="skip" href="#tools">Skip to tools</a>
+
+<header>
+  <div class="wrap bar">
+    <a href="index.html" class="brand" aria-label="MULTI TOOL HUB home">
+      <img src="assets/logo.svg" alt="" width="42" height="42">MULTI <b>TOOL HUB</b>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="#tools">All tools</a>
+      <a href="#how">How it works</a>
+      <a href="#faq">FAQ</a>
+      <button type="button" onclick="openHubChat()"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> Assistant</button>
+      <button type="button" id="themeBtn" class="icobtn" aria-label="Switch colour theme" onclick="toggleTheme()"><i class="fa-solid fa-circle-half-stroke"></i></button>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow"><i class="fa-solid fa-bolt"></i> 17 tools · one hub · zero sign-up</span>
+      <h1>Every file job, done in <mark>seconds</mark>.</h1>
+      <p>Merge, split, edit, sign, watermark, compress and convert PDFs, images and audio. Most tools run entirely inside your browser, so your files never leave your device.</p>
+      <label class="cmd">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        <input type="search" id="q" placeholder="What do you need to do? Try “sign”, “shrink” or “PDF to Word”" autocomplete="off" aria-label="Search tools">
+        <kbd>/</kbd>
+      </label>
+      <div class="hero-stats" aria-label="Service highlights">
+        <div><b>17</b><span>working tools</span></div>
+        <div><b>0</b><span>uploads for local tools</span></div>
+        <div><b>∞</b><span>free usage</span></div>
+        <div><b>1</b><span>click to start</span></div>
+      </div>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <div class="halo"></div><div class="ring"></div><div class="ring r2"></div>
+      <img src="assets/logo.svg" alt="">
+    </div>
+  </div>
+</section>
+
+<main class="wrap main" id="tools">
+  <aside>
+    <div class="rail" id="rail" role="group" aria-label="Tool categories"></div>
+    <div class="tip">
+      <b>Tip: press <kbd style="font:700 11px inherit;border:1px solid var(--line);border-radius:4px;padding:1px 5px">/</kbd></b>
+      Jump to search from anywhere. Your favourites and recent tools are saved on this device only.
+    </div>
+  </aside>
+  <div>
+    <div class="recent-wrap" id="recentWrap" hidden>
+      <div class="section-head"><h2 style="font-size:16px">Recently used</h2><button type="button" class="chip" id="clearRecent" style="font-size:11.5px;padding:5px 10px">Clear</button></div>
+      <div class="recent" id="recent"></div>
+    </div>
+    <div class="section-head">
+      <div><h2 id="listTitle">All tools</h2><p id="listSub">Pick a tool and get straight to work.</p></div>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty"><strong>No tool matches that search.</strong>Try a shorter word such as “pdf”, “image” or “compress”, or choose “All tools”.</div>
+  </div>
+</main>
+
+<section class="note" id="privacy">
+  <div class="wrap">
+    <div><h3><i class="fa-solid fa-lock"></i> Private by design</h3><p>Merge, split, edit, sign, watermark, compress and convert tools run in your browser’s memory. Nothing is uploaded to us, and files vanish when you close the tab.</p></div>
+    <div><h3><i class="fa-solid fa-cloud-arrow-down"></i> Two link-based helpers</h3><p>YouTube and Instagram downloads use the Loader.to API. It receives only the public link you paste — never a file and never an account.</p></div>
+    <div><h3><i class="fa-solid fa-infinity"></i> Free, no limits</h3><p>No account, no watermark on your work, no daily quota. Large files are limited only by your device’s memory.</p></div>
+    <div class="api">
+      <h3><i class="fa-solid fa-plug-circle-check"></i> About the downloader API — in plain language</h3>
+      <p>We keep this feature transparent instead of hiding it. When you press “Get download options”, the public URL you typed is sent to Loader.to so it can prepare the download. Nothing else leaves your browser. You can avoid it entirely by using the other 15 tools, which are fully local. Full details are in our <a href="privacy.html">Privacy Policy</a>.</p>
+    </div>
+  </div>
+</section>
+
+<section class="how wrap" id="how">
+  <h2>Three steps. No account.</h2>
+  <p>A deliberately simple workflow, whether you are on a laptop or a phone.</p>
+  <div class="steps">
+    <div class="step"><b>1</b><h3>Pick a tool</h3><p>Search by what you want to do, or browse a category. The assistant can choose for you.</p></div>
+    <div class="step"><b>2</b><h3>Add your file</h3><p>Drag it in or tap to browse. Adjust options and see a live preview before you commit.</p></div>
+    <div class="step"><b>3</b><h3>Download the result</h3><p>Your original is never changed. Check the result, then save it to your device.</p></div>
+  </div>
+</section>
+
+<section class="faq wrap" id="faq">
+  <h2>Questions, answered</h2>
+  <details><summary>Are my files uploaded?</summary><p>No for every PDF, image and audio tool. They use your browser’s own processing power. The only exception is the YouTube and Instagram helpers, which send the public link you paste to Loader.to. No file is ever sent there.</p></details>
+  <details><summary>Is it really free?</summary><p>Yes. There is no account, no trial, no daily limit and no watermark added to your results. If a tool cannot finish because of device memory, split the file into smaller parts first.</p></details>
+  <details><summary>Can I edit an existing PDF like in Acrobat?</summary><p>The <a href="tools/editor.html">PDF Editor</a> lets you edit existing text, add text, highlight, underline, strike through, draw, add lines, arrows, boxes, ellipses, images, signatures, comments and form values. It also supports page insert/delete/duplicate/rotate, merging another PDF, and true flattening for redaction. Works on rotated pages too.</p></details>
+  <details><summary>Why does PDF to Word sometimes change the layout?</summary><p>A PDF stores text as positioned fragments, not as sentences. We rebuild headings, paragraphs, lists and simple tables, but a complex magazine layout can still shift. You can preview the result before downloading and choose whether each PDF page starts a new Word page.</p></details>
+  <details><summary>Can I use it on my phone?</summary><p>Yes. Every page is responsive and touch-friendly. Add the site to your home screen to open it like an app; the local tools keep working offline after the first visit.</p></details>
+  <details><summary>Does the assistant use an AI service?</summary><p>The Hub Assistant runs entirely in your browser. It understands plain sentences, finds tools, explains privacy and formats, switches theme, and walks you through problems without sending your messages anywhere.</p></details>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; 2026 MULTI TOOL HUB · Created by <a class="creator" href="https://www.instagram.com/____fa_y_as_____" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i> (hank!nd3 p4d4y41! | FAYAS MONU</a></span>
+    <nav aria-label="Legal">
+      <a href="terms.html">Terms &amp; Conditions</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="index.html#privacy">Privacy summary</a>
+      <a href="tools/editor.html">PDF Editor</a>
+    </nav>
+    <div class="social">
+      <a href="https://www.instagram.com/____fa_y_as_____" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+      <a href="mailto:?subject=MULTI%20TOOL%20HUB" aria-label="Share by email"><i class="fa-solid fa-envelope"></i></a>
+    </div>
+  </div>
+</footer>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"MULTI TOOL HUB","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Free browser-based PDF, image and media tools.","creator":{"@type":"Person","name":"FAYAS MONU"}}
+</script>
+
+<script>
+const CATS={
+  all:["All tools",""],
+  organize:["Organize PDFs","--c-organize"],
+  optimize:["Optimize","--c-optimize"],
+  convert:["Convert","--c-convert"],
+  edit:["Edit & sign","--c-edit"],
+  images:["Images","--c-images"],
+  media:["Media","--c-media"]
+};
+const TOOLS=[
+  {t:"PDF Editor",d:"Edit text, add text, highlight, underline, strike, draw, shapes, images, signatures, comments and forms. Manage pages too.",c:"edit",i:"fa-pen-nib",u:"tools/editor.html",m:"Acrobat-style editor",badge:"All-in-one",live:1},
+  {t:"Merge PDF",d:"Combine PDFs in any order, choose page ranges and preview page counts before merging.",c:"organize",i:"fa-file-circle-plus",u:"tools/merge-pdf.html",m:"Combine files",badge:"Local"},
+  {t:"Split PDF",d:"Extract ranges, save every page, split into parts or pick pages visually.",c:"organize",i:"fa-scissors",u:"tools/split-pdf.html",m:"Extract pages",badge:"Local"},
+  {t:"Organize Pages",d:"Reorder by drag and drop, rotate, duplicate, delete, insert blank pages and undo.",c:"organize",i:"fa-table-cells-large",u:"tools/organize-pdf.html",m:"Visual page manager",badge:"Local"},
+  {t:"Rotate PDF",d:"Rotate all pages or a range, with a live thumbnail preview and reset.",c:"organize",i:"fa-arrows-rotate",u:"tools/rotate-pdf.html",m:"Fix orientation",badge:"Local"},
+  {t:"Compress PDF",d:"Choose a quality preset, preview the result and see exactly how much smaller it gets.",c:"optimize",i:"fa-file-arrow-down",u:"tools/compress-pdf.html",m:"Shrink file size",badge:"Local"},
+  {t:"PDF to Word",d:"Rebuild a real .docx with headings, lists and tables — with a preview before download.",c:"convert",i:"fa-file-word",u:"tools/pdf-to-word.html",m:"Editable .docx",badge:"Improved",new:1},
+  {t:"PDF to Text",d:"Pull clean, searchable text out of a PDF with page ranges and layout options.",c:"convert",i:"fa-file-lines",u:"tools/pdf-to-text.html",m:"Plain .txt",badge:"New",new:1},
+  {t:"PDF to JPG",d:"Export pages as JPG, PNG or WebP at the resolution you choose, one ZIP or individually.",c:"convert",i:"fa-file-image",u:"tools/pdf-to-jpg.html",m:"Page images",badge:"Local"},
+  {t:"JPG to PDF",d:"Combine photos and scans with A4/Letter sizing, orientation, margins and reorder.",c:"convert",i:"fa-images",u:"tools/jpg-to-pdf.html",m:"Images to PDF",badge:"Local"},
+  {t:"Crop PDF",d:"Drag a crop frame, use aspect presets and apply to all pages or just a range — live.",c:"edit",i:"fa-crop-simple",u:"tools/crop-pdf.html",m:"Trim margins",badge:"Live",live:1},
+  {t:"Page Numbers",d:"Nine positions, custom formats, fonts, ranges and an accurate live preview.",c:"edit",i:"fa-list-ol",u:"tools/page-numbers.html",m:"Number pages",badge:"Live",live:1},
+  {t:"Watermark",d:"Text, logo, tiled, rotated and positioned with a real-time preview, page by page.",c:"edit",i:"fa-certificate",u:"tools/watermark.html",m:"Brand or protect",badge:"Live",live:1},
+  {t:"Image Compressor",d:"Compress, resize, convert and rotate JPG, PNG and WebP images with a visual before/after.",c:"images",i:"fa-compress",u:"tools/image-compressor.html",m:"Smaller images",badge:"New",new:1},
+  {t:"Video to MP3",d:"Extract MP3 from video, trim with an audio preview, choose bitrate and normalize volume.",c:"media",i:"fa-file-audio",u:"tools/video-to-mp3.html",m:"Audio extraction",badge:"Local"},
+  {t:"YouTube Downloader",d:"Paste a public link and get download options in a clear, explained workflow.",c:"media",i:"fa-youtube",b:1,u:"tools/youtube-downloader.html",m:"Loader.to API",badge:"API"},
+  {t:"Instagram Downloader",d:"Save a public reel, video or post with a transparent explanation of the API.",c:"media",i:"fa-instagram",b:1,u:"tools/instagram-downloader.html",m:"Loader.to API",badge:"API"}
+];
+let cat="all";
+const $=id=>document.getElementById(id);
+const store={
+  get(k,d){try{return JSON.parse(localStorage.getItem(k)) ?? d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+};
+let favs=new Set(store.get("mth.favs",[]));
+let recent=store.get("mth.recent",[]);
+
+function renderRail(){
+  $("rail").innerHTML='<div class="lab">Categories</div>'+Object.entries(CATS).map(([k,[n]])=>{
+    const count=k==="all"?TOOLS.length:TOOLS.filter(x=>x.c===k).length;
+    return `<button type="button" data-k="${k}" aria-pressed="${k===cat}">${n}<span class="n">${count}</span></button>`;
+  }).join("");
+}
+function search(q){
+  q=q.toLowerCase().trim();
+  if(!q)return true;
+  const x=TOOLS.find(t=>t.u===q);
+  return !!x;
+}
+function matchTool(t,q){
+  if(!q)return true;
+  const hay=(t.t+" "+t.d+" "+t.m+" "+t.c+" "+t.badge).toLowerCase();
+  const words=q.split(/\s+/).filter(Boolean);
+  return words.every(w=>hay.includes(w)||fuzzy(hay,w));
+}
+function fuzzy(hay,w){
+  // simple 1-character tolerance for short typos
+  if(w.length<5)return false;
+  const idx=hay.indexOf(w.slice(0,-1));
+  return idx>=0;
+}
+function renderGrid(){
+  const q=$("q").value.trim().toLowerCase();
+  let list=TOOLS.filter(x=>(cat==="all"||x.c===cat)&&matchTool(x,q));
+  if(cat==="all"&&!q){
+    // favourites first, then the rest
+    list=list.slice().sort((a,b)=>(favs.has(b.u)?1:0)-(favs.has(a.u)?1:0));
+  }
+  $("listTitle").textContent=cat==="all"?"All tools":CATS[cat][0];
+  $("listSub").textContent=q?`${list.length} result${list.length===1?"":"s"} for “${$("q").value.trim()}”`:"Pick a tool and get straight to work.";
+  $("grid").innerHTML=list.map(x=>{
+    const ico=`<span class="ic"><i class="fa-${x.b?"brands":"solid"} ${x.i}" aria-hidden="true"></i></span>`;
+    const badge=x.badge?`<span class="badge ${x.new?"new":x.live?"live":""}">${x.badge}</span>`:"";
+    return `<a class="tool" style="--cat:var(${CATS[x.c][1]})" href="${x.u}" data-u="${x.u}">
+      <div class="top">${ico}${badge}</div>
+      <h3>${x.t}</h3><p>${x.d}</p>
+      <span class="meta"><span class="dot"></span>${x.m}</span>
+      <button class="fav ${favs.has(x.u)?"on":""}" type="button" data-fav="${x.u}" aria-label="${favs.has(x.u)?"Remove from":"Add to"} favourites" title="Favourite"><i class="fa-${favs.has(x.u)?"solid":"regular"} fa-star"></i></button>
+    </a>`;
+  }).join("");
+  $("empty").style.display=list.length?"none":"block";
+  renderRecent();
+}
+function renderRecent(){
+  const r=recent.filter(u=>TOOLS.some(t=>t.u===u)).slice(0,6);
+  $("recentWrap").hidden=!r.length;
+  $("recent").innerHTML=r.map(u=>{const t=TOOLS.find(x=>x.u===u);return `<a href="${t.u}"><i class="fa-solid ${t.i}"></i>${t.t}</a>`}).join("");
+}
+$("rail").addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b)return;
+  cat=b.dataset.k;renderRail();renderGrid();
+});
+$("grid").addEventListener("click",e=>{
+  const f=e.target.closest("[data-fav]");
+  if(f){e.preventDefault();e.stopPropagation();
+    const u=f.dataset.fav;
+    if(favs.has(u))favs.delete(u);else favs.add(u);
+    store.set("mth.favs",[...favs]);renderGrid();return;
+  }
+  const a=e.target.closest("[data-u]");
+  if(a){markRecent(a.dataset.u)}
+});
+function markRecent(u){recent=[u,...recent.filter(x=>x!==u)].slice(0,8);store.set("mth.recent",recent)}
+$("clearRecent").onclick=()=>{recent=[];store.set("mth.recent",[]);renderRecent()};
+$("q").addEventListener("input",()=>{clearTimeout(window.__qt);window.__qt=setTimeout(renderGrid,110)});
+$("q").addEventListener("keydown",e=>{
+  if(e.key==="Enter"){
+    const first=$("grid").querySelector("[data-u]");
+    if(first)location.href=first.dataset.u;
+  }
+  if(e.key==="Escape"){$("q").value="";renderGrid();$("q").blur()}
+});
+document.addEventListener("keydown",e=>{
+  if(e.key==="/"&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)&&!document.activeElement.isContentEditable){e.preventDefault();$("q").focus()}
+  if(e.key==="?"&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){e.preventDefault();openHubChat()}
+});
+$("grid").addEventListener("auxclick",e=>{const a=e.target.closest("[data-u]");if(a&&e.button===1)markRecent(a.dataset.u)});
+
+/* Theme */
+function setTheme(t){document.documentElement.dataset.theme=t;try{localStorage.setItem("theme",t)}catch(e){};window.dispatchEvent(new CustomEvent("mth:theme",{detail:t}))}
+function toggleTheme(){
+  const dark=document.documentElement.dataset.theme==="dark"||(!document.documentElement.dataset.theme&&matchMedia("(prefers-color-scheme:dark)").matches);
+  setTheme(dark?"light":"dark");
+}
+try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t;}catch(e){}
+
+renderRail();renderGrid();
+</script>
+<script src="assets/app.js"></script>
+<script src="assets/chat.js"></script>
+</body>
+</html>
