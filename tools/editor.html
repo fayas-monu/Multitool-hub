@@ -16,6 +16,34 @@
 <link rel="stylesheet" href="../assets/style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<style>
+  /* Extra Modern Home / Drop Zone UI Enhancements */
+  .drop {
+    border: 2px dashed var(--line, #cbd5e1);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(241, 245, 249, 0.5));
+    border-radius: 20px;
+    padding: 48px 24px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+  }
+  .drop:hover {
+    border-color: var(--primary, #e11d48);
+    background: linear-gradient(135deg, rgba(225, 29, 72, 0.02), rgba(241, 245, 249, 0.8));
+    transform: translateY(-2px);
+  }
+  .drop i {
+    font-size: 48px;
+    color: var(--primary, #e11d48);
+    margin-bottom: 16px;
+    animation: bounceSlow 2s infinite ease-in-out;
+  }
+  @keyframes bounceSlow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+</style>
 </head>
 <body>
 <header><div class="bar">
@@ -38,10 +66,10 @@
   </div>
 
   <label class="drop" id="zone">
-    <i class="fa-solid fa-file-pen" aria-hidden="true"></i>
-    <strong>Choose a PDF or drop it here</strong>
-    <span>One file to start · you can merge more pages later</span>
-    <input type="file" id="fileInput" accept="application/pdf,.pdf">
+    <i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i>
+    <strong style="display:block;font-size:18px;margin-bottom:6px;">Choose a PDF or drop it here</strong>
+    <span style="color:var(--muted, #64748b);font-size:14px;">100% Secure · Client-side processing · Your files never leave your device</span>
+    <input type="file" id="fileInput" accept="application/pdf,.pdf" hidden>
   </label>
 
   <div id="ed" hidden>
@@ -51,7 +79,16 @@
       <label title="Shape fill">Fill <input type="color" id="pf" value="#ffffff"><input type="checkbox" id="pn" checked> none</label>
       <label><span id="pl">Font size</span> <input type="range" id="ps" min="1" max="96" value="14"><b id="pv">14</b></label>
       <label>Opacity <input type="range" id="po" min="10" max="100" value="100"><b id="ov">100</b>%</label>
-      <label>Font <select id="pfont"><option value="h">Helvetica</option><option value="t">Times</option><option value="c">Courier</option></select></label>
+      <label>Font 
+        <select id="pfont">
+          <option value="h">Helvetica</option>
+          <option value="t">Times</option>
+          <option value="c">Courier</option>
+          <option value="arial">Arial</option>
+          <option value="georgia">Georgia</option>
+          <option value="verdana">Verdana</option>
+        </select>
+      </label>
       <label><input type="checkbox" id="pb"> Bold</label>
       <button type="button" class="chip" id="pdel" disabled style="margin-left:auto"><i class="fa-regular fa-trash-can"></i> Delete selected</button>
     </div>
@@ -161,8 +198,15 @@
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc=PE.asset("pdf.worker.min.js");
 var $=PE.$,$$=PE.$$;
-var FONTCSS={h:"Helvetica, Arial, sans-serif",t:"'Times New Roman', Times, serif",c:"'Courier New', Courier, monospace"};
-var FONTNAME={h:"Helvetica",t:"Times",c:"Courier"};
+var FONTCSS={
+  h:"Helvetica, Arial, sans-serif",
+  t:"'Times New Roman', Times, serif",
+  c:"'Courier New', Courier, monospace",
+  arial:"Arial, sans-serif",
+  georgia:"Georgia, serif",
+  verdana:"Verdana, sans-serif"
+};
+var FONTNAME={h:"Helvetica",t:"Times",c:"Courier",arial:"Helvetica",georgia:"Times",verdana:"Helvetica"};
 var LINE=1.25;
 var TOOLDEF={
   sel:{},edit:{},text:{color:"#111111",size:14,op:100},
@@ -292,6 +336,7 @@ async function openFiles(files,append){
   }
 }
 PE.drop($("zone"),$("fileInput"),/pdf/i,function(list){openFiles(list,false)});
+$("zone").onclick=function(){$("fileInput").click();};
 $("openBtn").onclick=async function(){
   var f=await PE.pickFiles({accept:"application/pdf,.pdf",multiple:false});
   if(f.length)openFiles(f,false);
@@ -535,7 +580,7 @@ async function loadText(){
       var size=Math.hypot(tr[2],tr[3])||t.height||11;
       var fam=(tc.styles[t.fontName]||{}).fontFamily||"";
       items.push({s:t.str,x:p[0],y:p[1],size:size,w:Math.max(1,t.width||size*t.str.length*.5),used:false,
-        font:/mono|courier/i.test(fam)?"c":(/serif/i.test(fam)&&!/sans/i.test(fam)?"t":"h")});
+        font:/mono|courier/i.test(fam)?"c":(/serif/i.test(fam)&&!/sans/i.test(fam)?"t":(/arial/i.test(fam)?"arial":(/verdana/i.test(fam)?"verdana":(/georgia/i.test(fam)?"georgia":"h"))))});
     });
     TEXTS[uid2]={rot:map.tot,items:items};render();
   }catch(e){PE.log("Text layer: "+e.message)}
@@ -1087,7 +1132,14 @@ async function embedFont(doc,cache,f,b){
   var key=fontKey(f,b);
   if(cache.fonts[key])return cache.fonts[key];
   var F=PDFLib.StandardFonts;
-  var name={h:[F.Helvetica,F.HelveticaBold],t:[F.TimesRoman,F.TimesRomanBold],c:[F.Courier,F.CourierBold]}[f||"h"][b?1:0];
+  var name={
+    h:[F.Helvetica,F.HelveticaBold],
+    t:[F.TimesRoman,F.TimesRomanBold],
+    c:[F.Courier,F.CourierBold],
+    arial:[F.Helvetica,F.HelveticaBold],
+    georgia:[F.TimesRoman,F.TimesRomanBold],
+    verdana:[F.Helvetica,F.HelveticaBold]
+  }[f||"h"][b?1:0];
   cache.fonts[key]=await doc.embedFont(name);
   return cache.fonts[key];
 }
@@ -1117,7 +1169,7 @@ async function textFallback(page,cache,doc,a,vp1,tot){
     var c=document.createElement("canvas");
     c.width=Math.ceil(maxw*dpr);c.height=Math.ceil(lh*lines.length*dpr);
     var x=c.getContext("2d");x.scale(dpr,dpr);
-    x.font=(a.bold?"700 ":"")+a.size+"px "+FONTCSS[a.font];
+    x.font=(a.bold?"700 ":"")+a.size+"px "+(FONTCSS[a.font]||FONTCSS.h);
     x.fillStyle=a.color;x.textBaseline="alphabetic";
     lines.forEach(function(l,i){x.fillText(l,0,a.size*.82+i*lh)});
     var src=c.toDataURL("image/png");
@@ -1367,8 +1419,6 @@ syncProps();
 $("pgCount").textContent="(0)";
 $("svName").value="edited-document.pdf";
 PE.log("PDF Editor v4 ready");
-
-
 </script>
 </body>
 </html>
