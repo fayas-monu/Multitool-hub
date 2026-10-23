@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
+<title>YouTube Downloader — clear, explained workflow | MULTI TOOL HUB</title>
+<meta name="description" content="Paste a public YouTube link and get video or audio download options. The process, the third-party API and your privacy are explained before anything happens.">
+<meta name="theme-color" content="#11162b">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  .vid{display:flex;gap:14px;align-items:center;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:10px;margin-top:14px}
+  .vid img{width:132px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;background:#0d1020;flex:none}
+  .vid .info{min-width:0}
+  .vid .info b{display:block;font-size:14px;word-break:break-word}
+  .vid .info span{display:block;font-size:12px;color:var(--muted);word-break:break-all;margin-top:3px}
+  .vid .info a{font-size:12px;font-weight:700;color:var(--accent)}
+  @media (max-width:520px){.vid img{width:100px}}
+  .steps{counter-reset:s;display:grid;gap:8px;margin-top:12px}
+  .steps li{list-style:none;position:relative;padding-left:32px;font-size:13.5px;color:var(--muted)}
+  .steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:0;width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font:700 12px/22px 'Plus Jakarta Sans',sans-serif;text-align:center}
+  .recent{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+  .recent a,.recent button{font:600 12px 'Plus Jakarta Sans',sans-serif;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 10px;color:var(--muted);text-decoration:none;cursor:pointer;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .recent a:hover{border-color:var(--accent);color:var(--accent)}
+  .recent button:hover{border-color:var(--err);color:var(--err)}
+  .frame-shell{position:relative;min-height:220px}
+  .frame-shell .loading{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:13.5px;gap:8px;text-align:center;padding:20px}
+  .frame-shell iframe{position:relative;z-index:1}
+  .apinote{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start}
+  .apinote i{color:var(--accent);font-size:17px;margin-top:2px}
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="" width="40" height="40">MULTI TOOL HUB</a>
+  <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
+</div></header>
+<main>
+<h1>YouTube Downloader</h1>
+<p class="lead">Paste a public YouTube link. We check it, show you exactly which video it points to, and only then open the download options from our API partner.</p>
+
+<div class="panel">
+  <label class="f" for="u">YouTube link</label>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <input class="in" id="u" type="url" placeholder="https://www.youtube.com/watch?v=…" autocomplete="off" spellcheck="false" style="flex:1;min-width:200px">
+    <button class="btn ghost sm" type="button" id="paste"><i class="fa-regular fa-clipboard"></i> Paste</button>
+  </div>
+  <div class="row">
+    <button class="btn" id="go"><i class="fa-solid fa-download"></i> Check link &amp; show options</button>
+    <button class="btn ghost" id="openTab" hidden>Open in a new tab</button>
+  </div>
+  <p class="hint" id="hint">Works with regular videos, Shorts, live replays and youtu.be links. Playlists and private videos are not supported.</p>
+
+  <div class="vid" id="vid" hidden>
+    <img id="thumb" alt="Video thumbnail" loading="lazy">
+    <div class="info">
+      <b id="vtitle">YouTube video</b>
+      <span id="vidid"></span>
+      <a id="watch" href="#" target="_blank" rel="noopener">Open on YouTube <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+    </div>
+  </div>
+
+  <div id="recentWrap" hidden>
+    <label class="f">Recent links on this device</label>
+    <div class="recent" id="recent"></div>
+  </div>
+</div>
+
+<div class="panel" id="box" hidden>
+  <h2>Download options</h2>
+  <p class="hint" style="margin-top:2px">Choose a format and quality inside the card below. Your browser will save the file when the API finishes preparing it.</p>
+  <div class="frame-shell" id="shell">
+    <div class="loading"><span class="spin"></span> Asking Loader.to to prepare your options…</div>
+    <iframe id="frame" title="YouTube download options" sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-downloads" style="width:100%;height:460px;border:0;border-radius:10px;background:#fff"></iframe>
+  </div>
+</div>
+
+<div class="callout">
+  <div class="apinote"><i class="fa-solid fa-circle-info"></i><div>
+    <strong>How this works — and what leaves your device.</strong>
+    The YouTube tool is the one exception to our “everything stays local” rule. Your public link (and nothing else — no file, no account) is sent to <strong>Loader.to</strong>, which returns the download card you see above. Loader.to may see your IP address and may set its own cookies. We do not run the download servers and cannot control their availability. Please download only videos you own or have permission to save, and follow YouTube's terms.
+  </div></div>
+</div>
+
+<div class="panel">
+  <h2 style="font-size:16px">If the card does not load</h2>
+  <ol class="steps">
+    <li>Check that the video is public and still available. Private, age-restricted and removed videos usually fail.</li>
+    <li>Press “Open in a new tab”. Some browsers block cross-site frames or third-party downloads.</li>
+    <li>Turn off strict tracking protection or an ad blocker for this page, then try again.</li>
+    <li>The Loader.to service can be busy. Wait a minute and retry.</li>
+  </ol>
+  <p class="hint">Prefer a fully local tool? Use <a href="video-to-mp3.html">Video to MP3</a> on a video file you already have. It never uploads anything.</p>
+</div>
+<div class="status" id="status" role="status" aria-live="polite"></div>
+</main>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
+<script src="../assets/app.js"></script>
+<script src="../assets/chat.js"></script>
+<script>
+var $=PE.$, current=null;
+function parse(u){
+  u=String(u||"").trim();
+  if(!u)return null;
+  if(/^[\w-]{11}$/.test(u))return {id:u,url:"https://www.youtube.com/watch?v="+u};
+  var id=null,m;
+  if((m=u.match(/(?:youtu\.be\/)([\w-]{11})/)))id=m[1];
+  else if((m=u.match(/[?&]v=([\w-]{11})/)))id=m[1];
+  else if((m=u.match(/(?:youtube\.com\/|youtube-nocookie\.com\/)(?:embed|shorts|live|v)\/([\w-]{11})/)))id=m[1];
+  if(!id)return null;
+  var host="";
+  try{host=new URL(u).hostname}catch(e){}
+  if(host&&!/(^|\.)(youtube\.com|youtu\.be|youtube-nocookie\.com)$/.test(host))return null;
+  return {id:id,url:"https://www.youtube.com/watch?v="+id};
+}
+function getRecent(){try{return JSON.parse(localStorage.getItem("mth.yt.recent")||"[]")}catch(e){return []}}
+function setRecent(list){try{localStorage.setItem("mth.yt.recent",JSON.stringify(list.slice(0,6)))}catch(e){}}
+function renderRecent(){
+  var list=getRecent();
+  $("recentWrap").hidden=!list.length;
+  $("recent").innerHTML=list.map(function(x){
+    return '<a href="#" data-u="'+PE.esc(x.id)+'" title="'+PE.esc(x.url)+'"><i class="fa-solid fa-clock-rotate-left"></i> '+PE.esc(x.id)+'</a>';
+  }).join("")+(list.length?'<button type="button" id="clrRecent">Clear</button>':"");
+  var c=$("clrRecent");
+  if(c)c.onclick=function(){setRecent([]);renderRecent()};
+}
+$("recent").addEventListener("click",function(e){
+  var a=e.target.closest("a[data-u]");if(!a)return;
+  e.preventDefault();$("u").value="https://www.youtube.com/watch?v="+a.dataset.u;run();
+});
+function run(){
+  var p=parse($("u").value);
+  if(!p){
+    $("vid").hidden=true;$("box").hidden=true;$("openTab").hidden=true;
+    PE.status("That does not look like a YouTube video link. Use a youtube.com/watch?v=…, youtu.be/… or /shorts/… link.","err");
+    return;
+  }
+  current=p;
+  $("u").value=p.url;
+  $("vid").hidden=false;
+  $("thumb").src="https://i.ytimg.com/vi/"+p.id+"/hqdefault.jpg";
+  $("thumb").onerror=function(){this.style.visibility="hidden"};
+  $("thumb").onload=function(){this.style.visibility="visible"};
+  $("vidid").textContent="Video ID: "+p.id;
+  $("watch").href=p.url;
+  $("vtitle").textContent="YouTube video "+p.id;
+
+  var list=getRecent().filter(function(x){return x.id!==p.id});
+  list.unshift({id:p.id,url:p.url,at:Date.now()});
+  setRecent(list);renderRecent();
+
+  $("box").hidden=false;$("openTab").hidden=false;
+  $("openTab").onclick=function(){window.open(p.url,"_blank","noopener")};
+  var shell=$("shell"),frame=$("frame");
+  var loading=shell.querySelector(".loading");
+  loading.hidden=false;
+  frame.style.visibility="hidden";
+  frame.onload=function(){loading.hidden=true;frame.style.visibility="visible"};
+  frame.src="https://loader.to/api/card/?url="+encodeURIComponent(p.url);
+  PE.status("Link checked. Loading the download card from Loader.to…");
+  setTimeout(function(){
+    if(!loading.hidden){
+      loading.innerHTML='<div><i class="fa-solid fa-triangle-exclamation" style="font-size:22px;color:var(--warn)"></i><br><br>The card is taking longer than usual.<br>Use “Open in a new tab” or check your connection.</div>';
+    }
+  },14000);
+  $("box").scrollIntoView({behavior:"smooth",block:"start"});
+}
+$("go").onclick=run;
+$("u").addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();run()}});
+$("paste").onclick=async function(){
+  try{var t=await navigator.clipboard.readText();$("u").value=t.trim();if(t.trim())run()}
+  catch(e){PE.status("Your browser did not allow clipboard access. Paste the link with Ctrl+V.","err");$("u").focus()}
+};
+renderRecent();
+</script>
+</body>
+</html>

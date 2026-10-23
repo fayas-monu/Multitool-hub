@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
+<title>PDF to JPG, PNG or WebP — any resolution | MULTI TOOL HUB</title>
+<meta name="description" content="Export PDF pages as sharp JPG, PNG or WebP images. Pick pages, resolution and quality, preview the first page, then download a ZIP or individual images.">
+<meta name="theme-color" content="#11162b">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+  .outgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:12px}
+  .outcard{border:1px solid var(--line);border-radius:10px;background:var(--surface-2);padding:7px;text-align:center}
+  .outcard img{width:100%;height:150px;object-fit:contain;background:#fff;border-radius:6px;display:block}
+  .outcard .nm{font-size:11.5px;font-weight:700;margin-top:6px;word-break:break-all}
+  .outcard .sz{font-size:11px;color:var(--muted)}
+  .outcard button{margin-top:6px;width:100%;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:7px;padding:5px;font:700 11.5px 'Plus Jakarta Sans',sans-serif;cursor:pointer}
+  .outcard button:hover{border-color:var(--accent);color:var(--accent)}
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="" width="40" height="40">MULTI TOOL HUB</a>
+  <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
+</div></header>
+<main>
+<h1>PDF to JPG</h1>
+<p class="lead">Turn pages into crisp images. Choose JPG, PNG or WebP, control the resolution, and take one ZIP or only the pages you need.</p>
+
+<label class="drop" id="zone"><i class="fa-solid fa-file-image" aria-hidden="true"></i><strong>Choose a PDF or drop it here</strong><span>Nothing is uploaded · works offline on your device</span>
+<input type="file" id="fileInput" accept="application/pdf,.pdf"></label>
+
+<div class="panel" id="panel" hidden>
+  <p style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><strong id="fn"></strong> <span id="meta" style="color:var(--muted)"></span></p>
+
+  <div class="g2">
+    <div>
+      <label class="f">Page preview <span class="live">● Live</span></label>
+      <div class="pvframe" style="padding:8px"><canvas id="pv" style="max-width:100%;max-height:300px;height:auto;border-radius:6px;box-shadow:0 8px 20px -10px rgba(10,12,40,.5)" aria-label="First page preview"></canvas></div>
+      <p class="hint" id="dims" style="text-align:center;margin-top:8px"></p>
+    </div>
+    <div>
+      <label class="f" for="fmt">Image format</label>
+      <select class="in" id="fmt">
+        <option value="image/jpeg" selected>JPG — smallest, best for photos</option>
+        <option value="image/png">PNG — lossless, larger</option>
+        <option value="image/webp">WebP — modern and compact</option>
+      </select>
+
+      <label class="f" for="dpi">Resolution</label>
+      <select class="in" id="dpiSel">
+        <option value="96">96 DPI — screen / web</option>
+        <option value="150" selected>150 DPI — good all-round</option>
+        <option value="200">200 DPI — sharp</option>
+        <option value="300">300 DPI — print quality</option>
+        <option value="custom">Custom…</option>
+      </select>
+      <div id="customDpi" hidden>
+        <label class="f" for="dpi">Custom DPI: <span id="dpiv">220</span></label>
+        <input type="range" id="dpi" min="48" max="600" step="2" value="220" style="width:100%">
+      </div>
+
+      <div id="qWrap">
+        <label class="f" for="q">Image quality: <span id="qv">92</span>%</label>
+        <input type="range" id="q" min="40" max="100" step="1" value="92" style="width:100%">
+      </div>
+
+      <label class="f" for="rangeMode">Pages</label>
+      <select class="in" id="rangeMode"><option value="all" selected>All pages</option><option value="range">Only selected pages</option></select>
+      <input class="in" id="rg" placeholder="For example 1-3, 7" style="margin-top:8px" hidden>
+    </div>
+  </div>
+
+  <div class="prog" id="prog"><div></div></div>
+  <div class="row">
+    <button class="btn" id="go"><i class="fa-solid fa-images"></i> Convert pages</button>
+    <button class="btn ghost" id="zip" hidden><i class="fa-solid fa-file-zipper"></i> Download ZIP</button>
+    <button class="btn ghost" id="all" hidden>Download each</button>
+  </div>
+  <p class="hint" id="hint">The preview shows page 1. Images are made on your device at the resolution you choose; nothing is uploaded.</p>
+  <div id="outWrap" hidden>
+    <div class="statgrid" style="grid-template-columns:repeat(auto-fit,minmax(110px,1fr))">
+      <div class="stat"><b id="sOut">0</b><span>Images</span></div>
+      <div class="stat"><b id="sBytes">0 KB</b><span>Total size</span></div>
+      <div class="stat"><b id="sFmt">JPG</b><span>Format</span></div>
+    </div>
+    <div class="outgrid" id="out"></div>
+  </div>
+</div>
+<div class="status" id="status" role="status" aria-live="polite"></div>
+</main>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
+<script src="../assets/app.js"></script>
+<script src="../assets/chat.js"></script>
+<script>
+var $=PE.$, file=null, info=null, results=[], busy=false;
+var EXT={"image/jpeg":"jpg","image/png":"png","image/webp":"webp"};
+
+function dpi(){
+  var v=$("dpiSel").value;
+  return v==="custom"?+$("dpi").value:+v;
+}
+function selPages(){
+  if(!info)return [];
+  if($("rangeMode").value==="all")return Array.from({length:info.pages},function(_,i){return i});
+  try{return PE.ranges($("rg").value,info.pages)}catch(e){return null}
+}
+function sync(){
+  var f=$("fmt").value, custom=$("dpiSel").value==="custom";
+  $("customDpi").hidden=!custom;
+  $("rg").hidden=$("rangeMode").value==="all";
+  $("qWrap").hidden=f==="image/png";
+  $("sFmt").textContent=EXT[f].toUpperCase();
+  if(info){
+    var v=info.pw/72*dpi(),h=info.ph/72*dpi();
+    $("dims").textContent="Page 1 at "+dpi()+" DPI → "+Math.round(v)+" × "+Math.round(h)+" px";
+  }
+}
+function fmtName(i){
+  return PE.baseName(file?file.name:"document")+"-page-"+String(i+1).padStart(3,"0")+"."+EXT[$("fmt").value];
+}
+function renderResult(){
+  $("outWrap").hidden=!results.length;
+  $("zip").hidden=!results.length;
+  $("all").hidden=!results.length;
+  $("sOut").textContent=results.length;
+  $("sBytes").textContent=PE.fmt(results.reduce(function(a,r){return a+r.blob.size},0));
+  $("out").innerHTML=results.map(function(r,i){
+    return '<div class="outcard"><img src="'+r.url+'" alt="'+PE.esc(r.name)+'" loading="lazy"><div class="nm">'+PE.esc(r.name)+'</div><div class="sz">'+PE.fmt(r.blob.size)+' · '+r.w+'×'+r.h+'</div><button type="button" data-dl="'+i+'"><i class="fa-solid fa-download"></i> Save</button></div>';
+  }).join("");
+}
+$("out").addEventListener("click",function(e){
+  var b=e.target.closest("[data-dl]");if(!b)return;
+  var r=results[+b.dataset.dl];if(!r)return;
+  PE.download(r.blob,r.name);
+});
+async function preview(){
+  if(!file)return;
+  try{
+    var ni=await PE.preview(file,$("pv"),{page:1,maxW:400});
+    if(info&&info.pdf&&info.pdf!==ni.pdf){try{info.pdf.destroy()}catch(e){}}
+    info=ni;
+    $("meta").textContent="· "+PE.fmt(file.size)+" · "+ni.pages+" page"+(ni.pages===1?"":"s");
+    sync();
+  }catch(e){
+    PE.status(/password|encrypt/i.test(e.message||"")?"This PDF is password-protected. Remove the password first, then try again.":"Could not read this PDF: "+(e.message||e),"err");
+  }
+}
+PE.drop($("zone"),$("fileInput"),/pdf/i,function(list){
+  file=list[0];results=[];renderResult();
+  $("fn").textContent=file.name;$("panel").hidden=false;$("meta").textContent="· reading…";
+  PE.status("Reading the PDF…");preview();
+});
+["fmt","dpiSel","rangeMode"].forEach(function(id){$(id).addEventListener("change",sync)});
+$("dpi").addEventListener("input",function(){$("dpiv").textContent=this.value;sync()});
+$("q").addEventListener("input",function(){$("qv").textContent=this.value});
+
+$("go").onclick=async function(){
+  if(!file||busy)return;
+  var list=selPages();
+  if(!list||!list.length){PE.status("Choose at least one page to convert.","err");return}
+  busy=true;this.disabled=true;$("zip").hidden=true;$("all").hidden=true;
+  results.forEach(function(r){URL.revokeObjectURL(r.url)});results=[];
+  var type=$("fmt").value,ext=EXT[type],q=+$("q").value/100,scale=dpi()/72;
+  PE.progress(.02);PE.status("Preparing…");
+  try{
+    var pdf=await PE.openPdf(file), canvas=document.createElement("canvas"), totalBytes=0;
+    for(var k=0;k<list.length;k++){
+      var i=list[k], page=await pdf.getPage(i+1), vp=page.getViewport({scale:scale});
+      var maxPix=32e6;
+      if(vp.width*vp.height>maxPix){var f=Math.sqrt(maxPix/(vp.width*vp.height));vp=page.getViewport({scale:scale*f})}
+      canvas.width=Math.max(1,Math.round(vp.width));canvas.height=Math.max(1,Math.round(vp.height));
+      var cx=canvas.getContext("2d");
+      if(type==="image/jpeg"){cx.fillStyle="#fff";cx.fillRect(0,0,canvas.width,canvas.height)}
+      await page.render({canvasContext:cx,viewport:vp,background:"rgba(255,255,255,0)"}).promise;
+      var blob=await new Promise(function(r){canvas.toBlob(r,type,type==="image/png"?undefined:q)});
+      if(!blob)throw new Error("The browser could not create a "+ext.toUpperCase()+" for page "+(i+1)+".");
+      totalBytes+=blob.size;
+      results.push({name:fmtName(i),blob:blob,url:URL.createObjectURL(blob),w:canvas.width,h:canvas.height});
+      canvas.width=canvas.height=0;
+      PE.progress(.05+.9*((k+1)/list.length));
+      PE.status("Rendering page "+(i+1)+" — "+results.length+" of "+list.length+" done…");
+      await PE.sleep(0);
+    }
+    try{pdf.destroy()}catch(e){}
+    PE.progress(1);
+    renderResult();
+    PE.status("Converted "+results.length+" page"+(results.length===1?"":"s")+" ("+PE.fmt(totalBytes)+"). Download the ZIP or save pages individually.","ok");
+    PE.toast("Images ready");
+  }catch(e){
+    PE.progress(null);
+    PE.status("Could not convert this PDF: "+(e.message||e),"err");
+  }finally{busy=false;this.disabled=false;setTimeout(function(){PE.progress(null)},600)}
+};
+
+$("zip").onclick=async function(){
+  if(!results.length)return;
+  var btn=this;btn.disabled=true;
+  try{
+    PE.status("Packing ZIP…");
+    var entries=results.map(function(r){return {name:r.name,data:r.blob}});
+    var blob=await PE.zip(entries,function(p){PE.progress(p)});
+    PE.download(blob,PE.baseName(file.name)+"-images.zip");
+    PE.progress(1);PE.status("ZIP ready — "+results.length+" images, "+PE.fmt(blob.size)+".","ok");PE.toast("Download started");
+  }catch(e){PE.status("Could not build the ZIP: "+(e.message||e),"err")}
+  finally{btn.disabled=false;setTimeout(function(){PE.progress(null)},700)}
+};
+$("all").onclick=async function(){
+  if(!results.length)return;
+  PE.status("Saving "+results.length+" images one by one…");
+  for(var i=0;i<results.length;i++){
+    PE.download(results[i].blob,results[i].name);
+    await PE.sleep(650);
+  }
+  PE.status("Saved "+results.length+" images. If your browser asked to allow multiple downloads, choose Allow.","ok");
+};
+</script>
+</body>
+</html>

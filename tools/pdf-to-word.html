@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
+<title>PDF to Word — editable .docx converter | MULTI TOOL HUB</title>
+<meta name="description" content="Convert a PDF to an editable Word .docx file with rebuilt paragraphs, headings, lists and tables. Choose pages, clean headers and footers, preview the result and keep scanned pages as images. Runs in your browser.">
+<meta name="theme-color" content="#11162b">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
+<style>
+  .pbox{max-height:420px;overflow:auto;background:#fff;color:#111;border:1px solid var(--line);border-radius:12px;padding:22px 26px;font:14.5px/1.6 Calibri,Carlito,Arial,sans-serif;box-shadow:inset 0 0 0 1px rgba(0,0,0,.03)}
+  .pbox h2,.pbox h3,.pbox h4{margin:16px 0 6px;line-height:1.25;color:#111}
+  .pbox h2{font-size:23px}.pbox h3{font-size:19px}.pbox h4{font-size:16.5px}
+  .pbox p{margin:0 0 10px}
+  .pbox ul{margin:0 0 10px;padding-left:24px}
+  .pbox li{margin:0 0 4px}
+  .pbox table{border-collapse:collapse;width:100%;margin:10px 0;font-size:13.5px}
+  .pbox td{border:1px solid #c9ced8;padding:5px 8px;vertical-align:top}
+  .pbox .pgbrk{border:0;border-top:2px dashed #c9ced8;margin:18px 0 12px;position:relative}
+  .pbox .pgbrk span{display:inline-block;transform:translateY(-50%);background:#fff;color:#8a93a5;font-size:11px;font-weight:700;padding-right:8px}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:8px;margin:14px 0 2px}
+  .stats div{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:9px 12px}
+  .stats b{display:block;font-size:18px;color:var(--ink)}
+  .stats span{font-size:11.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+  .preview-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:18px 0 8px}
+  .preview-head p{margin:0;font-weight:700;font-size:13px}
+  .warn{font-size:13px;color:var(--muted);background:color-mix(in srgb,var(--accent) 7%,var(--surface));border:1px solid color-mix(in srgb,var(--accent) 22%,var(--line));border-radius:10px;padding:10px 13px;margin-top:12px}
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="" width="40" height="40">MULTI TOOL HUB</a>
+  <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
+</div></header>
+<main>
+<h1>PDF to Word</h1>
+<p class="lead">Turn a PDF into a genuinely editable <b>.docx</b> file. Paragraphs are rebuilt from the real text flow, headings and bullet lists are detected, simple tables become Word tables, and scanned pages can be embedded as images so nothing is lost.</p>
+
+<label class="drop" id="zone"><i class="fa-solid fa-file-word" aria-hidden="true"></i><strong>Choose a PDF or drop it here</strong><span>You can convert one document at a time · nothing is uploaded</span>
+<input type="file" id="fileInput" accept="application/pdf,.pdf"></label>
+
+<div class="panel" id="panel" hidden>
+  <p style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><strong id="fn"></strong> <span id="sz" style="color:var(--muted)"></span> <span class="live">● Local conversion</span></p>
+
+  <div class="g2">
+    <div>
+      <label class="f" for="range">Pages to convert</label>
+      <input class="in" id="range" placeholder="All pages — or try 1-3, 5">
+    </div>
+    <div>
+      <label class="f" for="mode">Text layout</label>
+      <select class="in" id="mode">
+        <option value="flow" selected>Flowing paragraphs (recommended)</option>
+        <option value="lines">Keep every visual line break</option>
+      </select>
+    </div>
+  </div>
+
+  <label class="switch"><input type="checkbox" id="clean" checked> Remove repeated headers, footers and page numbers</label>
+  <label class="switch"><input type="checkbox" id="brk" checked> Start each PDF page on a new Word page</label>
+  <label class="switch"><input type="checkbox" id="imgs" checked> Embed pages that contain no text as images (scanned pages)</label>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="preview-head">
+    <p>Preview <span class="live">● Live</span></p>
+    <button class="btn sm ghost" type="button" id="refresh"><i class="fa-solid fa-rotate"></i> Refresh preview</button>
+  </div>
+  <div id="pvw" hidden>
+    <div id="pbox" class="pbox"></div>
+    <div id="scanNote" class="warn" hidden></div>
+    <div class="row">
+      <button class="btn" id="go"><i class="fa-solid fa-file-word"></i> Download Word file</button>
+      <button class="btn ghost" id="copy"><i class="fa-regular fa-copy"></i> Copy text</button>
+    </div>
+  </div>
+  <p class="hint">Text-based PDFs convert best. The converter rebuilds content — it does not copy the exact page design, custom fonts or complex multi-column magazine layouts. Scanned pages have no hidden text; the image option preserves how they look.</p>
+</div>
+<div class="status" id="status" role="status" aria-live="polite"></div>
+<div class="prog" id="prog"><div></div></div>
+</main>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
+<script src="../assets/app.js"></script>
+<script src="../assets/chat.js"></script>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc=PE.asset("pdf.worker.min.js");
+var $=PE.$, esc=PE.esc;
+var file=null,pdf=null,PAGES=[],blocks=[],busy=false;
+
+function norm(s){
+  return String(s||"").replace(/\u00a0/g," ").replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g,"")
+    .replace(/[ \t]+/g," ").replace(/\s+$/,"").replace(/^\s+/,"");
+}
+
+/* ---------- extract positioned text from every page ---------- */
+function styleInfo(tc,item){
+  var st=tc.styles[item.fontName]||{};
+  var fam=(st.fontFamily||"")+" "+(item.fontName||"")+" "+(st.fontSubstitution||"");
+  var bold=/bold|black|heavy|semibold|demi|700|800|900/i.test(fam);
+  var italic=/italic|oblique/i.test(fam);
+  return {bold:bold,italic:italic,mono:/mono|courier|consol/i.test(fam),serif:/serif|times|georgia|garamond/i.test(fam)&&!/sans/i.test(fam)};
+}
+
+async function analyse(f){
+  if(pdf){try{pdf.destroy()}catch(e){}}
+  pdf=await PE.openPdf(f);
+  PAGES=[];
+  for(var n=1;n<=pdf.numPages;n++){
+    PE.status("Reading page "+n+" of "+pdf.numPages+"…");
+    PE.progress((n-1)/pdf.numPages);
+    var page=await pdf.getPage(n);
+    var vp=page.getViewport({scale:1});
+    var tc=await page.getTextContent({normalizeWhitespace:false,disableCombineTextItems:false});
+    var items=[];
+    tc.items.forEach(function(it){
+      if(!it.str||!it.str.trim())return;
+      var tx=pdfjsLib.Util.transform(vp.transform,it.transform);
+      var size=Math.max(4,Math.hypot(tx[2],tx[3])||it.height||11);
+      var st=styleInfo(tc,it);
+      items.push({s:it.str,x:tx[4],y:tx[5],w:Math.max(1,it.width||size*it.str.length*.45),size:size,
+        bold:st.bold,italic:st.italic,mono:st.mono,serif:st.serif});
+    });
+    items.sort(function(a,b){return a.y-b.y||a.x-b.x});
+    var lines=[];
+    items.forEach(function(it){
+      var L=lines[lines.length-1];
+      if(L&&Math.abs(L.y-it.y)<=Math.max(1.2,Math.min(L.size,it.size)*.48)){
+        L.it.push(it);L.y=(L.y*(L.it.length-1)+it.y)/L.it.length;
+        L.size=Math.max(L.size,it.size);
+      }else lines.push({y:it.y,size:it.size,it:[it]});
+    });
+    lines.forEach(function(L){makeCells(L)});
+    var hasText=items.some(function(i){return i.s.replace(/[\s\d.,;:()[\]\/\\|_-]/g,"").length>1});
+    PAGES.push({n:n,w:vp.width,h:vp.height,items:items,lines:lines,hasText:hasText});
+    if(n%3===0)await PE.sleep(0);
+  }
+  PE.progress(1);setTimeout(function(){PE.progress(null)},300);
+}
+
+/* Split a visual line into cells when there are wide gaps (table columns). */
+function makeCells(L){
+  L.it.sort(function(a,b){return a.x-b.x});
+  var cells=[],cur=null;
+  L.it.forEach(function(it){
+    var gap=cur?it.x-(cur.x+cur.w):0;
+    var limit=Math.max(14,Math.max(L.size,it.size)*2.3);
+    if(!cur||gap>limit){cur={x:it.x,w:it.w,text:it.s,it:[it]};cells.push(cur)}
+    else{
+      var needSpace=gap>Math.max(1.5,L.size*.12)&&!/\s$/.test(cur.text)&&!/^\s/.test(it.s);
+      cur.text+=needSpace?" "+it.s:it.s;cur.w=Math.max(cur.w,it.x+it.w-cur.x);cur.it.push(it);
+    }
+  });
+  cells.forEach(function(c){c.text=norm(c.text);c.run=c.it.map(function(i){return {text:i.s,bold:i.bold,italic:i.italic}})});
+  L.cells=cells.filter(function(c){return c.text});
+  L.text=L.cells.map(function(c){return c.text}).join("\t");
+  L.x=L.cells.length?L.cells[0].x:0;
+  var w=0;L.cells.forEach(function(c){w+=c.text.length});
+  L.chars=w;
+}
+
+function bodySize(indices){
+  var sizes=[];
+  indices.forEach(function(pi){
+    PAGES[pi].lines.forEach(function(L){if(L.text.length>12)sizes.push(L.size)});
+  });
+  sizes.sort(function(a,b){return a-b});
+  return sizes.length?sizes[Math.floor(sizes.length/2)]:11;
+}
+
+/* ---------- clean repeated edges ---------- */
+function edgeNoise(indices){
+  var seen={},edge={},pages=indices.length;
+  indices.forEach(function(pi){
+    var P=PAGES[pi];
+    P.lines.forEach(function(L){
+      if(!L.text)return;
+      var top=L.y<P.h*.085,bottom=L.y>P.h*.9;
+      if(!top&&!bottom)return;
+      var key=norm(L.text).replace(/\d+/g,"#").toLowerCase();
+      if(key.length<2)return;
+      seen[key]=(seen[key]||0)+1;edge[key]=1;
+    });
+  });
+  var drop={};
+  Object.keys(seen).forEach(function(k){
+    var numeric=/^[\s#.,;:|\/\\-]+$/.test(k)||/^page\s*#(\s*(of|\/)\s*#)?$/i.test(k)||/^#\s*(of|\/)\s*#$/i.test(k);
+    if(numeric||(edge[k]&&seen[k]>=Math.max(2,Math.ceil(pages*.5))))drop[k]=1;
+  });
+  return drop;
+}
+
+/* ---------- turn page lines into Word blocks ---------- */
+function headingLevel(L,body){
+  var ratio=L.size/body;
+  var short=L.text.length<150;
+  if(!short)return 0;
+  if(ratio>=1.85)return 1;
+  if(ratio>=1.42)return 2;
+  if(ratio>=1.18)return 3;
+  return 0;
+}
+
+function bulletInfo(text){
+  var m=text.match(/^([•●▪◦‣∙·]|[-–—*])\s+(.+)$/);
+  if(m)return {ordered:false,text:m[2]};
+  m=text.match(/^(\(?\d{1,3}[.)]|[a-zA-Z][.)])\s+(.+)$/);
+  if(m)return {ordered:true,text:m[2],marker:m[1]};
+  return null;
+}
+
+function lineRuns(L){
+  return L.cells.map(function(c){return {text:c.text,bold:!!c.it[0].bold,italic:!!c.it[0].italic}})
+    .filter(function(r){return r.text});
+}
+
+function tableRuns(lines){
+  /* a table needs two or more consecutive rows with the same number of cells */
+  var found=[],i=0;
+  while(i<lines.length){
+    var L=lines[i];
+    if(!L.cells||L.cells.length<2){i++;continue}
+    var group=[L],cols=L.cells.length,j=i+1;
+    while(j<lines.length&&lines[j].cells.length===cols&&aligned(group[group.length-1],lines[j])){group.push(lines[j]);j++}
+    if(group.length>=2&&cols<=10){found.push({i:i,j:j,rows:group.map(function(g){return g.cells.map(function(c){return c.text})})});i=j}
+    else i++;
+  }
+  return found;
+}
+function aligned(a,b){
+  if(!a||!b||a.cells.length!==b.cells.length)return false;
+  for(var k=0;k<a.cells.length;k++){
+    if(Math.abs(a.cells[k].x-b.cells[k].x)>Math.max(18,a.size*2.2))return false;
+  }
+  return true;
+}
+
+function makesBlocks(indices,opts){
+  var body=bodySize(indices),drop=opts.clean?edgeNoise(indices):{},out=[];
+  indices.forEach(function(pi,pageNo){
+    var P=PAGES[pi];
+    if(pageNo&&opts.pageBreaks)out.push({t:"pb"});
+    var lines=P.lines.filter(function(L){
+      if(!L.text)return false;
+      if(opts.clean){
+        var key=norm(L.text).replace(/\d+/g,"#").toLowerCase();
+        if(drop[key]&&(L.y<P.h*.085||L.y>P.h*.9))return false;
+      }
+      return true;
+    });
+    var tables=tableRuns(lines),tmap={};
+    tables.forEach(function(tb){for(var k=tb.i;k<tb.j;k++)tmap[k]=tb});
+    var prev=null;
+    for(var li=0;li<lines.length;li++){
+      if(tmap[li]){
+        if(tmap[li].i===li){out.push({t:"table",rows:tmap[li].rows})}
+        prev=null;continue;
+      }
+      var L=lines[li],text=norm(L.cells.map(function(c){return c.text}).join(" "));
+      if(!text)continue;
+      var lvl=headingLevel(L,body);
+      if(lvl){
+        var last=out[out.length-1];
+        if(last&&last.t==="h"&&last.lvl===lvl&&Math.abs(last.size-L.size)<.6&&prev&&Math.abs(prev.y-L.y)<L.size*1.5){
+          last.text=joinText(last.text,text);last.runs.push.apply(last.runs,lineRuns(L));
+        }else out.push({t:"h",lvl:lvl,text:text,runs:lineRuns(L),size:L.size});
+        prev=L;continue;
+      }
+      var bul=bulletInfo(text),runs=lineRuns(L);
+      if(bul){
+        if(opts.mode==="lines")out.push({t:"li",ordered:bul.ordered,marker:bul.marker,text:bul.text,runs:runs});
+        else out.push({t:"li",ordered:bul.ordered,marker:bul.marker,text:bul.text,runs:runs});
+        prev=L;continue;
+      }
+      var lastB=out[out.length-1];
+      var gap=prev?L.y-prev.y:99;
+      var indent=Math.abs(L.x-(prev?prev.x:L.x));
+      var endsSentence=prev&&/[.!?…”"']\s*$/.test(prev.text);
+      var merge=opts.mode!=="lines"&&lastB&&lastB.t==="p"&&prev&&
+        gap<=Math.max(prev.size,L.size)*1.9&&
+        indent<Math.max(26,L.size*3.2)&&
+        !(endsSentence&&gap>Math.max(L.size*1.25,11));
+      if(merge){
+        lastB.text=joinText(lastB.text,text);
+        lastB.runs=mergeRuns(lastB.runs,runs);
+      }else{
+        out.push({t:"p",text:text,runs:runs,size:L.size});
+      }
+      prev=L;
+    }
+    if(!P.hasText&&opts.images)out.push({t:"img",page:pi});
+  });
+  return out;
+}
+
+function joinText(a,b){
+  a=String(a||"");b=String(b||"");
+  if(/[‐-]$/.test(a)&&/^[a-z]/.test(b))return a.slice(0,-1)+b;
+  if(/[‐-]$/.test(a))return a.slice(0,-1)+b;
+  return a+" "+b;
+}
+function mergeRuns(a,b){
+  var out=(a||[]).slice();
+  if(out.length&&b.length){
+    var last=out[out.length-1];
+    last.text=(last.text||"")+" ";
+  }
+  b.forEach(function(r){out.push({text:r.text,bold:r.bold,italic:r.italic})});
+  return out;
+}
+
+/* ---------- preview ---------- */
+function selectedIndices(){
+  var txt=$("range").value.trim();
+  if(!txt)return PAGES.map(function(p,i){return i});
+  try{return PE.ranges(txt,PAGES.length)}
+  catch(e){PE.status(e.message,"err");return null}
+}
+
+function renderPreview(){
+  var idx=selectedIndices();if(!idx)return;
+  var opts=readOpts();
+  blocks=makesBlocks(idx,opts);
+  var counts={pages:idx.length,words:0,tables:0,heads:0,scan:0,chars:0};
+  blocks.forEach(function(b){
+    if(b.t==="table"){counts.tables++;b.rows.forEach(function(r){r.forEach(function(c){counts.words+=c.split(/\s+/).filter(Boolean).length})})}
+    else if(b.t==="img"){counts.scan++}
+    else if(b.t!=="pb"){
+      counts.words+=String(b.text||"").split(/\s+/).filter(Boolean).length;
+      counts.chars+=String(b.text||"").length;
+      if(b.t==="h")counts.heads++;
+    }
+  });
+  $("stats").innerHTML=[
+    ["Pages",counts.pages],["Words",counts.words.toLocaleString()],["Headings",counts.heads],
+    ["Tables",counts.tables],["Scanned pages kept as images",counts.scan]
+  ].map(function(x){return "<div><b>"+x[1]+"</b><span>"+x[0]+"</span></div>"}).join("");
+  if(counts.words<8&&!counts.scan){
+    $("pvw").hidden=true;
+    PE.status("This PDF has almost no selectable text. It looks like a scan — tick “Embed pages… as images” to keep the pages, or use OCR software first.","err");
+    return;
+  }
+  $("pbox").innerHTML=blocks.map(function(b){
+    if(b.t==="pb")return '<hr class="pgbrk"><span>Page break</span>';
+    if(b.t==="h")return "<h"+(b.lvl+1)+">"+esc(b.text)+"</h"+(b.lvl+1)+">";
+    if(b.t==="li")return "<ul><li>"+(b.ordered?esc((b.marker||"")+" "):"")+runsHtml(b.runs)+"</li></ul>";
+    if(b.t==="img")return '<p style="color:#8a93a5;font-size:12.5px;border:1px dashed #c9ced8;padding:16px;text-align:center">Page '+(b.page+1)+' will be embedded as an image</p>';
+    if(b.t==="table")return "<table>"+b.rows.map(function(r){return "<tr>"+r.map(function(c){return "<td>"+esc(c)+"</td>"}).join("")+"</tr>"}).join("")+"</table>";
+    return "<p>"+runsHtml(b.runs)+"</p>";
+  }).join("");
+  $("scanNote").hidden=!counts.scan;
+  $("scanNote").textContent=counts.scan?counts.scan+" scanned page(s) will be placed in the Word file as page images. The other pages become editable text.":"";
+  $("pvw").hidden=false;
+  PE.status("Preview ready — "+counts.pages+" page"+(counts.pages===1?"":"s")+", "+counts.words.toLocaleString()+" words.","ok");
+}
+function runsHtml(runs){
+  if(!runs||!runs.length)return "";
+  return runs.map(function(r){
+    var t=esc(r.text);
+    if(r.bold)t="<strong>"+t+"</strong>";
+    if(r.italic)t="<em>"+t+"</em>";
+    return t;
+  }).join("");
+}
+function readOpts(){
+  return {mode:$("mode").value,clean:$("clean").checked,pageBreaks:$("brk").checked,images:$("imgs").checked};
+}
+
+/* ---------- build .docx ---------- */
+async function pageImage(pi){
+  var P=PAGES[pi],page=await pdf.getPage(P.n);
+  var scale=Math.min(2.2,1600/P.w);
+  var vp=page.getViewport({scale:scale});
+  var c=document.createElement("canvas");c.width=Math.round(vp.width);c.height=Math.round(vp.height);
+  var x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);
+  await page.render({canvasContext:x,viewport:vp}).promise;
+  var blob=await new Promise(function(res){c.toBlob(res,"image/jpeg",.88)});
+  return {bytes:await blob.arrayBuffer(),w:c.width,h:c.height};
+}
+
+async function buildDocx(){
+  if(typeof docx==="undefined")throw new Error("no-lib");
+  var D=docx,opts=readOpts();
+  var kids=[];
+  for(var i=0;i<blocks.length;i++){
+    var b=blocks[i];
+    if(b.t==="pb"){kids.push(new D.Paragraph({children:[new D.PageBreak()]}));continue}
+    if(b.t==="h"){
+      var lv=[D.HeadingLevel.HEADING_1,D.HeadingLevel.HEADING_2,D.HeadingLevel.HEADING_3][b.lvl-1];
+      kids.push(new D.Paragraph({heading:lv,spacing:{before:220,after:100},children:[new D.TextRun({text:b.text,bold:true})]}));
+      continue;
+    }
+    if(b.t==="li"){
+      kids.push(new D.Paragraph({bullet:b.ordered?undefined:{level:0},indent:b.ordered?{left:720}:undefined,
+        spacing:{after:60},children:[new D.TextRun({text:(b.ordered?(b.marker||"")+" ":"")+b.text,size:22})]}));
+      continue;
+    }
+    if(b.t==="table"){
+      var cols=Math.max.apply(null,b.rows.map(function(r){return r.length}));
+      var border={style:D.BorderStyle.SINGLE,size:4,color:"B7BEC9"};
+      kids.push(new D.Table({
+        width:{size:100,type:D.WidthType.PERCENTAGE},
+        borders:{top:border,bottom:border,left:border,right:border,insideHorizontal:border,insideVertical:border},
+        rows:b.rows.map(function(r){
+          var cells=[];
+          for(var k=0;k<cols;k++)cells.push(new D.TableCell({
+            margins:{top:70,bottom:70,left:110,right:110},
+            children:[new D.Paragraph({spacing:{after:0},children:[new D.TextRun({text:r[k]||"",size:20})]})]
+          }));
+          return new D.TableRow({children:cells});
+        })
+      }));
+      kids.push(new D.Paragraph({spacing:{after:40},children:[]}));
+      continue;
+    }
+    if(b.t==="img"){
+      PE.status("Rendering scanned page "+(b.page+1)+"…");
+      try{
+        var im=await pageImage(b.page);
+        var wpt=Math.min(620,Math.round(PAGES[b.page].w)),hpt=Math.round(wpt*im.h/im.w);
+        kids.push(new D.Paragraph({alignment:D.AlignmentType.CENTER,spacing:{after:120},
+          children:[new D.ImageRun({data:im.bytes,transformation:{width:wpt,height:hpt}})]}));
+      }catch(e){PE.log("Page image: "+e.message)}
+      continue;
+    }
+    kids.push(new D.Paragraph({spacing:{after:140,line:290},children:(b.runs&&b.runs.length?b.runs:[{text:b.text}]).map(function(r){
+      return new D.TextRun({text:r.text,bold:!!r.bold,italics:!!r.italic,size:22});
+    })}));
+  }
+  if(!kids.length)kids.push(new D.Paragraph("This PDF contained no text that could be converted."));
+  var first=PAGES[selectedIndices()[0]]||PAGES[0];
+  var doc=new D.Document({
+    creator:"MULTI TOOL HUB",
+    title:PE.baseName(file.name),
+    description:"Converted from PDF with MULTI TOOL HUB",
+    sections:[{
+      properties:{page:{size:{width:Math.round(first.w*20),height:Math.round(first.h*20)},margin:{top:1134,right:1134,bottom:1134,left:1134}}},
+      children:kids
+    }]
+  });
+  return await D.Packer.toBlob(doc);
+}
+
+function fallbackDoc(){
+  var html='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>'+esc(PE.baseName(file.name))+'</title><style>body{font:11pt Calibri,Arial,sans-serif;line-height:1.45}h1{font-size:20pt}h2{font-size:16pt}h3{font-size:13pt}table{border-collapse:collapse;width:100%}td{border:1px solid #999;padding:4pt 6pt;vertical-align:top}p{margin:0 0 7pt}</style></head><body>';
+  blocks.forEach(function(b){
+    if(b.t==="pb")html+='<br clear="all" style="page-break-before:always">';
+    else if(b.t==="h")html+="<h"+(b.lvl+1)+">"+esc(b.text)+"</h"+(b.lvl+1)+">";
+    else if(b.t==="li")html+="<p>• "+runsHtml(b.runs)+"</p>";
+    else if(b.t==="table")html+="<table>"+b.rows.map(function(r){return "<tr>"+r.map(function(c){return "<td>"+esc(c)+"</td>"}).join("")+"</tr>"}).join("")+"</table>";
+    else if(b.t==="img")html+="<p style='color:#777'>[Page "+(b.page+1)+" is an image and was skipped in this fallback file.]</p>";
+    else html+="<p>"+runsHtml(b.runs)+"</p>";
+  });
+  html+="</body></html>";
+  return new Blob(["\ufeff"+html],{type:"application/msword"});
+}
+
+/* ---------- wiring ---------- */
+PE.drop($("zone"),$("fileInput"),/pdf/i,async function(list){
+  file=list[0];
+  $("fn").textContent=file.name;$("sz").textContent=PE.fmt(file.size);
+  $("panel").hidden=false;$("pvw").hidden=true;$("stats").innerHTML="";
+  $("range").value="";$("go").disabled=true;
+  try{
+    await analyse(file);
+    $("go").disabled=false;
+    renderPreview();
+  }catch(e){
+    PE.progress(null);
+    PE.status(/password|encrypt/i.test(e.message||"")?"This PDF is password-protected. Remove the password first, then try again.":"Could not read this PDF: "+(e.message||e),"err");
+  }
+});
+var refresh=PE.debounce(function(){if(file&&!busy){try{renderPreview()}catch(e){PE.status(e.message,"err")}}},320);
+["mode","clean","brk","imgs"].forEach(function(id){$(id).addEventListener("change",refresh)});
+$("range").addEventListener("input",refresh);
+$("refresh").onclick=function(){if(file)renderPreview()};
+
+$("go").onclick=async function(){
+  if(!file||busy)return;
+  if(!blocks.length)renderPreview();
+  busy=true;this.disabled=true;PE.progress(.05);
+  try{
+    PE.status("Building your Word file…");
+    var blob;
+    try{blob=await buildDocx()}
+    catch(e){
+      PE.log("DOCX build: "+(e.message||e));
+      blob=fallbackDoc();
+      PE.toast("The .docx builder was unavailable — a Word-compatible .doc was created.");
+    }
+    var name=PE.baseName(file.name)+".docx";
+    if(!/\.docx$/i.test(blob.type)&&blob.type.indexOf("msword")>=0)name=PE.baseName(file.name)+".doc";
+    PE.download(blob,name);
+    PE.progress(1);PE.status("Done — "+name+" is downloading. Open it in Word, Google Docs or LibreOffice.","ok");
+    PE.toast("Word file ready");
+  }catch(e){
+    PE.status("Conversion failed: "+(e.message||e),"err");
+  }finally{busy=false;this.disabled=false;setTimeout(function(){PE.progress(null)},500)}
+};
+
+$("copy").onclick=function(){
+  if(!blocks.length)return;
+  var txt=blocks.map(function(b){
+    if(b.t==="pb")return "\f";
+    if(b.t==="table")return b.rows.map(function(r){return r.join("\t")}).join("\n");
+    if(b.t==="img")return "[image: page "+(b.page+1)+"]";
+    return b.text;
+  }).join("\n\n");
+  PE.copy(txt,"Converted text copied");
+};
+</script>
+</body>
+</html>

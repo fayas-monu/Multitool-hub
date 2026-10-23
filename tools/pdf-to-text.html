@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
+<title>PDF to Text — clean, searchable text with preview | MULTI TOOL HUB</title>
+<meta name="description" content="Extract text from a PDF with page ranges, smart paragraphs, de-hyphenation and repeated header cleanup. Preview the result, copy it or download TXT or a per-page ZIP.">
+<meta name="theme-color" content="#11162b">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+  pre.txtpre{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:14px;font:13px/1.62 ui-monospace,Menlo,Consolas,monospace;color:var(--ink);white-space:pre-wrap;word-break:break-word;max-height:380px;overflow:auto;margin-top:8px;tab-size:4}
+  .extractbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+  .extractbar .sp{font-size:12px;color:var(--muted);margin-left:auto}
+  .split{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:16px;align-items:start}
+  @media (max-width:820px){.split{grid-template-columns:1fr}}
+  .optcol{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:12px}
+  .optcol .f{margin-top:10px}
+  .optcol .f:first-child{margin-top:0}
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="" width="40" height="40">MULTI TOOL HUB</a>
+  <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
+</div></header>
+<main>
+<h1>PDF to Text</h1>
+<p class="lead">Pull the words out of a PDF without broken lines. Rebuild paragraphs, repair hyphenated words, drop repeated headers and preview everything before you save.</p>
+
+<label class="drop" id="zone"><i class="fa-solid fa-file-lines" aria-hidden="true"></i><strong>Choose a PDF or drop it here</strong><span>Nothing is uploaded · works offline on your device</span>
+<input type="file" id="fileInput" accept="application/pdf,.pdf"></label>
+
+<div class="panel" id="panel" hidden>
+  <p style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><strong id="fn"></strong> <span id="meta" style="color:var(--muted)"></span></p>
+
+  <div class="split">
+    <div>
+      <label class="f" style="margin-top:0">Text preview <span class="live">● Live</span></label>
+      <pre class="txtpre" id="preview" tabindex="0" aria-label="Extracted text preview">Choose a PDF to see its text.</pre>
+      <div class="extractbar">
+        <span class="sp" id="shown"></span>
+      </div>
+    </div>
+    <div class="optcol">
+      <label class="f" for="mode">Text style</label>
+      <select class="in" id="mode">
+        <option value="para" selected>Smart paragraphs (readable)</option>
+        <option value="lines">Keep every line break</option>
+        <option value="plain">One continuous flow</option>
+      </select>
+      <label class="f" for="rangeMode">Pages</label>
+      <select class="in" id="rangeMode"><option value="all" selected>All pages</option><option value="range">Only some pages</option></select>
+      <input class="in" id="rg" placeholder="1-3, 7" hidden style="margin-top:6px">
+
+      <label class="switch"><input type="checkbox" id="dehy" checked> Repair hyphenated words</label>
+      <label class="switch"><input type="checkbox" id="headers" checked> Remove repeated headers/footers</label>
+      <label class="switch"><input type="checkbox" id="bullets" checked> Normalise bullets to “-”</label>
+
+      <label class="f" for="sep">Between pages</label>
+      <select class="in" id="sep">
+        <option value="blank" selected>Blank line</option>
+        <option value="label">“--- Page N ---” marker</option>
+        <option value="formfeed">Form feed (printer page break)</option>
+      </select>
+      <label class="switch"><input type="checkbox" id="nums"> Add a [Page N] label with blank lines</label>
+    </div>
+  </div>
+
+  <div class="statgrid">
+    <div class="stat"><b id="sSel">–</b><span>Pages selected</span></div>
+    <div class="stat"><b id="sWords">–</b><span>Words</span></div>
+    <div class="stat"><b id="sChars">–</b><span>Characters</span></div>
+    <div class="stat"><b id="sEmpty">–</b><span>Pages without text</span></div>
+  </div>
+
+  <div class="prog" id="prog"><div></div></div>
+  <div class="row">
+    <button class="btn" id="go"><i class="fa-solid fa-download"></i> Download TXT</button>
+    <button class="btn ghost" id="copy"><i class="fa-regular fa-copy"></i> Copy all text</button>
+    <button class="btn ghost" id="zip"><i class="fa-solid fa-file-zipper"></i> One TXT per page (ZIP)</button>
+  </div>
+  <p class="hint" id="hint">Text is rebuilt from the PDF's real text layer, so it is selectable and searchable. A scanned PDF with no text layer will show almost nothing — it needs OCR first.</p>
+</div>
+<div class="status" id="status" role="status" aria-live="polite"></div>
+</main>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
+<script src="../assets/app.js"></script>
+<script src="../assets/chat.js"></script>
+<script>
+var $=PE.$, file=null, pdf=null, extraction=null, sig="", busy=false, timer=0;
+
+function opts(){
+  return {mode:$("mode").value,dehy:$("dehy").checked,headers:$("headers").checked,
+    bullets:$("bullets").checked,sep:$("sep").value,nums:$("nums").checked,
+    rangeMode:$("rangeMode").value,rg:$("rg").value};
+}
+function selectedPages(){
+  if(!extraction)return [];
+  var o=opts(),n=extraction.pages.length;
+  if(o.rangeMode==="all")return extraction.pages.map(function(_,i){return i});
+  try{return PE.ranges(o.rg,n)}catch(e){return null}
+}
+function clean(s){
+  return String(s||"").replace(/\uFB01/g,"fi").replace(/\uFB02/g,"fl").replace(/\uFB00/g,"ff")
+    .replace(/\uFB03/g,"ffi").replace(/\uFB04/g,"ffl").replace(/\u00A0/g," ")
+    .replace(/[\u2018\u2019]/g,"'").replace(/[\u201C\u201D]/g,"\"").replace(/\s+/g," ").trim();
+}
+function groupLines(items){
+  var arr=(items||[]).filter(function(it){return it.str&&it.str.trim()}).map(function(it){
+    var sz=Math.hypot(it.transform[2],it.transform[3])||it.height||10;
+    return {s:it.str,x:it.transform[4],y:it.transform[5],w:it.width||0,size:sz};
+  });
+  arr.sort(function(a,b){return (b.y-a.y)||(a.x-b.x)});
+  var lines=[];
+  arr.forEach(function(it){
+    var last=lines.length?lines[lines.length-1]:null;
+    if(last&&Math.abs(last.y-it.y)<=Math.max(2,Math.min(it.size,last.size)*.45)){
+      last.items.push(it);last.size=Math.max(last.size,it.size);
+    }else{
+      lines.push({y:it.y,size:it.size,items:[it]});
+    }
+  });
+  lines.forEach(function(l){
+    l.items.sort(function(a,b){return a.x-b.x});
+    var text="",prevEnd=null;
+    l.items.forEach(function(it){
+      var s=it.s.replace(/\s+/g," ").trim();
+      if(!s)return;
+      if(text){
+        var gap=it.x-prevEnd;
+        if(gap>Math.max(1.2,it.size*.16)&&!/\s$/.test(text)&&!/^[,.;:!?)}\]]/.test(s))text+=" ";
+      }
+      text+=s;
+      prevEnd=it.x+(it.w||it.size*.5*s.length);
+    });
+    l.text=clean(text);
+    l.left=Math.min.apply(null,l.items.map(function(i){return i.x}));
+    l.right=Math.max.apply(null,l.items.map(function(i){return i.x+(i.w||0)}));
+  });
+  return lines.filter(function(l){return l.text});
+}
+function lineKey(t){return clean(t).toLowerCase().replace(/[^a-z0-9]+/g,"").slice(0,80)}
+
+function buildPageText(lines,mode,dehy,bullets,ctx){
+  var out="",prev=null,maxW=ctx.maxW||300,med=ctx.med||12,baseSize=ctx.sz||12;
+  lines.forEach(function(l){
+    var t=l.text;
+    if(bullets)t=t.replace(/^[\u2022\u25CF\u25AA\u25E6\u2023\u2043\u00B7]\s*/,"- ");
+    if(/^[-*]\s/.test(t)||/^\d{1,3}[.)]\s/.test(t)){
+      if(out)out+=mode==="plain"?" ": "\n\n";
+      out+=t;prev=l;return;
+    }
+    if(!out){out=t;prev=l;return}
+    if(mode==="lines"){
+      var gap=prev?prev.y-l.y:0;
+      out+=(gap>med*1.65?"\n\n":"\n")+t;
+    }else if(mode==="plain"){
+      out+=" "+t;
+    }else{
+      var vgap=prev?prev.y-l.y:0;
+      var heading=l.size>baseSize*1.14&&t.length<90;
+      var shortPrev=prev&&(prev.right-prev.left)<maxW*.72;
+      var endsSentence=prev&&/[.!?:;”"']$/.test(prev.text);
+      var breakPara=!prev||vgap>med*1.6||heading||(shortPrev&&endsSentence);
+      if(breakPara)out+="\n\n"+t;
+      else if(prev&&dehy&&/-$/.test(prev.text)&&/^[a-z]/.test(t))out=out.replace(/-$/,"")+t;
+      else out+=" "+t;
+    }
+    prev=l;
+  });
+  return out.trim();
+}
+
+async function extract(){
+  if(!pdf)return null;
+  var o=opts(), key=[o.mode,o.dehy,o.headers,o.bullets].join("|");
+  if(extraction&&sig===key)return extraction;
+  var all=[],empty=0;
+  for(var i=1;i<=pdf.numPages;i++){
+    var page=await pdf.getPage(i), tc=await page.getTextContent();
+    var lines=groupLines(tc.items);
+    all.push(lines);
+    if(lines.map(function(l){return l.text}).join(" ").length<20)empty++;
+    if(i%4===0){PE.progress(.05+.7*(i/pdf.numPages));PE.status("Reading text — page "+i+" of "+pdf.numPages+"…");await PE.sleep(0)}
+  }
+  /* repeated running headers/footers */
+  var repeated={};
+  if(o.headers&&all.length>=3){
+    var counts={};
+    all.forEach(function(lines){
+      var cand=[];
+      if(lines.length)cand.push(lines[0].text);
+      if(lines.length>1)cand.push(lines[1].text);
+      if(lines.length>2)cand.push(lines[lines.length-1].text);
+      if(lines.length>3)cand.push(lines[lines.length-2].text);
+      var seen={};
+      cand.forEach(function(t){var k=lineKey(t);if(k&&!seen[k]){seen[k]=1;counts[k]=(counts[k]||0)+1}});
+    });
+    var need=Math.ceil(all.length*.62);
+    for(var k in counts)if(counts[k]>=need)repeated[k]=1;
+    if(Object.keys(repeated).length){
+      all=all.map(function(lines){
+        var a=lines.slice();
+        for(var pass=0;pass<2&&a.length;pass++){
+          if(repeated[lineKey(a[0].text)])a.shift();
+          if(a.length&&repeated[lineKey(a[a.length-1].text)])a.pop();
+        }
+        return a;
+      });
+    }
+  }
+  var pages=all.map(function(lines){
+    var maxW=0,med=12,sz=12;
+    if(lines.length){
+      maxW=Math.max.apply(null,lines.map(function(l){return l.right-l.left}));
+      var gaps=[];for(var i=1;i<lines.length;i++)gaps.push(lines[i-1].y-lines[i].y);
+      gaps=gaps.filter(function(g){return g>1}).sort(function(a,b){return a-b});
+      if(gaps.length)med=gaps[Math.floor(gaps.length*.5)];
+      if(med<6)med=Math.max(10,lines[0].size*1.25);
+      var sizes=lines.map(function(l){return l.size}).sort(function(a,b){return a-b});
+      sz=sizes[Math.floor(sizes.length*.5)];
+    }
+    return {text:buildPageText(lines,o.mode,o.dehy,o.bullets,{maxW:maxW,med:med,sz:sz}),raw:lines};
+  });
+  extraction={pages:pages,empty:empty};
+  sig=key;
+  return extraction;
+}
+
+function assemble(list){
+  var o=opts(),parts=[];
+  list.forEach(function(i){
+    var t=extraction.pages[i].text;
+    if(o.sep==="blank")parts.push((o.nums?"[Page "+(i+1)+"]\n":"")+t);
+    else if(o.sep==="label")parts.push("--- Page "+(i+1)+" ---\n"+t);
+    else parts.push(t);
+  });
+  if(o.sep==="formfeed")return parts.join("\n\n\f\n\n");
+  if(o.sep==="label")return parts.join("\n\n");
+  return parts.join("\n\n");
+}
+function stats(list){
+  var t=assemble(list);
+  return {pages:list.length,words:(t.match(/\S+/g)||[]).length,chars:t.length,text:t};
+}
+function render(){
+  if(!extraction)return;
+  var list=selectedPages();
+  if(list===null){
+    $("preview").textContent="Check the page range. Use a format like 1-3, 7.";
+    $("sSel").textContent="–";$("sWords").textContent="–";$("sChars").textContent="–";
+    $("sEmpty").textContent=extraction.empty;
+    PE.status("That page range is not valid.","err");
+    return;
+  }
+  if(!list.length){
+    $("preview").textContent="No pages selected.";
+    return;
+  }
+  var s=stats(list),max=12000;
+  $("preview").textContent=s.text.slice(0,max)||"(No text found on the selected pages.)";
+  $("shown").textContent=s.text.length>max?"Preview limited to the first "+max.toLocaleString()+" characters — the download contains everything.":s.chars.toLocaleString()+" characters of text";
+  $("sSel").textContent=s.pages;
+  $("sWords").textContent=s.words.toLocaleString();
+  $("sChars").textContent=s.chars.toLocaleString();
+  $("sEmpty").textContent=extraction.empty;
+  $("go").disabled=!s.text;
+  $("copy").disabled=!s.text;
+  $("zip").disabled=!s.text;
+  $("rangeMode").style.borderColor="";
+  if(extraction.empty>=Math.ceil(extraction.pages.length*.6)&&extraction.pages.length)
+    PE.status("Most pages have no text layer. This looks like a scanned PDF — run OCR first for useful text.","err");
+}
+async function refresh(showProgress){
+  if(!file||!pdf)return;
+  PE.progress(showProgress?0.02:null);
+  try{
+    await extract();
+    render();
+    PE.progress(null);
+    if(showProgress){
+      if(extraction.empty>=Math.ceil(extraction.pages.length*.6)&&extraction.pages.length)
+        PE.status("Opened "+extraction.pages.length+" pages, but most have no text layer. This is probably a scan — it needs OCR before text extraction works.","err");
+      else PE.status("Text ready — "+extraction.pages.length+" page"+(extraction.pages.length===1?"":"s")+" read.","ok");
+    }
+  }catch(e){
+    PE.progress(null);
+    PE.status("Could not read the text in this PDF: "+(e.message||e),"err");
+  }
+}
+function schedule(){
+  clearTimeout(timer);
+  timer=setTimeout(function(){refresh(false)},260);
+}
+
+PE.drop($("zone"),$("fileInput"),/pdf/i,async function(list){
+  file=list[0];extraction=null;sig="";
+  $("fn").textContent=file.name;$("panel").hidden=false;$("meta").textContent="· "+PE.fmt(file.size)+" · reading…";
+  $("preview").textContent="Reading text…";
+  PE.status("Opening the PDF…");
+  try{
+    if(pdf){try{pdf.destroy()}catch(e){}}
+    pdf=await PE.openPdf(file);
+    $("meta").textContent="· "+PE.fmt(file.size)+" · "+pdf.numPages+" page"+(pdf.numPages===1?"":"s");
+    await refresh(true);
+  }catch(e){
+    PE.status(/password|encrypt/i.test(e.message||"")?"This PDF is password-protected. Remove the password first, then try again.":"Could not read this PDF: "+(e.message||e),"err");
+  }
+});
+$("rangeMode").onchange=function(){$("rg").hidden=this.value==="all";schedule()};
+["mode","dehy","headers","bullets","sep","nums","rg"].forEach(function(id){
+  $(id).addEventListener("change",schedule);
+  $(id).addEventListener("input",schedule);
+});
+
+function outName(extra){
+  return PE.baseName(file?file.name:"document")+(extra||"")+".txt";
+}
+function currentList(){
+  var list=selectedPages();
+  if(list===null){PE.status("Fix the page range first.","err");return null}
+  if(!list.length){PE.status("Select at least one page.","err");return null}
+  return list;
+}
+$("go").onclick=function(){
+  var list=currentList();if(!list||!extraction)return;
+  var s=stats(list);
+  if(!s.text){PE.status("There is no text to download on those pages.","err");return}
+  PE.download(s.text,outName(),"text/plain;charset=utf-8");
+  PE.status("Saved "+s.pages+" page"+(s.pages===1?"":"s")+" · "+s.words.toLocaleString()+" words · "+PE.fmt(s.text.length)+".","ok");
+};
+$("copy").onclick=async function(){
+  var list=currentList();if(!list||!extraction)return;
+  var s=stats(list);
+  if(!s.text)return;
+  PE.copy(s.text,"Copied "+s.words.toLocaleString()+" words");
+};
+$("zip").onclick=async function(){
+  var list=currentList();if(!list||!extraction)return;
+  var btn=this;btn.disabled=true;PE.progress(.05);
+  try{
+    var base=PE.baseName(file.name),entries=list.map(function(i){
+      return {name:base+"-page-"+String(i+1).padStart(3,"0")+".txt",data:extraction.pages[i].text||"(no text)"};
+    });
+    var zip=await PE.zip(entries,function(p){PE.progress(p)});
+    PE.download(zip,base+"-text.zip");
+    PE.progress(1);PE.status("ZIP ready — "+list.length+" text file"+(list.length===1?"":"s")+", "+PE.fmt(zip.size)+".","ok");
+  }catch(e){PE.progress(null);PE.status("Could not build the ZIP: "+(e.message||e),"err")}
+  finally{btn.disabled=false;setTimeout(function(){PE.progress(null)},700)}
+};
+</script>
+</body>
+</html>

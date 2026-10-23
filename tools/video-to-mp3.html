@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
+<title>Video to MP3 — trim, fade, normalize | MULTI TOOL HUB</title>
+<meta name="description" content="Extract audio from a video in your browser. See the waveform, trim with a drag, add fades, normalize volume, pick MP3 quality or save WAV, and write title/artist tags.">
+<meta name="theme-color" content="#11162b">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.1/lame.min.js"></script>
+<style>
+  .wavewrap{position:relative;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);padding:8px;margin-top:8px}
+  .wavewrap canvas{display:block;width:100%;height:130px;border-radius:7px;background:var(--surface);cursor:crosshair;touch-action:none}
+  .wavebar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
+  .wavebar button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:6px 10px;font:700 12.5px 'Plus Jakarta Sans',sans-serif;cursor:pointer}
+  .wavebar button:hover{border-color:var(--accent);color:var(--accent)}
+  .wavebar .t{font:700 12px ui-monospace,Consolas,monospace;color:var(--muted)}
+  .trimgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+  .trimgrid input{width:100%}
+  .trimlab{font-size:11.5px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.6px}
+  @media (max-width:560px){.trimgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="" width="40" height="40">MULTI TOOL HUB</a>
+  <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
+</div></header>
+<main>
+<h1>Video to MP3</h1>
+<p class="lead">Pull the soundtrack out of a video. Trim it on the waveform, smooth the ends with fades, even out the volume and save MP3 or WAV — all inside your browser.</p>
+
+<label class="drop" id="zone"><i class="fa-solid fa-file-audio" aria-hidden="true"></i><strong>Choose a video or audio file</strong><span>MP4, WebM, MOV, M4A, MP3 · nothing is uploaded</span>
+<input type="file" id="fileInput" accept="video/*,audio/*,.mp4,.webm,.mov,.m4a,.mp3,.wav,.ogg"></label>
+
+<div class="panel" id="panel" hidden>
+  <p style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><strong id="fn"></strong> <span id="meta" style="color:var(--muted)"></span></p>
+
+  <div class="wavewrap">
+    <canvas id="wave" aria-label="Audio waveform with trim selection"></canvas>
+    <div class="wavebar">
+      <button type="button" id="play"><i class="fa-solid fa-play"></i> Preview</button>
+      <button type="button" id="setStart" title="Use the current preview position as the start">Set start here</button>
+      <button type="button" id="setEnd" title="Use the current preview position as the end">Set end here</button>
+      <span class="t" id="playpos">0:00.0</span>
+      <span class="t" style="margin-left:auto" id="seldur">Selection: 0:00.0</span>
+    </div>
+  </div>
+
+  <div class="trimgrid">
+    <div><label class="trimlab" for="start">Start (seconds)</label><input class="in" id="start" type="number" min="0" step="0.1" value="0"></div>
+    <div><label class="trimlab" for="end">End (seconds)</label><input class="in" id="end" type="number" min="0" step="0.1" value="0"></div>
+  </div>
+  <p class="hint" style="margin-top:6px">Drag the shaded region on the waveform to trim. The preview stops at the end marker.</p>
+
+  <audio id="aud" preload="metadata" style="display:none"></audio>
+
+  <div class="g2">
+    <div>
+      <label class="f" for="fmt">Output format</label>
+      <select class="in" id="fmt"><option value="mp3" selected>MP3 — small and universal</option><option value="wav">WAV — uncompressed, lossless</option></select>
+      <div id="brWrap">
+        <label class="f" for="br">MP3 bitrate</label>
+        <select class="in" id="br">
+          <option value="64">64 kbps — voice / smallest</option>
+          <option value="96">96 kbps — podcast / speech</option>
+          <option value="128" selected>128 kbps — standard</option>
+          <option value="192">192 kbps — high</option>
+          <option value="256">256 kbps — very high</option>
+          <option value="320">320 kbps — maximum</option>
+        </select>
+      </div>
+      <label class="f" for="sr">Sample rate</label>
+      <select class="in" id="sr"><option value="0" selected>Keep source</option><option value="44100">44.1 kHz (CD)</option><option value="48000">48 kHz (video)</option></select>
+      <label class="f" for="ch">Channels</label>
+      <select class="in" id="ch"><option value="0" selected>Keep source</option><option value="1">Mono</option><option value="2">Stereo</option></select>
+    </div>
+    <div>
+      <label class="f" for="fi">Fade in: <span id="fiv">0.0</span> s</label>
+      <input type="range" id="fi" min="0" max="5" step=".1" value="0" style="width:100%">
+      <label class="f" for="fo">Fade out: <span id="fov">0.0</span> s</label>
+      <input type="range" id="fo" min="0" max="5" step=".1" value="0" style="width:100%">
+      <label class="switch"><input type="checkbox" id="norm" checked> Normalize volume (target −1 dB)</label>
+      <label class="switch"><input type="checkbox" id="tags" checked> Write title and artist tags</label>
+    </div>
+  </div>
+
+  <details style="margin-top:12px">
+    <summary style="cursor:pointer;font-weight:700;font-size:13.5px">Track details (optional)</summary>
+    <div class="g2" style="margin-top:8px">
+      <div><label class="f" for="title">Title</label><input class="in" id="title" placeholder="Track title" autocomplete="off"></div>
+      <div><label class="f" for="artist">Artist</label><input class="in" id="artist" placeholder="Artist" autocomplete="off"></div>
+      <div><label class="f" for="name">Output file name</label><input class="in" id="name" autocomplete="off"></div>
+      <div><label class="f">Estimated result</label><p class="hint" id="est" style="margin-top:10px">—</p></div>
+    </div>
+  </details>
+
+  <div class="prog" id="prog"><div></div></div>
+  <div class="row"><button class="btn" id="go"><i class="fa-solid fa-music"></i> Convert audio</button></div>
+  <p class="hint" id="hint">Large videos need a lot of memory while decoding. Files above roughly 500 MB may fail — trim them in another editor first.</p>
+</div>
+<div class="status" id="status" role="status" aria-live="polite"></div>
+</main>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
+<script src="../assets/app.js"></script>
+<script src="../assets/chat.js"></script>
+<script>
+var $=PE.$, file=null, actx=null, buf=null, dur=0, start=0, end=0, peaks=[], objUrl=null;
+var playing=false, raf=0, busy=false, dragMode=0;
+
+function fmtTime(s){
+  if(!isFinite(s)||s<0)s=0;
+  var m=Math.floor(s/60),x=s-m*60;
+  return m+":"+(x<10?"0":"")+x.toFixed(1);
+}
+function setupCanvas(){
+  var c=$("wave"), w=Math.max(280,c.parentElement.clientWidth-18), h=130;
+  var dpr=Math.min(2,window.devicePixelRatio||1);
+  c.width=Math.round(w*dpr);c.height=Math.round(h*dpr);
+  c.style.height=h+"px";
+  c._w=w;c._h=h;c._dpr=dpr;
+}
+function buildPeaks(){
+  peaks=[];
+  if(!buf)return;
+  var n=1100, ch=buf.getChannelData(0), step=Math.max(1,Math.floor(ch.length/n));
+  for(var i=0;i<n;i++){
+    var s=i*step,e=Math.min(ch.length,s+step),mx=0;
+    for(var j=s;j<e;j+=3){var v=Math.abs(ch[j]);if(v>mx)mx=v}
+    peaks.push(mx);
+  }
+}
+function drawWave(){
+  var c=$("wave");if(!c._w)setupCanvas();
+  var x=c.getContext("2d"),dpr=c._dpr,w=c._w,h=c._h;
+  x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,w,h);
+  x.fillStyle=getComputedStyle(document.documentElement).getPropertyValue("--surface").trim()||"#fff";x.fillRect(0,0,w,h);
+  if(!peaks.length)return;
+  var sx=start/dur*w, ex=end/dur*w, mid=h/2, bw=Math.max(1,w/peaks.length*.72);
+  var accent=getComputedStyle(document.documentElement).getPropertyValue("--accent").trim()||"#3d3bf3";
+  var muted=getComputedStyle(document.documentElement).getPropertyValue("--line").trim()||"#d9deea";
+  for(var i=0;i<peaks.length;i++){
+    var px=i/peaks.length*w, amp=Math.max(1.5,peaks[i]*(h*.46));
+    x.fillStyle=(px>=sx&&px<=ex)?accent:muted;
+    x.fillRect(px,mid-amp,bw,amp*2);
+  }
+  x.fillStyle="rgba(10,12,30,.42)";
+  if(sx>0)x.fillRect(0,0,sx,h);
+  if(ex<w)x.fillRect(ex,0,w-ex,h);
+  x.strokeStyle=accent;x.lineWidth=2;
+  x.beginPath();x.moveTo(sx,0);x.lineTo(sx,h);x.moveTo(ex,0);x.lineTo(ex,h);x.stroke();
+  x.fillStyle=accent;
+  x.fillRect(sx-4,mid-16,8,32);x.fillRect(ex-4,mid-16,8,32);
+  if(playing&&$("aud")){
+    var p=($("aud").currentTime||0)/dur*w;
+    x.strokeStyle="#ffd84d";x.lineWidth=1.5;x.beginPath();x.moveTo(p,0);x.lineTo(p,h);x.stroke();
+  }
+}
+function updateUI(){
+  if(!buf)return;
+  $("start").value=start.toFixed(1);$("end").value=end.toFixed(1);
+  $("seldur").textContent="Selection: "+fmtTime(end-start);
+  var br=+$("br").value, est=(end-start)*(+$("fmt").value==="wav"?176400:br*125);
+  $("est").textContent=PE.fmt(est)+(+$("fmt").value==="wav"?" (16-bit stereo WAV)":" at "+br+" kbps");
+  $("brWrap").hidden=$("fmt").value==="wav";
+  drawWave();
+}
+function setSel(a,b){
+  a=Math.max(0,Math.min(dur,a));b=Math.max(0,Math.min(dur,b));
+  if(b-a<.2){if(a+.2<=dur)b=a+.2;else a=Math.max(0,b-.2)}
+  start=Math.min(a,b);end=Math.max(a,b);updateUI();
+}
+function stopPlay(){
+  playing=false;cancelAnimationFrame(raf);
+  var a=$("aud");if(a){a.pause();}
+  $("play").innerHTML='<i class="fa-solid fa-play"></i> Preview';
+  drawWave();
+}
+function tick(){
+  var a=$("aud");
+  if(!a)return;
+  if(a.currentTime>=end-.02){a.pause();stopPlay();return}
+  $("playpos").textContent=fmtTime(a.currentTime);
+  drawWave();
+  if(playing)raf=requestAnimationFrame(tick);
+}
+$("play").onclick=function(){
+  if(!buf)return;
+  var a=$("aud");
+  if(playing){stopPlay();return}
+  if(a.currentTime<start||a.currentTime>=end)a.currentTime=start;
+  a.play().then(function(){
+    playing=true;this.innerHTML='<i class="fa-solid fa-pause"></i> Pause';tick();
+  }.bind(this)).catch(function(e){PE.status("The browser could not play this file: "+(e.message||e),"err")});
+};
+$("setStart").onclick=function(){if(!buf)return;var t=$("aud").currentTime||0;setSel(Math.min(t,end-.2),end)};
+$("setEnd").onclick=function(){if(!buf)return;var t=$("aud").currentTime||0;setSel(start,Math.max(t,start+.2))};
+$("start").addEventListener("change",function(){setSel(+this.value||0,end)});
+$("end").addEventListener("change",function(){setSel(start,+this.value||dur)});
+["fmt","br","sr","ch"].forEach(function(id){
+  $(id).addEventListener("change",function(){
+    if(id==="fmt")$("brWrap").hidden=this.value==="wav";
+    updateUI();
+  });
+});
+$("fi").addEventListener("input",function(){$("fiv").textContent=(+this.value).toFixed(1)});
+$("fo").addEventListener("input",function(){$("fov").textContent=(+this.value).toFixed(1)});
+
+function pos(e){
+  var c=$("wave"),r=c.getBoundingClientRect();
+  var cx=(e.touches?e.touches[0].clientX:e.clientX)-r.left;
+  return Math.max(0,Math.min(1,cx/r.width))*dur;
+}
+function nearHandle(t){
+  var tol=dur/Math.max(30,$("wave")._w)*8;
+  if(Math.abs(t-start)<=tol)return 1;
+  if(Math.abs(t-end)<=tol)return 2;
+  return 0;
+}
+$("wave").addEventListener("pointerdown",function(e){
+  if(!buf)return;
+  e.preventDefault();this.setPointerCapture&&this.setPointerCapture(e.pointerId);
+  var t=pos(e),h=nearHandle(t);
+  if(h)dragMode=h;
+  else{dragMode=3;start=t;end=Math.min(dur,t+0.2);}
+  if(dragMode===1)setSel(t,end);
+  else if(dragMode===2)setSel(start,t);
+  else setSel(start,Math.max(start+.2,t));
+});
+$("wave").addEventListener("pointermove",function(e){
+  if(!buf||!dragMode)return;
+  var t=pos(e);
+  if(dragMode===1)setSel(t,end);
+  else if(dragMode===2)setSel(start,t);
+  else setSel(start,t);
+});
+["pointerup","pointercancel","pointerleave"].forEach(function(ev){
+  $("wave").addEventListener(ev,function(){dragMode=0});
+});
+
+function id3(tags){
+  function frame(id,text){
+    if(!text)return new Uint8Array(0);
+    var b=[0xFF,0xFE],s=String(text);
+    for(var i=0;i<s.length;i++){var c=s.charCodeAt(i);b.push(c&255,c>>8)}
+    var size=b.length,out=new Uint8Array(10+size);
+    out[0]=id.charCodeAt(0);out[1]=id.charCodeAt(1);out[2]=id.charCodeAt(2);out[3]=id.charCodeAt(3);
+    out[4]=(size>>>21)&127;out[5]=(size>>>14)&127;out[6]=(size>>>7)&127;out[7]=size&127;
+    out.set(b,10);return out;
+  }
+  var frames=[frame("TIT2",tags.title),frame("TPE1",tags.artist)].filter(function(f){return f.length});
+  if(!frames.length)return new Uint8Array(0);
+  var total=frames.reduce(function(a,f){return a+f.length},0);
+  var tag=new Uint8Array(10+total);
+  tag[0]=0x49;tag[1]=0x44;tag[2]=0x33;tag[3]=3;tag[4]=0;
+  tag[6]=(total>>>21)&127;tag[7]=(total>>>14)&127;tag[8]=(total>>>7)&127;tag[9]=total&127;
+  var o=10;frames.forEach(function(f){tag.set(f,o);o+=f.length});
+  return tag;
+}
+function wavBytes(chans,sr){
+  var ch=chans.length,len=chans[0].length,frames=len*ch*2;
+  var ab=new ArrayBuffer(44+frames),v=new DataView(ab);
+  function str(o,s){for(var i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))}
+  str(0,"RIFF");v.setUint32(4,36+frames,true);str(8,"WAVEfmt ");
+  v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,ch,true);
+  v.setUint32(24,sr,true);v.setUint32(28,sr*ch*2,true);v.setUint16(32,ch*2,true);v.setUint16(34,16,true);
+  str(36,"data");v.setUint32(40,frames,true);
+  var o=44;
+  for(var i=0;i<len;i++)for(var c=0;c<ch;c++){
+    var s=Math.max(-1,Math.min(1,chans[c][i]));
+    v.setInt16(o,s<0?s*32768:s*32767,true);o+=2;
+  }
+  return new Uint8Array(ab);
+}
+
+PE.drop($("zone"),$("fileInput"),/^(video|audio)\/|\.(mp4|webm|mov|m4a|mp3|wav|ogg|mkv|avi)$/i,async function(list){
+  file=list[0];stopPlay();
+  $("fn").textContent=file.name;$("meta").textContent="· "+PE.fmt(file.size)+" · decoding…";
+  $("panel").hidden=false;$("name").value=PE.baseName(file.name);
+  $("title").value=PE.baseName(file.name).replace(/[_]+/g," ").trim();
+  $("status").textContent="";
+  PE.status("Decoding the audio track… this can take a moment.");
+  try{
+    if(objUrl)URL.revokeObjectURL(objUrl);
+    objUrl=URL.createObjectURL(file);
+    $("aud").src=objUrl;
+    if(!actx)actx=new (window.AudioContext||window.webkitAudioContext)();
+    var ab=await file.arrayBuffer();
+    buf=await actx.decodeAudioData(ab);
+    dur=buf.duration;start=0;end=dur;
+    buildPeaks();setupCanvas();updateUI();
+    var ch=buf.numberOfChannels;
+    $("meta").textContent="· "+PE.fmt(file.size)+" · "+fmtTime(dur)+" · "+ch+" channel"+(ch===1?"":"s")+" · "+(buf.sampleRate/1000).toFixed(1)+" kHz";
+    PE.status("Audio ready — "+fmtTime(dur)+". Trim on the waveform, then convert.","ok");
+  }catch(e){
+    buf=null;$("meta").textContent="· "+PE.fmt(file.size);
+    PE.status("Could not decode the audio in this file. Try an MP4, WebM, MOV, M4A or MP3 file. Some codecs are not supported by browsers.","err");
+  }
+});
+
+$("go").onclick=async function(){
+  if(!file||!buf||busy)return;
+  if(end-start<.2){PE.status("Choose a section at least 0.2 seconds long.","err");return}
+  busy=true;this.disabled=true;stopPlay();PE.progress(.03);
+  try{
+    var fmt=$("fmt").value, br=+$("br").value;
+    var chPref=+$("ch").value, chansOut=buf.numberOfChannels;
+    if(chPref)chansOut=Math.min(chPref,buf.numberOfChannels);
+    if(chPref===2&&buf.numberOfChannels===1){/* duplicate mono below */}
+    var srPref=+$("sr").value, sr=srPref||buf.sampleRate;
+    if(sr>48000)sr=48000;
+    var s0=Math.max(0,Math.floor(start*buf.sampleRate)), s1=Math.min(buf.length,Math.ceil(end*buf.sampleRate));
+    var len=s1-s0;
+    if(len<1)throw new Error("The selected section is empty.");
+    PE.status("Preparing samples…");PE.progress(.08);
+
+    var tmp=actx.createBuffer(buf.numberOfChannels,len,buf.sampleRate);
+    for(var c=0;c<buf.numberOfChannels;c++)tmp.copyToChannel(buf.getChannelData(c).subarray(s0,s1),c);
+    var target=tmp;
+    if(sr!==buf.sampleRate){
+      var oc=new (window.OfflineAudioContext||window.webkitOfflineAudioContext)(tmp.numberOfChannels,Math.max(1,Math.ceil(tmp.duration*sr)),sr);
+      var src=oc.createBufferSource();src.buffer=tmp;src.connect(oc.destination);src.start(0);
+      target=await oc.startRendering();
+    }
+    var n=target.length, out=[];
+    for(var c2=0;c2<target.numberOfChannels;c2++)out.push(target.getChannelData(c2).slice(0));
+    if(out.length>1&&chansOut===1){
+      var mix=new Float32Array(n);
+      for(var c3=0;c3<out.length;c3++)for(var i=0;i<n;i++)mix[i]+=out[c3][i]/out.length;
+      out=[mix];
+    }else if(out.length===1&&chansOut===2){
+      out=[out[0].slice(0),out[0].slice(0)];
+    }
+    /* fades */
+    var tgt=target.sampleRate;
+    var fi=Math.min(n,Math.round((+$("fi").value||0)*tgt)), fo=Math.min(n,Math.round((+$("fo").value||0)*tgt));
+    for(var i2=0;i2<n;i2++){
+      var g=1;
+      if(fi&&i2<fi)g*=i2/fi;
+      if(fo&&i2>=n-fo)g*=(n-i2)/fo;
+      if(g!==1)for(var c4=0;c4<out.length;c4++)out[c4][i2]*=g;
+    }
+    /* normalize to -1 dBFS */
+    if($("norm").checked){
+      var peak=0;
+      for(var c5=0;c5<out.length;c5++)for(var i5=0;i5<n;i5+=5){var v=Math.abs(out[c5][i5]);if(v>peak)peak=v}
+      if(peak>0){var gain=Math.min(8,0.891/peak);if(gain!==1)for(var c6=0;c6<out.length;c6++)for(var i6=0;i6<n;i6++)out[c6][i6]*=gain}
+    }
+    PE.progress(.2);
+    var outName=($("name").value||PE.baseName(file.name)).trim().replace(/\.(mp3|wav)$/i,"");
+    outName=PE.csrfSafeName(outName||"audio");
+    if(fmt==="wav"){
+      PE.status("Building WAV…");PE.progress(.6);
+      var bytes=wavBytes(out,tgt);
+      PE.download(new Blob([bytes],{type:"audio/wav"}),outName+".wav");
+      PE.progress(1);PE.status("Done — "+PE.fmt(bytes.length)+" WAV at "+(tgt/1000).toFixed(1)+" kHz, "+out.length+" channel"+(out.length===1?"":"s")+".","ok");
+    }else if(typeof lamejs==="undefined"){
+      var wb=wavBytes(out,tgt);
+      PE.download(new Blob([wb],{type:"audio/wav"}),outName+".wav");
+      PE.progress(1);PE.status("The MP3 encoder could not load, so you got a WAV file instead.","err");
+    }else{
+      PE.status("Encoding MP3…");
+      var enc=new lamejs.Mp3Encoder(out.length,tgt,br), parts=[], step=1152*24;
+      for(var i7=0;i7<n;i7+=step){
+        var d=enc.encodeBuffer(out[0].subarray(i7,i7+step),out.length>1?out[1].subarray(i7,i7+step):undefined);
+        if(d.length)parts.push(new Int8Array(d));
+        if((i7/step)%12===0){PE.progress(.2+.75*(i7/n));PE.status("Encoding MP3… "+Math.round(i7/n*100)+"%");await PE.sleep(0)}
+      }
+      var tail=enc.flush();if(tail.length)parts.push(new Int8Array(tail));
+      var tag=new Uint8Array(0);
+      if($("tags").checked&&($("title").value.trim()||$("artist").value.trim()))
+        tag=id3({title:$("title").value.trim(),artist:$("artist").value.trim()});
+      var mp3=new Blob([tag].concat(parts),{type:"audio/mpeg"});
+      PE.download(mp3,outName+".mp3");
+      PE.progress(1);
+      PE.status("Done — "+PE.fmt(mp3.size)+" MP3 · "+br+" kbps · "+fmtTime(end-start)+" · "+(tgt/1000).toFixed(1)+" kHz.","ok");
+    }
+    PE.toast("Download started");
+  }catch(e){
+    PE.progress(null);
+    PE.status("Could not convert this file: "+(e.message||e),"err");
+  }finally{busy=false;this.disabled=false;setTimeout(function(){PE.progress(null)},700)}
+};
+window.addEventListener("resize",PE.debounce(function(){if(buf){setupCanvas();drawWave()}},200));
+</script>
+</body>
+</html>

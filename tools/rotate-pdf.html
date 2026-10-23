@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
+<title>Rotate PDF — visual page preview | MULTI TOOL HUB</title>
+<meta name="description" content="Rotate every page or just the ones you pick. See real thumbnails, select pages, rotate left or right and download. Your PDF never leaves your device.">
+<meta name="theme-color" content="#11162b">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<style>
+  .selbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:14px}
+  .selbar .count{font-size:13px;color:var(--muted);font-weight:600;margin-left:auto}
+  .selbar .count b{color:var(--ink)}
+  .rot-90 img{transform:rotate(90deg) scale(.72)}
+  .rot-180 img{transform:rotate(180deg) scale(.94)}
+  .rot-270 img{transform:rotate(270deg) scale(.72)}
+  .empty-note{color:var(--muted);font-size:13.5px;text-align:center;padding:30px 10px}
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="" width="40" height="40">MULTI TOOL HUB</a>
+  <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
+</div></header>
+<main>
+<h1>Rotate PDF</h1>
+<p class="lead">Turn pages the right way up — all of them or only the ones you select. Real thumbnails show the result, and the rotation is saved as proper PDF page rotation, not a picture.</p>
+
+<label class="drop" id="zone"><i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i><strong>Choose a PDF or drop it here</strong><span>Nothing is uploaded · works offline on your device</span>
+<input type="file" id="fileInput" accept="application/pdf,.pdf"></label>
+
+<div class="panel" id="panel" hidden>
+  <p style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><strong id="fn"></strong> <span id="meta" style="color:var(--muted)"></span></p>
+
+  <div class="selbar">
+    <button class="btn ghost sm" id="selAll" type="button">Select all</button>
+    <button class="btn ghost sm" id="selNone" type="button">Select none</button>
+    <button class="btn ghost sm" id="selOdd" type="button">Odd pages</button>
+    <button class="btn ghost sm" id="selEven" type="button">Even pages</button>
+    <input class="in" id="pick" placeholder="Pages e.g. 1-3, 7" style="width:150px;padding:8px 10px" aria-label="Select pages">
+    <button class="btn ghost sm" id="selPick" type="button">Select these</button>
+    <span class="count" id="count"></span>
+  </div>
+  <p class="hint" style="margin-top:6px">Click a page to select it. Use the ↺ / ↻ buttons on a page to rotate just that one.</p>
+
+  <div class="row" style="margin-top:12px">
+    <button class="btn ghost" data-r="-90"><i class="fa-solid fa-rotate-left"></i> Rotate left 90°</button>
+    <button class="btn ghost" data-r="90"><i class="fa-solid fa-rotate-right"></i> Rotate right 90°</button>
+    <button class="btn ghost" data-r="180"><i class="fa-solid fa-arrows-up-down"></i> Turn 180°</button>
+    <button class="btn ghost" id="resetSel">Reset selected</button>
+    <button class="btn ghost" id="resetAll">Reset all</button>
+  </div>
+
+  <div class="thumbs" id="thumbs" aria-label="PDF pages"></div>
+  <div class="prog" id="prog"><div></div></div>
+  <div class="row"><button class="btn" id="go" disabled><i class="fa-solid fa-download"></i> Download rotated PDF</button></div>
+  <p class="hint" id="cur">Rotation to apply: 0°</p>
+</div>
+<div class="status" id="status" role="status" aria-live="polite"></div>
+</main>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
+<script src="../assets/app.js"></script>
+<script src="../assets/chat.js"></script>
+<script>
+var $=PE.$, file=null, pdf=null, pages=[], rot={}, base={}, sel=new Set(), busy=false;
+
+function norm(a){return ((a%360)+360)%360}
+function changed(i){return norm(rot[i]||0)!==0}
+function selList(){
+  var out=[];sel.forEach(function(i){out.push(i)});
+  return out.sort(function(a,b){return a-b});
+}
+function update(){
+  var total=pages.length, n=0, dirty=0;
+  for(var i=0;i<total;i++){if(sel.has(i))n++;if(changed(i))dirty++}
+  $("count").innerHTML="<b>"+n+"</b> of "+total+" selected · <b>"+dirty+"</b> rotated";
+  $("go").disabled=!dirty||busy;
+  $("go").innerHTML=dirty?'<i class="fa-solid fa-download"></i> Download rotated PDF ('+dirty+" page"+(dirty===1?"":"s")+")":'<i class="fa-solid fa-download"></i> Download rotated PDF';
+  $("cur").textContent=dirty?(dirty+" page"+(dirty===1?" is":"s are")+" changed. Unchanged pages stay exactly as they were."):"No pages rotated yet. Select pages, then rotate.";
+  Array.prototype.forEach.call(document.querySelectorAll(".thumb"),function(el){
+    var i=+el.dataset.i, d=norm(rot[i]||0);
+    el.classList.toggle("sel",sel.has(i));
+    el.classList.remove("rot-90","rot-180","rot-270");
+    if(d===90)el.classList.add("rot-90");else if(d===180)el.classList.add("rot-180");else if(d===270)el.classList.add("rot-270");
+    var badge=el.querySelector(".rot");
+    if(d){badge.hidden=false;badge.textContent=d+"°"}else badge.hidden=true;
+    el.setAttribute("aria-pressed",sel.has(i)?"true":"false");
+  });
+}
+function applyTo(list,delta){
+  list.forEach(function(i){rot[i]=norm((rot[i]||0)+delta)});
+  update();
+}
+function rerender(){
+  $("thumbs").innerHTML=pages.map(function(p,i){
+    return '<div class="thumb" data-i="'+i+'" role="button" tabindex="0" aria-label="Page '+(i+1)+'" aria-pressed="false">'
+      +'<span class="no">'+(i+1)+'</span><span class="rot" hidden>0°</span>'
+      +'<div class="im"><img src="'+p.url+'" alt="Page '+(i+1)+'" loading="lazy"></div>'
+      +'<div class="ops"><button type="button" data-op="left" data-i="'+i+'" title="Rotate page '+(i+1)+' left" aria-label="Rotate page '+(i+1)+' left"><i class="fa-solid fa-rotate-left"></i></button>'
+      +'<button type="button" data-op="right" data-i="'+i+'" title="Rotate page '+(i+1)+' right" aria-label="Rotate page '+(i+1)+' right"><i class="fa-solid fa-rotate-right"></i></button></div></div>';
+  }).join("");
+  update();
+}
+
+async function load(f){
+  file=f;$("panel").hidden=false;$("fn").textContent=f.name;$("meta").textContent="· "+PE.fmt(f.size)+" · loading pages…";
+  $("thumbs").innerHTML='<p class="empty-note"><span class="spin"></span> Rendering page thumbnails…</p>';
+  try{
+    if(pdf){try{pdf.destroy()}catch(e){}}
+    pdf=await PE.openPdf(f);
+    pages=[];rot={};base={};sel=new Set();
+    var n=pdf.numPages;
+    for(var i=1;i<=n;i++){
+      var pg=await pdf.getPage(i), v1=pg.getViewport({scale:1});
+      base[i-1]=norm(pg.rotate||0);
+      var s=Math.min(1,150/Math.max(v1.width,v1.height));
+      var vp=pg.getViewport({scale:s});
+      var c=document.createElement("canvas");
+      c.width=Math.max(1,Math.round(vp.width));c.height=Math.max(1,Math.round(vp.height));
+      var cx=c.getContext("2d");cx.fillStyle="#fff";cx.fillRect(0,0,c.width,c.height);
+      await pg.render({canvasContext:cx,viewport:vp}).promise;
+      pages.push({url:c.toDataURL("image/jpeg",.82)});
+      c.width=c.height=0;
+      sel.add(i-1);
+      if(i%5===0){$("meta").textContent="· "+PE.fmt(f.size)+" · "+i+" of "+n+" pages";await PE.sleep(0)}
+    }
+    $("meta").textContent="· "+PE.fmt(f.size)+" · "+n+" page"+(n===1?"":"s");
+    rerender();
+    PE.status("Ready — "+n+" page"+(n===1?"":"s")+". All pages are selected; click a page to deselect it.","ok");
+  }catch(e){
+    $("panel").hidden=false;
+    $("thumbs").innerHTML='<p class="empty-note">The preview could not be drawn.</p>';
+    PE.status(/password|encrypt/i.test(e.message||"")?"This PDF is password-protected. Remove the password first, then try again.":"Could not read this PDF: "+(e.message||e),"err");
+  }
+}
+
+PE.drop($("zone"),$("fileInput"),/pdf/i,function(list){load(list[0])});
+
+$("thumbs").addEventListener("click",function(e){
+  var op=e.target.closest("button[data-op]");
+  if(op){
+    e.stopPropagation();
+    applyTo([+op.dataset.i],op.dataset.op==="left"?-90:90);
+    return;
+  }
+  var t=e.target.closest(".thumb");if(!t)return;
+  var i=+t.dataset.i;
+  if(sel.has(i))sel.delete(i);else sel.add(i);
+  update();
+});
+$("thumbs").addEventListener("keydown",function(e){
+  var t=e.target.closest(".thumb");
+  if(!t||e.target.closest("button"))return;
+  if(e.key===" "||e.key==="Enter"){
+    e.preventDefault();var i=+t.dataset.i;
+    if(sel.has(i))sel.delete(i);else sel.add(i);
+    update();
+  }
+});
+function pickByText(){
+  try{
+    var list=PE.ranges($("pick").value,pages.length);
+    sel=new Set(list);update();PE.status(list.length+" page(s) selected.","ok");
+  }catch(e){PE.status(e.message,"err")}
+}
+$("selPick").onclick=pickByText;
+$("pick").addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();pickByText()}});
+$("selAll").onclick=function(){sel=new Set(pages.map(function(_,i){return i}));update()};
+$("selNone").onclick=function(){sel=new Set();update()};
+$("selOdd").onclick=function(){sel=new Set(pages.map(function(_,i){return i}).filter(function(i){return i%2===0}));update()};
+$("selEven").onclick=function(){sel=new Set(pages.map(function(_,i){return i}).filter(function(i){return i%2===1}));update()};
+$("resetSel").onclick=function(){sel.forEach(function(i){rot[i]=0});update();PE.status("Rotation reset for the selected pages.")};
+$("resetAll").onclick=function(){rot={};update();PE.status("All rotations reset.")};
+document.querySelectorAll("[data-r]").forEach(function(b){
+  b.onclick=function(){
+    if(!sel.size){PE.status("Select at least one page first.","err");return}
+    applyTo(selList(),+b.dataset.r);
+  };
+});
+
+$("go").onclick=async function(){
+  if(!file||busy)return;
+  var list=[];for(var k in rot){if(norm(rot[k])!==0)list.push(+k)}
+  if(!list.length){PE.status("Rotate at least one page first.","err");return}
+  busy=true;this.disabled=true;PE.progress(.05);
+  try{
+    var doc=await PE.readPdf(file), ps=doc.getPages(), count=0;
+    for(var j=0;j<list.length;j++){
+      var i=list[j], p=ps[i];
+      if(!p)continue;
+      var orig=norm(p.getRotation().angle);
+      p.setRotation(PDFLib.degrees(norm(orig+norm(rot[i]))));
+      count++;
+      if(j%10===0){PE.progress(.05+.85*(j/list.length));await PE.sleep(0)}
+    }
+    PE.progress(.94);
+    var bytes=await doc.save({useObjectStreams:true});
+    PE.download(bytes,PE.baseName(file.name)+"-rotated.pdf","application/pdf");
+    PE.progress(1);
+    PE.status("Rotated "+count+" page"+(count===1?"":"s")+" and saved. "+PE.fmt(file.size)+" → "+PE.fmt(bytes.length)+".","ok");
+    PE.toast("Download started");
+  }catch(e){
+    PE.progress(null);
+    PE.status(/password|encrypt/i.test(e.message||"")?"This PDF is password-protected. Remove the password first, then try again.":"Could not rotate this PDF: "+(e.message||e),"err");
+  }finally{busy=false;update();setTimeout(function(){PE.progress(null)},700)}
+};
+</script>
+</body>
+</html>

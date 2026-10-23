@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
+<title>Compress PDF — see the size before you download | MULTI TOOL HUB</title>
+<meta name="description" content="Shrink a PDF with a clean lossless re-save or optimised page images. Choose quality, DPI, grayscale and a page range, then compare the exact before and after size.">
+<meta name="theme-color" content="#11162b">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<style>
+  .cmp{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-top:16px;text-align:center}
+  .cmp .box{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:13px}
+  .cmp .box b{display:block;font:800 20px 'Bricolage Grotesque',sans-serif}
+  .cmp .box span{font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);font-weight:700}
+  .cmp .arrow{color:var(--muted);font-size:19px}
+  .cmp .after b{color:var(--ok)}
+  .cmp .after.big b{color:var(--err)}
+  @media (max-width:520px){.cmp{grid-template-columns:1fr}.cmp .arrow{transform:rotate(90deg)}}
+  .graypv{filter:grayscale(1)}
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="" width="40" height="40">MULTI TOOL HUB</a>
+  <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
+</div></header>
+<main>
+<h1>Compress PDF</h1>
+<p class="lead">Make a PDF lighter without guessing. Choose a quality preset, see the page, then compare the exact file size before you keep the result.</p>
+
+<label class="drop" id="zone"><i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i><strong>Choose a PDF or drop it here</strong><span>Nothing is uploaded · works offline on your device</span>
+<input type="file" id="fileInput" accept="application/pdf,.pdf"></label>
+
+<div class="panel" id="panel" hidden>
+  <p style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><strong id="fn"></strong> <span id="meta" style="color:var(--muted)"></span></p>
+
+  <div class="g2" style="margin-top:4px">
+    <div>
+      <label class="f">Compression method</label>
+      <div class="planbox" style="grid-template-columns:1fr" id="modes">
+        <label><input type="radio" name="mode" value="clean"><strong>Clean up (no quality loss)</strong><small>Re-saves the PDF efficiently. Text stays selectable. Savings are modest, and sometimes zero.</small></label>
+        <label><input type="radio" name="mode" value="balanced" checked><strong>Balanced — recommended</strong><small>About 150 DPI page images. Good for reading, sharing and printing.</small></label>
+        <label><input type="radio" name="mode" value="strong"><strong>Strong</strong><small>About 120 DPI. Noticeably smaller for scan-heavy files.</small></label>
+        <label><input type="radio" name="mode" value="max"><strong>Maximum</strong><small>About 96 DPI. Smallest result; fine on screen, soft in print.</small></label>
+        <label><input type="radio" name="mode" value="custom"><strong>Custom</strong><small>Set the exact DPI, quality, colour and page range.</small></label>
+      </div>
+    </div>
+    <div>
+      <label class="f">Page preview <span class="live">● Live</span></label>
+      <div class="pvframe" style="padding:8px"><canvas id="pv" style="max-width:100%;max-height:300px;height:auto;border-radius:6px;box-shadow:0 8px 20px -10px rgba(10,12,40,.5)" aria-label="First page preview"></canvas></div>
+      <div class="statgrid" style="grid-template-columns:1fr 1fr">
+        <div class="stat"><b id="sPages">–</b><span>Pages</span></div>
+        <div class="stat"><b id="sSize">–</b><span>Original size</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="custom" hidden>
+    <div class="g2">
+      <div>
+        <label class="f" for="dpi">Resolution: <span id="dpiv">150</span> DPI</label>
+        <input type="range" id="dpi" min="72" max="300" step="6" value="150" style="width:100%">
+        <p class="hint" style="margin-top:4px">Higher DPI keeps more detail and makes a larger file.</p>
+      </div>
+      <div>
+        <label class="f" for="q">Image quality: <span id="qv">72</span>%</label>
+        <input type="range" id="q" min="30" max="95" step="1" value="72" style="width:100%">
+        <label class="switch"><input type="checkbox" id="gray"> Convert pages to grayscale</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div>
+      <label class="f" for="rg">Pages to compress</label>
+      <select class="in" id="rangeMode"><option value="all">All pages</option><option value="range">Only these pages (the rest stay original)</option></select>
+      <input class="in" id="rg" placeholder="For example 1-5, 8" style="margin-top:8px" hidden>
+    </div>
+    <div>
+      <label class="f" for="q2">What happens to text?</label>
+      <p class="hint" style="margin-top:0" id="textnote">Page-image modes turn each page into a picture, so text will not be selectable or searchable in those pages. Clean-up keeps text exactly as it is.</p>
+    </div>
+  </div>
+
+  <div class="prog" id="prog"><div></div></div>
+  <div class="row">
+    <button class="btn" id="go"><i class="fa-solid fa-compress"></i> Compress PDF</button>
+    <button class="btn ghost" id="again" hidden><i class="fa-solid fa-download"></i> Download result anyway</button>
+  </div>
+
+  <div class="cmp" id="cmp" hidden>
+    <div class="box"><b id="bBefore">–</b><span>Before</span></div>
+    <div class="arrow"><i class="fa-solid fa-arrow-right"></i></div>
+    <div class="box after" id="afterBox"><b id="bAfter">–</b><span id="bSaved">After</span></div>
+  </div>
+  <p class="hint" id="resnote"></p>
+</div>
+<div class="status" id="status" role="status" aria-live="polite"></div>
+</main>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
+<script src="../assets/app.js"></script>
+<script src="../assets/chat.js"></script>
+<script>
+var $=PE.$, file=null, info=null, lastOut=null, lastOutName="", busy=false;
+var PRESET={clean:{dpi:0,q:0,gray:false},balanced:{dpi:150,q:.72,gray:false},strong:{dpi:120,q:.55,gray:false},max:{dpi:96,q:.42,gray:false},custom:{dpi:150,q:.72,gray:false}};
+
+function mode(){return document.querySelector('input[name="mode"]:checked').value}
+function opts(){
+  var m=mode(), p=PRESET[m];
+  return {mode:m,dpi:m==="custom"?+$("dpi").value:p.dpi,q:m==="custom"?+$("q").value/100:p.q,
+    gray:m==="custom"?$("gray").checked:p.gray,rg:$("rangeMode").value,text:$("rg").value};
+}
+function rangeList(){
+  if(!info)return [];
+  if(opts().rg==="all")return info.pages?Array.from({length:info.pages},function(_,i){return i}):[];
+  try{return PE.ranges($("rg").value,info.pages)}catch(e){return null}
+}
+function sync(){
+  var m=mode(),p=PRESET[m];
+  $("custom").hidden=m!=="custom";
+  $("rg").hidden=$("rangeMode").value==="all"||m==="clean";
+  $("rangeMode").disabled=m==="clean";
+  $("pv").classList.toggle("graypv",m==="custom"&&$("gray").checked);
+  $("textnote").textContent=m==="clean"
+    ?"Clean-up keeps every text character, link and form field exactly as it is. It only removes wasted space in the file structure."
+    :"Pages converted to images cannot be selected or searched with Ctrl+F. The rest of the PDF (outside the chosen range) keeps its original text.";
+  if(m!=="custom"&&p.dpi){$("dpiv").textContent=p.dpi;$("qv").textContent=Math.round(p.q*100)}
+  $("again").hidden=true;
+  lastOut=null;
+}
+function setInfo(ni){
+  if(info&&info.pdf&&info.pdf!==ni.pdf){try{info.pdf.destroy()}catch(e){}}
+  info=ni;$("sPages").textContent=ni.pages;$("sSize").textContent=PE.fmt(file?file.size:0);
+}
+
+PE.drop($("zone"),$("fileInput"),/pdf/i,async function(list){
+  file=list[0];$("fn").textContent=file.name;$("panel").hidden=false;
+  $("cmp").hidden=true;$("resnote").textContent="";$("again").hidden=true;
+  $("sSize").textContent=PE.fmt(file.size);$("meta").textContent="· reading…";
+  PE.status("Reading the PDF…");
+  try{
+    var ni=await PE.preview(file,$("pv"),{page:1,maxW:420});
+    setInfo(ni);sync();
+    PE.status("Ready — "+ni.pages+" page"+(ni.pages===1?"":"s")+". Pick a method and compress.","ok");
+  }catch(e){
+    PE.status(/password|encrypt/i.test(e.message||"")?"This PDF is password-protected. Remove the password first, then try again.":"Could not read this PDF: "+(e.message||e),"err");
+  }
+});
+
+document.getElementById("modes").addEventListener("change",function(){sync()});
+$("rangeMode").onchange=sync;
+$("dpi").addEventListener("input",function(){$("dpiv").textContent=this.value});
+$("q").addEventListener("input",function(){$("qv").textContent=this.value});
+$("gray").addEventListener("change",sync);
+
+function grayCanvas(c){
+  var x=c.getContext("2d"),d=x.getImageData(0,0,c.width,c.height),p=d.data;
+  for(var i=0;i<p.length;i+=4){var g=p[i]*.299+p[i+1]*.587+p[i+2]*.114;p[i]=p[i+1]=p[i+2]=g}
+  x.putImageData(d,0,0);
+}
+
+
+$("go").onclick=async function(){
+  if(!file||busy)return;
+  var o=opts(),btn=this;busy=true;btn.disabled=true;$("again").hidden=true;$("cmp").hidden=true;$("resnote").textContent="";
+  PE.progress(.02);PE.status("Preparing…");
+  try{
+    var srcLib=await PE.readPdf(file), bytes;
+    if(o.mode==="clean"){
+      srcLib.setProducer("MULTI TOOL HUB");
+      srcLib.setCreator("MULTI TOOL HUB · multi tool hub");
+      bytes=await srcLib.save({useObjectStreams:true});
+    }else{
+      var list=rangeList();
+      if(!list||!list.length)throw new Error("Enter at least one page to compress, for example 1-5, 8.");
+      var out=await PDFLib.PDFDocument.create();
+      var jspdf=await PE.openPdf(file), inRange={};
+      list.forEach(function(i){inRange[i]=1});
+      /* rebuild in the original order, rasterising only the chosen pages */
+      var c2=document.createElement("canvas"), scale=o.dpi/72;
+      var done=0;
+      for(var pi=0;pi<jspdf.numPages;pi++){
+        if(inRange[pi]){
+          var page=await jspdf.getPage(pi+1), vp=page.getViewport({scale:scale}), base=page.getViewport({scale:1});
+          var maxPix=24e6;
+          if(vp.width*vp.height>maxPix){var f=Math.sqrt(maxPix/(vp.width*vp.height));vp=page.getViewport({scale:scale*f})}
+          c2.width=Math.max(1,Math.round(vp.width));c2.height=Math.max(1,Math.round(vp.height));
+          var cx=c2.getContext("2d");cx.fillStyle="#fff";cx.fillRect(0,0,c2.width,c2.height);
+          await page.render({canvasContext:cx,viewport:vp}).promise;
+          if(o.gray)grayCanvas(c2);
+          var blob=await new Promise(function(r){c2.toBlob(r,"image/jpeg",o.q)});
+          if(!blob)throw new Error("The browser could not encode page "+(pi+1)+" as an image. Try a lower DPI.");
+          var img=await out.embedJpg(await blob.arrayBuffer());
+          out.addPage([base.width,base.height]).drawImage(img,{x:0,y:0,width:base.width,height:base.height});
+          c2.width=c2.height=0;done++;
+        }else{
+          var cp=await out.copyPages(srcLib,[pi]);
+          out.addPage(cp[0]);
+        }
+        if(pi%3===0){PE.progress(.04+.9*(pi/jspdf.numPages));PE.status("Compressing page "+(pi+1)+" of "+jspdf.numPages+"…");await PE.sleep(0)}
+      }
+      try{jspdf.destroy()}catch(e){}
+      if(!done)throw new Error("None of the chosen pages exist in this PDF.");
+      bytes=await out.save({useObjectStreams:true});
+    }
+    PE.progress(1);
+    var before=file.size,after=bytes.length,saved=before-after,pct=before?Math.round(saved/before*100):0;
+    $("cmp").hidden=false;$("bBefore").textContent=PE.fmt(before);$("bAfter").textContent=PE.fmt(after);
+    $("afterBox").classList.toggle("big",after>=before);
+    $("bSaved").textContent=after<before?Math.round((1-after/before)*100)+"% smaller":after===before?"Same size":"Larger";
+    lastOut=bytes;lastOutName=PE.baseName(file.name)+"-compressed.pdf";
+    if(after<before){
+      PE.download(bytes,lastOutName,"application/pdf");
+      PE.status("Done — "+PE.fmt(before)+" → "+PE.fmt(after)+" ("+pct+"% smaller). Saved to your downloads.","ok");
+      PE.toast("Download started");
+      $("resnote").textContent=o.mode==="clean"?"The clean-up kept all text, links and form fields intact.":"The compressed pages are images, so text in them is no longer searchable. Your original file is untouched.";
+    }else{
+      $("again").hidden=false;
+      PE.status("The result is not smaller ("+PE.fmt(before)+" → "+PE.fmt(after)+"). Your original is the better copy.","err");
+      $("resnote").textContent="This PDF is already efficient. Try a page-image preset, or lower the DPI and quality under Custom.";
+    }
+  }catch(e){
+    PE.progress(null);
+    $("cmp").hidden=true;
+    PE.status(/password|encrypt/i.test(e.message||"")?"This PDF is password-protected. Remove the password first, then try again.":"Could not compress this PDF: "+(e.message||e),"err");
+  }finally{busy=false;btn.disabled=false;setTimeout(function(){PE.progress(null)},700)}
+};
+$("again").onclick=function(){
+  if(!lastOut)return;
+  PE.download(lastOut,lastOutName,"application/pdf");PE.toast("Download started");
+};
+</script>
+</body>
+</html>

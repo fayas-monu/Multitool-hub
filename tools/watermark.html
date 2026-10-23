@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
+<title>Watermark PDF — live, draggable preview | MULTI TOOL HUB</title>
+<meta name="description" content="Add a text or image watermark to a PDF and place it exactly where you want. Live preview on any page, drag to position, tile across the page, control opacity, angle and ranges. Processed locally.">
+<meta name="theme-color" content="#11162b">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<style>
+  .wm-stage{display:flex;justify-content:center;margin:12px 0 4px}
+  .wm-pv{position:relative;line-height:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;box-shadow:var(--shadow-lg);max-width:100%;touch-action:none}
+  .wm-pv canvas{display:block;max-width:100%;height:auto}
+  .wm-pv .ov{position:absolute;inset:0;cursor:grab;width:100%!important;height:100%!important}
+  .wm-pv .ov.dragging{cursor:grabbing}
+  .wm-pv .grabhint{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);background:rgba(15,20,45,.7);color:#fff;font:600 11px 'Plus Jakarta Sans',sans-serif;padding:4px 9px;border-radius:999px;pointer-events:none;white-space:nowrap;opacity:1;transition:opacity .3s}
+  .pagebar{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .pagebar button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:9px;padding:7px 11px;cursor:pointer;font:700 13px 'Plus Jakarta Sans',sans-serif}
+  .pagebar button:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+  .pagebar button:disabled{opacity:.35;cursor:default}
+  .pagebar input{width:58px;text-align:center;padding:7px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--ink);font:700 13px 'Plus Jakarta Sans',sans-serif}
+  .pagebar span{font-size:13px;color:var(--muted);font-weight:600}
+  .swatches{display:flex;gap:7px;flex-wrap:wrap;margin-top:7px}
+  .swatches button{width:26px;height:26px;border-radius:7px;border:2px solid #fff;box-shadow:0 0 0 1px var(--line);cursor:pointer}
+  .swatches button.on{box-shadow:0 0 0 2px var(--accent)}
+  .tabs2{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+  .tabs2 button{border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:9px;padding:8px 14px;font:700 13px 'Plus Jakarta Sans',sans-serif;cursor:pointer}
+  .tabs2 button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+  .warn{font-size:12.5px;color:var(--err);margin-top:6px;display:none}
+  .warn.on{display:block}
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="" width="40" height="40">MULTI TOOL HUB</a>
+  <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
+</div></header>
+<main>
+<h1>Watermark PDF</h1>
+<p class="lead">Place a text or image watermark exactly where you want it. Drag it on the live preview, switch pages, tile it across the sheet, and fine-tune opacity, angle and size before you download.</p>
+
+<label class="drop" id="zone"><i class="fa-solid fa-stamp" aria-hidden="true"></i><strong>Choose a PDF or drop it here</strong><span>Your file stays on this device</span>
+<input type="file" id="fileInput" accept="application/pdf,.pdf"></label>
+
+<div class="panel" id="panel" hidden>
+  <p style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><strong id="fn"></strong> <span id="meta" style="color:var(--muted)"></span> <span class="live">● Live preview</span></p>
+
+  <div class="wm-stage">
+    <div class="wm-pv" id="pv">
+      <canvas id="base" aria-label="PDF page preview"></canvas>
+      <canvas id="ov" class="ov" aria-label="Watermark preview — drag to move"></canvas>
+      <span class="grabhint" id="hint">Drag the watermark to position it</span>
+    </div>
+  </div>
+  <div class="pagebar">
+    <button type="button" id="prev" title="Previous page"><i class="fa-solid fa-chevron-left"></i></button>
+    <span>Page</span><input type="number" id="pg" value="1" min="1"><span id="pgt">of 1</span>
+    <button type="button" id="next" title="Next page"><i class="fa-solid fa-chevron-right"></i></button>
+    <button type="button" id="fit" title="Fit the preview to the panel">Fit</button>
+  </div>
+
+  <div class="tabs2" style="margin-top:16px">
+    <button type="button" data-tab="text" class="on"><i class="fa-solid fa-font"></i> Text watermark</button>
+    <button type="button" data-tab="image"><i class="fa-regular fa-image"></i> Image / logo</button>
+  </div>
+
+  <div id="textPane">
+    <label class="f" for="txt">Watermark text</label>
+    <input class="in" id="txt" value="CONFIDENTIAL" maxlength="60" autocomplete="off">
+    <div class="warn" id="txtWarn">This font can only draw Latin letters, numbers and common symbols. Remove the unsupported characters for a clean result.</div>
+    <div class="g2">
+      <div><label class="f" for="font">Font</label>
+        <select class="in" id="font">
+          <option value="helv" selected>Helvetica</option>
+          <option value="times">Times New Roman</option>
+          <option value="courier">Courier</option>
+        </select>
+      </div>
+      <div><label class="f" for="size">Size: <span id="sizev">56</span> pt</label><input type="range" id="size" min="8" max="200" value="56" style="width:100%"></div>
+    </div>
+    <label class="switch" style="margin-top:2px"><input type="checkbox" id="bold" checked> Bold text</label>
+    <label class="f" for="col">Colour</label>
+    <input type="color" id="col" value="#6b7280" style="width:100%;height:40px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);padding:3px">
+    <div class="swatches" id="sw">
+      <button type="button" data-c="#6b7280" style="background:#6b7280" title="Grey"></button>
+      <button type="button" data-c="#111827" style="background:#111827" title="Charcoal"></button>
+      <button type="button" data-c="#dc2626" style="background:#dc2626" title="Red"></button>
+      <button type="button" data-c="#2563eb" style="background:#2563eb" title="Blue"></button>
+      <button type="button" data-c="#16a34a" style="background:#16a34a" title="Green"></button>
+      <button type="button" data-c="#d97706" style="background:#d97706" title="Amber"></button>
+    </div>
+  </div>
+
+  <div id="imagePane" hidden>
+    <label class="f" for="imf">Image or logo (PNG, JPG or WebP — transparency is kept)</label>
+    <input class="in" type="file" id="imf" accept="image/png,image/jpeg,image/webp">
+    <p class="hint" id="imInfo" style="margin-top:6px">Choose a file to place it on the page.</p>
+    <label class="f" for="iw">Image width: <span id="iwv">35</span>% of the page</label>
+    <input type="range" id="iw" min="5" max="100" value="35" style="width:100%">
+  </div>
+
+  <div class="g2" style="margin-top:8px">
+    <div><label class="f" for="lay">Layout</label>
+      <select class="in" id="lay">
+        <option value="one" selected>One, centred</option>
+        <option value="tile">Repeated across the page</option>
+        <option value="custom">Custom — drag to place</option>
+      </select>
+    </div>
+    <div><label class="f" for="op">Opacity: <span id="opv">22</span>%</label><input type="range" id="op" min="3" max="100" value="22" style="width:100%"></div>
+  </div>
+  <label class="f" for="ang">Angle: <span id="angv">35</span>°</label>
+  <input type="range" id="ang" min="-90" max="90" value="35" style="width:100%">
+  <label class="switch"><input type="checkbox" id="allPages" checked> Apply to every page</label>
+  <div id="rangeWrap" hidden><label class="f" for="rg">Pages to watermark</label><input class="in" id="rg" placeholder="For example 1-3, 5, 8-"></div>
+
+  <div class="row">
+    <button class="btn" id="go"><i class="fa-solid fa-stamp"></i> Apply &amp; download</button>
+    <button class="btn ghost" id="resetPos"><i class="fa-solid fa-crosshairs"></i> Re-centre</button>
+  </div>
+  <p class="hint" id="noteTxt">Tip: choose <b>Custom</b> (or simply drag on the preview) to place the watermark over a specific area. With <b>Repeated</b>, the spacing follows the text size automatically.</p>
+</div>
+<div class="status" id="status" role="status" aria-live="polite"></div>
+<div class="prog" id="prog"><div></div></div>
+</main>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
+<script src="../assets/app.js"></script>
+<script src="../assets/chat.js"></script>
+<script>
+var $=PE.$, $$=PE.$$, file=null, info=null, cur=1, img=null, imgBytes=null, rota=0, renderTok=0;
+var pos={x:.5,y:.5}; /* centre as a fraction of the page */
+var FONTS={helv:["Helvetica","HelveticaBold"],times:["TimesRoman","TimesRomanBold"],courier:["Courier","CourierBold"]};
+var FONTCSS={helv:"Helvetica,Arial,sans-serif",times:"'Times New Roman',Times,serif",courier:"'Courier New',Courier,monospace"};
+
+function opts(){
+  return {
+    type:$("textPane").hidden?"image":"text",
+    text:$("txt").value,
+    font:$("font").value,bold:$("bold").checked,size:+$("size").value,col:$("col").value,
+    lay:$("lay").value,op:+$("op").value/100,ang:+$("ang").value,
+    imgW:+$("iw").value/100,pos:{x:pos.x,y:pos.y}
+  };
+}
+function cssFont(o,s){return (o.bold?"700 ":"")+s+"px "+FONTCSS[o.font]}
+
+/* Watermark centres in display points (top-left origin). */
+function centres(o,W,H){
+  if(o.lay==="tile"){
+    var out=[],gapX,gapY;
+    if(o.type==="text"){
+      var m=document.createElement("canvas").getContext("2d");
+      m.font=cssFont(o,o.size);
+      gapX=m.measureText(o.text||" ").width+o.size*1.5;
+      gapY=o.size*2.9;
+      for(var y=gapY*.55,r=0;y<H+gapY;y+=gapY,r++)
+        for(var x=(r%2?gapX/2:0);x<W+gapX;x+=gapX)out.push([x,y]);
+    }else{
+      var iw=W*o.imgW,ih=img?iw*img.height/img.width:iw*.6;
+      gapX=iw*1.5;gapY=ih*1.7;
+      for(var y2=gapY*.6,r2=0;y2<H+gapY;y2+=gapY,r2++)
+        for(var x2=(r2%2?gapX/2:0);x2<W+gapX;x2+=gapX)out.push([x2,y2]);
+    }
+    return out;
+  }
+  return [[o.pos.x*W,o.pos.y*H]];
+}
+
+function draw(){
+  if(!info||!img&&opts().type==="image"){drawBase();return}
+  var o=opts(),cv=$("ov"),base=$("base");
+  cv.width=base.width;cv.height=base.height;cv.style.width=base.style.width;cv.style.height=base.style.height;
+  var x=cv.getContext("2d"),k=base.width/info.pw; /* device pixels per PDF point */
+  if(o.type==="text"&&!o.text){drawBase();return}
+  var W=info.pw,H=info.ph;
+  x.clearRect(0,0,cv.width,cv.height);
+  x.save();x.globalAlpha=o.op;
+  centres(o,W,H).forEach(function(c){
+    x.save();x.translate(c[0]*k,c[1]*k);x.rotate(-o.ang*Math.PI/180);
+    if(o.type==="text"){
+      x.fillStyle=o.col;x.font=cssFont(o,o.size*k);x.textAlign="center";x.textBaseline="middle";
+      x.fillText(o.text,0,0);
+    }else{
+      var iw=W*o.imgW*k,ih=iiH(o,W)*k;
+      x.drawImage(img,-iw/2,-ih/2,iw,ih);
+    }
+    x.restore();
+  });
+  x.restore();
+}
+function iiH(o,W){return img?W*o.imgW*img.height/img.width:W*o.imgW*.6}
+function drawBase(){var cv=$("ov"),c=cv.getContext("2d");cv.width=$("base").width;cv.height=$("base").height;cv.style.width=$("base").style.width;cv.style.height=$("base").style.height;c.clearRect(0,0,cv.width,cv.height)}
+
+async function showPage(n){
+  if(!file)return;
+  cur=Math.max(1,Math.min(info?info.pages:1,n));
+  var tok=++renderTok;
+  $("pg").value=cur;$("pgt").textContent="of "+(info?info.pages:"?");
+  PE.status("Rendering page "+cur+"…");
+  try{
+    if(info&&info.pdf){try{info.pdf.destroy()}catch(e2){}}
+    var ni=await PE.preview(file,$("base"),{page:cur,maxW:620});
+    if(tok!==renderTok)return;
+    info=ni;
+    $("pg").value=cur;$("pgt").textContent="of "+cur;
+    $("pgt").textContent="of "+info.pages;
+    sizePreview();
+    draw();
+    PE.status("");
+  }catch(e){PE.status("This page could not be previewed: "+(e.message||e),"err")}
+}
+function sizePreview(){
+  var b=$("base"),max=Math.max(220,($("panel").clientWidth||720)-48);
+  var raw=parseFloat(b.style.width)||b.width;
+  var w=Math.min(raw,max),h=w*(b.height/b.width);
+  b.style.width=w+"px";b.style.height=h+"px";
+  $("pv").style.width=w+"px";
+  var ov=$("ov");ov.style.width=w+"px";ov.style.height=h+"px";
+}
+
+/* ---------- drag position ---------- */
+var drag=null;
+function pointerFrac(e){
+  var r=$("ov").getBoundingClientRect();
+  return {x:Math.max(0,Math.min(1,(e.clientX-r.left)/r.width)),y:Math.max(0,Math.min(1,(e.clientY-r.top)/r.height))};
+}
+$("ov").addEventListener("pointerdown",function(e){
+  if(!info)return;
+  var p=pointerFrac(e);
+  drag=p;
+  if($("lay").value!=="custom"){$("lay").value="custom";PE.toast("Custom placement — drag anywhere")}
+  pos=p;
+  $("ov").classList.add("dragging");$("hint").style.opacity="0";
+  try{$("ov").setPointerCapture(e.pointerId)}catch(x){}
+  draw();
+});
+$("ov").addEventListener("pointermove",function(e){
+  if(!drag)return;
+  pos=pointerFrac(e);draw();
+});
+["pointerup","pointercancel"].forEach(function(ev){$("ov").addEventListener(ev,function(){
+  if(!drag)return;drag=null;$("ov").classList.remove("dragging");
+})});
+
+/* ---------- controls ---------- */
+function sync(){
+  $("sizev").textContent=$("size").value;$("opv").textContent=$("op").value;$("angv").textContent=$("ang").value;$("iwv").textContent=$("iw").value;
+  $("rangeWrap").hidden=$("allPages").checked;
+  $("txtWarn").classList.toggle("on",/[^\u0000-\u00ff]/.test($("txt").value));
+  draw();
+}
+["txt","font","bold","size","col","lay","op","ang","iw","allPages"].forEach(function(id){
+  $(id).addEventListener("input",sync);
+});
+$("sw").addEventListener("click",function(e){
+  var b=e.target.closest("button[data-c]");if(!b)return;
+  $("col").value=b.dataset.c;
+  $$("#sw button").forEach(function(x){x.classList.toggle("on",x===b)});
+  draw();
+});
+$$(".tabs2 button").forEach(function(b){
+  b.addEventListener("click",function(){
+    $$(".tabs2 button").forEach(function(x){x.classList.toggle("on",x===b)});
+    $("textPane").hidden=b.dataset.tab!=="text";
+    $("imagePane").hidden=b.dataset.tab!=="image";
+    $("noteTxt").innerHTML=b.dataset.tab==="image"?"Place a logo or stamp anywhere. Drag it on the preview and resize it with the width slider.":"Tip: choose <b>Custom</b> (or simply drag on the preview) to place the watermark over a specific area. With <b>Repeated</b>, the spacing follows the text size automatically.";
+    draw();
+  });
+});
+$("imf").onchange=async function(){
+  var f=this.files&&this.files[0];if(!f)return;
+  try{
+    img=await PE.loadImage(f);
+    var c=document.createElement("canvas");c.width=img.width;c.height=img.height;
+    var x=c.getContext("2d");x.drawImage(img,0,0);
+    var blob=await new Promise(function(r){c.toBlob(r,"image/png")});
+    imgBytes=await blob.arrayBuffer();
+    $("imInfo").textContent=f.name+" · "+img.width+"×"+img.height+" px";
+    if(+$("iw").value>60)$("iw").value=35;
+    sync();
+    PE.toast("Image ready — drag it on the page");
+  }catch(e){PE.status("That image could not be opened: "+(e.message||e),"err")}
+};
+$("resetPos").onclick=function(){pos={x:.5,y:.5};$("lay").value="one";sync();PE.toast("Watermark re-centred")};
+$("prev").onclick=function(){showPage(cur-1)};
+$("next").onclick=function(){showPage(cur+1)};
+$("pg").addEventListener("change",function(){showPage(+this.value||1)});
+$("fit").onclick=function(){showPage(cur)};
+
+PE.drop($("zone"),$("fileInput"),/pdf/i,async function(list){
+  file=list[0];
+  $("fn").textContent=file.name;$("meta").textContent="· "+PE.fmt(file.size);
+  $("panel").hidden=false;$("pv").style.display="flex";$("pv").style.justifyContent="center";
+  try{
+    if(info&&info.pdf){try{info.pdf.destroy()}catch(e2){}}
+    info=await PE.preview(file,$("base"),{page:1,maxW:620});
+    cur=1;$("pg").value=1;$("pgt").textContent="of "+info.pages;
+    sizePreview();draw();
+    PE.status("Ready — "+info.pages+" page"+(info.pages===1?"":"s")+". Drag the watermark to place it.","ok");
+  }catch(e){
+    PE.status(/password|encrypt/i.test(e.message||"")?"This PDF is password-protected. Remove the password first, then try again.":"Could not read this PDF: "+(e.message||e),"err");
+  }
+});
+
+/* ---------- apply ---------- */
+async function apply(){
+  if(!file)return;
+  if(opts().type==="text"&&!$("txt").value.trim()){PE.status("Enter the watermark text first.","err");return}
+  if(opts().type==="image"&&!imgBytes){PE.status("Choose an image first.","err");return}
+  var btn=this;btn.disabled=true;PE.progress(.02);
+  try{
+    var lib=PDFLib,doc=await PE.readPdf(file),indices;
+    if($("allPages").checked)indices=Array.from({length:doc.getPageCount()},function(_,i){return i});
+    else indices=PE.ranges($("rg").value,doc.getPageCount());
+    var jsdoc=await PE.openPdf(file);
+    var o=opts();
+    var font=null;
+    if(o.type==="text"){
+      var pair=FONTS[o.font]||FONTS.helv;
+      font=await doc.embedFont(lib.StandardFonts[o.bold?pair[1]:pair[0]]);
+    }
+    var pimg=null;
+    if(o.type==="image")pimg=/^image\/png$/i.test(imgBlobType(imgBytes))?await doc.embedPng(imgBytes):await doc.embedJpg(imgBytes);
+    for(var n=0;n<indices.length;n++){
+      var pi=indices[n],page=doc.getPage(pi);
+      var jp=await jsdoc.getPage(pi+1),vp=jp.getViewport({scale:1}),rot=((jp.rotate||0)%360+360)%360;
+      var W=vp.width,H=vp.height;
+      var cs=centres(o,W,H);
+      for(var c=0;c<cs.length;c++){
+        var dp=vp.convertToPdfPoint(cs[c][0],cs[c][1]);
+        drawOne(page,o,font,pimg,dp[0],dp[1],rot);
+      }
+      if(n%5===0){PE.progress(.1+.8*(n/indices.length));await PE.sleep(0)}
+    }
+    PE.progress(.95);
+    var bytes=await doc.save();
+    PE.download(bytes,"watermarked-"+file.name,"application/pdf");
+    PE.progress(1);PE.status("Watermark applied to "+indices.length+" page"+(indices.length===1?"":"s")+".","ok");PE.toast("Download started");
+    try{jsdoc.destroy()}catch(e){}
+  }catch(e){
+    PE.progress(null);
+    PE.status(/encode|WinAnsi/i.test(e.message||"")?"Some characters cannot be drawn with this built-in font. Use Latin letters, numbers and common symbols, or choose an image watermark.":"Could not apply the watermark: "+(e.message||e),"err");
+  }finally{btn.disabled=false;setTimeout(function(){PE.progress(null)},600)}
+}
+function imgBlobType(bytes){
+  /* PNG signature: 89 50 4E 47 */
+  var u=new Uint8Array(bytes,0,8);
+  return u[0]===0x89&&u[1]===0x50?"image/png":"image/jpeg";
+}
+function drawOne(page,o,font,pimg,cx,cy,rot){
+  var lib=PDFLib,rad=(rot+o.ang)*Math.PI/180;
+  if(o.type==="text"){
+    var text=o.text,w=font.widthOfTextAtSize(text,o.size),h=o.size;
+    var dx=Math.cos(rad)*(w/2)-Math.sin(rad)*(h*.35);
+    var dy=Math.sin(rad)*(w/2)+Math.cos(rad)*(h*.35);
+    page.drawText(text,{
+      x:cx-dx,y:cy-dy,size:o.size,font:font,
+      color:lib.rgb.apply(null,PE.hex(o.col)),opacity:o.op,
+      rotate:lib.degrees(rot+o.ang)
+    });
+  }else{
+    var pw=page.getSize().width,ph=page.getSize().height;
+    var dispW=rot%180?ph:pw; /* display width in points */
+    var iw=dispW*o.imgW,ih=iw*pimg.height/pimg.width;
+    var dx2=Math.cos(rad)*(iw/2)-Math.sin(rad)*(ih/2);
+    var dy2=Math.sin(rad)*(iw/2)+Math.cos(rad)*(ih/2);
+    page.drawImage(pimg,{x:cx-dx2,y:cy-dy2,width:iw,height:ih,opacity:o.op,rotate:lib.degrees(rot+o.ang)});
+  }
+}
+$("go").onclick=apply;
+</script>
+</body>
+</html>

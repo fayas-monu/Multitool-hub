@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
+<title>JPG to PDF — photos and scans into one PDF | MULTI TOOL HUB</title>
+<meta name="description" content="Turn JPG, PNG and WebP images into one tidy PDF. Reorder by drag and drop, rotate, choose A4 or Letter, margins, fit mode and metadata.">
+<meta name="theme-color" content="#11162b">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<style>
+  .imglist{list-style:none;display:grid;gap:7px;margin-top:10px}
+  .imglist li{display:flex;align-items:center;gap:9px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:6px 8px;cursor:grab}
+  .imglist li.on{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 22%,transparent)}
+  .imglist li.drag{opacity:.4}
+  .imglist li.over{outline:2px dashed var(--accent);outline-offset:-2px}
+  .imglist img{width:42px;height:42px;object-fit:cover;border-radius:6px;background:#fff;flex:none;transition:transform .18s}
+  .imglist .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;font-weight:600}
+  .imglist .sz{font-size:11px;color:var(--muted);white-space:nowrap}
+  .imglist .ib{width:26px;height:26px;font-size:11px}
+  .dragdot{color:var(--muted);font-size:13px;cursor:grab}
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="" width="40" height="40">MULTI TOOL HUB</a>
+  <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
+</div></header>
+<main>
+<h1>JPG to PDF</h1>
+<p class="lead">Put photos, scans or screenshots into one clean PDF. Drag to reorder, rotate, choose the paper size and watch the layout preview update.</p>
+
+<label class="drop" id="zone"><i class="fa-solid fa-images" aria-hidden="true"></i><strong>Choose images or drop them here</strong><span>JPG, PNG, WebP · add more at any time</span>
+<input type="file" id="fileInput" accept="image/*" multiple></label>
+
+<div class="panel" id="panel" hidden>
+  <div class="g2">
+    <div>
+      <p style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:0"><strong id="cnt">0 images</strong><span id="total" style="color:var(--muted)"></span></p>
+      <ul class="imglist" id="list" aria-label="Image order"></ul>
+      <div class="row" style="margin-top:10px">
+        <button class="btn ghost sm" id="addMore" type="button"><i class="fa-solid fa-plus"></i> Add images</button>
+        <button class="btn ghost sm" id="reverse" type="button"><i class="fa-solid fa-arrows-up-down"></i> Reverse</button>
+        <button class="btn ghost sm" id="clear" type="button"><i class="fa-solid fa-trash"></i> Clear all</button>
+      </div>
+    </div>
+    <div>
+      <label class="f">Layout preview <span class="live">● Live</span></label>
+      <div class="pvframe" style="padding:10px"><canvas id="pv" style="max-width:100%;max-height:330px;height:auto;border-radius:4px;box-shadow:0 8px 20px -10px rgba(10,12,40,.5)" aria-label="Page layout preview"></canvas></div>
+      <p class="hint" id="pvinfo" style="text-align:center;margin-top:8px"></p>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div>
+      <label class="f" for="size">Page size</label>
+      <select class="in" id="size">
+        <option value="fit">Fit the image (no borders)</option>
+        <option value="a4" selected>A4</option>
+        <option value="letter">US Letter</option>
+        <option value="legal">US Legal</option>
+        <option value="a5">A5</option>
+      </select>
+      <label class="f" for="orient">Orientation</label>
+      <select class="in" id="orient">
+        <option value="auto" selected>Auto (follow each image)</option>
+        <option value="portrait">Portrait</option>
+        <option value="landscape">Landscape</option>
+      </select>
+      <label class="f" for="fit">Image fit</label>
+      <select class="in" id="fit">
+        <option value="contain" selected>Contain — show the whole image</option>
+        <option value="cover">Cover — fill the page, crop edges</option>
+        <option value="stretch">Stretch — fill exactly</option>
+      </select>
+    </div>
+    <div>
+      <label class="f" for="margin">Margin: <span id="mv">24</span> pt <span id="mhint" style="font-weight:500;color:var(--muted)"></span></label>
+      <input type="range" id="margin" min="0" max="72" step="2" value="24" style="width:100%">
+      <label class="f" for="q">Image quality: <span id="qv">92</span>%</label>
+      <input type="range" id="q" min="60" max="100" step="1" value="92" style="width:100%">
+      <label class="f" for="name">Output file name</label>
+      <input class="in" id="name" value="images" autocomplete="off">
+    </div>
+  </div>
+
+  <details style="margin-top:12px">
+    <summary style="cursor:pointer;font-weight:700;font-size:13.5px">Document details (optional)</summary>
+    <div class="g2" style="margin-top:8px">
+      <div><label class="f" for="title">Title</label><input class="in" id="title" autocomplete="off" placeholder="My document"></div>
+      <div><label class="f" for="author">Author</label><input class="in" id="author" autocomplete="off" placeholder="Your name"></div>
+    </div>
+  </details>
+
+  <div class="prog" id="prog"><div></div></div>
+  <div class="row"><button class="btn" id="go"><i class="fa-solid fa-file-pdf"></i> Create PDF</button></div>
+  <p class="hint" id="hint">Drag the rows to change page order. Click a row to preview it. Images stay on your device.</p>
+</div>
+<div class="status" id="status" role="status" aria-live="polite"></div>
+</main>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
+<script src="../assets/app.js"></script>
+<script src="../assets/chat.js"></script>
+<script>
+var $=PE.$, items=[], cur=0, dragFrom=-1, busy=false;
+var PAPER={a4:[595.28,841.89],letter:[612,792],legal:[612,1008],a5:[419.53,595.28]};
+
+function settings(){
+  return {size:$("size").value,orient:$("orient").value,fit:$("fit").value,margin:+$("margin").value,q:+$("q").value/100};
+}
+function pageSize(img,j){
+  var s=settings();
+  if(s.size==="fit")return [img.w,img.h];
+  var p=PAPER[s.size].slice();
+  var landscape=s.orient==="landscape"||(s.orient==="auto"&&img.w>img.h);
+  if(landscape&&p[0]<p[1])p=[p[1],p[0]];
+  if(!landscape&&p[0]>p[1])p=[p[1],p[0]];
+  return p;
+}
+function place(img,W,H){
+  var s=settings(),m=s.margin,bw=Math.max(1,W-2*m),bh=Math.max(1,H-2*m);
+  var sc=s.fit==="cover"?Math.max(bw/img.w,bh/img.h):(s.fit==="stretch"?0:Math.min(bw/img.w,bh/img.h));
+  var w=s.fit==="stretch"?bw:img.w*sc,h=s.fit==="stretch"?bh:img.h*sc;
+  return {x:(W-w)/2,y:(H-h)/2,w:w,h:h};
+}
+function isLandscape(img){var p=pageSize(img);return p[0]>p[1]}
+function updateMeta(){
+  $("cnt").textContent=items.length+" image"+(items.length===1?"":"s");
+  var total=items.reduce(function(a,i){return a+i.file.size},0);
+  $("total").textContent=items.length?"· "+PE.fmt(total):"";
+  $("mv").textContent=$("margin").value;
+  $("mhint").textContent=$("size").value==="fit"?"(margins crop the image; set 0 for a full-bleed page)":"";
+}
+function renderList(){
+  $("panel").hidden=!items.length;
+  $("list").innerHTML=items.map(function(it,i){
+    return '<li data-i="'+i+'" class="'+(i===cur?"on":"")+'" draggable="true" tabindex="0">'
+      +'<span class="dragdot" aria-hidden="true"><i class="fa-solid fa-grip-vertical"></i></span>'
+      +'<img src="'+it.url+'" alt="" style="transform:rotate('+it.rot+'deg)">'
+      +'<span class="nm">'+PE.esc(it.file.name)+'</span><span class="sz">'+(it.w?it.w+'×'+it.h:"…")+'</span>'
+      +'<button class="ib" data-a="left" data-i="'+i+'" title="Rotate left" aria-label="Rotate image '+(i+1)+' left"><i class="fa-solid fa-rotate-left"></i></button>'
+      +'<button class="ib" data-a="right" data-i="'+i+'" title="Rotate right" aria-label="Rotate image '+(i+1)+' right"><i class="fa-solid fa-rotate-right"></i></button>'
+      +'<button class="ib" data-a="rm" data-i="'+i+'" title="Remove" aria-label="Remove image '+(i+1)+'"><i class="fa-solid fa-xmark"></i></button></li>';
+  }).join("");
+  updateMeta();drawPreview();
+}
+function drawPreview(){
+  if(!items.length)return;
+  var it=items[Math.min(cur,items.length-1)];if(!it||!it.img)return;
+  var rot=(it.rot%180+180)%180, w=rot?it.img.height:it.img.width, h=rot?it.img.width:it.img.height;
+  var dims=pageSize({w:w,h:h}),W=dims[0],H=dims[1],m=settings().margin;
+  var c=$("pv"),maxW=340,maxH=300,k=Math.min(maxW/W,maxH/H);
+  var dpr=Math.min(2,window.devicePixelRatio||1);
+  c.width=Math.round(W*k*dpr);c.height=Math.round(H*k*dpr);c.style.width=Math.round(W*k)+"px";c.style.height=Math.round(H*k)+"px";
+  var x=c.getContext("2d");x.setTransform(dpr*k,0,0,dpr*k,0,0);
+  x.fillStyle="#fff";x.fillRect(0,0,W,H);
+  if(m>0){x.strokeStyle="rgba(61,59,243,.35)";x.setLineDash([3,3]);x.lineWidth=1/k;x.strokeRect(m,m,W-2*m,H-2*m);x.setLineDash([])}
+  var p=place({w:w,h:h},W,H);
+  x.save();x.beginPath();x.rect(0,0,W,H);x.clip();
+  x.translate(W/2,H/2);x.rotate(it.rot*Math.PI/180);
+  x.drawImage(it.img,-p.w/2,-p.h/2,p.w,p.h);
+  x.restore();
+  $("pvinfo").textContent="Page "+(Math.min(cur,items.length-1)+1)+" · "+Math.round(W)+" × "+Math.round(H)+" pt"+(settings().size==="fit"?"":" · "+settings().fit);
+}
+function sync(){updateMeta();drawPreview();}
+
+PE.drop($("zone"),$("fileInput"),/^image\//i,async function(files){
+  PE.status("Opening "+files.length+" image"+(files.length===1?"":"s")+"…");
+  for(var i=0;i<files.length;i++){
+    var f=files[i];
+    try{
+      var im=await PE.loadImage(f);
+      items.push({file:f,url:URL.createObjectURL(f),img:im,w:im.width,h:im.height,rot:0});
+    }catch(e){PE.toast(f.name+" could not be opened","err")}
+  }
+  if(!items.length){PE.status("No usable images were added.","err");return}
+  cur=Math.min(cur,items.length-1);renderList();
+  PE.status(items.length+" image"+(items.length===1?"":"s")+" ready. Drag rows to reorder, then create the PDF.","ok");
+});
+$("addMore").onclick=function(){$("fileInput").click()};
+$("list").addEventListener("click",function(e){
+  var b=e.target.closest("button[data-a]");
+  var li=e.target.closest("li[data-i]");if(!li)return;
+  var i=+li.dataset.i;
+  if(b){
+    e.stopPropagation();
+    if(b.dataset.a==="rm"){
+      URL.revokeObjectURL(items[i].url);items.splice(i,1);
+      if(cur>=items.length)cur=Math.max(0,items.length-1);
+      if(!items.length){$("list").innerHTML="";updateMeta();$("panel").hidden=true;PE.status("All images removed.");return}
+      renderList();return;
+    }
+    items[i].rot=(items[i].rot+(b.dataset.a==="left"?-90:90)+360)%360;
+    renderList();return;
+  }
+  cur=i;renderList();
+});
+$("list").addEventListener("keydown",function(e){
+  var li=e.target.closest("li[data-i]");if(!li||e.target.closest("button"))return;
+  if(e.key==="Enter"||e.key===" "){e.preventDefault();cur=+li.dataset.i;renderList()}
+});
+/* drag reorder */
+$("list").addEventListener("dragstart",function(e){
+  var li=e.target.closest("li");if(!li)return;
+  dragFrom=+li.dataset.i;li.classList.add("drag");
+  try{e.dataTransfer.effectAllowed="move";e.dataTransfer.setData("text/plain",String(dragFrom))}catch(x){}
+});
+$("list").addEventListener("dragend",function(e){
+  var li=e.target.closest("li");if(li)li.classList.remove("drag");
+  Array.prototype.forEach.call($("list").children,function(x){x.classList.remove("drag","over")});
+  dragFrom=-1;
+});
+$("list").addEventListener("dragover",function(e){
+  if(dragFrom<0)return;e.preventDefault();
+  try{e.dataTransfer.dropEffect="move"}catch(x){}
+  var li=e.target.closest("li");if(!li)return;
+  Array.prototype.forEach.call($("list").children,function(x){x.classList.remove("over")});
+  li.classList.add("over");
+});
+$("list").addEventListener("dragleave",function(e){
+  var li=e.target.closest("li");if(li)li.classList.remove("over");
+});
+$("list").addEventListener("drop",function(e){
+  if(dragFrom<0)return;
+  e.preventDefault();
+  var li=e.target.closest("li");
+  var to=li?+li.dataset.i:dragFrom;
+  if(to!==dragFrom){
+    var moved=items.splice(dragFrom,1)[0];
+    items.splice(to,0,moved);cur=to;
+  }
+  dragFrom=-1;renderList();PE.toast("Order updated");
+});
+$("reverse").onclick=function(){if(items.length<2)return;items.reverse();cur=items.length-1-cur;renderList();PE.toast("Order reversed")};
+$("clear").onclick=function(){
+  if(!items.length)return;
+  items.forEach(function(i){URL.revokeObjectURL(i.url)});items=[];cur=0;
+  $("panel").hidden=true;$("list").innerHTML="";PE.status("All images removed.");
+};
+["size","orient","fit"].forEach(function(id){$(id).addEventListener("change",sync)});
+$("margin").addEventListener("input",sync);
+$("q").addEventListener("input",function(){$("qv").textContent=this.value});
+window.addEventListener("resize",PE.debounce(drawPreview,200));
+
+function outName(){
+  var n=($("name").value||"images").trim().replace(/\.pdf$/i,"");
+  return PE.csrfSafeName(n||"images")+".pdf";
+}
+$("go").onclick=async function(){
+  if(!items.length||busy)return;
+  var btn=this,s=settings();busy=true;btn.disabled=true;PE.progress(.02);
+  try{
+    var doc=await PDFLib.PDFDocument.create();
+    var title=$("title").value.trim(),author=$("author").value.trim();
+    if(title)doc.setTitle(title);
+    if(author)doc.setAuthor(author);
+    doc.setCreator("MULTI TOOL HUB");doc.setProducer("MULTI TOOL HUB");
+    for(var i=0;i<items.length;i++){
+      PE.status("Adding image "+(i+1)+" of "+items.length+"…");
+      var r=await PE.imageBytes(items[i].file,{rotate:items[i].rot,quality:s.q,maxSide:3200,background:"#fff"});
+      var img=await doc.embedJpg(r.bytes), dims=pageSize({w:r.w,h:r.h},i);
+      var page=doc.addPage(dims),p=place({w:r.w,h:r.h},dims[0],dims[1]);
+      page.drawImage(img,{x:p.x,y:p.y,width:p.w,height:p.h});
+      PE.progress(.05+.9*((i+1)/items.length));
+      await PE.sleep(0);
+    }
+    var bytes=await doc.save({useObjectStreams:true});
+    PE.download(bytes,outName(),"application/pdf");
+    PE.progress(1);
+    PE.status("Created "+items.length+" page"+(items.length===1?"":"s")+" · "+PE.fmt(bytes.length)+".","ok");PE.toast("Download started");
+  }catch(e){
+    PE.progress(null);
+    PE.status("Could not create the PDF: "+(e.message||e),"err");
+  }finally{busy=false;btn.disabled=false;setTimeout(function(){PE.progress(null)},700)}
+};
+updateMeta();
+</script>
+</body>
+</html>

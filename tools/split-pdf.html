@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
+<title>Split PDF — extract pages, chunks or separate files | MULTI TOOL HUB</title>
+<meta name="description" content="Split a PDF visually. Tick the pages you want, extract them into one file, save each page separately or divide into equal chunks. Download a single PDF or a ZIP.">
+<meta name="theme-color" content="#11162b">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+  .pg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:10px;margin-top:12px;max-height:460px;overflow:auto;padding:2px}
+  .pg-card{position:relative;border:2px solid var(--line);border-radius:9px;background:#fff;padding:3px;cursor:pointer;line-height:0;transition:border-color .12s,box-shadow .12s}
+  .pg-card:hover{border-color:color-mix(in srgb,var(--accent) 55%,var(--line))}
+  .pg-card.on{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent)}
+  .pg-card img,.pg-card .ph{width:100%;height:auto;display:block;border-radius:5px;background:repeating-linear-gradient(45deg,#fff,#fff 8px,#f4f4f4 8px,#f4f4f4 16px);aspect-ratio:210/297;object-fit:contain}
+  .pg-card em{position:absolute;left:6px;bottom:6px;font:700 10px 'Plus Jakarta Sans',sans-serif;font-style:normal;background:rgba(10,12,30,.75);color:#fff;border-radius:5px;padding:1px 5px}
+  .pg-card .tick{position:absolute;right:6px;top:6px;width:20px;height:20px;border-radius:50%;border:2px solid #fff;background:rgba(10,12,30,.4);display:grid;place-items:center;color:#fff;font-size:10px}
+  .pg-card.on .tick{background:var(--accent);border-color:#fff}
+  .selbar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:10px}
+  .selbar button{font:600 12px 'Plus Jakarta Sans',sans-serif;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:8px;padding:6px 10px;cursor:pointer}
+  .selbar button:hover{border-color:var(--accent);color:var(--accent)}
+  .selbar .count{margin-left:auto;font:700 12.5px 'Plus Jakarta Sans',sans-serif;color:var(--accent)}
+  .modes{display:grid;gap:7px;margin-top:4px}
+  .modes label{display:flex;align-items:flex-start;gap:9px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;background:var(--surface-2)}
+  .modes label:has(input:checked){border-color:var(--accent);background:color-mix(in srgb,var(--accent) 6%,var(--surface-2))}
+  .modes input{margin-top:3px;accent-color:var(--accent)}
+  .modes b{display:block;font-size:13px}
+  .modes span{font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="" width="40" height="40">MULTI TOOL HUB</a>
+  <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
+</div></header>
+<main>
+<h1>Split PDF</h1>
+<p class="lead">Pick pages visually, then extract them into one PDF, save each page as its own file, or divide the document into equal parts. Everything happens on your device.</p>
+
+<label class="drop" id="zone"><i class="fa-solid fa-scissors" aria-hidden="true"></i><strong>Choose a PDF or drop it here</strong><span>One document at a time</span>
+<input type="file" id="fileInput" accept="application/pdf,.pdf"></label>
+
+<div class="panel" id="panel" hidden>
+  <p style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><strong id="fn"></strong> <span id="pc" style="color:var(--muted)"></span></p>
+
+  <label class="f">Choose pages</label>
+  <div class="selbar">
+    <button type="button" id="all">Select all</button>
+    <button type="button" id="none">Select none</button>
+    <button type="button" id="invert">Invert</button>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="pg-grid" id="grid"></div>
+
+  <label class="f" style="margin-top:18px">What should happen?</label>
+  <div class="modes">
+    <label><input type="radio" name="m" value="extract" checked><span><b>Extract selected pages into one PDF</b><span>The ticked pages become a single new document.</span></span></label>
+    <label><input type="radio" name="m" value="each"><span><b>One PDF per selected page</b><span>Every ticked page becomes its own file, delivered in a ZIP.</span></span></label>
+    <label><input type="radio" name="m" value="chunk"><span><b>Split into equal parts</b><span>Divide all pages into parts of a chosen size, delivered in a ZIP.</span></span></label>
+    <label><input type="radio" name="m" value="at"><span><b>Split at chosen pages</b><span>Create a new part after each page number you list.</span></span></label>
+  </div>
+
+  <div id="chunkBox" hidden><label class="f" for="ch">Pages per part</label><input class="in" id="ch" type="number" min="1" value="5"></div>
+  <div id="atBox" hidden><label class="f" for="at">New part after pages</label><input class="in" id="at" placeholder="For example 2, 5, 9"><p class="hint" style="margin-top:6px">Page 1-2 becomes part 1, 3-5 part 2, and so on.</p></div>
+
+  <label class="f" for="prefix" style="margin-top:14px">File name prefix</label>
+  <input class="in" id="prefix" value="" autocomplete="off">
+  <div class="row"><button class="btn" id="go"><i class="fa-solid fa-scissors"></i> Split &amp; download</button></div>
+  <p class="hint" id="hint">Tip: for a single page, use “Extract selected pages” with one tick. Your original file is never modified.</p>
+</div>
+<div class="status" id="status" role="status" aria-live="polite"></div>
+<div class="prog" id="prog"><div></div></div>
+</main>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
+<script src="../assets/app.js"></script>
+<script src="../assets/chat.js"></script>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc=PE.asset("pdf.worker.min.js");
+var $=PE.$, $$=PE.$$, file=null, pdf=null, pick=[];
+function mode(){return (document.querySelector('input[name=m]:checked')||{}).value||"extract"}
+function render(){
+  $("grid").innerHTML=pick.map(function(on,i){
+    return '<div class="pg-card'+(on?" on":"")+'" data-i="'+i+'" role="checkbox" tabindex="0" aria-checked="'+(!!on)+'" aria-label="Page '+(i+1)+'"><span class="ph"></span><span class="tick"><i class="fa-solid fa-check"></i></span><em>'+(i+1)+'</em></div>';
+  }).join("");
+  $("count").textContent=pick.filter(Boolean).length+" of "+pick.length+" selected";
+  $("go").disabled=!pick.length;
+  fillThumbs();
+}
+async function fillThumbs(){
+  var cards=$$(".pg-card");
+  for(var i=0;i<cards.length;i++){
+    if(!pdf)return;
+    try{
+      var p=await pdf.getPage(i+1),vp=p.getViewport({scale:1});
+      var s=Math.min(.32,150/vp.width),v=p.getViewport({scale:s});
+      var c=document.createElement("canvas");c.width=Math.max(1,Math.round(v.width));c.height=Math.max(1,Math.round(v.height));
+      var x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);
+      await p.render({canvasContext:x,viewport:v}).promise;
+      var img=new Image();img.alt="";img.src=c.toDataURL("image/jpeg",.68);
+      var ph=cards[i].querySelector(".ph");if(ph)cards[i].replaceChild(img,ph);
+    }catch(e){}
+  }
+}
+$("grid").addEventListener("click",function(e){
+  var c=e.target.closest(".pg-card");if(!c)return;
+  var i=+c.dataset.i;pick[i]=!pick[i];c.classList.toggle("on",pick[i]);c.setAttribute("aria-checked",String(!!pick[i]));
+  $("count").textContent=pick.filter(Boolean).length+" of "+pick.length+" selected";
+});
+$("grid").addEventListener("keydown",function(e){
+  if(e.key!==" "&&e.key!=="Enter")return;
+  var c=e.target.closest(".pg-card");if(!c)return;e.preventDefault();c.click();
+});
+$("all").onclick=function(){pick=pick.map(function(){return true});render()};
+$("none").onclick=function(){pick=pick.map(function(){return false});render()};
+$("invert").onclick=function(){pick=pick.map(function(v){return !v});render()};
+$$("input[name=m]").forEach(function(r){r.addEventListener("change",function(){
+  $("chunkBox").hidden=mode()!=="chunk";$("atBox").hidden=mode()!=="at";
+  $("hint").textContent=mode()==="each"?"Only the ticked pages will be saved — one PDF each, packed into a ZIP.":"Tip: for a single page, use “Extract selected pages” with one tick. Your original file is never modified.";
+})});
+
+PE.drop($("zone"),$("fileInput"),/pdf/i,async function(list){
+  file=list[0];$("fn").textContent=file.name;$("pc").textContent="· "+PE.fmt(file.size);
+  $("panel").hidden=false;$("grid").innerHTML="";
+  PE.status("Reading the PDF…");PE.progress(0);
+  try{
+    if(pdf){try{pdf.destroy()}catch(e){}}
+    pdf=await pdfjsLib.getDocument({data:await file.arrayBuffer()}).promise;
+    pick=Array.from({length:pdf.numPages},function(){return true});
+    $("pc").textContent="· "+pdf.numPages+" page"+(pdf.numPages===1?"":"s");
+    $("prefix").value=PE.baseName(file.name);
+    render();
+    PE.status("Ready — untick pages you do not need, then choose a split method.","ok");
+  }catch(e){
+    PE.status(/password|encrypt/i.test(e.message||"")?"This PDF is password-protected. Remove the password first, then try again.":"Could not read this PDF: "+(e.message||e),"err");
+  }finally{PE.progress(null)}
+});
+
+async function part(doc,idx){
+  var out=await PDFLib.PDFDocument.create();
+  var copied=await out.copyPages(doc,idx);
+  copied.forEach(function(p){out.addPage(p)});
+  out.setProducer("MULTI TOOL HUB");
+  return await out.save();
+}
+function base(){var v=$("prefix").value.trim()||PE.baseName(file.name);return PE.csrfSafeName(v)}
+
+$("go").onclick=async function(){
+  if(!file||!pdf)return;
+  var m=mode(),selected=pick.map(function(v,i){return v?i:-1}).filter(function(i){return i>=0});
+  if((m==="extract"||m==="each")&&!selected.length){PE.status("Tick at least one page.","err");return}
+  var btn=this;btn.disabled=true;PE.progress(.03);
+  try{
+    var doc=await PE.readPdf(file),n=doc.getPageCount(),name=base();
+    if(m==="extract"){
+      PE.status("Extracting "+selected.length+" page"+(selected.length===1?"":"s")+"…");
+      var bytes=await part(doc,selected);
+      PE.download(bytes,name+"-pages-"+PE.rangesText(selected).replace(/[, ]+/g,"_")+".pdf","application/pdf");
+      PE.status("Extracted "+selected.length+" pages into one PDF.","ok");
+    }else if(m==="each"){
+      var entries=[];
+      for(var i=0;i<selected.length;i++){
+        PE.progress(.05+.85*(i/selected.length));PE.status("Building file "+(i+1)+" of "+selected.length+"…");
+        entries.push({name:name+"-page-"+String(selected[i]+1).padStart(3,"0")+".pdf",data:await part(doc,[selected[i]])});
+      }
+      PE.status("Packing ZIP…");PE.progress(.93);
+      var blob=await PE.zip(entries);
+      PE.download(blob,name+"-separate-pages.zip");
+      PE.status("Saved "+entries.length+" separate PDFs in a ZIP.","ok");
+    }else{
+      var groups=[];
+      if(m==="chunk"){
+        var size=Math.max(1,Math.floor(+$("ch").value||1));
+        for(var a=0;a<n;a+=size){var g=[];for(var b=a;b<Math.min(n,a+size);b++)g.push(b);groups.push(g)}
+      }else{
+        var breaks=[];
+        String($("at").value||"").split(/[,;]/).forEach(function(s){
+          s=s.trim();if(!s)return;var v=+s;if(v>=1&&v<n&&breaks.indexOf(v)<0)breaks.push(v);
+        });
+        breaks.sort(function(x,y){return x-y});
+        if(!breaks.length){throw new Error("Enter at least one page number between 1 and "+(n-1)+" to split after.")}
+        var start=0;
+        breaks.forEach(function(v){var g=[];for(var k=start;k<v;k++)g.push(k);if(g.length)groups.push(g);start=v});
+        var last=[];for(var q=start;q<n;q++)last.push(q);if(last.length)groups.push(last);
+      }
+      var entries2=[];
+      for(var z=0;z<groups.length;z++){
+        PE.progress(.05+.85*(z/groups.length));PE.status("Building part "+(z+1)+" of "+groups.length+"…");
+        entries2.push({name:name+"-part-"+String(z+1).padStart(2,"0")+".pdf",data:await part(doc,groups[z])});
+      }
+      PE.status("Packing ZIP…");PE.progress(.93);
+      PE.download(await PE.zip(entries2),name+"-split.zip");
+      PE.status("Saved "+entries2.length+" parts in a ZIP.","ok");
+    }
+    PE.progress(1);PE.toast("Download started");
+  }catch(e){PE.progress(null);PE.status("Could not split this PDF: "+(e.message||e),"err")}
+  finally{btn.disabled=false;setTimeout(function(){PE.progress(null)},700)}
+};
+</script>
+</body>
+</html>

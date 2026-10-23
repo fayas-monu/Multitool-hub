@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
+<title>Add Page Numbers to PDF — accurate live preview | MULTI TOOL HUB</title>
+<meta name="description" content="Stamp page numbers on a PDF with a live preview. Nine positions, custom formats, start number, page ranges, fonts, bold, colour, opacity, margins and mirrored odd/even placement.">
+<meta name="theme-color" content="#11162b">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<style>
+  .pn-grid{display:grid;grid-template-columns:repeat(3,46px);grid-template-rows:repeat(3,40px);gap:5px;background:var(--surface-2);border:1px solid var(--line);border-radius:11px;padding:7px;width:max-content}
+  .pn-grid button{border:1px solid var(--line);background:var(--surface);border-radius:7px;cursor:pointer;color:var(--muted);font-size:14px;display:grid;place-items:center}
+  .pn-grid button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+  .pn-grid button:hover:not(.on){border-color:var(--accent);color:var(--accent)}
+  .pn-wrap{position:relative;display:inline-block;line-height:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;box-shadow:var(--shadow-lg);max-width:100%}
+  .pn-wrap canvas{display:block;max-width:100%;height:auto}
+  .pagebar{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .pagebar button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:9px;padding:7px 11px;cursor:pointer;font:700 13px 'Plus Jakarta Sans',sans-serif}
+  .pagebar button:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+  .pagebar input{width:58px;text-align:center;padding:7px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--ink);font:700 13px 'Plus Jakarta Sans',sans-serif}
+  .pagebar span{font-size:13px;color:var(--muted);font-weight:600}
+  .fmtchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+  .fmtchips button{font:600 11.5px 'Plus Jakarta Sans',sans-serif;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:7px;padding:5px 9px;cursor:pointer}
+  .fmtchips button:hover{border-color:var(--accent);color:var(--accent)}
+  .sample{font:700 12px 'Plus Jakarta Sans',sans-serif;color:var(--muted);margin-top:7px}
+  .sample b{color:var(--ink)}
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="" width="40" height="40">MULTI TOOL HUB</a>
+  <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
+</div></header>
+<main>
+<h1>Add Page Numbers</h1>
+<p class="lead">Put page numbers exactly where they belong. Pick one of nine positions, choose a format, set the starting number and check every page on the live preview before downloading.</p>
+
+<label class="drop" id="zone"><i class="fa-solid fa-list-ol" aria-hidden="true"></i><strong>Choose a PDF or drop it here</strong><span>Nothing is uploaded · works offline on your device</span>
+<input type="file" id="fileInput" accept="application/pdf,.pdf"></label>
+
+<div class="panel" id="panel" hidden>
+  <p style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><strong id="fn"></strong> <span id="meta" style="color:var(--muted)"></span> <span class="live">● Live preview</span></p>
+
+  <div style="text-align:center">
+    <div class="pn-wrap" id="wrap"><canvas id="base" aria-label="PDF page preview"></canvas></div>
+  </div>
+  <div class="pagebar">
+    <button type="button" id="prev" title="Previous page"><i class="fa-solid fa-chevron-left"></i></button>
+    <span>Page</span><input type="number" id="pg" value="1" min="1"><span id="pgt">of 1</span>
+    <button type="button" id="next" title="Next page"><i class="fa-solid fa-chevron-right"></i></button>
+  </div>
+
+  <div class="g2" style="margin-top:18px">
+    <div>
+      <label class="f">Position</label>
+      <div class="pn-grid" id="grid" role="group" aria-label="Number position">
+        <button type="button" data-p="tl" title="Top left">↖</button><button type="button" data-p="tc" title="Top centre">↑</button><button type="button" data-p="tr" title="Top right">↗</button>
+        <button type="button" data-p="ml" title="Middle left">←</button><button type="button" data-p="mc" title="Centre">•</button><button type="button" data-p="mr" title="Middle right">→</button>
+        <button type="button" data-p="bl" title="Bottom left">↙</button><button type="button" data-p="bc" class="on" title="Bottom centre">↓</button><button type="button" data-p="br" title="Bottom right">↘</button>
+      </div>
+      <label class="switch"><input type="checkbox" id="alt"> Mirror on alternate pages (inside/outside)</label>
+    </div>
+    <div>
+      <label class="f" for="fmt">Format</label>
+      <input class="in" id="fmt" value="Page {n} of {total}" autocomplete="off">
+      <div class="fmtchips" id="chips">
+        <button type="button" data-f="{n}">1</button>
+        <button type="button" data-f="Page {n}">Page 1</button>
+        <button type="button" data-f="{n} / {total}">1 / 10</button>
+        <button type="button" data-f="Page {n} of {total}">Page 1 of 10</button>
+        <button type="button" data-f="— {n} —">— 1 —</button>
+      </div>
+      <p class="sample">Preview on this page: <b id="sample">—</b></p>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div>
+      <label class="f" for="font">Font</label>
+      <select class="in" id="font">
+        <option value="helv" selected>Helvetica</option>
+        <option value="times">Times New Roman</option>
+        <option value="courier">Courier</option>
+      </select>
+      <label class="switch"><input type="checkbox" id="bold"> Bold</label>
+    </div>
+    <div>
+      <label class="f" for="size">Size: <span id="sizev">11</span> pt</label>
+      <input type="range" id="size" min="6" max="40" value="11" style="width:100%">
+      <label class="f" for="margin" style="margin-top:8px">Edge margin: <span id="marginv">28</span> pt</label>
+      <input type="range" id="margin" min="6" max="90" value="28" style="width:100%">
+    </div>
+  </div>
+
+  <div class="g2">
+    <div>
+      <label class="f" for="col">Colour</label>
+      <input type="color" id="col" value="#374151" style="width:100%;height:40px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);padding:3px">
+    </div>
+    <div>
+      <label class="f" for="op">Opacity: <span id="opv">100</span>%</label>
+      <input type="range" id="op" min="10" max="100" value="100" style="width:100%">
+      <label class="f" for="start" style="margin-top:8px">Start numbering at</label>
+      <input class="in" id="start" type="number" value="1" min="0" max="99999">
+    </div>
+  </div>
+
+  <label class="switch"><input type="checkbox" id="allPages" checked> Number every page</label>
+  <div id="rangeWrap" hidden>
+    <label class="f" for="rg">Pages to number</label>
+    <input class="in" id="rg" placeholder="For example 2-10, 12">
+  </div>
+  <label class="switch"><input type="checkbox" id="skipFirst"> Skip the first page (cover page)</label>
+
+  <div class="row"><button class="btn" id="go"><i class="fa-solid fa-list-ol"></i> Add numbers &amp; download</button></div>
+  <p class="hint" id="hint">Numbers are real PDF text, so they stay sharp and searchable. Use a range to leave a cover or contents page unnumbered.</p>
+</div>
+<div class="status" id="status" role="status" aria-live="polite"></div>
+<div class="prog" id="prog"><div></div></div>
+</main>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
+<script src="../assets/app.js"></script>
+<script src="../assets/chat.js"></script>
+<script>
+var $=PE.$, file=null, info=null, cur=1, pos="bc", tok=0;
+var FONTS={helv:["Helvetica","HelveticaBold"],times:["TimesRoman","TimesRomanBold"],courier:["Courier","CourierBold"]};
+var FONTCSS={helv:"Helvetica,Arial,sans-serif",times:"'Times New Roman',Times,serif",courier:"'Courier New',Courier,monospace"};
+
+function o(){
+  return {pos:pos,alt:$("alt").checked,fmt:$("fmt").value||"{n}",font:$("font").value,bold:$("bold").checked,
+    size:+$("size").value,margin:+$("margin").value,col:$("col").value,op:+$("op").value/100,
+    start:+$("start").value||0,all:$("allPages").checked,rg:$("rg").value,skip:$("skipFirst").checked};
+}
+function indices(){
+  try{
+    if(!info)return [];
+    var list=o().all?info.pdf?Array.from({length:info.pages},function(_,i){return i}):[]:null;
+    if(!list)list=PE.ranges(o().rg,info.pages);
+    if(o().skip)list=list.filter(function(i){return i!==0});
+    return list;
+  }catch(e){return null}
+}
+function numberFor(pi){
+  var list=indices();if(!list)return null;
+  var at=list.indexOf(pi);if(at<0)return null;
+  return {n:o().start+at,total:list.length,at:at};
+}
+function label(pi){
+  var v=numberFor(pi);if(!v)return "";
+  return String(o().fmt).replace(/\{n\}/g,v.n).replace(/\{total\}/g,v.total).replace(/\{page\}/g,pi+1);
+}
+function mirror(p,pi){
+  if(!o().alt)return p;
+  var odd=(pi%2===0); /* page 1 is odd */
+  var swapped={tl:"tr",tc:"tc",tr:"tl",ml:"mr",mc:"mc",mr:"ml",bl:"br",bc:"bc",br:"bl"}[p];
+  return odd?p:swapped;
+}
+function place(W,H,p,size,margin,textW){
+  var x=p[1]==="l"?margin:(p[1]==="r"?W-margin-textW:(W-textW)/2);
+  var y=p[0]==="t"?margin+size*.8:(p[0]==="m"?H/2+size*.35:H-margin-size*.18);
+  return {x:x,y:y};
+}
+
+function draw(){
+  if(!info)return;
+  var b=$("base"),cv=$("ov");if(!cv)return;
+  cv.width=b.width;cv.height=b.height;
+  var x=cv.getContext("2d");x.clearRect(0,0,cv.width,cv.height);
+  var op=o(),txt=label(cur-1);
+  if(!txt)return;
+  var k=b.width/info.pw;
+  x.save();x.globalAlpha=op.op;x.fillStyle=op.col;
+  x.font=(op.bold?"700 ":"")+(op.size*k)+"px "+FONTCSS[op.font];
+  x.textBaseline="alphabetic";
+  var w=x.measureText(txt).width/k;
+  var p=place(info.pw,info.ph,mirror(op.pos,cur-1),op.size,op.margin,w);
+  x.translate(p.x*k,p.y*k);
+  x.fillText(txt,0,0);
+  x.restore();
+}
+function ensureOverlay(){
+  var b=$("base");
+  if(!$("ov")){
+    var cv=document.createElement("canvas");cv.id="ov";
+    cv.style.cssText="position:absolute;inset:0;width:100%;height:100%;pointer-events:none";
+    $("wrap").appendChild(cv);
+  }
+  var w=$("wrap"),max=Math.max(220,($("panel").clientWidth||720)-48);
+  var raw=parseFloat(b.style.width)||b.width;
+  var cw=Math.min(raw,max),ch=cw*(b.height/b.width);
+  b.style.width=cw+"px";b.style.height=ch+"px";
+  w.style.width=cw+"px";
+}
+function sync(){
+  $("sizev").textContent=$("size").value;$("marginv").textContent=$("margin").value;$("opv").textContent=$("op").value;
+  $("rangeWrap").hidden=$("allPages").checked;
+  $("sample").textContent=label(cur-1)||"this page is not in the numbered range";
+  draw();
+}
+["fmt","font","bold","size","margin","col","op","start","alt","allPages","rg","skipFirst"].forEach(function(id){
+  $(id).addEventListener("input",sync);
+  $(id).addEventListener("change",sync);
+});
+$("grid").addEventListener("click",function(e){
+  var b=e.target.closest("button[data-p]");if(!b)return;
+  pos=b.dataset.p;
+  $$("#grid button").forEach(function(x){x.classList.toggle("on",x===b)});
+  draw();
+});
+$("chips").addEventListener("click",function(e){
+  var b=e.target.closest("button[data-f]");if(!b)return;
+  $("fmt").value=b.dataset.f;sync();
+});
+
+async function showPage(n){
+  if(!file)return;
+  var tok2=++tok;
+  cur=Math.max(1,Math.min(info?info.pages:1,n));
+  $("pg").value=cur;$("pgt").textContent="of "+(info?info.pages:"…");
+  PE.status("Rendering page "+cur+"…");
+  try{
+    if(info&&info.pdf){try{info.pdf.destroy()}catch(e2){}}
+    var ni=await PE.preview(file,$("base"),{page:cur,maxW:620});
+    if(tok2!==tok)return;
+    info=ni;ensureOverlay();$("pgt").textContent="of "+info.pages;
+    sync();PE.status("");
+  }catch(e){PE.status("Could not preview this page: "+(e.message||e),"err")}
+}
+$("prev").onclick=function(){showPage(cur-1)};
+$("next").onclick=function(){showPage(cur+1)};
+$("pg").addEventListener("change",function(){showPage(+this.value||1)});
+window.addEventListener("resize",PE.debounce(function(){if(info){ensureOverlay();draw()}},200));
+
+PE.drop($("zone"),$("fileInput"),/pdf/i,async function(list){
+  file=list[0];$("fn").textContent=file.name;$("meta").textContent="· "+PE.fmt(file.size);
+  $("panel").hidden=false;
+  try{
+    if(info&&info.pdf){try{info.pdf.destroy()}catch(e2){}}
+    info=await PE.preview(file,$("base"),{page:1,maxW:620});
+    cur=1;$("pg").value=1;$("pgt").textContent="of "+info.pages;
+    ensureOverlay();sync();
+    PE.status("Ready — "+info.pages+" page"+(info.pages===1?"":"s")+". Check the preview, then download.","ok");
+  }catch(e){
+    PE.status(/password|encrypt/i.test(e.message||"")?"This PDF is password-protected. Remove the password first, then try again.":"Could not read this PDF: "+(e.message||e),"err");
+  }
+});
+
+$("go").onclick=async function(){
+  if(!file)return;
+  var list=indices();
+  if(!list||!list.length){PE.status("Choose at least one page to number.","err");return}
+  var btn=this;btn.disabled=true;PE.progress(.04);
+  try{
+    var lib=PDFLib,doc=await PE.readPdf(file),op=o();
+    var pair=FONTS[op.font]||FONTS.helv;
+    var font=await doc.embedFont(lib.StandardFonts[op.bold?pair[1]:pair[0]]);
+    var jsdoc=await PE.openPdf(file);
+    for(var i=0;i<list.length;i++){
+      var pi=list[i],txt=op.fmt.replace(/\{n\}/g,op.start+i).replace(/\{total\}/g,list.length).replace(/\{page\}/g,pi+1);
+      if(!txt)continue;
+      var page=doc.getPage(pi),jp=await jsdoc.getPage(pi+1),vp=jp.getViewport({scale:1});
+      var rot=((jp.rotate||0)%360+360)%360;
+      var W=vp.width,H=vp.height;
+      var tw=font.widthOfTextAtSize(txt,op.size);
+      var p=place(W,H,mirror(op.pos,pi),op.size,op.margin,tw);
+      var dp=vp.convertToPdfPoint(p.x,p.y);
+      page.drawText(txt,{x:dp[0],y:dp[1],size:op.size,font:font,color:lib.rgb.apply(null,PE.hex(op.col)),opacity:op.op,rotate:lib.degrees(rot)});
+      if(i%8===0){PE.progress(.08+.86*(i/list.length));await PE.sleep(0)}
+    }
+    PE.progress(.96);
+    PE.download(await doc.save(),PE.baseName(file.name)+"-numbered.pdf","application/pdf");
+    PE.progress(1);PE.status("Page numbers added to "+list.length+" page"+(list.length===1?"":"s")+".","ok");PE.toast("Download started");
+    try{jsdoc.destroy()}catch(e){}
+  }catch(e){
+    PE.progress(null);
+    PE.status(/encode|WinAnsi/i.test(e.message||"")?"This format contains characters the built-in font cannot draw. Use Latin letters, numbers and {n} / {total}.":"Could not add page numbers: "+(e.message||e),"err");
+  }finally{btn.disabled=false;setTimeout(function(){PE.progress(null)},600)}
+};
+</script>
+</body>
+</html>
