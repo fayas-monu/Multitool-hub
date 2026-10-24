@@ -4,7 +4,7 @@
 (function(){
   "use strict";
   var script=document.currentScript,base=new URL("../",script.src).href;
-  var LOGO=base+"assets/logo.svg";
+  var LOGO=base+"assets/icon-192.png";
 
   /* ------------------------------------------------------------------ */
   /* Knowledge base                                                      */
@@ -150,7 +150,9 @@
   /* ------------------------------------------------------------------ */
   /* Reply engine                                                        */
   /* ------------------------------------------------------------------ */
-  function contextAware(){try{var p=location.pathname.split("/").pop()||"index.html";var map={"editor.html":"PDF Editor","merge-pdf.html":"Merge PDF","split-pdf.html":"Split PDF","compress-pdf.html":"Compress PDF","jpg-to-pdf.html":"JPG to PDF","pdf-to-word.html":"PDF to Word","pdf-to-text.html":"PDF to Text","watermark.html":"Watermark","crop-pdf.html":"Crop PDF","page-numbers.html":"Page Numbers","organize-pdf.html":"Organize Pages","rotate-pdf.html":"Rotate PDF","pdf-to-jpg.html":"PDF to JPG","image-compressor.html":"Image Compressor","video-to-mp3.html":"Video to MP3","youtube-downloader.html":"YouTube Downloader","instagram-downloader.html":"Instagram Downloader"};var name=map[p]||p;return "You are on: "+name+". Most tools run locally in your browser. The Hub Assistant runs entirely in your browser with no external AI/API."; }catch(e){return "";}}`n`n  function reply(input,ctx){ ctx=ctx||{}; if(!ctx.tip)ctx.tip=contextAware();
+  function contextAware(){try{var p=location.pathname.split("/").pop()||"index.html";var map={"editor.html":"PDF Editor","merge-pdf.html":"Merge PDF","split-pdf.html":"Split PDF","compress-pdf.html":"Compress PDF","jpg-to-pdf.html":"JPG to PDF","pdf-to-word.html":"PDF to Word","pdf-to-text.html":"PDF to Text","watermark.html":"Watermark","crop-pdf.html":"Crop PDF","page-numbers.html":"Page Numbers","organize-pdf.html":"Organize Pages","rotate-pdf.html":"Rotate PDF","pdf-to-jpg.html":"PDF to JPG","image-compressor.html":"Image Compressor","video-to-mp3.html":"Video to MP3","youtube-downloader.html":"YouTube Downloader","instagram-downloader.html":"Instagram Downloader"};var name=map[p]||p;return "You are on: "+name+". Most tools run locally in your browser. The Hub Assistant runs entirely in your browser with no external AI/API."; }catch(e){return "";}}
+
+  function reply(input,ctx){ ctx=ctx||{}; if(!ctx.tip)ctx.tip=contextAware();
     var raw=String(input||"").trim(),l=norm(raw);
     ctx=ctx||{};
 
@@ -190,6 +192,13 @@
     }
 
     /* "how do I use/open/..." with a tool match -> guide */
+    /* privacy questions beat tool matching ("is my file uploaded?") */
+    if(/\b(is|are|does|do|will|can|where)\b.*\b(upload(ed|s)?|stored?|saved|sent|private|safe|secure|leave|server|seen)\b/.test(l)&&!/\b(how (do|to) upload|upload (a|my|the) (file|pdf))\b/.test(l))return{b:privacyLine(),c:["About the API","Terms","Find a tool"]};
+    /* exact physical size of images in the PDF Editor */
+    if(/\b(cm|mm|centimet\w*|millimet\w*|inch(es)?|exact size|physical size|real size)\b/.test(l)&&/\b(image|photo|logo|picture|signature|stamp)\b/.test(l)){
+      var ed=T.filter(function(x){return x.id==="editor"})[0];
+      if(ed)return{b:"In the <b>PDF Editor</b>, add an image and a size dialog opens straight away. Choose <b>mm, cm, in or px</b>, type the width and height (the aspect ratio can be locked), and press <b>Apply size</b>. Select an image any time and use the ruler button in the properties bar to change it again. The image is exported at exactly that physical size."+cards([ed]),c:["How do I use it?","Is it private?","Find a tool"]};
+    }
     var hits=findTools(l);
     var wantsGuide=/\b(how|guide|steps|use|using|open|start|tutorial|walk|help)\b/.test(l);
     var wantsFind=/\b(which|what tool|find|recommend|best|need|want|make|convert|merge|split|edit|sign|compress|watermark|rotate|crop|extract|download|turn)\b/.test(l);

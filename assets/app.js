@@ -294,7 +294,7 @@
       var bars=document.querySelectorAll("header .bar");
       bars.forEach(function(bar){
         // Ensure theme toggle exists
-        if(!document.getElementById("mthThemeToggle")){
+        if(!document.getElementById("mthThemeToggle")&&!bar.querySelector("#themeBtn")){
           var btn=document.createElement("button");
           btn.type="button";
           btn.id="mthThemeToggle";
