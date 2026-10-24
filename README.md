@@ -69,7 +69,7 @@ The site is plain HTML, CSS and JavaScript — no build step.
 
 1. **Replace the placeholder domain.** `sitemap.xml` and `robots.txt` use `https://multitoolhub.example/`. Replace it with your real domain. If you do not want a sitemap, delete both files.
 2. **Keep `sw.js` at the site root.** Service workers only control pages at or below their own folder.
-3. **Bump the cache name** in `sw.js` (`const CACHE = "mth-v8";`) whenever you change HTML, CSS or JS. This forces visitors to receive the new files.
+3. **Bump the cache name** in `sw.js` (`const CACHE = "mth-v9";`) whenever you change HTML, CSS or JS. This forces visitors to receive the new files.
 4. **HTTPS is required** for the service worker and installation (localhost is exempt).
 
 ---

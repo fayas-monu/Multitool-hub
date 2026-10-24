@@ -8,7 +8,7 @@ This file is for whoever maintains the site. The user-facing documentation is in
 ## Shipping checklist
 
 1. Keep `sw.js` in the site root. It must be served over HTTPS (or localhost).
-2. Bump `const CACHE = "mth-v8";` in `sw.js` on every release that changes HTML, CSS or JS.
+2. Bump `const CACHE = "mth-v9";` in `sw.js` on every release that changes HTML, CSS or JS.
    The activate handler deletes every older cache.
 3. Replace `https://multitoolhub.example/` in `sitemap.xml` and `robots.txt` with the real domain.
 4. Test in a private window so an old service worker does not serve stale files.
