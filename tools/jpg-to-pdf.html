@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
-<title>JPG to PDF — photos and scans into one PDF | MULTI TOOL HUB</title>
+<title>JPG to PDF â€” photos and scans into one PDF | MULTI TOOL HUB</title>
 <meta name="description" content="Turn JPG, PNG and WebP images into one tidy PDF. Reorder by drag and drop, rotate, choose A4 or Letter, margins, fit mode and metadata.">
 <meta name="theme-color" content="#11162b">
 <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
@@ -30,14 +30,14 @@
 </head>
 <body>
 <header><div class="bar">
-  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="" width="40" height="40">MULTI TOOL HUB</a>
+  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="MULTI TOOL HUB logo" width="40" height="40">MULTI TOOL HUB</a>
   <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
 </div></header>
 <main>
 <h1>JPG to PDF</h1>
 <p class="lead">Put photos, scans or screenshots into one clean PDF. Drag to reorder, rotate, choose the paper size and watch the layout preview update.</p>
 
-<label class="drop" id="zone"><i class="fa-solid fa-images" aria-hidden="true"></i><strong>Choose images or drop them here</strong><span>JPG, PNG, WebP · add more at any time</span>
+<label class="drop" id="zone"><i class="fa-solid fa-images" aria-hidden="true"></i><strong>Choose images or drop them here</strong><span>JPG, PNG, WebP Â· add more at any time</span>
 <input type="file" id="fileInput" accept="image/*" multiple></label>
 
 <div class="panel" id="panel" hidden>
@@ -52,7 +52,7 @@
       </div>
     </div>
     <div>
-      <label class="f">Layout preview <span class="live">● Live</span></label>
+      <label class="f">Layout preview <span class="live">â— Live</span></label>
       <div class="pvframe" style="padding:10px"><canvas id="pv" style="max-width:100%;max-height:330px;height:auto;border-radius:4px;box-shadow:0 8px 20px -10px rgba(10,12,40,.5)" aria-label="Page layout preview"></canvas></div>
       <p class="hint" id="pvinfo" style="text-align:center;margin-top:8px"></p>
     </div>
@@ -76,9 +76,9 @@
       </select>
       <label class="f" for="fit">Image fit</label>
       <select class="in" id="fit">
-        <option value="contain" selected>Contain — show the whole image</option>
-        <option value="cover">Cover — fill the page, crop edges</option>
-        <option value="stretch">Stretch — fill exactly</option>
+        <option value="contain" selected>Contain â€” show the whole image</option>
+        <option value="cover">Cover â€” fill the page, crop edges</option>
+        <option value="stretch">Stretch â€” fill exactly</option>
       </select>
     </div>
     <div>
@@ -105,7 +105,7 @@
 </div>
 <div class="status" id="status" role="status" aria-live="polite"></div>
 </main>
-<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB Â· Created by FAYAS MONU</span></div>
 <script src="../assets/app.js"></script>
 <script src="../assets/chat.js"></script>
 <script>
@@ -134,7 +134,7 @@ function isLandscape(img){var p=pageSize(img);return p[0]>p[1]}
 function updateMeta(){
   $("cnt").textContent=items.length+" image"+(items.length===1?"":"s");
   var total=items.reduce(function(a,i){return a+i.file.size},0);
-  $("total").textContent=items.length?"· "+PE.fmt(total):"";
+  $("total").textContent=items.length?"Â· "+PE.fmt(total):"";
   $("mv").textContent=$("margin").value;
   $("mhint").textContent=$("size").value==="fit"?"(margins crop the image; set 0 for a full-bleed page)":"";
 }
@@ -144,7 +144,7 @@ function renderList(){
     return '<li data-i="'+i+'" class="'+(i===cur?"on":"")+'" draggable="true" tabindex="0">'
       +'<span class="dragdot" aria-hidden="true"><i class="fa-solid fa-grip-vertical"></i></span>'
       +'<img src="'+it.url+'" alt="" style="transform:rotate('+it.rot+'deg)">'
-      +'<span class="nm">'+PE.esc(it.file.name)+'</span><span class="sz">'+(it.w?it.w+'×'+it.h:"…")+'</span>'
+      +'<span class="nm">'+PE.esc(it.file.name)+'</span><span class="sz">'+(it.w?it.w+'Ã—'+it.h:"â€¦")+'</span>'
       +'<button class="ib" data-a="left" data-i="'+i+'" title="Rotate left" aria-label="Rotate image '+(i+1)+' left"><i class="fa-solid fa-rotate-left"></i></button>'
       +'<button class="ib" data-a="right" data-i="'+i+'" title="Rotate right" aria-label="Rotate image '+(i+1)+' right"><i class="fa-solid fa-rotate-right"></i></button>'
       +'<button class="ib" data-a="rm" data-i="'+i+'" title="Remove" aria-label="Remove image '+(i+1)+'"><i class="fa-solid fa-xmark"></i></button></li>';
@@ -167,12 +167,12 @@ function drawPreview(){
   x.translate(W/2,H/2);x.rotate(it.rot*Math.PI/180);
   x.drawImage(it.img,-p.w/2,-p.h/2,p.w,p.h);
   x.restore();
-  $("pvinfo").textContent="Page "+(Math.min(cur,items.length-1)+1)+" · "+Math.round(W)+" × "+Math.round(H)+" pt"+(settings().size==="fit"?"":" · "+settings().fit);
+  $("pvinfo").textContent="Page "+(Math.min(cur,items.length-1)+1)+" Â· "+Math.round(W)+" Ã— "+Math.round(H)+" pt"+(settings().size==="fit"?"":" Â· "+settings().fit);
 }
 function sync(){updateMeta();drawPreview();}
 
 PE.drop($("zone"),$("fileInput"),/^image\//i,async function(files){
-  PE.status("Opening "+files.length+" image"+(files.length===1?"":"s")+"…");
+  PE.status("Opening "+files.length+" image"+(files.length===1?"":"s")+"â€¦");
   for(var i=0;i<files.length;i++){
     var f=files[i];
     try{
@@ -263,7 +263,7 @@ $("go").onclick=async function(){
     if(author)doc.setAuthor(author);
     doc.setCreator("MULTI TOOL HUB");doc.setProducer("MULTI TOOL HUB");
     for(var i=0;i<items.length;i++){
-      PE.status("Adding image "+(i+1)+" of "+items.length+"…");
+      PE.status("Adding image "+(i+1)+" of "+items.length+"â€¦");
       var r=await PE.imageBytes(items[i].file,{rotate:items[i].rot,quality:s.q,maxSide:3200,background:"#fff"});
       var img=await doc.embedJpg(r.bytes), dims=pageSize({w:r.w,h:r.h},i);
       var page=doc.addPage(dims),p=place({w:r.w,h:r.h},dims[0],dims[1]);
@@ -274,7 +274,7 @@ $("go").onclick=async function(){
     var bytes=await doc.save({useObjectStreams:true});
     PE.download(bytes,outName(),"application/pdf");
     PE.progress(1);
-    PE.status("Created "+items.length+" page"+(items.length===1?"":"s")+" · "+PE.fmt(bytes.length)+".","ok");PE.toast("Download started");
+    PE.status("Created "+items.length+" page"+(items.length===1?"":"s")+" Â· "+PE.fmt(bytes.length)+".","ok");PE.toast("Download started");
   }catch(e){
     PE.progress(null);
     PE.status("Could not create the PDF: "+(e.message||e),"err");

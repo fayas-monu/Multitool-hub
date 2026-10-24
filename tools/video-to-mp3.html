@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
-<title>Video to MP3 — trim, fade, normalize | MULTI TOOL HUB</title>
+<title>Video to MP3 â€” trim, fade, normalize | MULTI TOOL HUB</title>
 <meta name="description" content="Extract audio from a video in your browser. See the waveform, trim with a drag, add fades, normalize volume, pick MP3 quality or save WAV, and write title/artist tags.">
 <meta name="theme-color" content="#11162b">
 <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
@@ -30,14 +30,14 @@
 </head>
 <body>
 <header><div class="bar">
-  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="" width="40" height="40">MULTI TOOL HUB</a>
+  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="MULTI TOOL HUB logo" width="40" height="40">MULTI TOOL HUB</a>
   <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
 </div></header>
 <main>
 <h1>Video to MP3</h1>
-<p class="lead">Pull the soundtrack out of a video. Trim it on the waveform, smooth the ends with fades, even out the volume and save MP3 or WAV — all inside your browser.</p>
+<p class="lead">Pull the soundtrack out of a video. Trim it on the waveform, smooth the ends with fades, even out the volume and save MP3 or WAV â€” all inside your browser.</p>
 
-<label class="drop" id="zone"><i class="fa-solid fa-file-audio" aria-hidden="true"></i><strong>Choose a video or audio file</strong><span>MP4, WebM, MOV, M4A, MP3 · nothing is uploaded</span>
+<label class="drop" id="zone"><i class="fa-solid fa-file-audio" aria-hidden="true"></i><strong>Choose a video or audio file</strong><span>MP4, WebM, MOV, M4A, MP3 Â· nothing is uploaded</span>
 <input type="file" id="fileInput" accept="video/*,audio/*,.mp4,.webm,.mov,.m4a,.mp3,.wav,.ogg"></label>
 
 <div class="panel" id="panel" hidden>
@@ -65,16 +65,16 @@
   <div class="g2">
     <div>
       <label class="f" for="fmt">Output format</label>
-      <select class="in" id="fmt"><option value="mp3" selected>MP3 — small and universal</option><option value="wav">WAV — uncompressed, lossless</option></select>
+      <select class="in" id="fmt"><option value="mp3" selected>MP3 â€” small and universal</option><option value="wav">WAV â€” uncompressed, lossless</option></select>
       <div id="brWrap">
         <label class="f" for="br">MP3 bitrate</label>
         <select class="in" id="br">
-          <option value="64">64 kbps — voice / smallest</option>
-          <option value="96">96 kbps — podcast / speech</option>
-          <option value="128" selected>128 kbps — standard</option>
-          <option value="192">192 kbps — high</option>
-          <option value="256">256 kbps — very high</option>
-          <option value="320">320 kbps — maximum</option>
+          <option value="64">64 kbps â€” voice / smallest</option>
+          <option value="96">96 kbps â€” podcast / speech</option>
+          <option value="128" selected>128 kbps â€” standard</option>
+          <option value="192">192 kbps â€” high</option>
+          <option value="256">256 kbps â€” very high</option>
+          <option value="320">320 kbps â€” maximum</option>
         </select>
       </div>
       <label class="f" for="sr">Sample rate</label>
@@ -87,7 +87,7 @@
       <input type="range" id="fi" min="0" max="5" step=".1" value="0" style="width:100%">
       <label class="f" for="fo">Fade out: <span id="fov">0.0</span> s</label>
       <input type="range" id="fo" min="0" max="5" step=".1" value="0" style="width:100%">
-      <label class="switch"><input type="checkbox" id="norm" checked> Normalize volume (target −1 dB)</label>
+      <label class="switch"><input type="checkbox" id="norm" checked> Normalize volume (target âˆ’1 dB)</label>
       <label class="switch"><input type="checkbox" id="tags" checked> Write title and artist tags</label>
     </div>
   </div>
@@ -98,17 +98,17 @@
       <div><label class="f" for="title">Title</label><input class="in" id="title" placeholder="Track title" autocomplete="off"></div>
       <div><label class="f" for="artist">Artist</label><input class="in" id="artist" placeholder="Artist" autocomplete="off"></div>
       <div><label class="f" for="name">Output file name</label><input class="in" id="name" autocomplete="off"></div>
-      <div><label class="f">Estimated result</label><p class="hint" id="est" style="margin-top:10px">—</p></div>
+      <div><label class="f">Estimated result</label><p class="hint" id="est" style="margin-top:10px">â€”</p></div>
     </div>
   </details>
 
   <div class="prog" id="prog"><div></div></div>
   <div class="row"><button class="btn" id="go"><i class="fa-solid fa-music"></i> Convert audio</button></div>
-  <p class="hint" id="hint">Large videos need a lot of memory while decoding. Files above roughly 500 MB may fail — trim them in another editor first.</p>
+  <p class="hint" id="hint">Large videos need a lot of memory while decoding. Files above roughly 500 MB may fail â€” trim them in another editor first.</p>
 </div>
 <div class="status" id="status" role="status" aria-live="polite"></div>
 </main>
-<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB Â· Created by FAYAS MONU</span></div>
 <script src="../assets/app.js"></script>
 <script src="../assets/chat.js"></script>
 <script>
@@ -282,11 +282,11 @@ function wavBytes(chans,sr){
 
 PE.drop($("zone"),$("fileInput"),/^(video|audio)\/|\.(mp4|webm|mov|m4a|mp3|wav|ogg|mkv|avi)$/i,async function(list){
   file=list[0];stopPlay();
-  $("fn").textContent=file.name;$("meta").textContent="· "+PE.fmt(file.size)+" · decoding…";
+  $("fn").textContent=file.name;$("meta").textContent="Â· "+PE.fmt(file.size)+" Â· decodingâ€¦";
   $("panel").hidden=false;$("name").value=PE.baseName(file.name);
   $("title").value=PE.baseName(file.name).replace(/[_]+/g," ").trim();
   $("status").textContent="";
-  PE.status("Decoding the audio track… this can take a moment.");
+  PE.status("Decoding the audio trackâ€¦ this can take a moment.");
   try{
     if(objUrl)URL.revokeObjectURL(objUrl);
     objUrl=URL.createObjectURL(file);
@@ -297,10 +297,10 @@ PE.drop($("zone"),$("fileInput"),/^(video|audio)\/|\.(mp4|webm|mov|m4a|mp3|wav|o
     dur=buf.duration;start=0;end=dur;
     buildPeaks();setupCanvas();updateUI();
     var ch=buf.numberOfChannels;
-    $("meta").textContent="· "+PE.fmt(file.size)+" · "+fmtTime(dur)+" · "+ch+" channel"+(ch===1?"":"s")+" · "+(buf.sampleRate/1000).toFixed(1)+" kHz";
-    PE.status("Audio ready — "+fmtTime(dur)+". Trim on the waveform, then convert.","ok");
+    $("meta").textContent="Â· "+PE.fmt(file.size)+" Â· "+fmtTime(dur)+" Â· "+ch+" channel"+(ch===1?"":"s")+" Â· "+(buf.sampleRate/1000).toFixed(1)+" kHz";
+    PE.status("Audio ready â€” "+fmtTime(dur)+". Trim on the waveform, then convert.","ok");
   }catch(e){
-    buf=null;$("meta").textContent="· "+PE.fmt(file.size);
+    buf=null;$("meta").textContent="Â· "+PE.fmt(file.size);
     PE.status("Could not decode the audio in this file. Try an MP4, WebM, MOV, M4A or MP3 file. Some codecs are not supported by browsers.","err");
   }
 });
@@ -319,7 +319,7 @@ $("go").onclick=async function(){
     var s0=Math.max(0,Math.floor(start*buf.sampleRate)), s1=Math.min(buf.length,Math.ceil(end*buf.sampleRate));
     var len=s1-s0;
     if(len<1)throw new Error("The selected section is empty.");
-    PE.status("Preparing samples…");PE.progress(.08);
+    PE.status("Preparing samplesâ€¦");PE.progress(.08);
 
     var tmp=actx.createBuffer(buf.numberOfChannels,len,buf.sampleRate);
     for(var c=0;c<buf.numberOfChannels;c++)tmp.copyToChannel(buf.getChannelData(c).subarray(s0,s1),c);
@@ -357,21 +357,21 @@ $("go").onclick=async function(){
     var outName=($("name").value||PE.baseName(file.name)).trim().replace(/\.(mp3|wav)$/i,"");
     outName=PE.csrfSafeName(outName||"audio");
     if(fmt==="wav"){
-      PE.status("Building WAV…");PE.progress(.6);
+      PE.status("Building WAVâ€¦");PE.progress(.6);
       var bytes=wavBytes(out,tgt);
       PE.download(new Blob([bytes],{type:"audio/wav"}),outName+".wav");
-      PE.progress(1);PE.status("Done — "+PE.fmt(bytes.length)+" WAV at "+(tgt/1000).toFixed(1)+" kHz, "+out.length+" channel"+(out.length===1?"":"s")+".","ok");
+      PE.progress(1);PE.status("Done â€” "+PE.fmt(bytes.length)+" WAV at "+(tgt/1000).toFixed(1)+" kHz, "+out.length+" channel"+(out.length===1?"":"s")+".","ok");
     }else if(typeof lamejs==="undefined"){
       var wb=wavBytes(out,tgt);
       PE.download(new Blob([wb],{type:"audio/wav"}),outName+".wav");
       PE.progress(1);PE.status("The MP3 encoder could not load, so you got a WAV file instead.","err");
     }else{
-      PE.status("Encoding MP3…");
+      PE.status("Encoding MP3â€¦");
       var enc=new lamejs.Mp3Encoder(out.length,tgt,br), parts=[], step=1152*24;
       for(var i7=0;i7<n;i7+=step){
         var d=enc.encodeBuffer(out[0].subarray(i7,i7+step),out.length>1?out[1].subarray(i7,i7+step):undefined);
         if(d.length)parts.push(new Int8Array(d));
-        if((i7/step)%12===0){PE.progress(.2+.75*(i7/n));PE.status("Encoding MP3… "+Math.round(i7/n*100)+"%");await PE.sleep(0)}
+        if((i7/step)%12===0){PE.progress(.2+.75*(i7/n));PE.status("Encoding MP3â€¦ "+Math.round(i7/n*100)+"%");await PE.sleep(0)}
       }
       var tail=enc.flush();if(tail.length)parts.push(new Int8Array(tail));
       var tag=new Uint8Array(0);
@@ -380,7 +380,7 @@ $("go").onclick=async function(){
       var mp3=new Blob([tag].concat(parts),{type:"audio/mpeg"});
       PE.download(mp3,outName+".mp3");
       PE.progress(1);
-      PE.status("Done — "+PE.fmt(mp3.size)+" MP3 · "+br+" kbps · "+fmtTime(end-start)+" · "+(tgt/1000).toFixed(1)+" kHz.","ok");
+      PE.status("Done â€” "+PE.fmt(mp3.size)+" MP3 Â· "+br+" kbps Â· "+fmtTime(end-start)+" Â· "+(tgt/1000).toFixed(1)+" kHz.","ok");
     }
     PE.toast("Download started");
   }catch(e){

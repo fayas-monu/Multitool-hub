@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
-<title>Rotate PDF — visual page preview | MULTI TOOL HUB</title>
+<title>Rotate PDF â€” visual page preview | MULTI TOOL HUB</title>
 <meta name="description" content="Rotate every page or just the ones you pick. See real thumbnails, select pages, rotate left or right and download. Your PDF never leaves your device.">
 <meta name="theme-color" content="#11162b">
 <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
@@ -28,14 +28,14 @@
 </head>
 <body>
 <header><div class="bar">
-  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="" width="40" height="40">MULTI TOOL HUB</a>
+  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="MULTI TOOL HUB logo" width="40" height="40">MULTI TOOL HUB</a>
   <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
 </div></header>
 <main>
 <h1>Rotate PDF</h1>
-<p class="lead">Turn pages the right way up — all of them or only the ones you select. Real thumbnails show the result, and the rotation is saved as proper PDF page rotation, not a picture.</p>
+<p class="lead">Turn pages the right way up â€” all of them or only the ones you select. Real thumbnails show the result, and the rotation is saved as proper PDF page rotation, not a picture.</p>
 
-<label class="drop" id="zone"><i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i><strong>Choose a PDF or drop it here</strong><span>Nothing is uploaded · works offline on your device</span>
+<label class="drop" id="zone"><i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i><strong>Choose a PDF or drop it here</strong><span>Nothing is uploaded Â· works offline on your device</span>
 <input type="file" id="fileInput" accept="application/pdf,.pdf"></label>
 
 <div class="panel" id="panel" hidden>
@@ -50,12 +50,12 @@
     <button class="btn ghost sm" id="selPick" type="button">Select these</button>
     <span class="count" id="count"></span>
   </div>
-  <p class="hint" style="margin-top:6px">Click a page to select it. Use the ↺ / ↻ buttons on a page to rotate just that one.</p>
+  <p class="hint" style="margin-top:6px">Click a page to select it. Use the â†º / â†» buttons on a page to rotate just that one.</p>
 
   <div class="row" style="margin-top:12px">
-    <button class="btn ghost" data-r="-90"><i class="fa-solid fa-rotate-left"></i> Rotate left 90°</button>
-    <button class="btn ghost" data-r="90"><i class="fa-solid fa-rotate-right"></i> Rotate right 90°</button>
-    <button class="btn ghost" data-r="180"><i class="fa-solid fa-arrows-up-down"></i> Turn 180°</button>
+    <button class="btn ghost" data-r="-90"><i class="fa-solid fa-rotate-left"></i> Rotate left 90Â°</button>
+    <button class="btn ghost" data-r="90"><i class="fa-solid fa-rotate-right"></i> Rotate right 90Â°</button>
+    <button class="btn ghost" data-r="180"><i class="fa-solid fa-arrows-up-down"></i> Turn 180Â°</button>
     <button class="btn ghost" id="resetSel">Reset selected</button>
     <button class="btn ghost" id="resetAll">Reset all</button>
   </div>
@@ -63,11 +63,11 @@
   <div class="thumbs" id="thumbs" aria-label="PDF pages"></div>
   <div class="prog" id="prog"><div></div></div>
   <div class="row"><button class="btn" id="go" disabled><i class="fa-solid fa-download"></i> Download rotated PDF</button></div>
-  <p class="hint" id="cur">Rotation to apply: 0°</p>
+  <p class="hint" id="cur">Rotation to apply: 0Â°</p>
 </div>
 <div class="status" id="status" role="status" aria-live="polite"></div>
 </main>
-<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB Â· Created by FAYAS MONU</span></div>
 <script src="../assets/app.js"></script>
 <script src="../assets/chat.js"></script>
 <script>
@@ -82,7 +82,7 @@ function selList(){
 function update(){
   var total=pages.length, n=0, dirty=0;
   for(var i=0;i<total;i++){if(sel.has(i))n++;if(changed(i))dirty++}
-  $("count").innerHTML="<b>"+n+"</b> of "+total+" selected · <b>"+dirty+"</b> rotated";
+  $("count").innerHTML="<b>"+n+"</b> of "+total+" selected Â· <b>"+dirty+"</b> rotated";
   $("go").disabled=!dirty||busy;
   $("go").innerHTML=dirty?'<i class="fa-solid fa-download"></i> Download rotated PDF ('+dirty+" page"+(dirty===1?"":"s")+")":'<i class="fa-solid fa-download"></i> Download rotated PDF';
   $("cur").textContent=dirty?(dirty+" page"+(dirty===1?" is":"s are")+" changed. Unchanged pages stay exactly as they were."):"No pages rotated yet. Select pages, then rotate.";
@@ -92,7 +92,7 @@ function update(){
     el.classList.remove("rot-90","rot-180","rot-270");
     if(d===90)el.classList.add("rot-90");else if(d===180)el.classList.add("rot-180");else if(d===270)el.classList.add("rot-270");
     var badge=el.querySelector(".rot");
-    if(d){badge.hidden=false;badge.textContent=d+"°"}else badge.hidden=true;
+    if(d){badge.hidden=false;badge.textContent=d+"Â°"}else badge.hidden=true;
     el.setAttribute("aria-pressed",sel.has(i)?"true":"false");
   });
 }
@@ -103,7 +103,7 @@ function applyTo(list,delta){
 function rerender(){
   $("thumbs").innerHTML=pages.map(function(p,i){
     return '<div class="thumb" data-i="'+i+'" role="button" tabindex="0" aria-label="Page '+(i+1)+'" aria-pressed="false">'
-      +'<span class="no">'+(i+1)+'</span><span class="rot" hidden>0°</span>'
+      +'<span class="no">'+(i+1)+'</span><span class="rot" hidden>0Â°</span>'
       +'<div class="im"><img src="'+p.url+'" alt="Page '+(i+1)+'" loading="lazy"></div>'
       +'<div class="ops"><button type="button" data-op="left" data-i="'+i+'" title="Rotate page '+(i+1)+' left" aria-label="Rotate page '+(i+1)+' left"><i class="fa-solid fa-rotate-left"></i></button>'
       +'<button type="button" data-op="right" data-i="'+i+'" title="Rotate page '+(i+1)+' right" aria-label="Rotate page '+(i+1)+' right"><i class="fa-solid fa-rotate-right"></i></button></div></div>';
@@ -112,8 +112,8 @@ function rerender(){
 }
 
 async function load(f){
-  file=f;$("panel").hidden=false;$("fn").textContent=f.name;$("meta").textContent="· "+PE.fmt(f.size)+" · loading pages…";
-  $("thumbs").innerHTML='<p class="empty-note"><span class="spin"></span> Rendering page thumbnails…</p>';
+  file=f;$("panel").hidden=false;$("fn").textContent=f.name;$("meta").textContent="Â· "+PE.fmt(f.size)+" Â· loading pagesâ€¦";
+  $("thumbs").innerHTML='<p class="empty-note"><span class="spin"></span> Rendering page thumbnailsâ€¦</p>';
   try{
     if(pdf){try{pdf.destroy()}catch(e){}}
     pdf=await PE.openPdf(f);
@@ -131,11 +131,11 @@ async function load(f){
       pages.push({url:c.toDataURL("image/jpeg",.82)});
       c.width=c.height=0;
       sel.add(i-1);
-      if(i%5===0){$("meta").textContent="· "+PE.fmt(f.size)+" · "+i+" of "+n+" pages";await PE.sleep(0)}
+      if(i%5===0){$("meta").textContent="Â· "+PE.fmt(f.size)+" Â· "+i+" of "+n+" pages";await PE.sleep(0)}
     }
-    $("meta").textContent="· "+PE.fmt(f.size)+" · "+n+" page"+(n===1?"":"s");
+    $("meta").textContent="Â· "+PE.fmt(f.size)+" Â· "+n+" page"+(n===1?"":"s");
     rerender();
-    PE.status("Ready — "+n+" page"+(n===1?"":"s")+". All pages are selected; click a page to deselect it.","ok");
+    PE.status("Ready â€” "+n+" page"+(n===1?"":"s")+". All pages are selected; click a page to deselect it.","ok");
   }catch(e){
     $("panel").hidden=false;
     $("thumbs").innerHTML='<p class="empty-note">The preview could not be drawn.</p>';
@@ -206,7 +206,7 @@ $("go").onclick=async function(){
     var bytes=await doc.save({useObjectStreams:true});
     PE.download(bytes,PE.baseName(file.name)+"-rotated.pdf","application/pdf");
     PE.progress(1);
-    PE.status("Rotated "+count+" page"+(count===1?"":"s")+" and saved. "+PE.fmt(file.size)+" → "+PE.fmt(bytes.length)+".","ok");
+    PE.status("Rotated "+count+" page"+(count===1?"":"s")+" and saved. "+PE.fmt(file.size)+" â†’ "+PE.fmt(bytes.length)+".","ok");
     PE.toast("Download started");
   }catch(e){
     PE.progress(null);

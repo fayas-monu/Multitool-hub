@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
-<title>Organize PDF Pages — reorder, rotate, duplicate, delete | MULTI TOOL HUB</title>
+<title>Organize PDF Pages â€” reorder, rotate, duplicate, delete | MULTI TOOL HUB</title>
 <meta name="description" content="See every page as a thumbnail. Drag to reorder, rotate, duplicate, insert blank pages and delete pages in bulk, then download a clean PDF. Your original is untouched.">
 <meta name="theme-color" content="#11162b">
 <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
@@ -41,18 +41,18 @@
 </head>
 <body>
 <header><div class="bar">
-  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="" width="40" height="40">MULTI TOOL HUB</a>
+  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="MULTI TOOL HUB logo" width="40" height="40">MULTI TOOL HUB</a>
   <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
 </div></header>
 <main>
 <h1>Organize Pages</h1>
-<p class="lead">Your document as a contact sheet. Drag pages into a new order, rotate them, duplicate, add blank sheets or remove mistakes — then download a fresh PDF.</p>
+<p class="lead">Your document as a contact sheet. Drag pages into a new order, rotate them, duplicate, add blank sheets or remove mistakes â€” then download a fresh PDF.</p>
 
-<label class="drop" id="zone"><i class="fa-solid fa-table-cells-large" aria-hidden="true"></i><strong>Choose a PDF or drop it here</strong><span>One document at a time · your original stays untouched</span>
+<label class="drop" id="zone"><i class="fa-solid fa-table-cells-large" aria-hidden="true"></i><strong>Choose a PDF or drop it here</strong><span>One document at a time Â· your original stays untouched</span>
 <input type="file" id="fileInput" accept="application/pdf,.pdf"></label>
 
 <div class="panel" id="panel" hidden>
-  <p style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><strong id="fn"></strong> <span id="pc" style="color:var(--muted)"></span> <span class="live">● Page view</span></p>
+  <p style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><strong id="fn"></strong> <span id="pc" style="color:var(--muted)"></span> <span class="live">â— Page view</span></p>
 
   <div class="bulkbar">
     <button type="button" id="all">Select all</button>
@@ -78,7 +78,7 @@
 <div class="status" id="status" role="status" aria-live="polite"></div>
 <div class="prog" id="prog"><div></div></div>
 </main>
-<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB Â· Created by FAYAS MONU</span></div>
 <script src="../assets/app.js"></script>
 <script src="../assets/chat.js"></script>
 <script>
@@ -91,7 +91,7 @@ function snap(){
 }
 function statusCount(){
   var live=pages.filter(function(p){return !p.del}).length;
-  $("pc").textContent="· "+live+" of "+pages.length+" pages kept";
+  $("pc").textContent="Â· "+live+" of "+pages.length+" pages kept";
   $("go").disabled=!live;
 }
 function selectedKeys(){return Object.keys(sel).filter(function(k){return sel[k]})}
@@ -182,7 +182,7 @@ $("blank").onclick=function(){
   var p={key:"b"+(++uid),orig:0,rot:0,del:false,blank:true,w:base&&base.w?base.w:595.28,h:base&&base.h?base.h:841.89,label:"blank"};
   var at=selectedKeys().length?pages.findIndex(function(x){return x.key===selectedKeys()[selectedKeys().length-1]})+1:pages.length;
   pages.splice(at,0,p);render();
-  PE.toast("Blank page added — drag it where you need it");
+  PE.toast("Blank page added â€” drag it where you need it");
 };
 $("undo").onclick=function(){if(!hist.length)return;pages=hist.pop();render()};
 $("reset").onclick=function(){
@@ -194,14 +194,14 @@ $("reset").onclick=function(){
 };
 
 PE.drop($("zone"),$("fileInput"),/pdf/i,async function(list){
-  file=list[0];$("fn").textContent=file.name;$("pc").textContent="· "+PE.fmt(file.size);
+  file=list[0];$("fn").textContent=file.name;$("pc").textContent="Â· "+PE.fmt(file.size);
   $("panel").hidden=false;$("grid").innerHTML="";pages=[];thumbs={};sel={};hist=[];
   $("out").value=PE.baseName(file.name)+"-organized.pdf";
-  PE.status("Creating thumbnails…");PE.progress(0);
+  PE.status("Creating thumbnailsâ€¦");PE.progress(0);
   try{
     if(pdf){try{pdf.destroy()}catch(e){}}
     pdf=await pdfjsLib.getDocument({data:await file.arrayBuffer()}).promise;
-    if(pdf.numPages>400)PE.toast("This is a large document — thumbnails may take a moment");
+    if(pdf.numPages>400)PE.toast("This is a large document â€” thumbnails may take a moment");
     for(var i=1;i<=pdf.numPages;i++){
       PE.progress((i-1)/pdf.numPages);
       var pg=await pdf.getPage(i),vp=pg.getViewport({scale:1});
@@ -213,9 +213,9 @@ PE.drop($("zone"),$("fileInput"),/pdf/i,async function(list){
       pages.push({key:"p"+i,orig:i,rot:0,del:false,blank:false,label:i});
       if(i%10===0)await PE.sleep(0);
     }
-    $("pc").textContent="· "+pdf.numPages+" pages";
+    $("pc").textContent="Â· "+pdf.numPages+" pages";
     render();
-    PE.status("Ready — drag thumbnails to reorder, or tick pages to act on several at once.","ok");
+    PE.status("Ready â€” drag thumbnails to reorder, or tick pages to act on several at once.","ok");
   }catch(e){
     PE.status(/password|encrypt/i.test(e.message||"")?"This PDF is password-protected. Remove the password first, then try again.":"Could not read this PDF: "+(e.message||e),"err");
   }finally{PE.progress(null)}
@@ -224,7 +224,7 @@ PE.drop($("zone"),$("fileInput"),/pdf/i,async function(list){
 $("go").onclick=async function(){
   if(!file||!pages.length)return;
   var keep=pages.filter(function(p){return !p.del});
-  if(!keep.length){PE.status("Every page is deleted — restore at least one.","err");return}
+  if(!keep.length){PE.status("Every page is deleted â€” restore at least one.","err");return}
   var btn=this;btn.disabled=true;PE.progress(.04);
   try{
     var src=await PE.readPdf(file),out=await PDFLib.PDFDocument.create();
@@ -241,7 +241,7 @@ $("go").onclick=async function(){
       if(i%10===0){PE.progress(.08+.85*(i/keep.length));await PE.sleep(0)}
     }
     out.setProducer("MULTI TOOL HUB");
-    out.setCreator("MULTI TOOL HUB — organized pages");
+    out.setCreator("MULTI TOOL HUB â€” organized pages");
     PE.progress(.96);
     var name=PE.csrfSafeName($("out").value||(PE.baseName(file.name)+"-organized.pdf"));
     if(!/\.pdf$/i.test(name))name+=".pdf";

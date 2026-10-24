@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
-<title>PDF to Text — clean, searchable text with preview | MULTI TOOL HUB</title>
+<title>PDF to Text â€” clean, searchable text with preview | MULTI TOOL HUB</title>
 <meta name="description" content="Extract text from a PDF with page ranges, smart paragraphs, de-hyphenation and repeated header cleanup. Preview the result, copy it or download TXT or a per-page ZIP.">
 <meta name="theme-color" content="#11162b">
 <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
@@ -29,14 +29,14 @@
 </head>
 <body>
 <header><div class="bar">
-  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="" width="40" height="40">MULTI TOOL HUB</a>
+  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="MULTI TOOL HUB logo" width="40" height="40">MULTI TOOL HUB</a>
   <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
 </div></header>
 <main>
 <h1>PDF to Text</h1>
 <p class="lead">Pull the words out of a PDF without broken lines. Rebuild paragraphs, repair hyphenated words, drop repeated headers and preview everything before you save.</p>
 
-<label class="drop" id="zone"><i class="fa-solid fa-file-lines" aria-hidden="true"></i><strong>Choose a PDF or drop it here</strong><span>Nothing is uploaded · works offline on your device</span>
+<label class="drop" id="zone"><i class="fa-solid fa-file-lines" aria-hidden="true"></i><strong>Choose a PDF or drop it here</strong><span>Nothing is uploaded Â· works offline on your device</span>
 <input type="file" id="fileInput" accept="application/pdf,.pdf"></label>
 
 <div class="panel" id="panel" hidden>
@@ -44,7 +44,7 @@
 
   <div class="split">
     <div>
-      <label class="f" style="margin-top:0">Text preview <span class="live">● Live</span></label>
+      <label class="f" style="margin-top:0">Text preview <span class="live">â— Live</span></label>
       <pre class="txtpre" id="preview" tabindex="0" aria-label="Extracted text preview">Choose a PDF to see its text.</pre>
       <div class="extractbar">
         <span class="sp" id="shown"></span>
@@ -63,12 +63,12 @@
 
       <label class="switch"><input type="checkbox" id="dehy" checked> Repair hyphenated words</label>
       <label class="switch"><input type="checkbox" id="headers" checked> Remove repeated headers/footers</label>
-      <label class="switch"><input type="checkbox" id="bullets" checked> Normalise bullets to “-”</label>
+      <label class="switch"><input type="checkbox" id="bullets" checked> Normalise bullets to â€œ-â€</label>
 
       <label class="f" for="sep">Between pages</label>
       <select class="in" id="sep">
         <option value="blank" selected>Blank line</option>
-        <option value="label">“--- Page N ---” marker</option>
+        <option value="label">â€œ--- Page N ---â€ marker</option>
         <option value="formfeed">Form feed (printer page break)</option>
       </select>
       <label class="switch"><input type="checkbox" id="nums"> Add a [Page N] label with blank lines</label>
@@ -76,10 +76,10 @@
   </div>
 
   <div class="statgrid">
-    <div class="stat"><b id="sSel">–</b><span>Pages selected</span></div>
-    <div class="stat"><b id="sWords">–</b><span>Words</span></div>
-    <div class="stat"><b id="sChars">–</b><span>Characters</span></div>
-    <div class="stat"><b id="sEmpty">–</b><span>Pages without text</span></div>
+    <div class="stat"><b id="sSel">â€“</b><span>Pages selected</span></div>
+    <div class="stat"><b id="sWords">â€“</b><span>Words</span></div>
+    <div class="stat"><b id="sChars">â€“</b><span>Characters</span></div>
+    <div class="stat"><b id="sEmpty">â€“</b><span>Pages without text</span></div>
   </div>
 
   <div class="prog" id="prog"><div></div></div>
@@ -88,11 +88,11 @@
     <button class="btn ghost" id="copy"><i class="fa-regular fa-copy"></i> Copy all text</button>
     <button class="btn ghost" id="zip"><i class="fa-solid fa-file-zipper"></i> One TXT per page (ZIP)</button>
   </div>
-  <p class="hint" id="hint">Text is rebuilt from the PDF's real text layer, so it is selectable and searchable. A scanned PDF with no text layer will show almost nothing — it needs OCR first.</p>
+  <p class="hint" id="hint">Text is rebuilt from the PDF's real text layer, so it is selectable and searchable. A scanned PDF with no text layer will show almost nothing â€” it needs OCR first.</p>
 </div>
 <div class="status" id="status" role="status" aria-live="polite"></div>
 </main>
-<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB Â· Created by FAYAS MONU</span></div>
 <script src="../assets/app.js"></script>
 <script src="../assets/chat.js"></script>
 <script>
@@ -169,7 +169,7 @@ function buildPageText(lines,mode,dehy,bullets,ctx){
       var vgap=prev?prev.y-l.y:0;
       var heading=l.size>baseSize*1.14&&t.length<90;
       var shortPrev=prev&&(prev.right-prev.left)<maxW*.72;
-      var endsSentence=prev&&/[.!?:;”"']$/.test(prev.text);
+      var endsSentence=prev&&/[.!?:;â€"']$/.test(prev.text);
       var breakPara=!prev||vgap>med*1.6||heading||(shortPrev&&endsSentence);
       if(breakPara)out+="\n\n"+t;
       else if(prev&&dehy&&/-$/.test(prev.text)&&/^[a-z]/.test(t))out=out.replace(/-$/,"")+t;
@@ -190,7 +190,7 @@ async function extract(){
     var lines=groupLines(tc.items);
     all.push(lines);
     if(lines.map(function(l){return l.text}).join(" ").length<20)empty++;
-    if(i%4===0){PE.progress(.05+.7*(i/pdf.numPages));PE.status("Reading text — page "+i+" of "+pdf.numPages+"…");await PE.sleep(0)}
+    if(i%4===0){PE.progress(.05+.7*(i/pdf.numPages));PE.status("Reading text â€” page "+i+" of "+pdf.numPages+"â€¦");await PE.sleep(0)}
   }
   /* repeated running headers/footers */
   var repeated={};
@@ -257,7 +257,7 @@ function render(){
   var list=selectedPages();
   if(list===null){
     $("preview").textContent="Check the page range. Use a format like 1-3, 7.";
-    $("sSel").textContent="–";$("sWords").textContent="–";$("sChars").textContent="–";
+    $("sSel").textContent="â€“";$("sWords").textContent="â€“";$("sChars").textContent="â€“";
     $("sEmpty").textContent=extraction.empty;
     PE.status("That page range is not valid.","err");
     return;
@@ -268,7 +268,7 @@ function render(){
   }
   var s=stats(list),max=12000;
   $("preview").textContent=s.text.slice(0,max)||"(No text found on the selected pages.)";
-  $("shown").textContent=s.text.length>max?"Preview limited to the first "+max.toLocaleString()+" characters — the download contains everything.":s.chars.toLocaleString()+" characters of text";
+  $("shown").textContent=s.text.length>max?"Preview limited to the first "+max.toLocaleString()+" characters â€” the download contains everything.":s.chars.toLocaleString()+" characters of text";
   $("sSel").textContent=s.pages;
   $("sWords").textContent=s.words.toLocaleString();
   $("sChars").textContent=s.chars.toLocaleString();
@@ -278,7 +278,7 @@ function render(){
   $("zip").disabled=!s.text;
   $("rangeMode").style.borderColor="";
   if(extraction.empty>=Math.ceil(extraction.pages.length*.6)&&extraction.pages.length)
-    PE.status("Most pages have no text layer. This looks like a scanned PDF — run OCR first for useful text.","err");
+    PE.status("Most pages have no text layer. This looks like a scanned PDF â€” run OCR first for useful text.","err");
 }
 async function refresh(showProgress){
   if(!file||!pdf)return;
@@ -289,8 +289,8 @@ async function refresh(showProgress){
     PE.progress(null);
     if(showProgress){
       if(extraction.empty>=Math.ceil(extraction.pages.length*.6)&&extraction.pages.length)
-        PE.status("Opened "+extraction.pages.length+" pages, but most have no text layer. This is probably a scan — it needs OCR before text extraction works.","err");
-      else PE.status("Text ready — "+extraction.pages.length+" page"+(extraction.pages.length===1?"":"s")+" read.","ok");
+        PE.status("Opened "+extraction.pages.length+" pages, but most have no text layer. This is probably a scan â€” it needs OCR before text extraction works.","err");
+      else PE.status("Text ready â€” "+extraction.pages.length+" page"+(extraction.pages.length===1?"":"s")+" read.","ok");
     }
   }catch(e){
     PE.progress(null);
@@ -304,13 +304,13 @@ function schedule(){
 
 PE.drop($("zone"),$("fileInput"),/pdf/i,async function(list){
   file=list[0];extraction=null;sig="";
-  $("fn").textContent=file.name;$("panel").hidden=false;$("meta").textContent="· "+PE.fmt(file.size)+" · reading…";
-  $("preview").textContent="Reading text…";
-  PE.status("Opening the PDF…");
+  $("fn").textContent=file.name;$("panel").hidden=false;$("meta").textContent="Â· "+PE.fmt(file.size)+" Â· readingâ€¦";
+  $("preview").textContent="Reading textâ€¦";
+  PE.status("Opening the PDFâ€¦");
   try{
     if(pdf){try{pdf.destroy()}catch(e){}}
     pdf=await PE.openPdf(file);
-    $("meta").textContent="· "+PE.fmt(file.size)+" · "+pdf.numPages+" page"+(pdf.numPages===1?"":"s");
+    $("meta").textContent="Â· "+PE.fmt(file.size)+" Â· "+pdf.numPages+" page"+(pdf.numPages===1?"":"s");
     await refresh(true);
   }catch(e){
     PE.status(/password|encrypt/i.test(e.message||"")?"This PDF is password-protected. Remove the password first, then try again.":"Could not read this PDF: "+(e.message||e),"err");
@@ -336,7 +336,7 @@ $("go").onclick=function(){
   var s=stats(list);
   if(!s.text){PE.status("There is no text to download on those pages.","err");return}
   PE.download(s.text,outName(),"text/plain;charset=utf-8");
-  PE.status("Saved "+s.pages+" page"+(s.pages===1?"":"s")+" · "+s.words.toLocaleString()+" words · "+PE.fmt(s.text.length)+".","ok");
+  PE.status("Saved "+s.pages+" page"+(s.pages===1?"":"s")+" Â· "+s.words.toLocaleString()+" words Â· "+PE.fmt(s.text.length)+".","ok");
 };
 $("copy").onclick=async function(){
   var list=currentList();if(!list||!extraction)return;
@@ -353,7 +353,7 @@ $("zip").onclick=async function(){
     });
     var zip=await PE.zip(entries,function(p){PE.progress(p)});
     PE.download(zip,base+"-text.zip");
-    PE.progress(1);PE.status("ZIP ready — "+list.length+" text file"+(list.length===1?"":"s")+", "+PE.fmt(zip.size)+".","ok");
+    PE.progress(1);PE.status("ZIP ready â€” "+list.length+" text file"+(list.length===1?"":"s")+", "+PE.fmt(zip.size)+".","ok");
   }catch(e){PE.progress(null);PE.status("Could not build the ZIP: "+(e.message||e),"err")}
   finally{btn.disabled=false;setTimeout(function(){PE.progress(null)},700)}
 };

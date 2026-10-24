@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
-<title>Add Page Numbers to PDF — accurate live preview | MULTI TOOL HUB</title>
+<title>Add Page Numbers to PDF â€” accurate live preview | MULTI TOOL HUB</title>
 <meta name="description" content="Stamp page numbers on a PDF with a live preview. Nine positions, custom formats, start number, page ranges, fonts, bold, colour, opacity, margins and mirrored odd/even placement.">
 <meta name="theme-color" content="#11162b">
 <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
@@ -37,18 +37,18 @@
 </head>
 <body>
 <header><div class="bar">
-  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="" width="40" height="40">MULTI TOOL HUB</a>
+  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="MULTI TOOL HUB logo" width="40" height="40">MULTI TOOL HUB</a>
   <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
 </div></header>
 <main>
 <h1>Add Page Numbers</h1>
 <p class="lead">Put page numbers exactly where they belong. Pick one of nine positions, choose a format, set the starting number and check every page on the live preview before downloading.</p>
 
-<label class="drop" id="zone"><i class="fa-solid fa-list-ol" aria-hidden="true"></i><strong>Choose a PDF or drop it here</strong><span>Nothing is uploaded · works offline on your device</span>
+<label class="drop" id="zone"><i class="fa-solid fa-list-ol" aria-hidden="true"></i><strong>Choose a PDF or drop it here</strong><span>Nothing is uploaded Â· works offline on your device</span>
 <input type="file" id="fileInput" accept="application/pdf,.pdf"></label>
 
 <div class="panel" id="panel" hidden>
-  <p style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><strong id="fn"></strong> <span id="meta" style="color:var(--muted)"></span> <span class="live">● Live preview</span></p>
+  <p style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><strong id="fn"></strong> <span id="meta" style="color:var(--muted)"></span> <span class="live">â— Live preview</span></p>
 
   <div style="text-align:center">
     <div class="pn-wrap" id="wrap"><canvas id="base" aria-label="PDF page preview"></canvas></div>
@@ -63,9 +63,9 @@
     <div>
       <label class="f">Position</label>
       <div class="pn-grid" id="grid" role="group" aria-label="Number position">
-        <button type="button" data-p="tl" title="Top left">↖</button><button type="button" data-p="tc" title="Top centre">↑</button><button type="button" data-p="tr" title="Top right">↗</button>
-        <button type="button" data-p="ml" title="Middle left">←</button><button type="button" data-p="mc" title="Centre">•</button><button type="button" data-p="mr" title="Middle right">→</button>
-        <button type="button" data-p="bl" title="Bottom left">↙</button><button type="button" data-p="bc" class="on" title="Bottom centre">↓</button><button type="button" data-p="br" title="Bottom right">↘</button>
+        <button type="button" data-p="tl" title="Top left">â†–</button><button type="button" data-p="tc" title="Top centre">â†‘</button><button type="button" data-p="tr" title="Top right">â†—</button>
+        <button type="button" data-p="ml" title="Middle left">â†</button><button type="button" data-p="mc" title="Centre">â€¢</button><button type="button" data-p="mr" title="Middle right">â†’</button>
+        <button type="button" data-p="bl" title="Bottom left">â†™</button><button type="button" data-p="bc" class="on" title="Bottom centre">â†“</button><button type="button" data-p="br" title="Bottom right">â†˜</button>
       </div>
       <label class="switch"><input type="checkbox" id="alt"> Mirror on alternate pages (inside/outside)</label>
     </div>
@@ -77,9 +77,9 @@
         <button type="button" data-f="Page {n}">Page 1</button>
         <button type="button" data-f="{n} / {total}">1 / 10</button>
         <button type="button" data-f="Page {n} of {total}">Page 1 of 10</button>
-        <button type="button" data-f="— {n} —">— 1 —</button>
+        <button type="button" data-f="â€” {n} â€”">â€” 1 â€”</button>
       </div>
-      <p class="sample">Preview on this page: <b id="sample">—</b></p>
+      <p class="sample">Preview on this page: <b id="sample">â€”</b></p>
     </div>
   </div>
 
@@ -127,7 +127,7 @@
 <div class="status" id="status" role="status" aria-live="polite"></div>
 <div class="prog" id="prog"><div></div></div>
 </main>
-<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB Â· Created by FAYAS MONU</span></div>
 <script src="../assets/app.js"></script>
 <script src="../assets/chat.js"></script>
 <script>
@@ -225,8 +225,8 @@ async function showPage(n){
   if(!file)return;
   var tok2=++tok;
   cur=Math.max(1,Math.min(info?info.pages:1,n));
-  $("pg").value=cur;$("pgt").textContent="of "+(info?info.pages:"…");
-  PE.status("Rendering page "+cur+"…");
+  $("pg").value=cur;$("pgt").textContent="of "+(info?info.pages:"â€¦");
+  PE.status("Rendering page "+cur+"â€¦");
   try{
     if(info&&info.pdf){try{info.pdf.destroy()}catch(e2){}}
     var ni=await PE.preview(file,$("base"),{page:cur,maxW:620});
@@ -241,14 +241,14 @@ $("pg").addEventListener("change",function(){showPage(+this.value||1)});
 window.addEventListener("resize",PE.debounce(function(){if(info){ensureOverlay();draw()}},200));
 
 PE.drop($("zone"),$("fileInput"),/pdf/i,async function(list){
-  file=list[0];$("fn").textContent=file.name;$("meta").textContent="· "+PE.fmt(file.size);
+  file=list[0];$("fn").textContent=file.name;$("meta").textContent="Â· "+PE.fmt(file.size);
   $("panel").hidden=false;
   try{
     if(info&&info.pdf){try{info.pdf.destroy()}catch(e2){}}
     info=await PE.preview(file,$("base"),{page:1,maxW:620});
     cur=1;$("pg").value=1;$("pgt").textContent="of "+info.pages;
     ensureOverlay();sync();
-    PE.status("Ready — "+info.pages+" page"+(info.pages===1?"":"s")+". Check the preview, then download.","ok");
+    PE.status("Ready â€” "+info.pages+" page"+(info.pages===1?"":"s")+". Check the preview, then download.","ok");
   }catch(e){
     PE.status(/password|encrypt/i.test(e.message||"")?"This PDF is password-protected. Remove the password first, then try again.":"Could not read this PDF: "+(e.message||e),"err");
   }

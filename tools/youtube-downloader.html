@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
-<title>YouTube Downloader — clear, explained workflow | MULTI TOOL HUB</title>
+<title>YouTube Downloader â€” clear, explained workflow | MULTI TOOL HUB</title>
 <meta name="description" content="Paste a public YouTube link and get video or audio download options. The process, the third-party API and your privacy are explained before anything happens.">
 <meta name="theme-color" content="#11162b">
 <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
@@ -38,7 +38,7 @@
 </head>
 <body>
 <header><div class="bar">
-  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="" width="40" height="40">MULTI TOOL HUB</a>
+  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="MULTI TOOL HUB logo" width="40" height="40">MULTI TOOL HUB</a>
   <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
 </div></header>
 <main>
@@ -48,7 +48,7 @@
 <div class="panel">
   <label class="f" for="u">YouTube link</label>
   <div style="display:flex;gap:8px;flex-wrap:wrap">
-    <input class="in" id="u" type="url" placeholder="https://www.youtube.com/watch?v=…" autocomplete="off" spellcheck="false" style="flex:1;min-width:200px">
+    <input class="in" id="u" type="url" placeholder="https://www.youtube.com/watch?v=â€¦" autocomplete="off" spellcheck="false" style="flex:1;min-width:200px">
     <button class="btn ghost sm" type="button" id="paste"><i class="fa-regular fa-clipboard"></i> Paste</button>
   </div>
   <div class="row">
@@ -76,15 +76,15 @@
   <h2>Download options</h2>
   <p class="hint" style="margin-top:2px">Choose a format and quality inside the card below. Your browser will save the file when the API finishes preparing it.</p>
   <div class="frame-shell" id="shell">
-    <div class="loading"><span class="spin"></span> Asking Loader.to to prepare your options…</div>
+    <div class="loading"><span class="spin"></span> Asking Loader.to to prepare your optionsâ€¦</div>
     <iframe id="frame" title="YouTube download options" sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-downloads" style="width:100%;height:460px;border:0;border-radius:10px;background:#fff"></iframe>
   </div>
 </div>
 
 <div class="callout">
   <div class="apinote"><i class="fa-solid fa-circle-info"></i><div>
-    <strong>How this works — and what leaves your device.</strong>
-    The YouTube tool is the one exception to our “everything stays local” rule. Your public link (and nothing else — no file, no account) is sent to <strong>Loader.to</strong>, which returns the download card you see above. Loader.to may see your IP address and may set its own cookies. We do not run the download servers and cannot control their availability. Please download only videos you own or have permission to save, and follow YouTube's terms.
+    <strong>How this works â€” and what leaves your device.</strong>
+    The YouTube tool is the one exception to our â€œeverything stays localâ€ rule. Your public link (and nothing else â€” no file, no account) is sent to <strong>Loader.to</strong>, which returns the download card you see above. Loader.to may see your IP address and may set its own cookies. We do not run the download servers and cannot control their availability. Please download only videos you own or have permission to save, and follow YouTube's terms.
   </div></div>
 </div>
 
@@ -92,7 +92,7 @@
   <h2 style="font-size:16px">If the card does not load</h2>
   <ol class="steps">
     <li>Check that the video is public and still available. Private, age-restricted and removed videos usually fail.</li>
-    <li>Press “Open in a new tab”. Some browsers block cross-site frames or third-party downloads.</li>
+    <li>Press â€œOpen in a new tabâ€. Some browsers block cross-site frames or third-party downloads.</li>
     <li>Turn off strict tracking protection or an ad blocker for this page, then try again.</li>
     <li>The Loader.to service can be busy. Wait a minute and retry.</li>
   </ol>
@@ -100,7 +100,7 @@
 </div>
 <div class="status" id="status" role="status" aria-live="polite"></div>
 </main>
-<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB Â· Created by FAYAS MONU</span></div>
 <script src="../assets/app.js"></script>
 <script src="../assets/chat.js"></script>
 <script>
@@ -138,7 +138,7 @@ function run(){
   var p=parse($("u").value);
   if(!p){
     $("vid").hidden=true;$("box").hidden=true;$("openTab").hidden=true;
-    PE.status("That does not look like a YouTube video link. Use a youtube.com/watch?v=…, youtu.be/… or /shorts/… link.","err");
+    PE.status("That does not look like a YouTube video link. Use a youtube.com/watch?v=â€¦, youtu.be/â€¦ or /shorts/â€¦ link.","err");
     return;
   }
   current=p;
@@ -163,10 +163,10 @@ function run(){
   frame.style.visibility="hidden";
   frame.onload=function(){loading.hidden=true;frame.style.visibility="visible"};
   frame.src="https://loader.to/api/card/?url="+encodeURIComponent(p.url);
-  PE.status("Link checked. Loading the download card from Loader.to…");
+  PE.status("Link checked. Loading the download card from Loader.toâ€¦");
   setTimeout(function(){
     if(!loading.hidden){
-      loading.innerHTML='<div><i class="fa-solid fa-triangle-exclamation" style="font-size:22px;color:var(--warn)"></i><br><br>The card is taking longer than usual.<br>Use “Open in a new tab” or check your connection.</div>';
+      loading.innerHTML='<div><i class="fa-solid fa-triangle-exclamation" style="font-size:22px;color:var(--warn)"></i><br><br>The card is taking longer than usual.<br>Use â€œOpen in a new tabâ€ or check your connection.</div>';
     }
   },14000);
   $("box").scrollIntoView({behavior:"smooth",block:"start"});

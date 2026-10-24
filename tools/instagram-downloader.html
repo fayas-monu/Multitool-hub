@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
-<title>Instagram Downloader — public reels, posts and videos | MULTI TOOL HUB</title>
+<title>Instagram Downloader â€” public reels, posts and videos | MULTI TOOL HUB</title>
 <meta name="description" content="Save a public Instagram reel, video or photo post. We validate the link, explain exactly what is shared with the API, and show clear steps if it fails.">
 <meta name="theme-color" content="#11162b">
 <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
@@ -37,7 +37,7 @@
 </head>
 <body>
 <header><div class="bar">
-  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="" width="40" height="40">MULTI TOOL HUB</a>
+  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="MULTI TOOL HUB logo" width="40" height="40">MULTI TOOL HUB</a>
   <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
 </div></header>
 <main>
@@ -47,7 +47,7 @@
 <div class="panel">
   <label class="f" for="u">Instagram link</label>
   <div style="display:flex;gap:8px;flex-wrap:wrap">
-    <input class="in" id="u" type="url" placeholder="https://www.instagram.com/reel/…" autocomplete="off" spellcheck="false" style="flex:1;min-width:200px">
+    <input class="in" id="u" type="url" placeholder="https://www.instagram.com/reel/â€¦" autocomplete="off" spellcheck="false" style="flex:1;min-width:200px">
     <button class="btn ghost sm" type="button" id="paste"><i class="fa-regular fa-clipboard"></i> Paste</button>
   </div>
   <div class="row">
@@ -75,7 +75,7 @@
   <h2>Download options</h2>
   <p class="hint" style="margin-top:2px">Pick the photo or video inside the card below. Your browser saves it when Loader.to has prepared the file.</p>
   <div class="frame-shell" id="shell">
-    <div class="loading"><span class="spin"></span> Asking Loader.to to prepare your options…</div>
+    <div class="loading"><span class="spin"></span> Asking Loader.to to prepare your optionsâ€¦</div>
     <iframe id="frame" title="Instagram download options" sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-downloads" style="width:100%;height:460px;border:0;border-radius:10px;background:#fff"></iframe>
   </div>
 </div>
@@ -83,23 +83,23 @@
 <div class="callout">
   <div class="apinote"><i class="fa-solid fa-circle-info"></i><div>
     <strong>What is shared, exactly.</strong>
-    This is the second exception to our local-only rule. The public Instagram link — and nothing else — is sent to <strong>Loader.to</strong>, which returns the download card. Loader.to may see your IP address and may use its own cookies. We do not control whether a post is downloadable; that depends on the account's privacy and Instagram's rules. Save only content you own or have clear permission to use, and respect copyright.
+    This is the second exception to our local-only rule. The public Instagram link â€” and nothing else â€” is sent to <strong>Loader.to</strong>, which returns the download card. Loader.to may see your IP address and may use its own cookies. We do not control whether a post is downloadable; that depends on the account's privacy and Instagram's rules. Save only content you own or have clear permission to use, and respect copyright.
   </div></div>
 </div>
 
 <div class="panel">
   <h2 style="font-size:16px">If the card does not load</h2>
   <ol class="steps">
-    <li>Confirm the post is public. Open it in a private window — if Instagram asks you to log in, the API cannot see it either.</li>
-    <li>Use the direct post link (instagram.com/reel/…, /p/… or /tv/…), not a screenshot or a profile link.</li>
-    <li>Press “Open in a new tab” if your browser blocks third-party frames.</li>
+    <li>Confirm the post is public. Open it in a private window â€” if Instagram asks you to log in, the API cannot see it either.</li>
+    <li>Use the direct post link (instagram.com/reel/â€¦, /p/â€¦ or /tv/â€¦), not a screenshot or a profile link.</li>
+    <li>Press â€œOpen in a new tabâ€ if your browser blocks third-party frames.</li>
     <li>Wait a minute and retry: the API can be busy or rate-limited.</li>
   </ol>
   <p class="hint">Working with a video file you already have? <a href="video-to-mp3.html">Video to MP3</a> extracts audio locally, with no API at all.</p>
 </div>
 <div class="status" id="status" role="status" aria-live="polite"></div>
 </main>
-<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB Â· Created by FAYAS MONU</span></div>
 <script src="../assets/app.js"></script>
 <script src="../assets/chat.js"></script>
 <script>
@@ -138,7 +138,7 @@ function run(){
   var p=parse($("u").value);
   if(!p){
     $("card").hidden=true;$("box").hidden=true;$("openTab").hidden=true;
-    PE.status("That does not look like a public Instagram post link. Use instagram.com/reel/…, /p/… or /tv/….","err");
+    PE.status("That does not look like a public Instagram post link. Use instagram.com/reel/â€¦, /p/â€¦ or /tv/â€¦.","err");
     return;
   }
   $("u").value=p.url;
@@ -154,14 +154,14 @@ function run(){
   $("box").hidden=false;$("openTab").hidden=false;
   $("openTab").onclick=function(){window.open(p.url,"_blank","noopener")};
   var shell=$("shell"),frame=$("frame"),loading=shell.querySelector(".loading");
-  loading.hidden=false;loading.innerHTML='<span class="spin"></span> Asking Loader.to to prepare your options…';
+  loading.hidden=false;loading.innerHTML='<span class="spin"></span> Asking Loader.to to prepare your optionsâ€¦';
   frame.style.visibility="hidden";
   frame.onload=function(){loading.hidden=true;frame.style.visibility="visible"};
   frame.src="https://loader.to/api/card/?url="+encodeURIComponent(p.url);
-  PE.status("Link checked. Loading the download card from Loader.to…");
+  PE.status("Link checked. Loading the download card from Loader.toâ€¦");
   setTimeout(function(){
     if(!loading.hidden){
-      loading.innerHTML='<div><i class="fa-solid fa-triangle-exclamation" style="font-size:22px;color:var(--warn)"></i><br><br>The card is taking longer than usual.<br>Use “Open in a new tab” or check your connection.</div>';
+      loading.innerHTML='<div><i class="fa-solid fa-triangle-exclamation" style="font-size:22px;color:var(--warn)"></i><br><br>The card is taking longer than usual.<br>Use â€œOpen in a new tabâ€ or check your connection.</div>';
     }
   },14000);
   $("box").scrollIntoView({behavior:"smooth",block:"start"});

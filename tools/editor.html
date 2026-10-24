@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
-<title>PDF Editor â€” edit, sign, redact & manage pages | MULTI TOOL HUB</title>
+<title>PDF Editor — edit, sign, redact & manage pages | MULTI TOOL HUB</title>
 <meta name="description" content="A full browser PDF editor: edit text, add text, highlight, underline, strike, draw, shapes, lines, arrows, images, signatures, comments and form values. Rotate, reorder, insert, duplicate, extract and merge pages. Your file never leaves your device.">
 <meta name="theme-color" content="#11162b">
 <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
@@ -14,12 +14,20 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js">
+imgUnit.onchange=function(){if(!imgSizeCur)return;var unit=this.value,pw=imgSizeCur.w,ph=imgSizeCur.h;imgW.value=(unit==='px'?pw:(unit==='cm'?pw/96*2.54:(unit==='mm'?pw/96*25.4:pw)));imgH.value=(unit==='px'?ph:(unit==='cm'?ph/96*2.54:(unit==='mm'?ph/96*25.4:ph)));};
+imgSizeApply.onclick=function(){if(!imgSizeCur)return;var unit=imgUnit.value||'px',wv=parseFloat(imgW.value)||0,hv=parseFloat(imgH.value)||0;if(wv<=0||hv<=0){PE.toast('Invalid size');return;}var wpx=unit==='px'?wv:(unit==='cm'?wv/2.54*96:(unit==='mm'?wv/25.4*96:wv)),hpx=unit==='px'?hv:(unit==='cm'?hv/2.54*96:(unit==='mm'?hv/25.4*96:hv));imgSizeCur.w=wpx;imgSizeCur.h=hpx;if(imgSizeCur.ratio)imgSizeCur.ratio=imgSizeCur.w/imgSizeCur.h;render();push();var dlg=imgSizeDlg;if(dlg.close)dlg.close();};
+imgSizeCancel.onclick=function(){var dlg=imgSizeDlg;if(dlg.close)dlg.close();};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js">
+imgUnit.onchange=function(){if(!imgSizeCur)return;var unit=this.value,pw=imgSizeCur.w,ph=imgSizeCur.h;imgW.value=(unit==='px'?pw:(unit==='cm'?pw/96*2.54:(unit==='mm'?pw/96*25.4:pw)));imgH.value=(unit==='px'?ph:(unit==='cm'?ph/96*2.54:(unit==='mm'?ph/96*25.4:ph)));};
+imgSizeApply.onclick=function(){if(!imgSizeCur)return;var unit=imgUnit.value||'px',wv=parseFloat(imgW.value)||0,hv=parseFloat(imgH.value)||0;if(wv<=0||hv<=0){PE.toast('Invalid size');return;}var wpx=unit==='px'?wv:(unit==='cm'?wv/2.54*96:(unit==='mm'?wv/25.4*96:wv)),hpx=unit==='px'?hv:(unit==='cm'?hv/2.54*96:(unit==='mm'?hv/25.4*96:hv));imgSizeCur.w=wpx;imgSizeCur.h=hpx;if(imgSizeCur.ratio)imgSizeCur.ratio=imgSizeCur.w/imgSizeCur.h;render();push();var dlg=imgSizeDlg;if(dlg.close)dlg.close();};
+imgSizeCancel.onclick=function(){var dlg=imgSizeDlg;if(dlg.close)dlg.close();};
+</script>
 </head>
 <body>
 <header><div class="bar">
-  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="" width="40" height="40">MULTI TOOL HUB</a>
+  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="MULTI TOOL HUB logo" width="40" height="40">MULTI TOOL HUB</a>
   <div style="display:flex;align-items:center;gap:4px">
     <button type="button" class="back" id="chatBtn" style="border:0;background:none;cursor:pointer"><i class="fa-solid fa-wand-magic-sparkles"></i> Assistant</button>
     <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
@@ -30,7 +38,7 @@
   <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap">
     <div style="max-width:72ch">
       <h1>PDF Editor</h1>
-      <p class="lead" style="margin-bottom:8px">Edit text, add text, highlight, underline, strike, draw, shapes, lines, arrows, images and signatures. Manage pages, fill forms and redact â€” all inside your browser. Nothing is uploaded.</p>
+      <p class="lead" style="margin-bottom:8px">Edit text, add text, highlight, underline, strike, draw, shapes, lines, arrows, images and signatures. Manage pages, fill forms and redact — all inside your browser. Nothing is uploaded.</p>
     </div>
     <div class="row" style="margin:0 0 8px">
       <button class="btn sm ghost" type="button" id="openBtn"><i class="fa-solid fa-folder-open"></i> Open PDF</button>
@@ -40,7 +48,7 @@
   <label class="drop" id="zone">
     <i class="fa-solid fa-file-pen" aria-hidden="true"></i>
     <strong>Choose a PDF or drop it here</strong>
-    <span>One file to start Â· you can merge more pages later</span>
+    <span>One file to start · you can merge more pages later</span>
     <input type="file" id="fileInput" accept="application/pdf,.pdf">
   </label>
 
@@ -53,8 +61,8 @@
       <label>Opacity <input type="range" id="po" min="1" max="100" value="100"><b id="ov">100</b>%</label>
       <label>Font <select id="pfont" title="Font family"></select></label>
       <span class="pgrp" role="group" aria-label="Text style">
-        <button type="button" class="pbtn" id="pb" title="Bold â€” Ctrl+B" aria-pressed="false"><i class="fa-solid fa-bold"></i></button>
-        <button type="button" class="pbtn" id="pi" title="Italic â€” Ctrl+I" aria-pressed="false"><i class="fa-solid fa-italic"></i></button>
+        <button type="button" class="pbtn" id="pb" title="Bold — Ctrl+B" aria-pressed="false"><i class="fa-solid fa-bold"></i></button>
+        <button type="button" class="pbtn" id="pi" title="Italic — Ctrl+I" aria-pressed="false"><i class="fa-solid fa-italic"></i></button>
         <span class="pdiv" aria-hidden="true"></span>
         <button type="button" class="pbtn al on" data-al="l" title="Align left" aria-pressed="true"><i class="fa-solid fa-align-left"></i></button>
         <button type="button" class="pbtn al" data-al="c" title="Align centre" aria-pressed="false"><i class="fa-solid fa-align-center"></i></button>
@@ -63,9 +71,10 @@
       <label title="Line spacing">Line <select id="plh"><option value="1">1.0</option><option value="1.15">1.15</option><option value="1.25" selected>1.25</option><option value="1.5">1.5</option><option value="2">2.0</option></select></label>
       <label title="Line and border style">Stroke <select id="pdash"><option value="solid">Solid</option><option value="dash">Dashed</option><option value="dot">Dotted</option></select></label>
       <span class="pgrp" role="group" aria-label="Arrange">
-        <button type="button" class="pbtn" id="pdup" title="Duplicate â€” Ctrl+D" disabled><i class="fa-regular fa-clone"></i></button>
+        <button type="button" class="pbtn" id="pdup" title="Duplicate — Ctrl+D" disabled><i class="fa-regular fa-clone"></i></button>
         <button type="button" class="pbtn" id="pfront" title="Bring to front" disabled><i class="fa-solid fa-turn-up"></i></button>
         <button type="button" class="pbtn" id="pback" title="Send to back" disabled><i class="fa-solid fa-turn-down"></i></button>
+        <button type="button" class="pbtn" id="pimgsize" title="Image size (px/cm/mm)" disabled><i class="fa-solid fa-ruler-combined"></i></button>
       </span>
       <button type="button" class="chip" id="pdel" disabled style="margin-left:auto"><i class="fa-regular fa-trash-can"></i> Delete</button>
     </div>
@@ -86,7 +95,7 @@
         </div>
         <div class="tabpane" id="pane-forms">
           <div id="forms"><p class="empty-sm">No fillable form fields found in this PDF.</p></div>
-          <p class="ed-tip">Values are written when you save. Tick â€œFlatten form fieldsâ€ in the save dialog to lock them.</p>
+          <p class="ed-tip">Values are written when you save. Tick ™Flatten form fields— in the save dialog to lock them.</p>
         </div>
         <div class="pgops" id="pgops">
           <button type="button" data-op="rotL" title="Rotate this page anticlockwise"><i class="fa-solid fa-rotate-left"></i> Rotate</button>
@@ -106,7 +115,7 @@
           <div class="stage" id="stage"><canvas id="cv"></canvas><div id="layer"></div></div>
         </div>
         <div class="status" id="status" role="status" aria-live="polite"></div>
-        <p class="ed-tip" id="docTip"><b>Tip:</b> text editing covers the old words rather than deleting them. Use â€œFlatten to imagesâ€ in the save dialog for a secure, permanent result. Everything is processed on this device.</p>
+        <p class="ed-tip" id="docTip"><b>Tip:</b> text editing covers the old words rather than deleting them. Use ™Flatten to images— in the save dialog for a secure, permanent result. Everything is processed on this device.</p>
       </div>
     </div>
   </div>
@@ -153,12 +162,12 @@
     <label class="switch"><input type="radio" name="svRange" value="pick"> Page range <input class="in" id="svPick" placeholder="1-3, 5" style="width:120px;padding:5px 8px;display:inline-block" disabled></label>
   </fieldset>
   <label class="switch"><input type="checkbox" id="svFlatForm"> Flatten form fields (not editable afterwards)</label>
-  <label class="switch"><input type="checkbox" id="svFlatAll"> Flatten to images â€” secure, removes hidden text</label>
-  <label class="switch" id="svDpiWrap" hidden>Image quality <select id="svDpi" style="padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink)"><option value="150">150 DPI Â· small</option><option value="200" selected>200 DPI Â· balanced</option><option value="300">300 DPI Â· sharp</option></select></label>
+  <label class="switch"><input type="checkbox" id="svFlatAll"> Flatten to images — secure, removes hidden text</label>
+  <label class="switch" id="svDpiWrap" hidden>Image quality <select id="svDpi" style="padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink)"><option value="150">150 DPI · small</option><option value="200" selected>200 DPI · balanced</option><option value="300">300 DPI · sharp</option></select></label>
   <table>
-    <tr><td>Pages</td><td id="svPages">â€“</td></tr>
+    <tr><td>Pages</td><td id="svPages">"</td></tr>
     <tr><td>Annotations</td><td id="svAnns">0</td></tr>
-    <tr><td>File size</td><td id="svSize">â€“</td></tr>
+    <tr><td>File size</td><td id="svSize">"</td></tr>
   </table>
   <p class="ed-tip" id="svFontNote" hidden></p>
   <div class="row">
@@ -169,10 +178,18 @@
   <div class="status" id="svStatus"></div>
 </dialog>
 
-<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB Â· Created by FAYAS MONU</span></div>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
 
-<script src="../assets/app.js"></script>
-<script src="../assets/chat.js"></script>
+<script src="../assets/app.js">
+imgUnit.onchange=function(){if(!imgSizeCur)return;var unit=this.value,pw=imgSizeCur.w,ph=imgSizeCur.h;imgW.value=(unit==='px'?pw:(unit==='cm'?pw/96*2.54:(unit==='mm'?pw/96*25.4:pw)));imgH.value=(unit==='px'?ph:(unit==='cm'?ph/96*2.54:(unit==='mm'?ph/96*25.4:ph)));};
+imgSizeApply.onclick=function(){if(!imgSizeCur)return;var unit=imgUnit.value||'px',wv=parseFloat(imgW.value)||0,hv=parseFloat(imgH.value)||0;if(wv<=0||hv<=0){PE.toast('Invalid size');return;}var wpx=unit==='px'?wv:(unit==='cm'?wv/2.54*96:(unit==='mm'?wv/25.4*96:wv)),hpx=unit==='px'?hv:(unit==='cm'?hv/2.54*96:(unit==='mm'?hv/25.4*96:hv));imgSizeCur.w=wpx;imgSizeCur.h=hpx;if(imgSizeCur.ratio)imgSizeCur.ratio=imgSizeCur.w/imgSizeCur.h;render();push();var dlg=imgSizeDlg;if(dlg.close)dlg.close();};
+imgSizeCancel.onclick=function(){var dlg=imgSizeDlg;if(dlg.close)dlg.close();};
+</script>
+<script src="../assets/chat.js">
+imgUnit.onchange=function(){if(!imgSizeCur)return;var unit=this.value,pw=imgSizeCur.w,ph=imgSizeCur.h;imgW.value=(unit==='px'?pw:(unit==='cm'?pw/96*2.54:(unit==='mm'?pw/96*25.4:pw)));imgH.value=(unit==='px'?ph:(unit==='cm'?ph/96*2.54:(unit==='mm'?ph/96*25.4:ph)));};
+imgSizeApply.onclick=function(){if(!imgSizeCur)return;var unit=imgUnit.value||'px',wv=parseFloat(imgW.value)||0,hv=parseFloat(imgH.value)||0;if(wv<=0||hv<=0){PE.toast('Invalid size');return;}var wpx=unit==='px'?wv:(unit==='cm'?wv/2.54*96:(unit==='mm'?wv/25.4*96:wv)),hpx=unit==='px'?hv:(unit==='cm'?hv/2.54*96:(unit==='mm'?hv/25.4*96:hv));imgSizeCur.w=wpx;imgSizeCur.h=hpx;if(imgSizeCur.ratio)imgSizeCur.ratio=imgSizeCur.w/imgSizeCur.h;render();push();var dlg=imgSizeDlg;if(dlg.close)dlg.close();};
+imgSizeCancel.onclick=function(){var dlg=imgSizeDlg;if(dlg.close)dlg.close();};
+</script>
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc=PE.asset("pdf.worker.min.js");
 var $=PE.$,$$=PE.$$;
@@ -209,7 +226,7 @@ function buildFontSelect(){
     var f=FONTS[id],opt='<option value="'+id+'" style="font-family:'+f.css.replace(/"/g,"'")+'">'+f.label+'</option>';
     if(f.std)std+=opt;else com+=opt;
   });
-  $("pfont").innerHTML='<optgroup label="Standard PDF fonts">'+std+'</optgroup><optgroup label="Common fonts â€” high-resolution on export">'+com+'</optgroup>';
+  $("pfont").innerHTML='<optgroup label="Standard PDF fonts">'+std+'</optgroup><optgroup label="Common fonts — high-resolution on export">'+com+'</optgroup>';
 }
 buildFontSelect();
 var LINE=1.25;
@@ -222,21 +239,21 @@ var TOOLDEF={
 };
 var HELP={
   sel:"Click an item to select it. Drag to move; use the corner square to resize. Double-click text to edit it. Arrow keys nudge (Shift = 10 px). Ctrl+D duplicates, Delete removes.",
-  edit:"Click outlined text to rewrite it. The old words are covered with a colour sampled from the page, so there is no white patch. Use â€œFlatten to imagesâ€ when saving to remove the original text completely.",
+  edit:"Click outlined text to rewrite it. The old words are covered with a colour sampled from the page, so there is no white patch. Use ™Flatten to images— when saving to remove the original text completely.",
   text:"Click for a free-flowing text box, or drag a box to wrap text to a width. Use Font, Bold, Italic, Align and Line spacing in the bar above. Escape finishes.",
   hl:"Drag across the words you want to highlight.",
   ul:"Drag under a line of text to underline it. The box snaps to a thin line.",
   st:"Drag across a line of text to strike through it.",
   pen:"Draw freehand with a mouse, stylus or finger. Use Colour, Size and Stroke to change the line.",
-  line:"Drag from the start point to the end point. Hold Shift to snap to 45Â°.",
-  arrow:"Drag from the tail to the arrow tip. Hold Shift to snap to 45Â°.",
-  rect:"Drag to draw a rectangle. Tick â€œnoneâ€ on Fill for an outline only; use Stroke for dashed borders.",
-  ell:"Drag to draw an ellipse. Tick â€œnoneâ€ on Fill for an outline only; use Stroke for dashed borders.",
+  line:"Drag from the start point to the end point. Hold Shift to snap to 45°.",
+  arrow:"Drag from the tail to the arrow tip. Hold Shift to snap to 45°.",
+  rect:"Drag to draw a rectangle. Tick ™none— on Fill for an outline only; use Stroke for dashed borders.",
+  ell:"Drag to draw an ellipse. Tick ™none— on Fill for an outline only; use Stroke for dashed borders.",
   img:"Choose a PNG, JPG or WebP image to place on the page, then drag and resize it.",
   sig:"Draw a signature with a mouse or finger. It is added as a transparent image you can place anywhere.",
   note:"Click a spot on the page to leave a comment. Comments are also written onto the exported page.",
   wo:"Drag over anything to cover it in white. The content stays underneath unless you flatten on save.",
-  rd:"Drag over sensitive content. It looks black here; choose â€œFlatten to imagesâ€ on save to permanently remove the hidden text underneath."
+  rd:"Drag over sensitive content. It looks black here; choose ™Flatten to images— on save to permanently remove the hidden text underneath."
 };
 var SOURCES=[],METAS=[],ANNS={},TEXTS={},FIELDS=[];
 var cur=0,zoom=1,fitMode=true,tool="sel",sel=null,map=null,seq=1,dragging=null,showTok=0,thumbTok=0,renderTask=null,renderDone=null;
@@ -324,7 +341,7 @@ async function openFiles(files,append){
     resetEditor();
   }
   var wasEmpty=!SOURCES.length;
-  PE.status("Opening "+files[0].name+"â€¦");
+  PE.status("Opening "+files[0].name+"…");
   try{
     for(var i=0;i<files.length;i++){
       var info=await addSource(files[i]);
@@ -345,7 +362,7 @@ async function openFiles(files,append){
     await showPage(cur,true);
     await renderThumbs();
     push();
-    PE.status(wasEmpty?"Opened "+docName+" Â· "+METAS.length+" page"+(METAS.length===1?"":"s"):"Added pages â€” "+METAS.length+" total","ok");
+    PE.status(wasEmpty?"Opened "+docName+" · "+METAS.length+" page"+(METAS.length===1?"":"s"):"Added pages — "+METAS.length+" total","ok");
     savedOnce=false;
   }catch(e){
     PE.status(/password|encrypt/i.test(e.message||"")?"This PDF is password-protected. Remove the password first, then reopen it.":"Could not open this PDF: "+(e.message||e),"err");
@@ -394,7 +411,7 @@ async function showPage(i,keep){
   if(!METAS.length)return;
   cur=clamp(i,0,METAS.length-1);
   var meta=METAS[cur],tok=++showTok;
-  PE.status("Rendering page "+(cur+1)+"â€¦");
+  PE.status("Rendering page "+(cur+1)+"…");
   try{
     var g=await geom(meta);if(tok!==showTok)return;
     var vp1=g.vp1,tot=g.tot,page=g.page;
@@ -650,7 +667,7 @@ function uiState(){
   if(b("next"))b("next").disabled=cur>=METAS.length-1;
   if(b("del"))b("del").disabled=!sel;
   $("pdel").disabled=!sel;
-  ["pdup","pfront","pback"].forEach(function(id){var el=$(id);if(el)el.disabled=!sel});
+  ["pdup","pfront","pback","pimgsize"].forEach(function(id){var el=$(id);if(el)el.disabled=!(sel && ((id!=="pimgsize") || (byId(sel)&&byId(sel).k==="img")));});
   $("pn2").value=cur+1;$("pt").textContent="/ "+METAS.length;
   $("pgCount").textContent="("+METAS.length+")";
   $("zl").textContent=Math.round(zoom*100)+"%";
@@ -744,6 +761,7 @@ function readProps(){
 $$("#props .al").forEach(function(b){b.addEventListener("click",function(){setAlignUI(b.dataset.al);D.align=b.dataset.al;readProps()})});
 /* Keep the caret in a text box while Bold/Italic/Align are clicked. */
 $$("#props .pbtn").forEach(function(b){b.addEventListener("mousedown",function(e){e.preventDefault()})});
+$("pimgsize").onclick=function(){var a=sel&&byId(sel);if(a&&a.k==="img")openImgSizeDlg(a);};
 $("pdel").onclick=delSel;
 $("pdup").onclick=duplicateSel;
 $("pfront").onclick=function(){arrangeSel(true)};
@@ -937,7 +955,7 @@ function renderComments(){
   });
   $("cmCount").textContent=all.length?"("+all.length+")":"";
   var box=$("comments");
-  if(!all.length){box.innerHTML='<p class="empty-sm">No comments yet. Use the Comment tool or â€œNew commentâ€.</p>';return}
+  if(!all.length){box.innerHTML='<p class="empty-sm">No comments yet. Use the Comment tool or ™New comment—.</p>';return}
   box.innerHTML=all.map(function(c){
     return '<div class="cmt"><b>Page '+(c.pg+1)+'</b><p>'+PE.esc(c.a.text||"")+'</p><div class="cmt-actions"><button type="button" data-go="'+c.pg+'">View</button><button type="button" data-edit="'+c.a.id+'">Edit</button><button type="button" data-del="'+c.a.id+'">Delete</button></div></div>';
   }).join("");
@@ -1198,6 +1216,7 @@ document.addEventListener("keydown",function(e){
 async function addImage(src,w,h){
   var meta=METAS[cur];if(!meta)return;
   var a=mk("img",0,0,w,h);a.src=src;a.op=100;
+  a.ratio=w/h;
   var size=await displaySize(meta);a.x=(size.w-w)/2;a.y=(size.h-h)/2;
   addAnno(a);sel=a.id;setTool("sel");sel=a.id;render();push();
 }
@@ -1212,7 +1231,8 @@ $("imgIn").onchange=async function(){
     var size=await displaySize(METAS[cur]);
     var w=Math.min(260,size.w*.45,im.width),h=w*c.height/c.width;
     await addImage(c.toDataURL("image/png"),w,h);
-    PE.toast("Image added â€” drag to place it");
+    PE.toast("Image added · drag to place or resize");
+    try{openImgSizeDlg(byId(sel));}catch(e){}
   }catch(e){PE.status("That image could not be opened.","err")}
 };
 var sc=$("sc"),sx=sc.getContext("2d"),sd=false;
@@ -1245,7 +1265,8 @@ $("sadd").onclick=async function(){
   var size=await displaySize(METAS[cur]);
   var ww=Math.min(180,size.w*.4),hh=ww*h/w;
   await addImage(c.toDataURL("image/png"),ww,hh);
-  PE.toast("Signature added â€” drag to place it");
+  PE.toast("Signature added · drag to place it");
+  try{openImgSizeDlg(byId(sel));}catch(e){}
 };
 
 /* ---------------- page operations ---------------- */
@@ -1324,7 +1345,7 @@ async function mergePdf(){
 }
 async function extractPage(){
   try{
-    PE.status("Building a one-page PDFâ€¦");
+    PE.status("Building a one-page PDF…");
     var bytes=await buildPdf([cur],{});
     PE.download(bytes,PE.baseName(docName)+"-page-"+(cur+1)+".pdf","application/pdf");
     PE.status("Page extracted.","ok");
@@ -1390,7 +1411,7 @@ function stdSafe(f,text){
   for(var i=0;i<s.length;i++){
     var c=s.charCodeAt(i);
     if((c>=32&&c<=126)||(c>=160&&c<=255))continue;
-    if("â‚¬â€šÆ’â€žâ€¦â€ â€¡Ë†â€°Å â€¹Å’Å½â€˜â€™â€œâ€â€¢â€“â€”Ëœâ„¢Å¡â€ºÅ“Å¾Å¸".indexOf(s.charAt(i))>=0)continue;
+    if("â‚¬â€šÆ’â€ž…â€ â€¡Ë†â€°Å â€¹Å’Å½˜'™—â€¢"—Ëœâ„¢Å¡â€ºÅ“Å¾Å¸".indexOf(s.charAt(i))>=0)continue;
     return false;
   }
   return true;
@@ -1636,7 +1657,7 @@ function selectedIndices(){
 }
 function updateSaveSummary(){
   var idx=selectedIndices();
-  if(!idx){$("svPages").textContent="â€“";return}
+  if(!idx){$("svPages").textContent=""";return}
   var n=0,raster=0;
   idx.forEach(function(i){
     (ANNS[METAS[i].uid]||[]).forEach(function(a){
@@ -1675,18 +1696,18 @@ $("svGo").onclick=async function(){
   var name=PE.csrfSafeName($("svName").value.trim()||"edited-document.pdf");
   if(!/\.pdf$/i.test(name))name+=".pdf";
   var flat=$("svFlatAll").checked,flatForm=$("svFlatForm").checked,dpi=+$("svDpi").value;
-  saving=true;$("svGo").disabled=true;$("svStatus").textContent="Preparing your PDFâ€¦";$("svStatus").className="status";
+  saving=true;$("svGo").disabled=true;$("svStatus").textContent="Preparing your PDF…";$("svStatus").className="status";
   $("svProg").style.display="block";
   try{
     var bytes=await buildPdf(idx,{flatForm:flatForm});
     $("svProg").firstElementChild.style.width="45%";
-    $("svStatus").textContent=flat?"Flattening pages to imagesâ€¦":"Finalisingâ€¦";
+    $("svStatus").textContent=flat?"Flattening pages to images…":"Finalising…";
     if(flat)bytes=await flattenBytes(bytes,dpi,function(p){$("svProg").firstElementChild.style.width=(45+p*50)+"%";updateProgText(p)});
     $("svProg").firstElementChild.style.width="100%";
     await PE.sleep(80);
     PE.download(bytes,name,"application/pdf");
     savedOnce=true;
-    $("svStatus").textContent="Saved "+PE.fmt(bytes.byteLength)+(flat?" Â· flattened":"")+".";$("svStatus").className="status ok";
+    $("svStatus").textContent="Saved "+PE.fmt(bytes.byteLength)+(flat?" · flattened":"")+".";$("svStatus").className="status ok";
     $("svSize").textContent=PE.fmt(bytes.byteLength);
     PE.toast("PDF saved");
     setTimeout(function(){if($("saveDlg").open)$("saveDlg").close()},900);
@@ -1695,9 +1716,11 @@ $("svGo").onclick=async function(){
   }finally{
     saving=false;$("svGo").disabled=false;
   }
-  function updateProgText(p){$("svStatus").textContent="Flattening page "+Math.round(p*idx.length)+" of "+idx.length+"â€¦"}
+  function updateProgText(p){$("svStatus").textContent="Flattening page "+Math.round(p*idx.length)+" of "+idx.length+"…"}
 };
 
+var imgSizeCur=null;
+function openImgSizeDlg(a){if(!a||a.k!=='img')return;imgSizeCur=a;var dlg=imgSizeDlg;if(!dlg)return;var pw=a.w,ph=a.h;var unit=imgUnit.value||'px';imgW.value=(unit==='px'?pw:(unit==='cm'?pw/96*2.54:(unit==='mm'?pw/96*25.4:pw)));imgH.value=(unit==='px'?ph:(unit==='cm'?ph/96*2.54:(unit==='mm'?ph/96*25.4:ph)));if(typeof dlg.showModal==='function')dlg.showModal();else dlg.setAttribute('open','');}
 /* ---------------- init ---------------- */
 setTool("sel");
 syncProps();
@@ -1706,6 +1729,19 @@ $("svName").value="edited-document.pdf";
 PE.log("PDF Editor v4 ready");
 
 
+
+imgUnit.onchange=function(){if(!imgSizeCur)return;var unit=this.value,pw=imgSizeCur.w,ph=imgSizeCur.h;imgW.value=(unit==='px'?pw:(unit==='cm'?pw/96*2.54:(unit==='mm'?pw/96*25.4:pw)));imgH.value=(unit==='px'?ph:(unit==='cm'?ph/96*2.54:(unit==='mm'?ph/96*25.4:ph)));};
+imgSizeApply.onclick=function(){if(!imgSizeCur)return;var unit=imgUnit.value||'px',wv=parseFloat(imgW.value)||0,hv=parseFloat(imgH.value)||0;if(wv<=0||hv<=0){PE.toast('Invalid size');return;}var wpx=unit==='px'?wv:(unit==='cm'?wv/2.54*96:(unit==='mm'?wv/25.4*96:wv)),hpx=unit==='px'?hv:(unit==='cm'?hv/2.54*96:(unit==='mm'?hv/25.4*96:hv));imgSizeCur.w=wpx;imgSizeCur.h=hpx;if(imgSizeCur.ratio)imgSizeCur.ratio=imgSizeCur.w/imgSizeCur.h;render();push();var dlg=imgSizeDlg;if(dlg.close)dlg.close();};
+imgSizeCancel.onclick=function(){var dlg=imgSizeDlg;if(dlg.close)dlg.close();};
 </script>
-</body>
+
 </html>
+
+imgUnit.onchange=function(){if(!imgSizeCur)return;var unit=this.value,pw=imgSizeCur.w,ph=imgSizeCur.h;imgW.value=(unit==='px'?pw:(unit==='cm'?pw/96*2.54:(unit==='mm'?pw/96*25.4:pw)));imgH.value=(unit==='px'?ph:(unit==='cm'?ph/96*2.54:(unit==='mm'?ph/96*25.4:ph)));};
+imgSizeApply.onclick=function(){if(!imgSizeCur)return;var unit=imgUnit.value||'px',wv=parseFloat(imgW.value)||0,hv=parseFloat(imgH.value)||0;if(wv<=0||hv<=0){PE.toast('Invalid size');return;}var wpx=unit==='px'?wv:(unit==='cm'?wv/2.54*96:(unit==='mm'?wv/25.4*96:wv)),hpx=unit==='px'?hv:(unit==='cm'?hv/2.54*96:(unit==='mm'?hv/25.4*96:hv));imgSizeCur.w=wpx;imgSizeCur.h=hpx;if(imgSizeCur.ratio)imgSizeCur.ratio=imgSizeCur.w/imgSizeCur.h;render();push();var dlg=imgSizeDlg;if(dlg.close)dlg.close();};
+imgSizeCancel.onclick=function(){var dlg=imgSizeDlg;if(dlg.close)dlg.close();};
+</script>
+
+</html>
+
+

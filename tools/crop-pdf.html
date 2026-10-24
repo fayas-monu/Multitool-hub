@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
-<title>Crop PDF — draggable crop frame & live preview | MULTI TOOL HUB</title>
+<title>Crop PDF â€” draggable crop frame & live preview | MULTI TOOL HUB</title>
 <meta name="description" content="Crop PDF pages visually. Drag the frame, resize from any corner, lock an aspect ratio, auto-detect margins, preview every page and apply to one page or a range. Nothing leaves your device.">
 <meta name="theme-color" content="#11162b">
 <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
@@ -34,7 +34,7 @@
 </head>
 <body>
 <header><div class="bar">
-  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="" width="40" height="40">MULTI TOOL HUB</a>
+  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="MULTI TOOL HUB logo" width="40" height="40">MULTI TOOL HUB</a>
   <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
 </div></header>
 <main>
@@ -45,12 +45,12 @@
 <input type="file" id="fileInput" accept="application/pdf,.pdf"></label>
 
 <div class="panel" id="panel" hidden>
-  <p style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><strong id="fn"></strong> <span id="meta" style="color:var(--muted)"></span> <span class="live">● Live preview</span></p>
+  <p style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><strong id="fn"></strong> <span id="meta" style="color:var(--muted)"></span> <span class="live">â— Live preview</span></p>
 
   <div style="text-align:center">
     <div class="crop-wrap" id="wrap">
       <canvas id="base" aria-label="PDF page preview"></canvas>
-      <canvas id="ov" class="crop-ov" aria-label="Crop frame — drag to move, corners to resize"></canvas>
+      <canvas id="ov" class="crop-ov" aria-label="Crop frame â€” drag to move, corners to resize"></canvas>
     </div>
   </div>
   <div class="crop-read" id="read"></div>
@@ -91,7 +91,7 @@
 
   <label class="f" for="scope">Pages to crop</label>
   <select class="in" id="scope">
-    <option value="all" selected>All pages — same relative area</option>
+    <option value="all" selected>All pages â€” same relative area</option>
     <option value="current">Current page only</option>
     <option value="range">A page range</option>
   </select>
@@ -102,12 +102,12 @@
     <button class="btn" id="go"><i class="fa-solid fa-crop-simple"></i> Crop &amp; download</button>
     <button class="btn ghost" id="reset"><i class="fa-solid fa-rotate-left"></i> Reset frame</button>
   </div>
-  <p class="hint"><b>How it works:</b> cropping hides the area outside the frame and shrinks the page box. The hidden content is not physically deleted from the file — if you need it gone for privacy, run the result through the PDF Editor with “Flatten to images”.</p>
+  <p class="hint"><b>How it works:</b> cropping hides the area outside the frame and shrinks the page box. The hidden content is not physically deleted from the file â€” if you need it gone for privacy, run the result through the PDF Editor with â€œFlatten to imagesâ€.</p>
 </div>
 <div class="status" id="status" role="status" aria-live="polite"></div>
 <div class="prog" id="prog"><div></div></div>
 </main>
-<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB Â· Created by FAYAS MONU</span></div>
 <script src="../assets/app.js"></script>
 <script src="../assets/chat.js"></script>
 <script>
@@ -155,7 +155,7 @@ function draw(){
 function readOut(){
   if(!info)return;
   var pw=info.pw*crop.w,ph=info.ph*crop.h;
-  $("read").innerHTML="<span>Crop size: <b>"+Math.round(pw)+" × "+Math.round(ph)+" pt</b></span><span><b>"+Math.round(pw*25.4/72)+" × "+Math.round(ph*25.4/72)+" mm</b></span><span>Page: <b>"+Math.round(info.pw)+" × "+Math.round(info.ph)+" pt</b></span>";
+  $("read").innerHTML="<span>Crop size: <b>"+Math.round(pw)+" Ã— "+Math.round(ph)+" pt</b></span><span><b>"+Math.round(pw*25.4/72)+" Ã— "+Math.round(ph*25.4/72)+" mm</b></span><span>Page: <b>"+Math.round(info.pw)+" Ã— "+Math.round(info.ph)+" pt</b></span>";
 }
 
 /* ---------- pointer handling ---------- */
@@ -245,7 +245,7 @@ $("auto").onclick=async function(){
       var i=(y*W+x)*4,r=d[i],g=d[i+1],bl=d[i+2];
       if(r<lim||g<lim||bl<lim){found=true;if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y}
     }
-    if(!found){PE.toast("No visible content found — the page may be blank");return}
+    if(!found){PE.toast("No visible content found â€” the page may be blank");return}
     var pad=(+$("pad").value)/(info.pw)*(W); /* padding in device px */
     x0=Math.max(0,x0-pad);y0=Math.max(0,y0-pad);x1=Math.min(W,x1+pad);y1=Math.min(H,y1+pad);
     setRect({x:x0/W,y:y0/H,w:(x1-x0)/W,h:(y1-y0)/H});
@@ -268,8 +268,8 @@ $("sens").addEventListener("input",function(){$("sensv").textContent=this.value}
 async function showPage(n){
   if(!file)return;
   var t=++tok;cur=PE.clamp(n,1,info?info.pages:1);
-  $("pg").value=cur;$("pgt").textContent="of "+(info?info.pages:"…");
-  PE.status("Rendering page "+cur+"…");
+  $("pg").value=cur;$("pgt").textContent="of "+(info?info.pages:"â€¦");
+  PE.status("Rendering page "+cur+"â€¦");
   try{
     if(info&&info.pdf){try{info.pdf.destroy()}catch(e2){}}
     var ni=await PE.preview(file,$("base"),{page:cur,maxW:650});
@@ -290,7 +290,7 @@ $("pg").addEventListener("change",function(){showPage(+this.value||1)});
 window.addEventListener("resize",PE.debounce(function(){if(info){sizeWrap();draw()}},200));
 
 PE.drop($("zone"),$("fileInput"),/pdf/i,async function(list){
-  file=list[0];$("fn").textContent=file.name;$("meta").textContent="· "+PE.fmt(file.size);$("panel").hidden=false;
+  file=list[0];$("fn").textContent=file.name;$("meta").textContent="Â· "+PE.fmt(file.size);$("panel").hidden=false;
   try{
     if(info&&info.pdf){try{info.pdf.destroy()}catch(e2){}}
     info=await PE.preview(file,$("base"),{page:1,maxW:650});
@@ -298,7 +298,7 @@ PE.drop($("zone"),$("fileInput"),/pdf/i,async function(list){
     crop={x:0,y:0,w:1,h:1};ratio=0;
     $$("#presets button").forEach(function(x){x.classList.toggle("on",x.dataset.r==="free")});
     sizeWrap();draw();
-    PE.status("Ready — drag the corners to crop "+info.pages+" page"+(info.pages===1?"":"s")+".","ok");
+    PE.status("Ready â€” drag the corners to crop "+info.pages+" page"+(info.pages===1?"":"s")+".","ok");
   }catch(e){
     PE.status(/password|encrypt/i.test(e.message||"")?"This PDF is password-protected. Remove the password first, then try again.":"Could not read this PDF: "+(e.message||e),"err");
   }

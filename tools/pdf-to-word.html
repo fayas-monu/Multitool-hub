@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
-<title>PDF to Word — editable .docx converter | MULTI TOOL HUB</title>
+<title>PDF to Word â€” editable .docx converter | MULTI TOOL HUB</title>
 <meta name="description" content="Convert a PDF to an editable Word .docx file with rebuilt paragraphs, headings, lists and tables. Choose pages, clean headers and footers, preview the result and keep scanned pages as images. Runs in your browser.">
 <meta name="theme-color" content="#11162b">
 <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
@@ -38,23 +38,23 @@
 </head>
 <body>
 <header><div class="bar">
-  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="" width="40" height="40">MULTI TOOL HUB</a>
+  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="MULTI TOOL HUB logo" width="40" height="40">MULTI TOOL HUB</a>
   <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
 </div></header>
 <main>
 <h1>PDF to Word</h1>
 <p class="lead">Turn a PDF into a genuinely editable <b>.docx</b> file. Paragraphs are rebuilt from the real text flow, headings and bullet lists are detected, simple tables become Word tables, and scanned pages can be embedded as images so nothing is lost.</p>
 
-<label class="drop" id="zone"><i class="fa-solid fa-file-word" aria-hidden="true"></i><strong>Choose a PDF or drop it here</strong><span>You can convert one document at a time · nothing is uploaded</span>
+<label class="drop" id="zone"><i class="fa-solid fa-file-word" aria-hidden="true"></i><strong>Choose a PDF or drop it here</strong><span>You can convert one document at a time Â· nothing is uploaded</span>
 <input type="file" id="fileInput" accept="application/pdf,.pdf"></label>
 
 <div class="panel" id="panel" hidden>
-  <p style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><strong id="fn"></strong> <span id="sz" style="color:var(--muted)"></span> <span class="live">● Local conversion</span></p>
+  <p style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><strong id="fn"></strong> <span id="sz" style="color:var(--muted)"></span> <span class="live">â— Local conversion</span></p>
 
   <div class="g2">
     <div>
       <label class="f" for="range">Pages to convert</label>
-      <input class="in" id="range" placeholder="All pages — or try 1-3, 5">
+      <input class="in" id="range" placeholder="All pages â€” or try 1-3, 5">
     </div>
     <div>
       <label class="f" for="mode">Text layout</label>
@@ -72,7 +72,7 @@
   <div class="stats" id="stats"></div>
 
   <div class="preview-head">
-    <p>Preview <span class="live">● Live</span></p>
+    <p>Preview <span class="live">â— Live</span></p>
     <button class="btn sm ghost" type="button" id="refresh"><i class="fa-solid fa-rotate"></i> Refresh preview</button>
   </div>
   <div id="pvw" hidden>
@@ -83,12 +83,12 @@
       <button class="btn ghost" id="copy"><i class="fa-regular fa-copy"></i> Copy text</button>
     </div>
   </div>
-  <p class="hint">Text-based PDFs convert best. The converter rebuilds content — it does not copy the exact page design, custom fonts or complex multi-column magazine layouts. Scanned pages have no hidden text; the image option preserves how they look.</p>
+  <p class="hint">Text-based PDFs convert best. The converter rebuilds content â€” it does not copy the exact page design, custom fonts or complex multi-column magazine layouts. Scanned pages have no hidden text; the image option preserves how they look.</p>
 </div>
 <div class="status" id="status" role="status" aria-live="polite"></div>
 <div class="prog" id="prog"><div></div></div>
 </main>
-<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB Â· Created by FAYAS MONU</span></div>
 <script src="../assets/app.js"></script>
 <script src="../assets/chat.js"></script>
 <script>
@@ -115,7 +115,7 @@ async function analyse(f){
   pdf=await PE.openPdf(f);
   PAGES=[];
   for(var n=1;n<=pdf.numPages;n++){
-    PE.status("Reading page "+n+" of "+pdf.numPages+"…");
+    PE.status("Reading page "+n+" of "+pdf.numPages+"â€¦");
     PE.progress((n-1)/pdf.numPages);
     var page=await pdf.getPage(n);
     var vp=page.getViewport({scale:1});
@@ -210,7 +210,7 @@ function headingLevel(L,body){
 }
 
 function bulletInfo(text){
-  var m=text.match(/^([•●▪◦‣∙·]|[-–—*])\s+(.+)$/);
+  var m=text.match(/^([â€¢â—â–ªâ—¦â€£âˆ™Â·]|[-â€“â€”*])\s+(.+)$/);
   if(m)return {ordered:false,text:m[2]};
   m=text.match(/^(\(?\d{1,3}[.)]|[a-zA-Z][.)])\s+(.+)$/);
   if(m)return {ordered:true,text:m[2],marker:m[1]};
@@ -283,7 +283,7 @@ function makesBlocks(indices,opts){
       var lastB=out[out.length-1];
       var gap=prev?L.y-prev.y:99;
       var indent=Math.abs(L.x-(prev?prev.x:L.x));
-      var endsSentence=prev&&/[.!?…”"']\s*$/.test(prev.text);
+      var endsSentence=prev&&/[.!?â€¦â€"']\s*$/.test(prev.text);
       var merge=opts.mode!=="lines"&&lastB&&lastB.t==="p"&&prev&&
         gap<=Math.max(prev.size,L.size)*1.9&&
         indent<Math.max(26,L.size*3.2)&&
@@ -303,8 +303,8 @@ function makesBlocks(indices,opts){
 
 function joinText(a,b){
   a=String(a||"");b=String(b||"");
-  if(/[‐-]$/.test(a)&&/^[a-z]/.test(b))return a.slice(0,-1)+b;
-  if(/[‐-]$/.test(a))return a.slice(0,-1)+b;
+  if(/[â€-]$/.test(a)&&/^[a-z]/.test(b))return a.slice(0,-1)+b;
+  if(/[â€-]$/.test(a))return a.slice(0,-1)+b;
   return a+" "+b;
 }
 function mergeRuns(a,b){
@@ -345,7 +345,7 @@ function renderPreview(){
   ].map(function(x){return "<div><b>"+x[1]+"</b><span>"+x[0]+"</span></div>"}).join("");
   if(counts.words<8&&!counts.scan){
     $("pvw").hidden=true;
-    PE.status("This PDF has almost no selectable text. It looks like a scan — tick “Embed pages… as images” to keep the pages, or use OCR software first.","err");
+    PE.status("This PDF has almost no selectable text. It looks like a scan â€” tick â€œEmbed pagesâ€¦ as imagesâ€ to keep the pages, or use OCR software first.","err");
     return;
   }
   $("pbox").innerHTML=blocks.map(function(b){
@@ -359,7 +359,7 @@ function renderPreview(){
   $("scanNote").hidden=!counts.scan;
   $("scanNote").textContent=counts.scan?counts.scan+" scanned page(s) will be placed in the Word file as page images. The other pages become editable text.":"";
   $("pvw").hidden=false;
-  PE.status("Preview ready — "+counts.pages+" page"+(counts.pages===1?"":"s")+", "+counts.words.toLocaleString()+" words.","ok");
+  PE.status("Preview ready â€” "+counts.pages+" page"+(counts.pages===1?"":"s")+", "+counts.words.toLocaleString()+" words.","ok");
 }
 function runsHtml(runs){
   if(!runs||!runs.length)return "";
@@ -422,7 +422,7 @@ async function buildDocx(){
       continue;
     }
     if(b.t==="img"){
-      PE.status("Rendering scanned page "+(b.page+1)+"…");
+      PE.status("Rendering scanned page "+(b.page+1)+"â€¦");
       try{
         var im=await pageImage(b.page);
         var wpt=Math.min(620,Math.round(PAGES[b.page].w)),hpt=Math.round(wpt*im.h/im.w);
@@ -454,7 +454,7 @@ function fallbackDoc(){
   blocks.forEach(function(b){
     if(b.t==="pb")html+='<br clear="all" style="page-break-before:always">';
     else if(b.t==="h")html+="<h"+(b.lvl+1)+">"+esc(b.text)+"</h"+(b.lvl+1)+">";
-    else if(b.t==="li")html+="<p>• "+runsHtml(b.runs)+"</p>";
+    else if(b.t==="li")html+="<p>â€¢ "+runsHtml(b.runs)+"</p>";
     else if(b.t==="table")html+="<table>"+b.rows.map(function(r){return "<tr>"+r.map(function(c){return "<td>"+esc(c)+"</td>"}).join("")+"</tr>"}).join("")+"</table>";
     else if(b.t==="img")html+="<p style='color:#777'>[Page "+(b.page+1)+" is an image and was skipped in this fallback file.]</p>";
     else html+="<p>"+runsHtml(b.runs)+"</p>";
@@ -488,18 +488,18 @@ $("go").onclick=async function(){
   if(!blocks.length)renderPreview();
   busy=true;this.disabled=true;PE.progress(.05);
   try{
-    PE.status("Building your Word file…");
+    PE.status("Building your Word fileâ€¦");
     var blob;
     try{blob=await buildDocx()}
     catch(e){
       PE.log("DOCX build: "+(e.message||e));
       blob=fallbackDoc();
-      PE.toast("The .docx builder was unavailable — a Word-compatible .doc was created.");
+      PE.toast("The .docx builder was unavailable â€” a Word-compatible .doc was created.");
     }
     var name=PE.baseName(file.name)+".docx";
     if(!/\.docx$/i.test(blob.type)&&blob.type.indexOf("msword")>=0)name=PE.baseName(file.name)+".doc";
     PE.download(blob,name);
-    PE.progress(1);PE.status("Done — "+name+" is downloading. Open it in Word, Google Docs or LibreOffice.","ok");
+    PE.progress(1);PE.status("Done â€” "+name+" is downloading. Open it in Word, Google Docs or LibreOffice.","ok");
     PE.toast("Word file ready");
   }catch(e){
     PE.status("Conversion failed: "+(e.message||e),"err");
