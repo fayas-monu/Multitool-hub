@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
 <title>MULTI TOOL HUB — Free PDF, image and media tools</title>
@@ -217,6 +218,37 @@ footer .social a:hover{border-color:var(--accent);color:var(--accent)}
   .hero{padding-top:38px}
 }
 @media (max-width:390px){.grid{grid-template-columns:1fr}}
+/* ---- v5 refinement: calm, flat SaaS look ---- */
+:root{--text-color:var(--ink);--r:12px;--shadow:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.06);--shadow-lg:0 12px 32px -12px rgba(16,24,40,.22);--bg:#f6f7fb}
+:root[data-theme="dark"]{--bg:#0f1220}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1220}}
+body{background-image:none}
+button{color:inherit}
+.brand-logo{display:block;height:46px;width:auto;max-width:56vw;color:var(--ink);overflow:visible}
+header{background:color-mix(in srgb,var(--bg) 94%,transparent)}
+.nav a,.nav button{color:var(--muted)}
+.nav .icobtn{color:var(--ink);background:var(--surface)}
+.hero{padding:56px 0 24px;overflow:visible;border-bottom:0}
+.hero::before{display:none}
+.hero .wrap{display:block}
+.hero-art{display:none}
+.eyebrow{border-radius:6px;letter-spacing:1.2px;font-size:11.5px}
+.hero h1{font-size:clamp(34px,5vw,54px);letter-spacing:-1.6px;line-height:1.06;max-width:22ch}
+.hero h1 mark{background:none;color:var(--accent);padding:0;margin:0}
+.hero p{font-size:17px}
+.cmd{border:1px solid var(--line);box-shadow:var(--shadow);border-radius:12px;height:56px;max-width:640px}
+.cmd:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+.hero-stats{gap:28px}
+.rail button[aria-pressed="true"]{background:color-mix(in srgb,var(--accent) 12%,var(--surface));color:var(--accent);border-color:color-mix(in srgb,var(--accent) 30%,var(--line));box-shadow:none}
+.tool{border-radius:12px;padding:18px;box-shadow:var(--shadow)}
+.tool:hover{transform:none;border-color:var(--cat);box-shadow:var(--shadow-lg)}
+.tool .ic{border-radius:10px;width:44px;height:44px}
+.step{box-shadow:var(--shadow);border-radius:12px}
+.step::after{display:none}
+.step b{background:var(--accent);color:var(--accent-ink)}
+.faq details{box-shadow:none;border-radius:10px}
+.recent a{box-shadow:none}
+@media (max-width:480px){.brand-logo{height:34px}}
 </style>
 </head>
 <body>
@@ -224,9 +256,7 @@ footer .social a:hover{border-color:var(--accent);color:var(--accent)}
 
 <header>
   <div class="wrap bar">
-    <a href="index.html" class="brand" aria-label="MULTI TOOL HUB home">
-      <img src="assets/logo.svg" alt="MULTI TOOL HUB logo" width="42" height="42">MULTI <b>TOOL HUB</b>
-    </a>
+    <a class="brand" href="index.html" aria-label="MULTI TOOL HUB home"><svg class="brand-logo" viewBox="0 0 420 110" width="153" height="40" role="img" aria-label="MULTI TOOL HUB" focusable="false"><title>MULTI TOOL HUB</title><defs><linearGradient id="iconBg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1E293B"/><stop offset="100%" stop-color="#0F172A"/></linearGradient><linearGradient id="toolGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#4F46E5"/></linearGradient><linearGradient id="hubGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#F43F5E"/><stop offset="100%" stop-color="#E11D48"/></linearGradient><filter id="cleanShadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#0F172A" flood-opacity="0.12"/></filter></defs><g transform="translate(10, 10)" filter="url(#cleanShadow)"><rect x="0" y="0" width="90" height="90" rx="20" fill="url(#iconBg)" stroke="#334155" stroke-width="1.5"/><text x="45" y="57" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="34" fill="#FFFFFF" text-anchor="middle" letter-spacing="-1">M<tspan fill="#38BDF8">T</tspan>H</text><circle cx="70" cy="24" r="4" fill="#F43F5E"/></g><text x="120" y="48" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="28" fill="currentColor" style="color: var(--text-color, #0F172A);" letter-spacing="-0.3">MULTI <tspan fill="url(#toolGrad)">TOOL</tspan></text><rect x="290" y="24" width="62" height="28" rx="6" fill="url(#hubGrad)"/><text x="321" y="43.5" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="14" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">HUB</text><text x="122" y="74" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600" font-size="11" fill="#64748B" letter-spacing="1.5">PDF TOOLS · MEDIA TOOLS</text></svg></a>
     <nav class="nav" aria-label="Main">
       <a href="#tools">All tools</a>
       <a href="#how">How it works</a>
@@ -255,11 +285,7 @@ footer .social a:hover{border-color:var(--accent);color:var(--accent)}
         <div><b>1</b><span>click to start</span></div>
       </div>
     </div>
-    <div class="hero-art" aria-hidden="true">
-      <div class="halo"></div><div class="ring"></div><div class="ring r2"></div>
-      <img src="assets/logo.svg" alt="">
-    </div>
-  </div>
+</div>
 </section>
 
 <main class="wrap main" id="tools">
@@ -312,7 +338,7 @@ footer .social a:hover{border-color:var(--accent);color:var(--accent)}
   <details><summary>Can I edit an existing PDF like in Acrobat?</summary><p>The <a href="tools/editor.html">PDF Editor</a> lets you edit existing text, add text, highlight, underline, strike through, draw, add lines, arrows, boxes, ellipses, images, signatures, comments and form values. It also supports page insert/delete/duplicate/rotate, merging another PDF, and true flattening for redaction. Works on rotated pages too.</p></details>
   <details><summary>Why does PDF to Word sometimes change the layout?</summary><p>A PDF stores text as positioned fragments, not as sentences. We rebuild headings, paragraphs, lists and simple tables, but a complex magazine layout can still shift. You can preview the result before downloading and choose whether each PDF page starts a new Word page.</p></details>
   <details><summary>Can I use it on my phone?</summary><p>Yes. Every page is responsive and touch-friendly. Add the site to your home screen to open it like an app; the local tools keep working offline after the first visit.</p></details>
-  <details><summary>Does the helper use an AI service?</summary><p>The Hub Helper runs entirely in your browser. It understands plain sentences, finds tools, explains privacy and formats, switches theme, and walks you through problems without sending your messages anywhere.</p></details>
+  <details><summary>Does the assistant use an AI service?</summary><p>The Hub Assistant runs entirely in your browser. It understands plain sentences, finds tools, explains privacy and formats, switches theme, and walks you through problems without sending your messages anywhere.</p></details>
 </section>
 
 <footer>

@@ -8,7 +8,7 @@ This file is for whoever maintains the site. The user-facing documentation is in
 ## Shipping checklist
 
 1. Keep `sw.js` in the site root. It must be served over HTTPS (or localhost).
-2. Bump `const CACHE = "mth-v9";` in `sw.js` on every release that changes HTML, CSS or JS.
+2. Bump `const CACHE = "mth-v10";` in `sw.js` on every release that changes HTML, CSS or JS.
    The activate handler deletes every older cache.
 3. Replace `https://multitoolhub.example/` in `sitemap.xml` and `robots.txt` with the real domain.
 4. Test in a private window so an old service worker does not serve stale files.
@@ -72,3 +72,10 @@ Useful manual checks:
 - Fixed editor text-edit covers using hard-coded white on tinted pages; the colour is now sampled from the page.
 - Fixed font switching/size drift in the editor: the selected font, size, style, alignment and spacing now round-trip through the annotation model, and live Bold/Italic while typing keeps the caret.
 - Added wrapped text boxes, text alignment/line spacing/background, shape stroke styles, duplicate and bring-front/send-back controls to the editor.
+- Fixed (v10): `index.html` and `tools/editor.html` scripts, plus `assets/chat.js`, had syntax errors, so the tool grid, editor and assistant did not run. Always run a parse check on every inline script before release.
+- Fixed (v10): UTF-8 mojibake across all tool pages (this corrupted bullet/hyphen regexes in PDF to Word). Keep files UTF-8; never round-trip them through cp1252.
+- Fixed (v10): PDF to Word no longer deletes real hyphens at line ends (only lowercase continuations are de-hyphenated).
+- Added (v10): exact image sizing in the PDF Editor (mm / cm / in / px). Annotation units are PDF points (1/72 in); "px" means CSS pixels at 96 dpi.
+- Added (v10): the official SVG logo is inlined in every header so `currentColor` follows the theme (`--text-color` is bound to `--ink`). `assets/logo.svg` remains the file used for favicon, manifest and social images.
+- Removed (v10): duplicate `tools/chat.js` and stray `assets/n`.
+- India/UAE legal sections are now Terms section 23 and Privacy section 22. They are templates, not legal advice; have counsel review before commercial use.

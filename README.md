@@ -24,6 +24,7 @@ A fast, privacy-first collection of **17 browser tools** for PDFs, images and me
 
 - **PDF Editor** — select and edit text, add wrapped text boxes with a 19-font picker, bold/italic, alignment, line spacing, text background, highlight, underline, strike, freehand pen, lines, arrows, rectangles, ellipses, solid/dashed/dotted strokes, whiteout, true redaction boxes, images, typed or drawn signatures, sticky comments and PDF form fields. Text-edit covers sample the page background so tinted pages stay clean. Also reorder, duplicate, arrange, delete, rotate, insert blank pages, merge another PDF, extract pages and save a flattened copy.
 - **PDF to Word** — builds a real `.docx` with headings, paragraphs, lists and tables. Uses the correct page viewport, so text lands in the right place, and warns you when a page is scanned instead of silently producing an empty file.
+- **Exact image sizing** — set inserted images to exact mm, cm, inches or pixels, with an aspect-ratio lock.
 - **Live previews** — Watermark, Page Numbers, Crop, PDF to JPG, Image Compressor and Video to MP3 show the result before you commit.
 - **Hub Assistant** — a local assistant that finds the right tool from a plain sentence, explains steps, checks file types and sizes, supports voice input, and can switch the theme. It runs entirely in your browser.
 - **Installable PWA** — works from the home screen and keeps previously opened pages available offline.
@@ -69,7 +70,7 @@ The site is plain HTML, CSS and JavaScript — no build step.
 
 1. **Replace the placeholder domain.** `sitemap.xml` and `robots.txt` use `https://multitoolhub.example/`. Replace it with your real domain. If you do not want a sitemap, delete both files.
 2. **Keep `sw.js` at the site root.** Service workers only control pages at or below their own folder.
-3. **Bump the cache name** in `sw.js` (`const CACHE = "mth-v9";`) whenever you change HTML, CSS or JS. This forces visitors to receive the new files.
+3. **Bump the cache name** in `sw.js` (`const CACHE = "mth-v10";`) whenever you change HTML, CSS or JS. This forces visitors to receive the new files.
 4. **HTTPS is required** for the service worker and installation (localhost is exempt).
 
 ---
@@ -97,7 +98,7 @@ offline.html                 Offline fallback
 terms.html / privacy.html   Legal pages
 robots.txt / sitemap.xml    Search-engine files
 assets/
-  logo.svg                  3D isometric cube logo
+  logo.svg                  Official MULTI TOOL HUB logo (also inlined in page headers)
   icon-192.png              Home-screen icon
   icon-512.png              Large icon
   icon-maskable-512.png     Android adaptive icon
