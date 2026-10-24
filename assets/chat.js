@@ -150,7 +150,7 @@
   /* ------------------------------------------------------------------ */
   /* Reply engine                                                        */
   /* ------------------------------------------------------------------ */
-  function reply(input,ctx){
+  function contextAware(){try{var p=location.pathname.split("/").pop()||"index.html";var map={"editor.html":"PDF Editor","merge-pdf.html":"Merge PDF","split-pdf.html":"Split PDF","compress-pdf.html":"Compress PDF","jpg-to-pdf.html":"JPG to PDF","pdf-to-word.html":"PDF to Word","pdf-to-text.html":"PDF to Text","watermark.html":"Watermark","crop-pdf.html":"Crop PDF","page-numbers.html":"Page Numbers","organize-pdf.html":"Organize Pages","rotate-pdf.html":"Rotate PDF","pdf-to-jpg.html":"PDF to JPG","image-compressor.html":"Image Compressor","video-to-mp3.html":"Video to MP3","youtube-downloader.html":"YouTube Downloader","instagram-downloader.html":"Instagram Downloader"};var name=map[p]||p;return "You are on: "+name+". Most tools run locally in your browser. The Hub Assistant runs entirely in your browser with no external AI/API."; }catch(e){return "";}}`n`n  function reply(input,ctx){ ctx=ctx||{}; if(!ctx.tip)ctx.tip=contextAware();
     var raw=String(input||"").trim(),l=norm(raw);
     ctx=ctx||{};
 

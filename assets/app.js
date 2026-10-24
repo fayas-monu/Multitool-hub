@@ -3,6 +3,13 @@
 (function(){
   try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t;}catch(e){}
 
+  /* Early theme application for no-flash */
+  try{
+    var th=localStorage.getItem("theme");
+    if(th)document.documentElement.dataset.theme=th;
+    else if(matchMedia("(prefers-color-scheme: dark)").matches)document.documentElement.dataset.theme="dark";
+  }catch(e){}
+
   var PE=window.PE={};
   PE.credit="(hank!nd3 p4d4y41! | FAYAS MONU";
   PE.version="4.0";
@@ -279,6 +286,49 @@
       t.remove();
     }
   };
+
+  /* Shared branding and theme injection for tool/legal pages */
+  function injectBrand(){
+    try{
+      // Add theme toggle to header if missing
+      var bars=document.querySelectorAll("header .bar");
+      bars.forEach(function(bar){
+        // Ensure theme toggle exists
+        if(!document.getElementById("mthThemeToggle")){
+          var btn=document.createElement("button");
+          btn.type="button";
+          btn.id="mthThemeToggle";
+          btn.className="back";
+          btn.style.border="1px solid var(--line)";
+          btn.style.background="var(--surface)";
+          btn.setAttribute("aria-label","Toggle theme");
+          btn.innerHTML='<i class="fa-solid fa-circle-half-stroke"></i> Theme';
+          btn.onclick=function(){
+            try{
+              var cur=document.documentElement.dataset.theme;
+              var isDark=cur==="dark"||(!cur&&matchMedia("(prefers-color-scheme:dark)").matches);
+              var next=isDark?"light":"dark";
+              document.documentElement.dataset.theme=next;
+              try{localStorage.setItem("theme",next)}catch(e){}
+              window.dispatchEvent(new CustomEvent("mth:theme",{detail:next}));
+            }catch(e){}
+          };
+          // insert before last child or append
+          bar.appendChild(btn);
+        }
+        // Replace brand logo/text if simple
+        var brands=bar.querySelectorAll(".brand");
+        brands.forEach(function(br){
+          // Ensure logo uses currentColor friendly svg
+          var img=br.querySelector("img");
+          if(img && img.getAttribute("src") && img.getAttribute("src").indexOf("logo.svg")>=0){
+            img.setAttribute("alt","MULTI TOOL HUB logo");
+          }
+        });
+      });
+    }catch(e){}
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",injectBrand);else injectBrand();
 
   /* Build a ZIP in the background without freezing the page. */
   PE.zip=async function(entries,onProgress){
