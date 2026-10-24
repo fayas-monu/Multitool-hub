@@ -191,7 +191,7 @@ imgSizeApply.onclick=function(){if(!imgSizeCur)return;var unit=imgUnit.value||'p
 imgSizeCancel.onclick=function(){var dlg=imgSizeDlg;if(dlg.close)dlg.close();};
 </script>
 <script>
-pdfjsLib.GlobalWorkerOptions.workerSrc=PE.asset("pdf.worker.min.js");
+try{pdfjsLib.GlobalWorkerOptions.workerSrc=PE.asset('pdf.worker.min.js');}catch(e){try{pdfjsLib.GlobalWorkerOptions.workerSrc='../assets/pdf.worker.min.js';}catch(e2){}}
 var $=PE.$,$$=PE.$$;
 /* Font registry: standard PDF fonts stay vector/selectable; other common
    families are rendered at high resolution on export so they look identical. */
