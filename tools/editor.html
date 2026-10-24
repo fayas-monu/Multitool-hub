@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
 <title>PDF Editor — edit, sign, redact & manage pages | MULTI TOOL HUB</title>
@@ -14,20 +15,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js">
-imgUnit.onchange=function(){if(!imgSizeCur)return;var unit=this.value,pw=imgSizeCur.w,ph=imgSizeCur.h;imgW.value=(unit==='px'?pw:(unit==='cm'?pw/96*2.54:(unit==='mm'?pw/96*25.4:pw)));imgH.value=(unit==='px'?ph:(unit==='cm'?ph/96*2.54:(unit==='mm'?ph/96*25.4:ph)));};
-imgSizeApply.onclick=function(){if(!imgSizeCur)return;var unit=imgUnit.value||'px',wv=parseFloat(imgW.value)||0,hv=parseFloat(imgH.value)||0;if(wv<=0||hv<=0){PE.toast('Invalid size');return;}var wpx=unit==='px'?wv:(unit==='cm'?wv/2.54*96:(unit==='mm'?wv/25.4*96:wv)),hpx=unit==='px'?hv:(unit==='cm'?hv/2.54*96:(unit==='mm'?hv/25.4*96:hv));imgSizeCur.w=wpx;imgSizeCur.h=hpx;if(imgSizeCur.ratio)imgSizeCur.ratio=imgSizeCur.w/imgSizeCur.h;render();push();var dlg=imgSizeDlg;if(dlg.close)dlg.close();};
-imgSizeCancel.onclick=function(){var dlg=imgSizeDlg;if(dlg.close)dlg.close();};
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js">
-imgUnit.onchange=function(){if(!imgSizeCur)return;var unit=this.value,pw=imgSizeCur.w,ph=imgSizeCur.h;imgW.value=(unit==='px'?pw:(unit==='cm'?pw/96*2.54:(unit==='mm'?pw/96*25.4:pw)));imgH.value=(unit==='px'?ph:(unit==='cm'?ph/96*2.54:(unit==='mm'?ph/96*25.4:ph)));};
-imgSizeApply.onclick=function(){if(!imgSizeCur)return;var unit=imgUnit.value||'px',wv=parseFloat(imgW.value)||0,hv=parseFloat(imgH.value)||0;if(wv<=0||hv<=0){PE.toast('Invalid size');return;}var wpx=unit==='px'?wv:(unit==='cm'?wv/2.54*96:(unit==='mm'?wv/25.4*96:wv)),hpx=unit==='px'?hv:(unit==='cm'?hv/2.54*96:(unit==='mm'?hv/25.4*96:hv));imgSizeCur.w=wpx;imgSizeCur.h=hpx;if(imgSizeCur.ratio)imgSizeCur.ratio=imgSizeCur.w/imgSizeCur.h;render();push();var dlg=imgSizeDlg;if(dlg.close)dlg.close();};
-imgSizeCancel.onclick=function(){var dlg=imgSizeDlg;if(dlg.close)dlg.close();};
-</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 </head>
 <body>
 <header><div class="bar">
-  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="MULTI TOOL HUB logo" width="40" height="40">MULTI TOOL HUB</a>
+  <a class="brand" href="../index.html" aria-label="MULTI TOOL HUB home"><svg class="brand-logo" viewBox="0 0 420 110" width="153" height="40" role="img" aria-label="MULTI TOOL HUB" focusable="false"><title>MULTI TOOL HUB</title><defs><linearGradient id="iconBg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1E293B"/><stop offset="100%" stop-color="#0F172A"/></linearGradient><linearGradient id="toolGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#4F46E5"/></linearGradient><linearGradient id="hubGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#F43F5E"/><stop offset="100%" stop-color="#E11D48"/></linearGradient><filter id="cleanShadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#0F172A" flood-opacity="0.12"/></filter></defs><g transform="translate(10, 10)" filter="url(#cleanShadow)"><rect x="0" y="0" width="90" height="90" rx="20" fill="url(#iconBg)" stroke="#334155" stroke-width="1.5"/><text x="45" y="57" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="34" fill="#FFFFFF" text-anchor="middle" letter-spacing="-1">M<tspan fill="#38BDF8">T</tspan>H</text><circle cx="70" cy="24" r="4" fill="#F43F5E"/></g><text x="120" y="48" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="28" fill="currentColor" style="color: var(--text-color, #0F172A);" letter-spacing="-0.3">MULTI <tspan fill="url(#toolGrad)">TOOL</tspan></text><rect x="290" y="24" width="62" height="28" rx="6" fill="url(#hubGrad)"/><text x="321" y="43.5" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="14" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">HUB</text><text x="122" y="74" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600" font-size="11" fill="#64748B" letter-spacing="1.5">PDF TOOLS · MEDIA TOOLS</text></svg></a>
   <div style="display:flex;align-items:center;gap:4px">
     <button type="button" class="back" id="chatBtn" style="border:0;background:none;cursor:pointer"><i class="fa-solid fa-wand-magic-sparkles"></i> Assistant</button>
     <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
@@ -102,8 +95,8 @@ imgSizeCancel.onclick=function(){var dlg=imgSizeDlg;if(dlg.close)dlg.close();};
           <button type="button" data-op="rotR" title="Rotate this page clockwise"><i class="fa-solid fa-rotate-right"></i> Rotate</button>
           <button type="button" data-op="blank" title="Insert a blank page after this one"><i class="fa-solid fa-square-plus"></i> Blank</button>
           <button type="button" data-op="dup" title="Duplicate this page"><i class="fa-regular fa-copy"></i> Duplicate</button>
-          <button type="button" data-op="left" title="Move this page left">â† Move</button>
-          <button type="button" data-op="right" title="Move this page right">Move â†’</button>
+          <button type="button" data-op="left" title="Move this page left">← Move</button>
+          <button type="button" data-op="right" title="Move this page right">Move →</button>
           <button type="button" data-op="del" title="Delete this page"><i class="fa-solid fa-trash"></i> Delete</button>
           <button type="button" data-op="merge" title="Append pages from another PDF"><i class="fa-solid fa-file-circle-plus"></i> Merge</button>
           <button type="button" data-op="extract" title="Download just this page">Extract page</button>
@@ -122,6 +115,24 @@ imgSizeCancel.onclick=function(){var dlg=imgSizeDlg;if(dlg.close)dlg.close();};
 </div>
 
 <input type="file" id="imgIn" accept="image/png,image/jpeg,image/webp" hidden>
+
+<dialog class="sig" id="imgSizeDlg">
+  <h2>Image size</h2>
+  <p>Set an exact physical size. The image keeps its position and is exported at precisely this size on the printed page.</p>
+  <div class="row" style="align-items:flex-end;gap:10px">
+    <div style="flex:1"><label class="f" for="imgW">Width</label><input class="in" id="imgW" type="number" min="0.1" step="any" inputmode="decimal"></div>
+    <div style="flex:1"><label class="f" for="imgH">Height</label><input class="in" id="imgH" type="number" min="0.1" step="any" inputmode="decimal"></div>
+    <div style="width:92px"><label class="f" for="imgUnit">Unit</label>
+      <select class="in" id="imgUnit"><option value="mm">mm</option><option value="cm" selected>cm</option><option value="in">in</option><option value="px">px</option></select></div>
+  </div>
+  <label class="switch" style="margin-top:10px"><input type="checkbox" id="imgLock" checked> Keep aspect ratio</label>
+  <p class="ed-tip" id="imgSizeInfo" style="margin-top:8px"></p>
+  <div class="row">
+    <button class="btn" id="imgSizeApply" type="button">Apply size</button>
+    <button class="btn ghost" id="imgSizeReset" type="button">Reset ratio</button>
+    <button class="btn ghost" id="imgSizeCancel" type="button">Cancel</button>
+  </div>
+</dialog>
 
 <dialog class="sig" id="noteDlg">
   <h2>Page comment</h2>
@@ -165,9 +176,9 @@ imgSizeCancel.onclick=function(){var dlg=imgSizeDlg;if(dlg.close)dlg.close();};
   <label class="switch"><input type="checkbox" id="svFlatAll"> Flatten to images — secure, removes hidden text</label>
   <label class="switch" id="svDpiWrap" hidden>Image quality <select id="svDpi" style="padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink)"><option value="150">150 DPI · small</option><option value="200" selected>200 DPI · balanced</option><option value="300">300 DPI · sharp</option></select></label>
   <table>
-    <tr><td>Pages</td><td id="svPages">"</td></tr>
+    <tr><td>Pages</td><td id="svPages">&mdash;</td></tr>
     <tr><td>Annotations</td><td id="svAnns">0</td></tr>
-    <tr><td>File size</td><td id="svSize">"</td></tr>
+    <tr><td>File size</td><td id="svSize">&mdash;</td></tr>
   </table>
   <p class="ed-tip" id="svFontNote" hidden></p>
   <div class="row">
@@ -180,16 +191,8 @@ imgSizeCancel.onclick=function(){var dlg=imgSizeDlg;if(dlg.close)dlg.close();};
 
 <div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
 
-<script src="../assets/app.js">
-imgUnit.onchange=function(){if(!imgSizeCur)return;var unit=this.value,pw=imgSizeCur.w,ph=imgSizeCur.h;imgW.value=(unit==='px'?pw:(unit==='cm'?pw/96*2.54:(unit==='mm'?pw/96*25.4:pw)));imgH.value=(unit==='px'?ph:(unit==='cm'?ph/96*2.54:(unit==='mm'?ph/96*25.4:ph)));};
-imgSizeApply.onclick=function(){if(!imgSizeCur)return;var unit=imgUnit.value||'px',wv=parseFloat(imgW.value)||0,hv=parseFloat(imgH.value)||0;if(wv<=0||hv<=0){PE.toast('Invalid size');return;}var wpx=unit==='px'?wv:(unit==='cm'?wv/2.54*96:(unit==='mm'?wv/25.4*96:wv)),hpx=unit==='px'?hv:(unit==='cm'?hv/2.54*96:(unit==='mm'?hv/25.4*96:hv));imgSizeCur.w=wpx;imgSizeCur.h=hpx;if(imgSizeCur.ratio)imgSizeCur.ratio=imgSizeCur.w/imgSizeCur.h;render();push();var dlg=imgSizeDlg;if(dlg.close)dlg.close();};
-imgSizeCancel.onclick=function(){var dlg=imgSizeDlg;if(dlg.close)dlg.close();};
-</script>
-<script src="../assets/chat.js">
-imgUnit.onchange=function(){if(!imgSizeCur)return;var unit=this.value,pw=imgSizeCur.w,ph=imgSizeCur.h;imgW.value=(unit==='px'?pw:(unit==='cm'?pw/96*2.54:(unit==='mm'?pw/96*25.4:pw)));imgH.value=(unit==='px'?ph:(unit==='cm'?ph/96*2.54:(unit==='mm'?ph/96*25.4:ph)));};
-imgSizeApply.onclick=function(){if(!imgSizeCur)return;var unit=imgUnit.value||'px',wv=parseFloat(imgW.value)||0,hv=parseFloat(imgH.value)||0;if(wv<=0||hv<=0){PE.toast('Invalid size');return;}var wpx=unit==='px'?wv:(unit==='cm'?wv/2.54*96:(unit==='mm'?wv/25.4*96:wv)),hpx=unit==='px'?hv:(unit==='cm'?hv/2.54*96:(unit==='mm'?hv/25.4*96:hv));imgSizeCur.w=wpx;imgSizeCur.h=hpx;if(imgSizeCur.ratio)imgSizeCur.ratio=imgSizeCur.w/imgSizeCur.h;render();push();var dlg=imgSizeDlg;if(dlg.close)dlg.close();};
-imgSizeCancel.onclick=function(){var dlg=imgSizeDlg;if(dlg.close)dlg.close();};
-</script>
+<script src="../assets/app.js"></script>
+<script src="../assets/chat.js"></script>
 <script>
 try{pdfjsLib.GlobalWorkerOptions.workerSrc=PE.asset('pdf.worker.min.js');}catch(e){try{pdfjsLib.GlobalWorkerOptions.workerSrc='../assets/pdf.worker.min.js';}catch(e2){}}
 var $=PE.$,$$=PE.$$;
@@ -1411,7 +1414,7 @@ function stdSafe(f,text){
   for(var i=0;i<s.length;i++){
     var c=s.charCodeAt(i);
     if((c>=32&&c<=126)||(c>=160&&c<=255))continue;
-    if("â‚¬â€šÆ’â€ž…â€ â€¡Ë†â€°Å â€¹Å’Å½˜'™—â€¢"—Ëœâ„¢Å¡â€ºÅ“Å¾Å¸".indexOf(s.charAt(i))>=0)continue;
+    if("\u20ac\u201a\u0192\u201e\u2026\u2020\u2021\u02c6\u2030\u0160\u2039\u0152\u017d\u2018\u2019\u201c\u201d\u2022\u2013\u2014\u02dc\u2122\u0161\u203a\u0153\u017e\u0178".indexOf(s.charAt(i))>=0)continue;
     return false;
   }
   return true;
@@ -1657,7 +1660,7 @@ function selectedIndices(){
 }
 function updateSaveSummary(){
   var idx=selectedIndices();
-  if(!idx){$("svPages").textContent=""";return}
+  if(!idx){$("svPages").textContent="\u2014";return}
   var n=0,raster=0;
   idx.forEach(function(i){
     (ANNS[METAS[i].uid]||[]).forEach(function(a){
@@ -1719,29 +1722,61 @@ $("svGo").onclick=async function(){
   function updateProgText(p){$("svStatus").textContent="Flattening page "+Math.round(p*idx.length)+" of "+idx.length+"…"}
 };
 
-var imgSizeCur=null;
-function openImgSizeDlg(a){if(!a||a.k!=='img')return;imgSizeCur=a;var dlg=imgSizeDlg;if(!dlg)return;var pw=a.w,ph=a.h;var unit=imgUnit.value||'px';imgW.value=(unit==='px'?pw:(unit==='cm'?pw/96*2.54:(unit==='mm'?pw/96*25.4:pw)));imgH.value=(unit==='px'?ph:(unit==='cm'?ph/96*2.54:(unit==='mm'?ph/96*25.4:ph)));if(typeof dlg.showModal==='function')dlg.showModal();else dlg.setAttribute('open','');}
+
+/* ---------------- exact image sizing (px / mm / cm / in) ----------------
+   Annotation units are PDF points (1 pt = 1/72 in). "px" means CSS pixels at 96 dpi. */
+var imgSizeCur=null,imgRatio=1;
+var UNIT_PT={mm:72/25.4,cm:72/2.54,"in":72,px:72/96};
+function ptToUnit(v,u){var r=v/UNIT_PT[u];return u==="px"?Math.round(r):Math.round(r*100)/100}
+function unitToPt(v,u){return v*UNIT_PT[u]}
+function imgSizeFill(){
+  var u=$("imgUnit").value;
+  $("imgW").value=ptToUnit(imgSizeCur.w,u);$("imgH").value=ptToUnit(imgSizeCur.h,u);
+  imgSizeNote();
+}
+function imgSizeNote(){
+  var u=$("imgUnit").value,w=unitToPt(parseFloat($("imgW").value)||0,u),h=unitToPt(parseFloat($("imgH").value)||0,u);
+  var msg=Math.round(w/UNIT_PT.mm*10)/10+" × "+Math.round(h/UNIT_PT.mm*10)/10+" mm  ·  "+Math.round(w/UNIT_PT.cm*100)/100+" × "+Math.round(h/UNIT_PT.cm*100)/100+" cm";
+  var m=METAS[cur];
+  if(m&&map&&map.vp1&&(w>map.vp1.width+.5||h>map.vp1.height+.5))msg+="  ·  larger than the page";
+  $("imgSizeInfo").textContent=msg;
+}
+function openImgSizeDlg(a){
+  if(!a||a.k!=="img")return;
+  imgSizeCur=a;imgRatio=a.w&&a.h?a.w/a.h:1;
+  imgSizeFill();
+  var d=$("imgSizeDlg");
+  if(d.showModal){if(!d.open)d.showModal()}else d.setAttribute("open","");
+}
+$("imgUnit").onchange=function(){if(imgSizeCur)imgSizeFill()};
+$("imgW").oninput=function(){
+  if($("imgLock").checked){var w=parseFloat(this.value)||0,u=$("imgUnit").value;var h=w/imgRatio;$("imgH").value=u==="px"?Math.round(h):Math.round(h*100)/100}
+  imgSizeNote();
+};
+$("imgH").oninput=function(){
+  if($("imgLock").checked){var h=parseFloat(this.value)||0,u=$("imgUnit").value;var w=h*imgRatio;$("imgW").value=u==="px"?Math.round(w):Math.round(w*100)/100}
+  imgSizeNote();
+};
+$("imgSizeReset").onclick=function(){if(!imgSizeCur)return;var u=$("imgUnit").value,w=parseFloat($("imgW").value)||0;$("imgLock").checked=true;if(w>0){var h=w/imgRatio;$("imgH").value=u==="px"?Math.round(h):Math.round(h*100)/100;imgSizeNote()}};
+$("imgSizeApply").onclick=function(){
+  if(!imgSizeCur)return;
+  var u=$("imgUnit").value,w=unitToPt(parseFloat($("imgW").value),u),h=unitToPt(parseFloat($("imgH").value),u);
+  if(!(w>=2&&h>=2)||!isFinite(w)||!isFinite(h)){PE.toast("Enter a width and height greater than zero");return}
+  // keep the centre of the image where it was so resizing feels natural
+  var cx=imgSizeCur.x+imgSizeCur.w/2,cy=imgSizeCur.y+imgSizeCur.h/2;
+  imgSizeCur.w=w;imgSizeCur.h=h;imgSizeCur.x=cx-w/2;imgSizeCur.y=cy-h/2;
+  render();push();
+  $("imgSizeDlg").close();
+  PE.toast("Image set to "+$("imgW").value+" × "+$("imgH").value+" "+u);
+};
+$("imgSizeCancel").onclick=function(){$("imgSizeDlg").close()};
+
 /* ---------------- init ---------------- */
 setTool("sel");
 syncProps();
 $("pgCount").textContent="(0)";
 $("svName").value="edited-document.pdf";
 PE.log("PDF Editor v4 ready");
-
-
-
-imgUnit.onchange=function(){if(!imgSizeCur)return;var unit=this.value,pw=imgSizeCur.w,ph=imgSizeCur.h;imgW.value=(unit==='px'?pw:(unit==='cm'?pw/96*2.54:(unit==='mm'?pw/96*25.4:pw)));imgH.value=(unit==='px'?ph:(unit==='cm'?ph/96*2.54:(unit==='mm'?ph/96*25.4:ph)));};
-imgSizeApply.onclick=function(){if(!imgSizeCur)return;var unit=imgUnit.value||'px',wv=parseFloat(imgW.value)||0,hv=parseFloat(imgH.value)||0;if(wv<=0||hv<=0){PE.toast('Invalid size');return;}var wpx=unit==='px'?wv:(unit==='cm'?wv/2.54*96:(unit==='mm'?wv/25.4*96:wv)),hpx=unit==='px'?hv:(unit==='cm'?hv/2.54*96:(unit==='mm'?hv/25.4*96:hv));imgSizeCur.w=wpx;imgSizeCur.h=hpx;if(imgSizeCur.ratio)imgSizeCur.ratio=imgSizeCur.w/imgSizeCur.h;render();push();var dlg=imgSizeDlg;if(dlg.close)dlg.close();};
-imgSizeCancel.onclick=function(){var dlg=imgSizeDlg;if(dlg.close)dlg.close();};
 </script>
-
+</body>
 </html>
-
-imgUnit.onchange=function(){if(!imgSizeCur)return;var unit=this.value,pw=imgSizeCur.w,ph=imgSizeCur.h;imgW.value=(unit==='px'?pw:(unit==='cm'?pw/96*2.54:(unit==='mm'?pw/96*25.4:pw)));imgH.value=(unit==='px'?ph:(unit==='cm'?ph/96*2.54:(unit==='mm'?ph/96*25.4:ph)));};
-imgSizeApply.onclick=function(){if(!imgSizeCur)return;var unit=imgUnit.value||'px',wv=parseFloat(imgW.value)||0,hv=parseFloat(imgH.value)||0;if(wv<=0||hv<=0){PE.toast('Invalid size');return;}var wpx=unit==='px'?wv:(unit==='cm'?wv/2.54*96:(unit==='mm'?wv/25.4*96:wv)),hpx=unit==='px'?hv:(unit==='cm'?hv/2.54*96:(unit==='mm'?hv/25.4*96:hv));imgSizeCur.w=wpx;imgSizeCur.h=hpx;if(imgSizeCur.ratio)imgSizeCur.ratio=imgSizeCur.w/imgSizeCur.h;render();push();var dlg=imgSizeDlg;if(dlg.close)dlg.close();};
-imgSizeCancel.onclick=function(){var dlg=imgSizeDlg;if(dlg.close)dlg.close();};
-</script>
-
-</html>
-
-

@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
-<title>Image Compressor â€” resize, convert and compare | MULTI TOOL HUB</title>
+<title>Image Compressor — resize, convert and compare | MULTI TOOL HUB</title>
 <meta name="description" content="Compress and resize JPG, PNG and WebP images with a live preview and exact before/after sizes. Choose quality, longest side, width, percentage, rotation and grayscale.">
 <meta name="theme-color" content="#11162b">
 <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
@@ -38,14 +39,14 @@
 </head>
 <body>
 <header><div class="bar">
-  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="MULTI TOOL HUB logo" width="40" height="40">MULTI TOOL HUB</a>
+  <a class="brand" href="../index.html" aria-label="MULTI TOOL HUB home"><svg class="brand-logo" viewBox="0 0 420 110" width="153" height="40" role="img" aria-label="MULTI TOOL HUB" focusable="false"><title>MULTI TOOL HUB</title><defs><linearGradient id="iconBg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1E293B"/><stop offset="100%" stop-color="#0F172A"/></linearGradient><linearGradient id="toolGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#4F46E5"/></linearGradient><linearGradient id="hubGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#F43F5E"/><stop offset="100%" stop-color="#E11D48"/></linearGradient><filter id="cleanShadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#0F172A" flood-opacity="0.12"/></filter></defs><g transform="translate(10, 10)" filter="url(#cleanShadow)"><rect x="0" y="0" width="90" height="90" rx="20" fill="url(#iconBg)" stroke="#334155" stroke-width="1.5"/><text x="45" y="57" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="34" fill="#FFFFFF" text-anchor="middle" letter-spacing="-1">M<tspan fill="#38BDF8">T</tspan>H</text><circle cx="70" cy="24" r="4" fill="#F43F5E"/></g><text x="120" y="48" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="28" fill="currentColor" style="color: var(--text-color, #0F172A);" letter-spacing="-0.3">MULTI <tspan fill="url(#toolGrad)">TOOL</tspan></text><rect x="290" y="24" width="62" height="28" rx="6" fill="url(#hubGrad)"/><text x="321" y="43.5" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="14" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">HUB</text><text x="122" y="74" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600" font-size="11" fill="#64748B" letter-spacing="1.5">PDF TOOLS · MEDIA TOOLS</text></svg></a>
   <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
 </div></header>
 <main>
 <h1>Image Compressor</h1>
 <p class="lead">Make photos and screenshots lighter without guessing. Watch the live preview, compress every image at once, and compare the exact before and after size.</p>
 
-<label class="drop" id="zone"><i class="fa-solid fa-compress" aria-hidden="true"></i><strong>Choose images or drop them here</strong><span>JPG, PNG and WebP Â· add more any time Â· nothing is uploaded</span>
+<label class="drop" id="zone"><i class="fa-solid fa-compress" aria-hidden="true"></i><strong>Choose images or drop them here</strong><span>JPG, PNG and WebP · add more any time · nothing is uploaded</span>
 <input type="file" id="fileInput" accept="image/*" multiple></label>
 
 <div class="panel" id="panel" hidden>
@@ -59,7 +60,7 @@
       </div>
     </div>
     <div>
-      <label class="f" style="margin-top:0">Live preview <span class="live">â— Live</span></label>
+      <label class="f" style="margin-top:0">Live preview <span class="live">● Live</span></label>
       <div class="pvframe" style="padding:8px;min-height:180px"><canvas id="pv" style="max-width:100%;max-height:250px;height:auto;border-radius:5px;box-shadow:0 8px 20px -10px rgba(10,12,40,.5)" aria-label="Image preview"></canvas></div>
       <p class="hint" id="pvinfo" style="text-align:center;margin-top:6px"></p>
     </div>
@@ -69,25 +70,25 @@
     <div>
       <label class="f">Quick preset</label>
       <div class="chips" id="presets">
-        <button class="chip" type="button" data-p="web">Web Â· 1600 px</button>
-        <button class="chip" type="button" data-p="email">Email Â· 1200 px</button>
-        <button class="chip" type="button" data-p="social">Social Â· 1080 px</button>
-        <button class="chip" type="button" data-p="tiny">Tiny Â· 800 px</button>
+        <button class="chip" type="button" data-p="web">Web · 1600 px</button>
+        <button class="chip" type="button" data-p="email">Email · 1200 px</button>
+        <button class="chip" type="button" data-p="social">Social · 1080 px</button>
+        <button class="chip" type="button" data-p="tiny">Tiny · 800 px</button>
         <button class="chip" type="button" data-p="quality">Top quality</button>
       </div>
       <label class="f" for="fmt">Output format</label>
       <select class="in" id="fmt">
         <option value="keep" selected>Keep original format</option>
-        <option value="jpeg">JPG â€” smallest photos</option>
-        <option value="png">PNG â€” lossless graphics</option>
-        <option value="webp">WebP â€” modern, compact</option>
+        <option value="jpeg">JPG — smallest photos</option>
+        <option value="png">PNG — lossless graphics</option>
+        <option value="webp">WebP — modern, compact</option>
       </select>
       <div id="qWrap">
         <label class="f" for="q">Quality: <span id="qv">82</span>%</label>
         <input type="range" id="q" min="30" max="100" step="1" value="82" style="width:100%">
       </div>
       <label class="f" for="rot">Rotate</label>
-      <select class="in" id="rot"><option value="0" selected>No rotation</option><option value="90">90Â° clockwise</option><option value="180">180Â°</option><option value="270">90Â° anticlockwise</option></select>
+      <select class="in" id="rot"><option value="0" selected>No rotation</option><option value="90">90° clockwise</option><option value="180">180°</option><option value="270">90° anticlockwise</option></select>
     </div>
     <div>
       <label class="f" for="resize">Resize</label>
@@ -128,7 +129,7 @@
 </div>
 <div class="status" id="status" role="status" aria-live="polite"></div>
 </main>
-<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>Â© 2026 MULTI TOOL HUB Â· Created by FAYAS MONU</span></div>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>© 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
 <script src="../assets/app.js"></script>
 <script src="../assets/chat.js"></script>
 <script>
@@ -164,9 +165,9 @@ function clearResults(){
 function renderList(){
   $("panel").hidden=!items.length;
   $("cnt").textContent=items.length+" image"+(items.length===1?"":"s");
-  $("total").textContent=items.length?"Â· "+PE.fmt(items.reduce(function(a,i){return a+i.file.size},0)):"";
+  $("total").textContent=items.length?"· "+PE.fmt(items.reduce(function(a,i){return a+i.file.size},0)):"";
   $("list").innerHTML=items.map(function(it,i){
-    return '<li data-i="'+i+'" class="'+(i===cur?"on":"")+'" tabindex="0"><img src="'+it.url+'" alt=""><span class="nm">'+PE.esc(it.file.name)+'</span><span class="sz">'+it.w+'Ã—'+it.h+'<br>'+PE.fmt(it.file.size)+'</span>'
+    return '<li data-i="'+i+'" class="'+(i===cur?"on":"")+'" tabindex="0"><img src="'+it.url+'" alt=""><span class="nm">'+PE.esc(it.file.name)+'</span><span class="sz">'+it.w+'×'+it.h+'<br>'+PE.fmt(it.file.size)+'</span>'
       +'<button class="ib" data-rm="'+i+'" type="button" title="Remove" aria-label="Remove '+PE.esc(it.file.name)+'"><i class="fa-solid fa-xmark"></i></button></li>';
   }).join("");
   drawPreview();
@@ -204,7 +205,7 @@ function drawPreview(){
   if(s.gray)x.filter="grayscale(1)";
   x.drawImage(it.img,-it.img.width*d.scale*k/2,-it.img.height*d.scale*k/2,it.img.width*d.scale*k,it.img.height*d.scale*k);
   x.restore();
-  $("pvinfo").textContent="â†’ "+d.w+" Ã— "+d.h+" px Â· "+EXT[t].toUpperCase()+(t==="png"?" (lossless)":" Â· "+Math.round(s.q*100)+"% quality");
+  $("pvinfo").textContent="→ "+d.w+" × "+d.h+" px · "+EXT[t].toUpperCase()+(t==="png"?" (lossless)":" · "+Math.round(s.q*100)+"% quality");
 }
 function rangeFor(){
   var m=$("resize").value,el=$("val");
@@ -223,7 +224,7 @@ function sync(){
 function schedule(){clearTimeout(timer);timer=setTimeout(function(){clearResults();sync()},150)}
 
 PE.drop($("zone"),$("fileInput"),/^image\//i,async function(files){
-  PE.status("Opening "+files.length+" image"+(files.length===1?"":"s")+"â€¦");
+  PE.status("Opening "+files.length+" image"+(files.length===1?"":"s")+"…");
   for(var i=0;i<files.length;i++){
     try{
       var im=await PE.loadImage(files[i]);
@@ -301,8 +302,8 @@ function renderResults(){
       +'<figure><img src="'+r.beforeUrl+'" alt="Original">'+"<figcaption>BEFORE</figcaption></figure>"
       +'<figure><img src="'+r.url+'" alt="Compressed"><figcaption>AFTER</figcaption></figure></div>'
       +'<div class="nm">'+PE.esc(r.name)+'</div>'
-      +'<div class="f2"><span>'+PE.fmt(r.before)+' â†’ '+PE.fmt(r.after)+'</span><b>'+(r.kept?"already optimised":(pct>=0?pct+"% smaller":"larger"))+'</b></div>'
-      +'<div class="f2"><span>'+r.w+' Ã— '+r.h+' px</span><span>'+r.type.toUpperCase()+'</span></div>'
+      +'<div class="f2"><span>'+PE.fmt(r.before)+' → '+PE.fmt(r.after)+'</span><b>'+(r.kept?"already optimised":(pct>=0?pct+"% smaller":"larger"))+'</b></div>'
+      +'<div class="f2"><span>'+r.w+' × '+r.h+' px</span><span>'+r.type.toUpperCase()+'</span></div>'
       +'<button type="button" data-dl="'+i+'"><i class="fa-solid fa-download"></i> Save image</button></div>';
   }).join("");
   $("resNote").textContent=saved<0?"These images got larger. Try a lower quality, a smaller size, or the WebP format.":"Tip: compare the previews, then save the ones you need. Your originals are untouched.";
@@ -316,14 +317,14 @@ $("go").onclick=async function(){
   busy=true;this.disabled=true;clearResults();PE.progress(.02);
   try{
     for(var i=0;i<items.length;i++){
-      PE.status("Compressing "+(i+1)+" of "+items.length+" â€” "+items[i].file.name);
+      PE.status("Compressing "+(i+1)+" of "+items.length+" — "+items[i].file.name);
       results.push(await compressOne(items[i]));
       PE.progress(.05+.9*((i+1)/items.length));
       await PE.sleep(0);
     }
     PE.progress(1);renderResults();
     var before=results.reduce(function(a,r){return a+r.before},0),after=results.reduce(function(a,r){return a+r.after},0);
-    PE.status("Done â€” "+results.length+" image"+(results.length===1?"":"s")+" Â· "+PE.fmt(before)+" â†’ "+PE.fmt(after)+" ("+(before?Math.round((1-after/before)*100):0)+"% smaller). Save above.","ok");
+    PE.status("Done — "+results.length+" image"+(results.length===1?"":"s")+" · "+PE.fmt(before)+" → "+PE.fmt(after)+" ("+(before?Math.round((1-after/before)*100):0)+"% smaller). Save above.","ok");
     PE.toast("Images ready");
   }catch(e){
     PE.progress(null);
@@ -334,10 +335,10 @@ $("zip").onclick=async function(){
   if(!results.length)return;
   var btn=this;btn.disabled=true;
   try{
-    PE.status("Packing ZIPâ€¦");
+    PE.status("Packing ZIP…");
     var zip=await PE.zip(results.map(function(r){return {name:r.name,data:r.blob}}),function(p){PE.progress(p)});
     PE.download(zip,"compressed-images.zip");
-    PE.progress(1);PE.status("ZIP ready â€” "+results.length+" images, "+PE.fmt(zip.size)+".","ok");
+    PE.progress(1);PE.status("ZIP ready — "+results.length+" images, "+PE.fmt(zip.size)+".","ok");
   }catch(e){PE.status("Could not build the ZIP: "+(e.message||e),"err")}
   finally{btn.disabled=false;setTimeout(function(){PE.progress(null)},700)}
 };

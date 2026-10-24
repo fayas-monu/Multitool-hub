@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
-<title>Compress PDF â€” see the size before you download | MULTI TOOL HUB</title>
+<title>Compress PDF — see the size before you download | MULTI TOOL HUB</title>
 <meta name="description" content="Shrink a PDF with a clean lossless re-save or optimised page images. Choose quality, DPI, grayscale and a page range, then compare the exact before and after size.">
 <meta name="theme-color" content="#11162b">
 <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
@@ -30,14 +31,14 @@
 </head>
 <body>
 <header><div class="bar">
-  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="MULTI TOOL HUB logo" width="40" height="40">MULTI TOOL HUB</a>
+  <a class="brand" href="../index.html" aria-label="MULTI TOOL HUB home"><svg class="brand-logo" viewBox="0 0 420 110" width="153" height="40" role="img" aria-label="MULTI TOOL HUB" focusable="false"><title>MULTI TOOL HUB</title><defs><linearGradient id="iconBg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1E293B"/><stop offset="100%" stop-color="#0F172A"/></linearGradient><linearGradient id="toolGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#4F46E5"/></linearGradient><linearGradient id="hubGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#F43F5E"/><stop offset="100%" stop-color="#E11D48"/></linearGradient><filter id="cleanShadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#0F172A" flood-opacity="0.12"/></filter></defs><g transform="translate(10, 10)" filter="url(#cleanShadow)"><rect x="0" y="0" width="90" height="90" rx="20" fill="url(#iconBg)" stroke="#334155" stroke-width="1.5"/><text x="45" y="57" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="34" fill="#FFFFFF" text-anchor="middle" letter-spacing="-1">M<tspan fill="#38BDF8">T</tspan>H</text><circle cx="70" cy="24" r="4" fill="#F43F5E"/></g><text x="120" y="48" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="28" fill="currentColor" style="color: var(--text-color, #0F172A);" letter-spacing="-0.3">MULTI <tspan fill="url(#toolGrad)">TOOL</tspan></text><rect x="290" y="24" width="62" height="28" rx="6" fill="url(#hubGrad)"/><text x="321" y="43.5" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="14" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">HUB</text><text x="122" y="74" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600" font-size="11" fill="#64748B" letter-spacing="1.5">PDF TOOLS · MEDIA TOOLS</text></svg></a>
   <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
 </div></header>
 <main>
 <h1>Compress PDF</h1>
 <p class="lead">Make a PDF lighter without guessing. Choose a quality preset, see the page, then compare the exact file size before you keep the result.</p>
 
-<label class="drop" id="zone"><i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i><strong>Choose a PDF or drop it here</strong><span>Nothing is uploaded Â· works offline on your device</span>
+<label class="drop" id="zone"><i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i><strong>Choose a PDF or drop it here</strong><span>Nothing is uploaded · works offline on your device</span>
 <input type="file" id="fileInput" accept="application/pdf,.pdf"></label>
 
 <div class="panel" id="panel" hidden>
@@ -48,18 +49,18 @@
       <label class="f">Compression method</label>
       <div class="planbox" style="grid-template-columns:1fr" id="modes">
         <label><input type="radio" name="mode" value="clean"><strong>Clean up (no quality loss)</strong><small>Re-saves the PDF efficiently. Text stays selectable. Savings are modest, and sometimes zero.</small></label>
-        <label><input type="radio" name="mode" value="balanced" checked><strong>Balanced â€” recommended</strong><small>About 150 DPI page images. Good for reading, sharing and printing.</small></label>
+        <label><input type="radio" name="mode" value="balanced" checked><strong>Balanced — recommended</strong><small>About 150 DPI page images. Good for reading, sharing and printing.</small></label>
         <label><input type="radio" name="mode" value="strong"><strong>Strong</strong><small>About 120 DPI. Noticeably smaller for scan-heavy files.</small></label>
         <label><input type="radio" name="mode" value="max"><strong>Maximum</strong><small>About 96 DPI. Smallest result; fine on screen, soft in print.</small></label>
         <label><input type="radio" name="mode" value="custom"><strong>Custom</strong><small>Set the exact DPI, quality, colour and page range.</small></label>
       </div>
     </div>
     <div>
-      <label class="f">Page preview <span class="live">â— Live</span></label>
+      <label class="f">Page preview <span class="live">● Live</span></label>
       <div class="pvframe" style="padding:8px"><canvas id="pv" style="max-width:100%;max-height:300px;height:auto;border-radius:6px;box-shadow:0 8px 20px -10px rgba(10,12,40,.5)" aria-label="First page preview"></canvas></div>
       <div class="statgrid" style="grid-template-columns:1fr 1fr">
-        <div class="stat"><b id="sPages">â€“</b><span>Pages</span></div>
-        <div class="stat"><b id="sSize">â€“</b><span>Original size</span></div>
+        <div class="stat"><b id="sPages">–</b><span>Pages</span></div>
+        <div class="stat"><b id="sSize">–</b><span>Original size</span></div>
       </div>
     </div>
   </div>
@@ -98,15 +99,15 @@
   </div>
 
   <div class="cmp" id="cmp" hidden>
-    <div class="box"><b id="bBefore">â€“</b><span>Before</span></div>
+    <div class="box"><b id="bBefore">–</b><span>Before</span></div>
     <div class="arrow"><i class="fa-solid fa-arrow-right"></i></div>
-    <div class="box after" id="afterBox"><b id="bAfter">â€“</b><span id="bSaved">After</span></div>
+    <div class="box after" id="afterBox"><b id="bAfter">–</b><span id="bSaved">After</span></div>
   </div>
   <p class="hint" id="resnote"></p>
 </div>
 <div class="status" id="status" role="status" aria-live="polite"></div>
 </main>
-<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB Â· Created by FAYAS MONU</span></div>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
 <script src="../assets/app.js"></script>
 <script src="../assets/chat.js"></script>
 <script>
@@ -145,12 +146,12 @@ function setInfo(ni){
 PE.drop($("zone"),$("fileInput"),/pdf/i,async function(list){
   file=list[0];$("fn").textContent=file.name;$("panel").hidden=false;
   $("cmp").hidden=true;$("resnote").textContent="";$("again").hidden=true;
-  $("sSize").textContent=PE.fmt(file.size);$("meta").textContent="Â· readingâ€¦";
-  PE.status("Reading the PDFâ€¦");
+  $("sSize").textContent=PE.fmt(file.size);$("meta").textContent="· reading…";
+  PE.status("Reading the PDF…");
   try{
     var ni=await PE.preview(file,$("pv"),{page:1,maxW:420});
     setInfo(ni);sync();
-    PE.status("Ready â€” "+ni.pages+" page"+(ni.pages===1?"":"s")+". Pick a method and compress.","ok");
+    PE.status("Ready — "+ni.pages+" page"+(ni.pages===1?"":"s")+". Pick a method and compress.","ok");
   }catch(e){
     PE.status(/password|encrypt/i.test(e.message||"")?"This PDF is password-protected. Remove the password first, then try again.":"Could not read this PDF: "+(e.message||e),"err");
   }
@@ -172,12 +173,12 @@ function grayCanvas(c){
 $("go").onclick=async function(){
   if(!file||busy)return;
   var o=opts(),btn=this;busy=true;btn.disabled=true;$("again").hidden=true;$("cmp").hidden=true;$("resnote").textContent="";
-  PE.progress(.02);PE.status("Preparingâ€¦");
+  PE.progress(.02);PE.status("Preparing…");
   try{
     var srcLib=await PE.readPdf(file), bytes;
     if(o.mode==="clean"){
       srcLib.setProducer("MULTI TOOL HUB");
-      srcLib.setCreator("MULTI TOOL HUB Â· multi tool hub");
+      srcLib.setCreator("MULTI TOOL HUB · multi tool hub");
       bytes=await srcLib.save({useObjectStreams:true});
     }else{
       var list=rangeList();
@@ -206,7 +207,7 @@ $("go").onclick=async function(){
           var cp=await out.copyPages(srcLib,[pi]);
           out.addPage(cp[0]);
         }
-        if(pi%3===0){PE.progress(.04+.9*(pi/jspdf.numPages));PE.status("Compressing page "+(pi+1)+" of "+jspdf.numPages+"â€¦");await PE.sleep(0)}
+        if(pi%3===0){PE.progress(.04+.9*(pi/jspdf.numPages));PE.status("Compressing page "+(pi+1)+" of "+jspdf.numPages+"…");await PE.sleep(0)}
       }
       try{jspdf.destroy()}catch(e){}
       if(!done)throw new Error("None of the chosen pages exist in this PDF.");
@@ -220,12 +221,12 @@ $("go").onclick=async function(){
     lastOut=bytes;lastOutName=PE.baseName(file.name)+"-compressed.pdf";
     if(after<before){
       PE.download(bytes,lastOutName,"application/pdf");
-      PE.status("Done â€” "+PE.fmt(before)+" â†’ "+PE.fmt(after)+" ("+pct+"% smaller). Saved to your downloads.","ok");
+      PE.status("Done — "+PE.fmt(before)+" → "+PE.fmt(after)+" ("+pct+"% smaller). Saved to your downloads.","ok");
       PE.toast("Download started");
       $("resnote").textContent=o.mode==="clean"?"The clean-up kept all text, links and form fields intact.":"The compressed pages are images, so text in them is no longer searchable. Your original file is untouched.";
     }else{
       $("again").hidden=false;
-      PE.status("The result is not smaller ("+PE.fmt(before)+" â†’ "+PE.fmt(after)+"). Your original is the better copy.","err");
+      PE.status("The result is not smaller ("+PE.fmt(before)+" → "+PE.fmt(after)+"). Your original is the better copy.","err");
       $("resnote").textContent="This PDF is already efficient. Try a page-image preset, or lower the DPI and quality under Custom.";
     }
   }catch(e){

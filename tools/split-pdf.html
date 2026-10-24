@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
-<title>Split PDF â€” extract pages, chunks or separate files | MULTI TOOL HUB</title>
+<title>Split PDF — extract pages, chunks or separate files | MULTI TOOL HUB</title>
 <meta name="description" content="Split a PDF visually. Tick the pages you want, extract them into one file, save each page separately or divide into equal chunks. Download a single PDF or a ZIP.">
 <meta name="theme-color" content="#11162b">
 <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
@@ -40,7 +41,7 @@
 </head>
 <body>
 <header><div class="bar">
-  <a class="brand" href="../index.html"><img src="../assets/logo.svg" alt="MULTI TOOL HUB logo" width="40" height="40">MULTI TOOL HUB</a>
+  <a class="brand" href="../index.html" aria-label="MULTI TOOL HUB home"><svg class="brand-logo" viewBox="0 0 420 110" width="153" height="40" role="img" aria-label="MULTI TOOL HUB" focusable="false"><title>MULTI TOOL HUB</title><defs><linearGradient id="iconBg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1E293B"/><stop offset="100%" stop-color="#0F172A"/></linearGradient><linearGradient id="toolGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#4F46E5"/></linearGradient><linearGradient id="hubGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#F43F5E"/><stop offset="100%" stop-color="#E11D48"/></linearGradient><filter id="cleanShadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#0F172A" flood-opacity="0.12"/></filter></defs><g transform="translate(10, 10)" filter="url(#cleanShadow)"><rect x="0" y="0" width="90" height="90" rx="20" fill="url(#iconBg)" stroke="#334155" stroke-width="1.5"/><text x="45" y="57" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="34" fill="#FFFFFF" text-anchor="middle" letter-spacing="-1">M<tspan fill="#38BDF8">T</tspan>H</text><circle cx="70" cy="24" r="4" fill="#F43F5E"/></g><text x="120" y="48" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="28" fill="currentColor" style="color: var(--text-color, #0F172A);" letter-spacing="-0.3">MULTI <tspan fill="url(#toolGrad)">TOOL</tspan></text><rect x="290" y="24" width="62" height="28" rx="6" fill="url(#hubGrad)"/><text x="321" y="43.5" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="14" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">HUB</text><text x="122" y="74" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600" font-size="11" fill="#64748B" letter-spacing="1.5">PDF TOOLS · MEDIA TOOLS</text></svg></a>
   <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
 </div></header>
 <main>
@@ -76,12 +77,12 @@
   <label class="f" for="prefix" style="margin-top:14px">File name prefix</label>
   <input class="in" id="prefix" value="" autocomplete="off">
   <div class="row"><button class="btn" id="go"><i class="fa-solid fa-scissors"></i> Split &amp; download</button></div>
-  <p class="hint" id="hint">Tip: for a single page, use â€œExtract selected pagesâ€ with one tick. Your original file is never modified.</p>
+  <p class="hint" id="hint">Tip: for a single page, use “Extract selected pages” with one tick. Your original file is never modified.</p>
 </div>
 <div class="status" id="status" role="status" aria-live="polite"></div>
 <div class="prog" id="prog"><div></div></div>
 </main>
-<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB Â· Created by FAYAS MONU</span></div>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
 <script src="../assets/app.js"></script>
 <script src="../assets/chat.js"></script>
 <script>
@@ -125,21 +126,21 @@ $("none").onclick=function(){pick=pick.map(function(){return false});render()};
 $("invert").onclick=function(){pick=pick.map(function(v){return !v});render()};
 $$("input[name=m]").forEach(function(r){r.addEventListener("change",function(){
   $("chunkBox").hidden=mode()!=="chunk";$("atBox").hidden=mode()!=="at";
-  $("hint").textContent=mode()==="each"?"Only the ticked pages will be saved â€” one PDF each, packed into a ZIP.":"Tip: for a single page, use â€œExtract selected pagesâ€ with one tick. Your original file is never modified.";
+  $("hint").textContent=mode()==="each"?"Only the ticked pages will be saved — one PDF each, packed into a ZIP.":"Tip: for a single page, use “Extract selected pages” with one tick. Your original file is never modified.";
 })});
 
 PE.drop($("zone"),$("fileInput"),/pdf/i,async function(list){
-  file=list[0];$("fn").textContent=file.name;$("pc").textContent="Â· "+PE.fmt(file.size);
+  file=list[0];$("fn").textContent=file.name;$("pc").textContent="· "+PE.fmt(file.size);
   $("panel").hidden=false;$("grid").innerHTML="";
-  PE.status("Reading the PDFâ€¦");PE.progress(0);
+  PE.status("Reading the PDF…");PE.progress(0);
   try{
     if(pdf){try{pdf.destroy()}catch(e){}}
     pdf=await pdfjsLib.getDocument({data:await file.arrayBuffer()}).promise;
     pick=Array.from({length:pdf.numPages},function(){return true});
-    $("pc").textContent="Â· "+pdf.numPages+" page"+(pdf.numPages===1?"":"s");
+    $("pc").textContent="· "+pdf.numPages+" page"+(pdf.numPages===1?"":"s");
     $("prefix").value=PE.baseName(file.name);
     render();
-    PE.status("Ready â€” untick pages you do not need, then choose a split method.","ok");
+    PE.status("Ready — untick pages you do not need, then choose a split method.","ok");
   }catch(e){
     PE.status(/password|encrypt/i.test(e.message||"")?"This PDF is password-protected. Remove the password first, then try again.":"Could not read this PDF: "+(e.message||e),"err");
   }finally{PE.progress(null)}
@@ -162,17 +163,17 @@ $("go").onclick=async function(){
   try{
     var doc=await PE.readPdf(file),n=doc.getPageCount(),name=base();
     if(m==="extract"){
-      PE.status("Extracting "+selected.length+" page"+(selected.length===1?"":"s")+"â€¦");
+      PE.status("Extracting "+selected.length+" page"+(selected.length===1?"":"s")+"…");
       var bytes=await part(doc,selected);
       PE.download(bytes,name+"-pages-"+PE.rangesText(selected).replace(/[, ]+/g,"_")+".pdf","application/pdf");
       PE.status("Extracted "+selected.length+" pages into one PDF.","ok");
     }else if(m==="each"){
       var entries=[];
       for(var i=0;i<selected.length;i++){
-        PE.progress(.05+.85*(i/selected.length));PE.status("Building file "+(i+1)+" of "+selected.length+"â€¦");
+        PE.progress(.05+.85*(i/selected.length));PE.status("Building file "+(i+1)+" of "+selected.length+"…");
         entries.push({name:name+"-page-"+String(selected[i]+1).padStart(3,"0")+".pdf",data:await part(doc,[selected[i]])});
       }
-      PE.status("Packing ZIPâ€¦");PE.progress(.93);
+      PE.status("Packing ZIP…");PE.progress(.93);
       var blob=await PE.zip(entries);
       PE.download(blob,name+"-separate-pages.zip");
       PE.status("Saved "+entries.length+" separate PDFs in a ZIP.","ok");
@@ -194,10 +195,10 @@ $("go").onclick=async function(){
       }
       var entries2=[];
       for(var z=0;z<groups.length;z++){
-        PE.progress(.05+.85*(z/groups.length));PE.status("Building part "+(z+1)+" of "+groups.length+"â€¦");
+        PE.progress(.05+.85*(z/groups.length));PE.status("Building part "+(z+1)+" of "+groups.length+"…");
         entries2.push({name:name+"-part-"+String(z+1).padStart(2,"0")+".pdf",data:await part(doc,groups[z])});
       }
-      PE.status("Packing ZIPâ€¦");PE.progress(.93);
+      PE.status("Packing ZIP…");PE.progress(.93);
       PE.download(await PE.zip(entries2),name+"-split.zip");
       PE.status("Saved "+entries2.length+" parts in a ZIP.","ok");
     }
