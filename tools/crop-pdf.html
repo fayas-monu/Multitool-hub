@@ -5,112 +5,199 @@
 <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
-<title>Crop PDF — draggable crop frame & live preview | MULTI TOOL HUB</title>
-<meta name="description" content="Crop PDF pages visually. Drag the frame, resize from any corner, lock an aspect ratio, auto-detect margins, preview every page and apply to one page or a range. Nothing leaves your device.">
-<meta name="theme-color" content="#11162b">
+<title>Crop PDF — precise 8-way crop frame &amp; live preview | MULTI TOOL HUB</title>
+<meta name="description" content="Crop PDF pages precisely. Drag any of the eight handles, type exact insets in points, millimetres, inches or percent, lock an aspect ratio, auto-trim margins and preview the result. Nothing leaves your device.">
+<meta name="theme-color" content="#f5f1e8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111613" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
 <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
 <link rel="manifest" href="../manifest.webmanifest">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
-  .crop-wrap{position:relative;display:inline-block;line-height:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;box-shadow:var(--shadow-lg);max-width:100%;touch-action:none}
+  .crop-wrap{position:relative;display:inline-block;line-height:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;box-shadow:var(--shadow-lg);max-width:100%;touch-action:none;user-select:none}
   .crop-wrap canvas{display:block;max-width:100%;height:auto}
+  .crop-wrap #base{max-height:none!important;height:auto!important}
   .crop-wrap .crop-ov{position:absolute;inset:0;width:100%!important;height:100%!important;cursor:move;touch-action:none}
-  .crop-tools{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-  .crop-tools button{font:600 12.5px 'Plus Jakarta Sans',sans-serif;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:8px;padding:7px 11px;cursor:pointer}
-  .crop-tools button:hover,.crop-tools button.on{border-color:var(--accent);color:var(--accent)}
-  .pagebar{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;flex-wrap:wrap}
-  .pagebar button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:9px;padding:7px 11px;cursor:pointer;font:700 13px 'Plus Jakarta Sans',sans-serif}
+  .crop-layout{display:grid;grid-template-columns:minmax(0,1fr) 318px;gap:22px;align-items:start;margin-top:14px}
+  .crop-stage{min-width:0;text-align:center}
+  .crop-side{min-width:0}
+  .crop-block{padding:12px 13px;border:1px solid var(--line);border-radius:10px;background:var(--surface);margin-bottom:10px}
+  .crop-block h3{font:600 14px 'Fraunces',Georgia,serif;letter-spacing:-.01em;margin:0 0 8px;color:var(--ink)}
+  .crop-tools{display:flex;flex-wrap:wrap;gap:5px}
+  .crop-tools button{font:600 11.8px 'Plus Jakarta Sans',sans-serif;border:1px solid var(--line);background:var(--surface-2);color:var(--muted);border-radius:7px;padding:6px 9px;cursor:pointer}
+  .crop-tools button:hover,.crop-tools button.on{border-color:var(--accent);color:var(--accent);background:color-mix(in srgb,var(--accent) 7%,var(--surface))}
+  .crop-unit{display:flex;align-items:center;gap:7px;margin-bottom:8px}
+  .crop-unit label{font:700 10.5px 'Plus Jakarta Sans',sans-serif;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+  .crop-unit select{flex:1;padding:6px 8px;border:1px solid var(--line);border-radius:7px;background:var(--surface-2);color:var(--ink);font:600 12px 'Plus Jakarta Sans',sans-serif}
+  .edge-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  .edge-grid label{display:block;font:600 10.5px 'Plus Jakarta Sans',sans-serif;color:var(--muted)}
+  .edge-grid label span{color:var(--accent);font-weight:800}
+  .edge-grid input{width:100%;margin-top:3px;padding:6px 7px;border:1px solid var(--line);border-radius:7px;background:var(--surface-2);color:var(--ink);font:700 12.5px 'Plus Jakarta Sans',sans-serif;text-align:right}
+  .edge-grid input:focus{border-color:var(--accent);outline:0;box-shadow:var(--ring)}
+  .edge-note{font-size:10.5px;color:var(--muted);line-height:1.45;margin-top:7px}
+  .pagebar{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:10px;flex-wrap:wrap}
+  .pagebar button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:6px 10px;cursor:pointer;font:700 12.5px 'Plus Jakarta Sans',sans-serif}
   .pagebar button:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
-  .pagebar input{width:58px;text-align:center;padding:7px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--ink);font:700 13px 'Plus Jakarta Sans',sans-serif}
-  .pagebar span{font-size:13px;color:var(--muted);font-weight:600}
-  .crop-read{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:8px;font:600 12.5px 'Plus Jakarta Sans',sans-serif;color:var(--muted)}
+  .pagebar input{width:56px;text-align:center;padding:6px;border:1px solid var(--line);border-radius:7px;background:var(--surface-2);color:var(--ink);font:700 12.5px 'Plus Jakarta Sans',sans-serif}
+  .pagebar span{font-size:12.5px;color:var(--muted);font-weight:600}
+  .crop-read{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:9px;font:600 11.5px 'Plus Jakarta Sans',sans-serif;color:var(--muted)}
+  .crop-read span{padding:3px 9px;border:1px solid var(--line);border-radius:20px;background:var(--surface)}
   .crop-read b{color:var(--ink)}
+  .crop-result{margin:12px auto 0;display:flex;flex-direction:column;align-items:center;gap:5px}
+  .crop-result[hidden]{display:none}
+  .crop-result .lab{font:700 10px 'Plus Jakarta Sans',sans-serif;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+  .crop-result canvas{max-width:100%;height:auto;border:1px solid var(--line);border-radius:7px;background:#fff;box-shadow:var(--shadow)}
+  .crop-file{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;font-size:13px}
+  .crop-file strong{max-width:100%;overflow-wrap:anywhere}
+  .crop-side .row{margin-top:4px}
+  .crop-side .row .btn{flex:1 1 100%;justify-content:center}
+  .slider-row{margin-bottom:9px}
+  .slider-row:last-child{margin-bottom:0}
+  .slider-row label{display:block;font:600 11px 'Plus Jakarta Sans',sans-serif;color:var(--muted);margin-bottom:2px}
+  .slider-row input[type=range]{width:100%}
+  @media (max-width:900px){
+    .crop-layout{grid-template-columns:1fr}
+    .crop-side{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}
+    .crop-block{margin-bottom:0}
+  }
+  @media (max-width:620px){
+    .crop-side{grid-template-columns:1fr}
+    .crop-wrap{width:100%!important}
+    .crop-wrap canvas{width:100%!important;height:auto!important}
+    .crop-wrap .crop-ov{width:100%!important;height:100%!important}
+  }
 </style>
 </head>
 <body>
 <header><div class="bar">
-  <a class="brand" href="../index.html" aria-label="MULTI TOOL HUB home"><svg class="brand-logo" viewBox="0 0 420 110" width="153" height="40" role="img" aria-label="MULTI TOOL HUB" focusable="false"><title>MULTI TOOL HUB</title><defs><linearGradient id="iconBg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1E293B"/><stop offset="100%" stop-color="#0F172A"/></linearGradient><linearGradient id="toolGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#4F46E5"/></linearGradient><linearGradient id="hubGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#F43F5E"/><stop offset="100%" stop-color="#E11D48"/></linearGradient><filter id="cleanShadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#0F172A" flood-opacity="0.12"/></filter></defs><g transform="translate(10, 10)" filter="url(#cleanShadow)"><rect x="0" y="0" width="90" height="90" rx="20" fill="url(#iconBg)" stroke="#334155" stroke-width="1.5"/><text x="45" y="57" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="34" fill="#FFFFFF" text-anchor="middle" letter-spacing="-1">M<tspan fill="#38BDF8">T</tspan>H</text><circle cx="70" cy="24" r="4" fill="#F43F5E"/></g><text x="120" y="48" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="28" fill="currentColor" style="color: var(--text-color, #0F172A);" letter-spacing="-0.3">MULTI <tspan fill="url(#toolGrad)">TOOL</tspan></text><rect x="290" y="24" width="62" height="28" rx="6" fill="url(#hubGrad)"/><text x="321" y="43.5" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="14" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">HUB</text><text x="122" y="74" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600" font-size="11" fill="#64748B" letter-spacing="1.5">PDF TOOLS · MEDIA TOOLS</text></svg></a>
+  <a class="brand" href="../index.html">
+    <svg class="brand-logo" viewBox="0 0 420 110" role="img" aria-label="MULTI TOOL HUB — FILES, HANDLED WELL" focusable="false">
+      <title>MULTI TOOL HUB — FILES, HANDLED WELL</title>
+      <defs>
+        <linearGradient id="mthInk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#26352d"/><stop offset="1" stop-color="#16211b"/></linearGradient>
+        <linearGradient id="mthTool" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1b7a63"/><stop offset="1" stop-color="#156b57"/></linearGradient>
+        <linearGradient id="mthHub" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b4652a"/><stop offset="1" stop-color="#a9571b"/></linearGradient>
+      </defs>
+      <g transform="translate(8 8)">
+        <rect width="94" height="94" rx="22" fill="url(#mthInk)"/>
+        <rect x="0.75" y="0.75" width="92.5" height="92.5" rx="21.4" fill="none" stroke="#43564b" stroke-width="1.5"/>
+        <g fill="none" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 66V41l9 15 9-15v25" stroke="#fffdf8"/>
+            <path d="M40 41h17M48.5 41v25" stroke="#e8c66c"/>
+            <path d="M62 41v25M77 41v25M62 53.5h15" stroke="#fffdf8"/>
+          </g>
+        <circle cx="75" cy="24" r="4" fill="#e8c66c"/>
+      </g>
+      <text x="120" y="50" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="800" font-size="29" fill="currentColor" letter-spacing="-0.4">MULTI <tspan fill="url(#mthTool)">TOOL</tspan></text>
+      <rect x="292" y="25" width="66" height="29" rx="7" fill="url(#mthHub)"/>
+      <text x="325" y="44.8" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="700" font-size="14" fill="#fffdf8" text-anchor="middle" letter-spacing="1.2">HUB</text>
+      <text x="122" y="76" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="600" font-size="10.5" fill="currentColor" opacity=".62" letter-spacing="1.7">FILES, HANDLED WELL</text>
+    </svg>
+  </a>
   <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
 </div></header>
 <main>
 <h1>Crop PDF</h1>
-<p class="lead">Drag the frame to keep exactly the part you need. Resize from any corner, lock an aspect ratio, trim white margins automatically, and check the result on any page before downloading.</p>
+<p class="lead">Drag any of the eight handles to frame exactly what you need, or type exact insets. Resize from the top, bottom, left or right independently, lock a ratio, trim margins automatically, then check the live result before downloading.</p>
 
 <label class="drop" id="zone"><i class="fa-solid fa-crop-simple" aria-hidden="true"></i><strong>Choose a PDF or drop it here</strong><span>Processed locally in your browser</span>
 <input type="file" id="fileInput" accept="application/pdf,.pdf"></label>
 
 <div class="panel" id="panel" hidden>
-  <p style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><strong id="fn"></strong> <span id="meta" style="color:var(--muted)"></span> <span class="live">● Live preview</span></p>
+  <div class="crop-file"><strong id="fn"></strong><span id="meta" style="color:var(--muted)"></span><span class="live">● Live preview</span></div>
 
-  <div style="text-align:center">
-    <div class="crop-wrap" id="wrap">
-      <canvas id="base" aria-label="PDF page preview"></canvas>
-      <canvas id="ov" class="crop-ov" aria-label="Crop frame — drag to move, corners to resize"></canvas>
+  <div class="crop-layout">
+    <div class="crop-stage">
+      <div class="crop-wrap" id="wrap">
+        <canvas id="base" aria-label="PDF page preview"></canvas>
+        <canvas id="ov" class="crop-ov" aria-label="Crop frame. Drag a corner or edge to resize, drag inside to move."></canvas>
+      </div>
+      <div class="crop-read" id="read"></div>
+      <div class="pagebar">
+        <button type="button" id="prev" title="Previous page" aria-label="Previous page"><i class="fa-solid fa-chevron-left"></i></button>
+        <span>Page</span><input type="number" id="pg" value="1" min="1" aria-label="Page number"><span id="pgt">of 1</span>
+        <button type="button" id="next" title="Next page" aria-label="Next page"><i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+      <div class="crop-result" id="resultWrap" hidden>
+        <span class="lab">Result preview</span>
+        <canvas id="result" aria-label="Cropped result preview"></canvas>
+      </div>
     </div>
-  </div>
-  <div class="crop-read" id="read"></div>
-  <div class="pagebar">
-    <button type="button" id="prev" title="Previous page"><i class="fa-solid fa-chevron-left"></i></button>
-    <span>Page</span><input type="number" id="pg" value="1" min="1"><span id="pgt">of 1</span>
-    <button type="button" id="next" title="Next page"><i class="fa-solid fa-chevron-right"></i></button>
+
+    <aside class="crop-side">
+      <div class="crop-block">
+        <h3>Precise edge crop</h3>
+        <div class="crop-unit">
+          <label for="unit">Units</label>
+          <select id="unit">
+            <option value="%">Percent of page</option>
+            <option value="pt">Points (pt)</option>
+            <option value="mm">Millimetres (mm)</option>
+            <option value="in">Inches (in)</option>
+          </select>
+        </div>
+        <div class="edge-grid">
+          <label>Top <span class="u" data-u="top">%</span><input id="cTop" type="number" min="0" step="0.01" value="0" inputmode="decimal"></label>
+          <label>Bottom <span class="u" data-u="bottom">%</span><input id="cBottom" type="number" min="0" step="0.01" value="0" inputmode="decimal"></label>
+          <label>Left <span class="u" data-u="left">%</span><input id="cLeft" type="number" min="0" step="0.01" value="0" inputmode="decimal"></label>
+          <label>Right <span class="u" data-u="right">%</span><input id="cRight" type="number" min="0" step="0.01" value="0" inputmode="decimal"></label>
+        </div>
+        <div class="edge-note">Each edge moves independently. Values are measured inward from that edge of the page.</div>
+      </div>
+
+      <div class="crop-block">
+        <h3>Aspect ratio</h3>
+        <div class="crop-tools" id="presets">
+          <button type="button" data-r="free" class="on">Free</button>
+          <button type="button" data-r="same">Page</button>
+          <button type="button" data-r="1">1:1</button>
+          <button type="button" data-r="1.4142">A4 ↑</button>
+          <button type="button" data-r="0.7071">A4 →</button>
+          <button type="button" data-r="1.3333">4:3</button>
+          <button type="button" data-r="1.7778">16:9</button>
+        </div>
+      </div>
+
+      <div class="crop-block">
+        <h3>Frame tools</h3>
+        <div class="crop-tools">
+          <button type="button" id="auto"><i class="fa-solid fa-compress"></i> Auto-trim margins</button>
+          <button type="button" id="full"><i class="fa-solid fa-expand"></i> Whole page</button>
+          <button type="button" id="centre"><i class="fa-solid fa-crosshairs"></i> Centre</button>
+        </div>
+        <div class="slider-row" style="margin-top:10px">
+          <label for="pad">Auto-trim padding: <span id="padv">10</span> pt</label>
+          <input type="range" id="pad" min="0" max="40" value="10">
+        </div>
+        <div class="slider-row">
+          <label for="sens">Auto-trim sensitivity: <span id="sensv">96</span>%</label>
+          <input type="range" id="sens" min="80" max="100" value="96">
+        </div>
+      </div>
+
+      <div class="crop-block">
+        <h3>Pages to crop</h3>
+        <select class="in" id="scope" aria-label="Pages to crop">
+          <option value="all" selected>All pages — same relative area</option>
+          <option value="current">Current page only</option>
+          <option value="range">A page range</option>
+        </select>
+        <div id="rangeWrap" hidden><input class="in" id="rg" placeholder="For example 1-3, 5" style="margin-top:8px"></div>
+        <label class="switch" style="margin-top:9px"><input type="checkbox" id="trimBox" checked> Resize page to the crop box</label>
+        <div class="row">
+          <button class="btn" id="go"><i class="fa-solid fa-crop-simple"></i> Crop &amp; download</button>
+          <button class="btn ghost" id="reset"><i class="fa-solid fa-rotate-left"></i> Reset frame</button>
+        </div>
+      </div>
+    </aside>
   </div>
 
-  <div style="margin-top:16px">
-    <label class="f">4-way crop controls (exact)</label>
-    <div class="g2" style="margin-top:6px">
-      <label class="f">Top <input class="in" id="cTop" type="number" min="0" max="100" step="0.1" value="0"></label>
-      <label class="f">Bottom <input class="in" id="cBottom" type="number" min="0" max="100" step="0.1" value="0"></label>
-      <label class="f">Left <input class="in" id="cLeft" type="number" min="0" max="100" step="0.1" value="0"></label>
-      <label class="f">Right <input class="in" id="cRight" type="number" min="0" max="100" step="0.1" value="0"></label>
-    </div>
-    <div style="font-size:12px;color:var(--muted);margin-top:4px">Values are % of page from each edge.</div>
-    <label class="f" style="margin-top:10px">Aspect ratio</label>
-    <div class="crop-tools" id="presets">
-      <button type="button" data-r="free" class="on">Free</button>
-      <button type="button" data-r="same">Same as page</button>
-      <button type="button" data-r="1">Square 1:1</button>
-      <button type="button" data-r="1.4142">A4 portrait</button>
-      <button type="button" data-r="0.7071">A4 landscape</button>
-      <button type="button" data-r="1.3333">4:3</button>
-      <button type="button" data-r="1.7778">16:9</button>
-    </div>
-    <div class="crop-tools" style="margin-top:7px">
-      <button type="button" id="auto"><i class="fa-solid fa-wand-magic-sparkles"></i> Auto-trim white margins</button>
-      <button type="button" id="full"><i class="fa-solid fa-expand"></i> Select whole page</button>
-      <button type="button" id="centre"><i class="fa-solid fa-crosshairs"></i> Centre frame</button>
-    </div>
-  </div>
-
-  <div class="g2">
-    <div>
-      <label class="f" for="pad">Auto-trim padding: <span id="padv">10</span> pt</label>
-      <input type="range" id="pad" min="0" max="40" value="10" style="width:100%">
-    </div>
-    <div>
-      <label class="f" for="sens">Auto-trim sensitivity: <span id="sensv">96</span>%</label>
-      <input type="range" id="sens" min="80" max="100" value="96" style="width:100%">
-    </div>
-  </div>
-
-  <label class="f" for="scope">Pages to crop</label>
-  <select class="in" id="scope">
-    <option value="all" selected>All pages — same relative area</option>
-    <option value="current">Current page only</option>
-    <option value="range">A page range</option>
-  </select>
-  <div id="rangeWrap" hidden><input class="in" id="rg" placeholder="For example 1-3, 5" style="margin-top:8px"></div>
-  <label class="switch"><input type="checkbox" id="trimBox" checked> Resize the page to the crop (recommended)</label>
-
-  <div class="row">
-    <button class="btn" id="go"><i class="fa-solid fa-crop-simple"></i> Crop &amp; download</button>
-    <button class="btn ghost" id="reset"><i class="fa-solid fa-rotate-left"></i> Reset frame</button>
-  </div>
   <p class="hint"><b>How it works:</b> cropping hides the area outside the frame and shrinks the page box. The hidden content is not physically deleted from the file — if you need it gone for privacy, run the result through the PDF Editor with “Flatten to images”.</p>
 </div>
 <div class="status" id="status" role="status" aria-live="polite"></div>
@@ -122,18 +209,51 @@
 <script>
 var $=PE.$, $$=PE.$$, file=null, info=null, cur=1, tok=0;
 var crop={x:0,y:0,w:1,h:1}, ratio=0, drag=null;
+var MIN=.03;
 
 function o(){return {scope:$("scope").value,rg:$("rg").value,pad:+$("pad").value,sens:+$("sens").value,trim:$("trimBox").checked}}
 
-function frame(){ /* crop in CSS pixels on the displayed overlay */
+/* ---------- geometry helpers ---------- */
+function frame(){
   var r=$("ov").getBoundingClientRect();
   return {x:crop.x*r.width,y:crop.y*r.height,w:crop.w*r.width,h:crop.h*r.height,W:r.width,H:r.height};
 }
+function unitsPer(edge){
+  if(!info)return 100;
+  var u=$("unit").value;
+  if(u==="%")return 100;
+  var pts=(edge==="top"||edge==="bottom")?info.ph:info.pw;
+  if(u==="pt")return pts;
+  if(u==="mm")return pts*25.4/72;
+  return pts/72;
+}
+function clampRect(r){
+  r.w=Math.max(MIN,r.w);r.h=Math.max(MIN,r.h);
+  r.x=PE.clamp(r.x,0,1-MIN);r.y=PE.clamp(r.y,0,1-MIN);
+  if(r.x+r.w>1)r.w=1-r.x;
+  if(r.y+r.h>1)r.h=1-r.y;
+  return r;
+}
+function setRect(r){
+  var x=PE.clamp(r.x,0,1),y=PE.clamp(r.y,0,1);
+  crop={x:x,y:y,w:PE.clamp(r.w,MIN,1-x),h:PE.clamp(r.h,MIN,1-y)};
+  updateCropInputs();
+  draw();
+}
+function fitRatio(r){
+  if(!info)return;
+  var rr=r*info.ph/info.pw; /* fraction width / fraction height */
+  var w=.9,h=w/rr;
+  if(h>.9){h=.9;w=h*rr}
+  setRect({x:(1-w)/2,y:(1-h)/2,w:w,h:h});
+}
+
+/* ---------- overlay ---------- */
 function draw(){
   if(!info)return;
   var b=$("base"),cv=$("ov");
   cv.width=b.width;cv.height=b.height;
-  var r=cv.getBoundingClientRect(),k=cv.width/r.width;
+  var r=cv.getBoundingClientRect(),k=cv.width/(r.width||1);
   var x=cv.getContext("2d");
   x.clearRect(0,0,cv.width,cv.height);
   var f=frame();
@@ -143,45 +263,86 @@ function draw(){
   x.fillRect(0,f.y*k,f.x*k,f.h*k);
   x.fillRect((f.x+f.w)*k,f.y*k,cv.width-(f.x+f.w)*k,f.h*k);
   /* thirds guide */
-  x.save();x.strokeStyle="rgba(255,255,255,.35)";x.lineWidth=1;
+  x.save();x.strokeStyle="rgba(255,255,255,.34)";x.lineWidth=1;
   for(var i=1;i<3;i++){
     x.beginPath();x.moveTo((f.x+f.w*i/3)*k,f.y*k);x.lineTo((f.x+f.w*i/3)*k,(f.y+f.h)*k);x.stroke();
     x.beginPath();x.moveTo(f.x*k,(f.y+f.h*i/3)*k);x.lineTo((f.x+f.w)*k,(f.y+f.h*i/3)*k);x.stroke();
   }
   x.restore();
   /* border */
-  x.save();x.strokeStyle="#fff";x.lineWidth=2;x.strokeRect(f.x*k,f.y*k,f.w*k,f.h*k);
-  x.strokeStyle="rgba(20,26,60,.55)";x.lineWidth=1;x.strokeRect(f.x*k+1,f.y*k+1,f.w*k-2,f.h*k-2);
+  x.save();x.strokeStyle="#fffdf8";x.lineWidth=2;x.strokeRect(f.x*k,f.y*k,f.w*k,f.h*k);
+  x.strokeStyle="rgba(20,33,27,.6)";x.lineWidth=1;x.strokeRect(f.x*k+1,f.y*k+1,f.w*k-2,f.h*k-2);
   /* corner handles */
-  var hs=10*k;
+  var hs=Math.max(7,9*k);
   [[f.x,f.y],[f.x+f.w,f.y],[f.x,f.y+f.h],[f.x+f.w,f.y+f.h]].forEach(function(p){
-    x.fillStyle="#fff";x.fillRect(p[0]*k-hs/2,p[1]*k-hs/2,hs,hs);
-    x.strokeStyle="#11162b";x.lineWidth=1.5;x.strokeRect(p[0]*k-hs/2,p[1]*k-hs/2,hs,hs);
+    x.fillStyle="#fffdf8";x.fillRect(p[0]*k-hs/2,p[1]*k-hs/2,hs,hs);
+    x.strokeStyle="#16211b";x.lineWidth=1.5;x.strokeRect(p[0]*k-hs/2,p[1]*k-hs/2,hs,hs);
   });
+  /* edge handles */
+  var cx=(f.x+f.w/2)*k, cy=(f.y+f.h/2)*k, ew=Math.max(13,20*k), et=Math.max(4,5*k);
+  function bar(px,py,bw,bh){
+    x.fillStyle="#fffdf8";x.fillRect(px-bw/2,py-bh/2,bw,bh);
+    x.strokeStyle="#16211b";x.lineWidth=1.5;x.strokeRect(px-bw/2,py-bh/2,bw,bh);
+  }
+  bar(cx,f.y*k,ew,et);
+  bar(cx,(f.y+f.h)*k,ew,et);
+  bar(f.x*k,cy,et,ew);
+  bar((f.x+f.w)*k,cy,et,ew);
   x.restore();
   readOut();
+  drawResult();
+}
+function drawResult(){
+  if(!info)return;
+  var b=$("base"),res=$("result"),wrap=$("resultWrap");
+  if(!b.width||!b.height){wrap.hidden=true;return}
+  var sx=crop.x*b.width,sy=crop.y*b.height,sw=crop.w*b.width,sh=crop.h*b.height;
+  if(sw<2||sh<2){wrap.hidden=true;return}
+  var max=Math.min(300,Math.max(150,($("panel").clientWidth||700)*.34));
+  var scale=Math.min(1,max/sw);
+  var cw=Math.max(1,Math.round(sw*scale)),ch=Math.max(1,Math.round(sh*scale));
+  if(res.width!==cw)res.width=cw;
+  if(res.height!==ch)res.height=ch;
+  var x=res.getContext("2d");
+  x.clearRect(0,0,cw,ch);
+  x.drawImage(b,sx,sy,sw,sh,0,0,cw,ch);
+  wrap.hidden=false;
 }
 function readOut(){
   if(!info)return;
   var pw=info.pw*crop.w,ph=info.ph*crop.h;
-  $("read").innerHTML="<span>Crop size: <b>"+Math.round(pw)+" × "+Math.round(ph)+" pt</b></span><span><b>"+Math.round(pw*25.4/72)+" × "+Math.round(ph*25.4/72)+" mm</b></span><span>Page: <b>"+Math.round(info.pw)+" × "+Math.round(info.ph)+" pt</b></span>";
+  $("read").innerHTML="<span>Crop: <b>"+pw.toFixed(1)+" × "+ph.toFixed(1)+" pt</b></span>"+
+    "<span><b>"+(pw*25.4/72).toFixed(1)+" × "+(ph*25.4/72).toFixed(1)+" mm</b></span>"+
+    "<span><b>"+(pw/72).toFixed(2)+" × "+(ph/72).toFixed(2)+" in</b></span>"+
+    "<span>Page: <b>"+info.pw.toFixed(0)+" × "+info.ph.toFixed(0)+" pt</b></span>";
 }
 function updateCropInputs(){
-  if(!$("cTop"))return;
-  $("cTop").value=(crop.y*100).toFixed(1);
-  $("cLeft").value=(crop.x*100).toFixed(1);
-  $("cRight").value=((1-crop.x-crop.w)*100).toFixed(1);
-  $("cBottom").value=((1-crop.y-crop.h)*100).toFixed(1);
+  if(!$("cTop")||!info)return;
+  var u=$("unit").value,dp=u==="%" ? 1 : 2;
+  $("cTop").value=(crop.y*unitsPer("top")).toFixed(dp);
+  $("cBottom").value=((1-crop.y-crop.h)*unitsPer("bottom")).toFixed(dp);
+  $("cLeft").value=(crop.x*unitsPer("left")).toFixed(dp);
+  $("cRight").value=((1-crop.x-crop.w)*unitsPer("right")).toFixed(dp);
+  $$(".u").forEach(function(s){s.textContent=u});
+  $("cTop").max=unitsPer("top").toFixed(2);
+  $("cBottom").max=unitsPer("bottom").toFixed(2);
+  $("cLeft").max=unitsPer("left").toFixed(2);
+  $("cRight").max=unitsPer("right").toFixed(2);
 }
 function applyCropInputs(){
-  if(!$("cTop"))return;
-  var t=Math.max(0,Math.min(50,parseFloat($("cTop").value)||0));
-  var l=Math.max(0,Math.min(50,parseFloat($("cLeft").value)||0));
-  var r=Math.max(0,Math.min(50,parseFloat($("cRight").value)||0));
-  var b=Math.max(0,Math.min(50,parseFloat($("cBottom").value)||0));
-  var x=l/100,y=t/100,w=Math.max(.03,1-l/100-r/100),h=Math.max(.03,1-t/100-b/100);
-  crop={x:PE.clamp(x,0,1),y:PE.clamp(y,0,1),w:PE.clamp(w,.03,1-x),h:PE.clamp(h,.03,1-y)};
-  ratio=0;$$("#presets button").forEach(function(xx){xx.classList.toggle("on",xx.dataset.r==="free")});
+  if(!$("cTop")||!info)return;
+  function val(id,edge){
+    var raw=parseFloat($(id).value);
+    return (isNaN(raw)?0:raw)/unitsPer(edge);
+  }
+  var maxInset=1-MIN;
+  var l=PE.clamp(val("cLeft","left"),0,maxInset);
+  var r=PE.clamp(val("cRight","right"),0,maxInset-l);
+  var t=PE.clamp(val("cTop","top"),0,maxInset);
+  var b=PE.clamp(val("cBottom","bottom"),0,maxInset-t);
+  crop={x:l,y:t,w:1-l-r,h:1-t-b};
+  ratio=0;
+  $$("#presets button").forEach(function(x){x.classList.toggle("on",x.dataset.r==="free")});
   draw();
 }
 
@@ -190,82 +351,91 @@ function frac(e){
   var r=$("ov").getBoundingClientRect();
   return {x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height,r:r};
 }
-function corner(p){
-  /* use CSS-pixel proximity, then convert to fractions */
-  var r=$("ov").getBoundingClientRect(),t=14;
-  var pts={nw:[crop.x,crop.y],ne:[crop.x+crop.w,crop.y],sw:[crop.x,crop.y+crop.h],se:[crop.x+crop.w,crop.y+crop.h]};
-  for(var k in pts){
-    if(Math.abs(p.x*r.width-pts[k][0]*r.width)<t&&Math.abs(p.y*r.height-pts[k][1]*r.height)<t)return k;
-  }
+function hit(p){
+  var r=$("ov").getBoundingClientRect();
+  var px=p.x*r.width,py=p.y*r.height;
+  var x=crop.x*r.width,y=crop.y*r.height,w=crop.w*r.width,h=crop.h*r.height;
+  var t=Math.max(11,Math.min(17,r.width*.035));
+  var nearL=Math.abs(px-x)<=t,nearR=Math.abs(px-(x+w))<=t;
+  var nearT=Math.abs(py-y)<=t,nearB=Math.abs(py-(y+h))<=t;
+  if(nearL&&nearT)return "nw";
+  if(nearR&&nearT)return "ne";
+  if(nearL&&nearB)return "sw";
+  if(nearR&&nearB)return "se";
+  if(nearT&&px>x+t&&px<x+w-t)return "n";
+  if(nearB&&px>x+t&&px<x+w-t)return "s";
+  if(nearL&&py>y+t&&py<y+h-t)return "w";
+  if(nearR&&py>y+t&&py<y+h-t)return "e";
+  if(px>=x&&px<=x+w&&py>=y&&py<=y+h)return "move";
   return null;
+}
+function cursorFor(h){
+  if(!h)return "default";
+  if(h==="move")return "move";
+  if(h==="n"||h==="s")return "ns-resize";
+  if(h==="e"||h==="w")return "ew-resize";
+  if(h==="nw"||h==="se")return "nwse-resize";
+  return "nesw-resize";
 }
 $("ov").addEventListener("pointerdown",function(e){
   if(!info)return;
-  var p=frac(e),h=corner(p);
-  if(h)drag={mode:h,start:p,o:{x:crop.x,y:crop.y,w:crop.w,h:crop.h}};
-  else if(p.x>=crop.x&&p.x<=crop.x+crop.w&&p.y>=crop.y&&p.y<=crop.y+crop.h)drag={mode:"move",start:p,o:{x:crop.x,y:crop.y,w:crop.w,h:crop.h}};
-  else{drag=null;return}
-  $("ov").setPointerCapture(e.pointerId);
+  var p=frac(e),h=hit(p);
+  if(!h){drag=null;return}
+  drag={mode:h,start:p,o:{x:crop.x,y:crop.y,w:crop.w,h:crop.h}};
+  $("ov").style.cursor=cursorFor(h);
+  try{$("ov").setPointerCapture(e.pointerId)}catch(err){}
   e.preventDefault();
 });
 $("ov").addEventListener("pointermove",function(e){
-  if(!drag||!info)return;
-  var p=frac(e),d=drag,dx=p.x-d.start.x,dy=p.y-d.start.y;
-  var m=.03; /* minimum size */
+  if(!info)return;
+  var p=frac(e);
+  if(!drag){$("ov").style.cursor=cursorFor(hit(p));return}
+  var d=drag,dx=p.x-d.start.x,dy=p.y-d.start.y;
   if(d.mode==="move"){
     crop.x=PE.clamp(d.o.x+dx,0,1-d.o.w);
     crop.y=PE.clamp(d.o.y+dy,0,1-d.o.h);
-  }else{
-    var x=d.o.x,y=d.o.y,w=d.o.w,h=d.o.h;
-    if(d.mode==="nw"){var nx=PE.clamp(x+dx,0,x+w-m),ny=PE.clamp(y+dy,0,y+h-m);w=x+w-nx;h=y+h-ny;x=nx;y=ny}
-    else if(d.mode==="ne"){var ny2=PE.clamp(y+dy,0,y+h-m);w=PE.clamp(w+dx,m,1-x);h=y+h-ny2;y=ny2}
-    else if(d.mode==="sw"){var nx2=PE.clamp(x+dx,0,x+w-m);h=PE.clamp(h+dy,m,1-y);w=x+w-nx2;x=nx2}
-    else{var ch=PE.clamp(h+dy,m,1-y);var cw=PE.clamp(w+dx,m,1-x);
-      if(ratio){cw=ch*ratio*info.ph/info.pw;if(x+cw>1){cw=1-x;ch=cw*info.pw/info.ph/ratio}}
-      w=cw;h=ch}
-    if(ratio){
-      /* keep ratio around the fixed opposite corner */
-      var r=ratio*info.ph/info.pw; /* height per width in fractions */
-      if(d.mode==="nw"||d.mode==="ne"||d.mode==="sw"||d.mode==="se"){
-        if(w/h>r)w=h*r;else h=w/r;
-        if(d.mode==="nw"){x=d.o.x+d.o.w-w;y=d.o.y+d.o.h-h}
-        else if(d.mode==="ne"){y=d.o.y+d.o.h-h}
-        else if(d.mode==="sw"){x=d.o.x+d.o.w-w}
-        if(x<0){w+=x;h=w/r;x=0}
-        if(y<0){h+=y;w=h*r;y=0}
-      }
-    }
-    crop={x:PE.clamp(x,0,1),y:PE.clamp(y,0,1),w:PE.clamp(w,m,1-x),h:PE.clamp(h,m,1-y)};
+    updateCropInputs();draw();return;
   }
+  var r={x:d.o.x,y:d.o.y,w:d.o.w,h:d.o.h};
+  if(d.mode.indexOf("w")>-1){var right=d.o.x+d.o.w;r.x=PE.clamp(d.o.x+dx,0,right-MIN);r.w=right-r.x}
+  if(d.mode.indexOf("e")>-1){r.w=PE.clamp(d.o.w+dx,MIN,1-d.o.x)}
+  if(d.mode.indexOf("n")>-1){var bottom=d.o.y+d.o.h;r.y=PE.clamp(d.o.y+dy,0,bottom-MIN);r.h=bottom-r.y}
+  if(d.mode.indexOf("s")>-1){r.h=PE.clamp(d.o.h+dy,MIN,1-d.o.y)}
+  if(ratio&&info){
+    var rr=ratio*info.ph/info.pw; /* fraction width / fraction height */
+    var corner=d.mode.length===2;
+    if(corner){
+      if(Math.abs(dx)>=Math.abs(dy))r.h=r.w/rr;else r.w=r.h*rr;
+      if(d.mode.indexOf("w")>-1)r.x=d.o.x+d.o.w-r.w;else r.x=d.o.x;
+      if(d.mode.indexOf("n")>-1)r.y=d.o.y+d.o.h-r.h;else r.y=d.o.y;
+    }else if(d.mode==="n"||d.mode==="s"){
+      var w2=r.h*rr;r.x=(d.o.x+d.o.w/2)-w2/2;r.w=w2;
+    }else{
+      var h2=r.w/rr;r.y=(d.o.y+d.o.h/2)-h2/2;r.h=h2;
+    }
+    if(r.x<0){if(corner&&d.mode.indexOf("w")>-1)r.w+=r.x;r.x=0}
+    if(r.y<0){if(corner&&d.mode.indexOf("n")>-1)r.h+=r.y;r.y=0}
+    if(r.x+r.w>1)r.w=1-r.x;
+    if(r.y+r.h>1)r.h=1-r.y;
+  }
+  crop=clampRect(r);
   updateCropInputs();
   draw();
 });
-["pointerup","pointercancel"].forEach(function(ev){$("ov").addEventListener(ev,function(){drag=null})});
+["pointerup","pointercancel"].forEach(function(ev){$("ov").addEventListener(ev,function(){drag=null;$("ov").style.cursor="move"})});
+$("ov").addEventListener("pointerleave",function(){if(!drag)$("ov").style.cursor="move"});
 
-/* ---------- frame helpers ---------- */
-function setRect(r){
-  var x=PE.clamp(r.x,0,1),y=PE.clamp(r.y,0,1);
-  crop={x:x,y:y,w:PE.clamp(r.w,.03,1-x),h:PE.clamp(r.h,.03,1-y)};
-  updateCropInputs();
-  draw();
-}
-function fitRatio(r){
-  if(!info)return;
-  var w=.9,h=w/r;
-  if(h>.9){h=.9;w=h*r}
-  setRect({x:(1-w)/2,y:(1-h)/2,w:w,h:h});
-}
+/* ---------- controls ---------- */
 $("presets").addEventListener("click",function(e){
   var b=e.target.closest("button[data-r]");if(!b)return;
   $$("#presets button").forEach(function(x){x.classList.toggle("on",x===b)});
   var r=b.dataset.r;
   if(r==="free"){ratio=0;updateCropInputs();return}
-  if(r==="same"){ratio=info?info.pw/info.ph:1}
-  else ratio=+r;
+  ratio=r==="same"?(info?info.pw/info.ph:1):+r;
   fitRatio(ratio);
   updateCropInputs();
 });
-$("auto").onclick=async function(){
+$("auto").onclick=function(){
   if(!info)return;
   var b=$("base"),ctx=b.getContext("2d"),W=b.width,H=b.height;
   try{
@@ -276,24 +446,20 @@ $("auto").onclick=async function(){
       if(r<lim||g<lim||bl<lim){found=true;if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y}
     }
     if(!found){PE.toast("No visible content found — the page may be blank");return}
-    var pad=(+$("pad").value)/(info.pw)*(W); /* padding in device px */
-    x0=Math.max(0,x0-pad);y0=Math.max(0,y0-pad);x1=Math.min(W,x1+pad);y1=Math.min(H,y1+pad);
+    var pad=+$("pad").value;
+    var padX=pad/info.pw*W,padY=pad/info.ph*H;
+    x0=Math.max(0,x0-padX);y0=Math.max(0,y0-padY);x1=Math.min(W,x1+padX);y1=Math.min(H,y1+padY);
     setRect({x:x0/W,y:y0/H,w:(x1-x0)/W,h:(y1-y0)/H});
-    updateCropInputs();
-    PE.status("Margins detected and trimmed. Fine-tune by dragging the frame.","ok");
+    PE.status("Margins detected and trimmed. Fine-tune with any handle or numeric field.","ok");
   }catch(e){PE.status("Could not analyse the page: "+(e.message||e),"err")}
 };
-$("full").onclick=function(){ratio=0;$$("#presets button").forEach(function(x){x.classList.toggle("on",x.dataset.r==="free")});setRect({x:0,y:0,w:1,h:1});updateCropInputs();};
-$("centre").onclick=function(){
-  var w=crop.w,h=crop.h;setRect({x:(1-w)/2,y:(1-h)/2,w:w,h:h});updateCropInputs();
-};
-$("reset").onclick=function(){ratio=0;$$("#presets button").forEach(function(x){x.classList.toggle("on",x.dataset.r==="free")});setRect({x:0,y:0,w:1,h:1});updateCropInputs();};
-["pad","sens","scope"].forEach(function(id){$(id).addEventListener("input",function(){
-  $("padv").textContent=$("pad").value;$("sensv").textContent=$("sens").value;
-  $("rangeWrap").hidden=$("scope").value!=="range";
-})});
+$("full").onclick=function(){ratio=0;$$("#presets button").forEach(function(x){x.classList.toggle("on",x.dataset.r==="free")});setRect({x:0,y:0,w:1,h:1})};
+$("centre").onclick=function(){var w=crop.w,h=crop.h;setRect({x:(1-w)/2,y:(1-h)/2,w:w,h:h})};
+$("reset").onclick=function(){ratio=0;$$("#presets button").forEach(function(x){x.classList.toggle("on",x.dataset.r==="free")});setRect({x:0,y:0,w:1,h:1})};
 $("pad").addEventListener("input",function(){$("padv").textContent=this.value});
 $("sens").addEventListener("input",function(){$("sensv").textContent=this.value});
+$("scope").addEventListener("change",function(){$("rangeWrap").hidden=this.value!=="range"});
+$("unit").addEventListener("change",updateCropInputs);
 ["cTop","cBottom","cLeft","cRight"].forEach(function(id){
   var el=$(id);if(el){el.addEventListener("change",applyCropInputs);el.addEventListener("input",applyCropInputs);}
 });
@@ -306,16 +472,21 @@ async function showPage(n){
   PE.status("Rendering page "+cur+"…");
   try{
     if(info&&info.pdf){try{info.pdf.destroy()}catch(e2){}}
-    var ni=await PE.preview(file,$("base"),{page:cur,maxW:650});
+    var ni=await PE.preview(file,$("base"),{page:cur,maxW:900});
     if(t!==tok)return;
     info=ni;sizeWrap();
-    $("pgt").textContent="of "+info.pages;draw();PE.status("");
+    $("pgt").textContent="of "+info.pages;
+    updateCropInputs();draw();
+    PE.status("");
   }catch(e){PE.status("Could not preview this page: "+(e.message||e),"err")}
 }
 function sizeWrap(){
-  var b=$("base"),max=Math.max(220,($("panel").clientWidth||720)-48),raw=parseFloat(b.style.width)||b.width;
+  var b=$("base"),stage=document.querySelector(".crop-stage");
+  var max=Math.max(240,(stage?stage.clientWidth:$("panel").clientWidth)-2);
+  var raw=parseFloat(b.style.width)||b.width;
   var w=Math.min(raw,max),h=w*(b.height/b.width);
-  b.style.width=w+"px";b.style.height=h+"px";$("wrap").style.width=w+"px";
+  b.style.width=w+"px";b.style.height="auto";
+  $("wrap").style.width=w+"px";
   var ov=$("ov");ov.style.width=w+"px";ov.style.height=h+"px";
 }
 $("prev").onclick=function(){showPage(cur-1)};
@@ -327,12 +498,12 @@ PE.drop($("zone"),$("fileInput"),/pdf/i,async function(list){
   file=list[0];$("fn").textContent=file.name;$("meta").textContent="· "+PE.fmt(file.size);$("panel").hidden=false;
   try{
     if(info&&info.pdf){try{info.pdf.destroy()}catch(e2){}}
-    info=await PE.preview(file,$("base"),{page:1,maxW:650});
+    info=await PE.preview(file,$("base"),{page:1,maxW:900});
     cur=1;$("pg").value=1;$("pgt").textContent="of "+info.pages;
     crop={x:0,y:0,w:1,h:1};ratio=0;
     $$("#presets button").forEach(function(x){x.classList.toggle("on",x.dataset.r==="free")});
     updateCropInputs();sizeWrap();draw();
-    PE.status("Ready — drag the corners to crop "+info.pages+" page"+(info.pages===1?"":"s")+".","ok");
+    PE.status("Ready — drag any corner or edge, or type exact insets for "+info.pages+" page"+(info.pages===1?"":"s")+".","ok");
   }catch(e){
     PE.status(/password|encrypt/i.test(e.message||"")?"This PDF is password-protected. Remove the password first, then try again.":"Could not read this PDF: "+(e.message||e),"err");
   }

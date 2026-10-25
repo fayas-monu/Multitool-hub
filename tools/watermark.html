@@ -7,13 +7,14 @@
 <!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
 <title>Watermark PDF — live, draggable preview | MULTI TOOL HUB</title>
 <meta name="description" content="Add a text or image watermark to a PDF and place it exactly where you want. Live preview on any page, drag to position, tile across the page, control opacity, angle and ranges. Processed locally.">
-<meta name="theme-color" content="#11162b">
+<meta name="theme-color" content="#f5f1e8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111613" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
 <link rel="manifest" href="../manifest.webmanifest">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
@@ -42,7 +43,28 @@
 </head>
 <body>
 <header><div class="bar">
-  <a class="brand" href="../index.html" aria-label="MULTI TOOL HUB home"><svg class="brand-logo" viewBox="0 0 420 110" width="153" height="40" role="img" aria-label="MULTI TOOL HUB" focusable="false"><title>MULTI TOOL HUB</title><defs><linearGradient id="iconBg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1E293B"/><stop offset="100%" stop-color="#0F172A"/></linearGradient><linearGradient id="toolGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#4F46E5"/></linearGradient><linearGradient id="hubGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#F43F5E"/><stop offset="100%" stop-color="#E11D48"/></linearGradient><filter id="cleanShadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#0F172A" flood-opacity="0.12"/></filter></defs><g transform="translate(10, 10)" filter="url(#cleanShadow)"><rect x="0" y="0" width="90" height="90" rx="20" fill="url(#iconBg)" stroke="#334155" stroke-width="1.5"/><text x="45" y="57" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="34" fill="#FFFFFF" text-anchor="middle" letter-spacing="-1">M<tspan fill="#38BDF8">T</tspan>H</text><circle cx="70" cy="24" r="4" fill="#F43F5E"/></g><text x="120" y="48" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="28" fill="currentColor" style="color: var(--text-color, #0F172A);" letter-spacing="-0.3">MULTI <tspan fill="url(#toolGrad)">TOOL</tspan></text><rect x="290" y="24" width="62" height="28" rx="6" fill="url(#hubGrad)"/><text x="321" y="43.5" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="14" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">HUB</text><text x="122" y="74" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600" font-size="11" fill="#64748B" letter-spacing="1.5">PDF TOOLS · MEDIA TOOLS</text></svg></a>
+  <a class="brand" href="../index.html"><svg class="brand-logo" viewBox="0 0 420 110" role="img" aria-label="MULTI TOOL HUB — FILES, HANDLED WELL" focusable="false">
+      <title>MULTI TOOL HUB — FILES, HANDLED WELL</title>
+      <defs>
+        <linearGradient id="mthInk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#26352d"/><stop offset="1" stop-color="#16211b"/></linearGradient>
+        <linearGradient id="mthTool" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1b7a63"/><stop offset="1" stop-color="#156b57"/></linearGradient>
+        <linearGradient id="mthHub" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b4652a"/><stop offset="1" stop-color="#a9571b"/></linearGradient>
+      </defs>
+      <g transform="translate(8 8)">
+        <rect width="94" height="94" rx="22" fill="url(#mthInk)"/>
+        <rect x="0.75" y="0.75" width="92.5" height="92.5" rx="21.4" fill="none" stroke="#43564b" stroke-width="1.5"/>
+        <g fill="none" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 66V41l9 15 9-15v25" stroke="#fffdf8"/>
+            <path d="M40 41h17M48.5 41v25" stroke="#e8c66c"/>
+            <path d="M62 41v25M77 41v25M62 53.5h15" stroke="#fffdf8"/>
+          </g>
+        <circle cx="75" cy="24" r="4" fill="#e8c66c"/>
+      </g>
+      <text x="120" y="50" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="800" font-size="29" fill="currentColor" letter-spacing="-0.4">MULTI <tspan fill="url(#mthTool)">TOOL</tspan></text>
+      <rect x="292" y="25" width="66" height="29" rx="7" fill="url(#mthHub)"/>
+      <text x="325" y="44.8" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="700" font-size="14" fill="#fffdf8" text-anchor="middle" letter-spacing="1.2">HUB</text>
+      <text x="122" y="76" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="600" font-size="10.5" fill="currentColor" opacity=".62" letter-spacing="1.7">FILES, HANDLED WELL</text>
+    </svg></a>
   <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
 </div></header>
 <main>
@@ -208,7 +230,7 @@ async function showPage(n){
   PE.status("Rendering page "+cur+"…");
   try{
     if(info&&info.pdf){try{info.pdf.destroy()}catch(e2){}}
-    var ni=await PE.preview(file,$("base"),{page:cur,maxW:620});
+    var ni=await PE.preview(file,$("base"),{page:cur,maxW:820});
     if(tok!==renderTok)return;
     info=ni;
     $("pg").value=cur;$("pgt").textContent="of "+cur;
@@ -302,7 +324,7 @@ PE.drop($("zone"),$("fileInput"),/pdf/i,async function(list){
   $("panel").hidden=false;$("pv").style.display="flex";$("pv").style.justifyContent="center";
   try{
     if(info&&info.pdf){try{info.pdf.destroy()}catch(e2){}}
-    info=await PE.preview(file,$("base"),{page:1,maxW:620});
+    info=await PE.preview(file,$("base"),{page:1,maxW:820});
     cur=1;$("pg").value=1;$("pgt").textContent="of "+info.pages;
     sizePreview();draw();
     PE.status("Ready — "+info.pages+" page"+(info.pages===1?"":"s")+". Drag the watermark to place it.","ok");

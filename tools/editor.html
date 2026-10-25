@@ -7,23 +7,48 @@
 <!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
 <title>PDF Editor — edit, sign, redact & manage pages | MULTI TOOL HUB</title>
 <meta name="description" content="A full browser PDF editor: edit text, add text, highlight, underline, strike, draw, shapes, lines, arrows, images, signatures, comments and form values. Rotate, reorder, insert, duplicate, extract and merge pages. Your file never leaves your device.">
-<meta name="theme-color" content="#11162b">
+<meta name="theme-color" content="#f5f1e8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111613" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
 <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
 <link rel="manifest" href="../manifest.webmanifest">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 </head>
 <body>
 <header><div class="bar">
-  <a class="brand" href="../index.html" aria-label="MULTI TOOL HUB home"><svg class="brand-logo" viewBox="0 0 420 110" width="153" height="40" role="img" aria-label="MULTI TOOL HUB" focusable="false"><title>MULTI TOOL HUB</title><defs><linearGradient id="iconBg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1E293B"/><stop offset="100%" stop-color="#0F172A"/></linearGradient><linearGradient id="toolGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#4F46E5"/></linearGradient><linearGradient id="hubGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#F43F5E"/><stop offset="100%" stop-color="#E11D48"/></linearGradient><filter id="cleanShadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#0F172A" flood-opacity="0.12"/></filter></defs><g transform="translate(10, 10)" filter="url(#cleanShadow)"><rect x="0" y="0" width="90" height="90" rx="20" fill="url(#iconBg)" stroke="#334155" stroke-width="1.5"/><text x="45" y="57" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="34" fill="#FFFFFF" text-anchor="middle" letter-spacing="-1">M<tspan fill="#38BDF8">T</tspan>H</text><circle cx="70" cy="24" r="4" fill="#F43F5E"/></g><text x="120" y="48" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="28" fill="currentColor" style="color: var(--text-color, #0F172A);" letter-spacing="-0.3">MULTI <tspan fill="url(#toolGrad)">TOOL</tspan></text><rect x="290" y="24" width="62" height="28" rx="6" fill="url(#hubGrad)"/><text x="321" y="43.5" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="14" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">HUB</text><text x="122" y="74" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600" font-size="11" fill="#64748B" letter-spacing="1.5">PDF TOOLS · MEDIA TOOLS</text></svg></a>
-  <div style="display:flex;align-items:center;gap:4px">
-    <button type="button" class="back" id="chatBtn" style="border:0;background:none;cursor:pointer"><i class="fa-solid fa-wand-magic-sparkles"></i> Assistant</button>
-    <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
+  <a class="brand" href="../index.html">
+    <svg class="brand-logo" viewBox="0 0 420 110" role="img" aria-label="MULTI TOOL HUB — FILES, HANDLED WELL" focusable="false">
+      <title>MULTI TOOL HUB — FILES, HANDLED WELL</title>
+      <defs>
+        <linearGradient id="mthInk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#26352d"/><stop offset="1" stop-color="#16211b"/></linearGradient>
+        <linearGradient id="mthTool" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1b7a63"/><stop offset="1" stop-color="#156b57"/></linearGradient>
+        <linearGradient id="mthHub" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b4652a"/><stop offset="1" stop-color="#a9571b"/></linearGradient>
+      </defs>
+      <g transform="translate(8 8)">
+        <rect width="94" height="94" rx="22" fill="url(#mthInk)"/>
+        <rect x="0.75" y="0.75" width="92.5" height="92.5" rx="21.4" fill="none" stroke="#43564b" stroke-width="1.5"/>
+        <g fill="none" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 66V41l9 15 9-15v25" stroke="#fffdf8"/>
+            <path d="M40 41h17M48.5 41v25" stroke="#e8c66c"/>
+            <path d="M62 41v25M77 41v25M62 53.5h15" stroke="#fffdf8"/>
+          </g>
+        <circle cx="75" cy="24" r="4" fill="#e8c66c"/>
+      </g>
+      <text x="120" y="50" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="800" font-size="29" fill="currentColor" letter-spacing="-0.4">MULTI <tspan fill="url(#mthTool)">TOOL</tspan></text>
+      <rect x="292" y="25" width="66" height="29" rx="7" fill="url(#mthHub)"/>
+      <text x="325" y="44.8" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="700" font-size="14" fill="#fffdf8" text-anchor="middle" letter-spacing="1.2">HUB</text>
+      <text x="122" y="76" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="600" font-size="10.5" fill="currentColor" opacity=".62" letter-spacing="1.7">FILES, HANDLED WELL</text>
+    </svg>
+  </a>
+  <div class="header-actions ed-actions">
+    <button type="button" class="back" id="chatBtn" aria-label="Open assistant"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px"><path d="M20 11.5a7.5 7.5 0 0 1-11.2 6.5L4 19.5l1.5-4.5A7.5 7.5 0 1 1 20 11.5Z"/><path d="M8.5 10h7M8.5 13.2h4.4"/></svg> Assistant</button>
+    <a class="back" href="../index.html" aria-label="All tools"><i class="fa-solid fa-arrow-left"></i> All tools</a>
   </div>
 </div></header>
 
@@ -34,6 +59,7 @@
       <p class="lead" style="margin-bottom:8px">Edit text, add text, highlight, underline, strike, draw, shapes, lines, arrows, images and signatures. Manage pages, fill forms and redact — all inside your browser. Nothing is uploaded.</p>
     </div>
     <div class="row" style="margin:0 0 8px">
+      <button class="btn sm ghost" type="button" id="focusBtn" aria-pressed="false"><i class="fa-solid fa-expand"></i> Focus preview</button>
       <button class="btn sm ghost" type="button" id="openBtn"><i class="fa-solid fa-folder-open"></i> Open PDF</button>
     </div>
   </div>
@@ -50,8 +76,8 @@
     <div class="props" id="props">
       <label title="Text, stroke or line colour">Colour <input type="color" id="pc" value="#111111"></label>
       <label title="Shape or text-box fill">Fill <input type="color" id="pf" value="#ffffff"><input type="checkbox" id="pn" checked> none</label>
-      <label><span id="pl">Size</span> <input type="range" id="ps" min="2" max="300" value="14"><b id="pv">14</b></label>
-      <label>Opacity <input type="range" id="po" min="1" max="100" value="100"><b id="ov">100</b>%</label>
+      <label title="Exact font or stroke size in points"><span id="pl">Size</span> <input type="number" class="num" id="ps" min="2" max="300" step="0.5" value="14" inputmode="decimal"> pt<b id="pv" hidden>14</b></label>
+      <label title="Opacity percentage">Opacity <input type="number" class="num" id="po" min="1" max="100" step="1" value="100" inputmode="numeric">%<b id="ov" hidden>100</b></label>
       <label>Font <select id="pfont" title="Font family"></select></label>
       <span class="pgrp" role="group" aria-label="Text style">
         <button type="button" class="pbtn" id="pb" title="Bold — Ctrl+B" aria-pressed="false"><i class="fa-solid fa-bold"></i></button>
@@ -61,7 +87,7 @@
         <button type="button" class="pbtn al" data-al="c" title="Align centre" aria-pressed="false"><i class="fa-solid fa-align-center"></i></button>
         <button type="button" class="pbtn al" data-al="r" title="Align right" aria-pressed="false"><i class="fa-solid fa-align-right"></i></button>
       </span>
-      <label title="Line spacing">Line <select id="plh"><option value="1">1.0</option><option value="1.15">1.15</option><option value="1.25" selected>1.25</option><option value="1.5">1.5</option><option value="2">2.0</option></select></label>
+      <label title="Exact line spacing multiplier">Line spacing <input type="number" class="num" id="plh" min="0.8" max="3" step="0.05" value="1.25" inputmode="decimal">×</label>
       <label title="Line and border style">Stroke <select id="pdash"><option value="solid">Solid</option><option value="dash">Dashed</option><option value="dot">Dotted</option></select></label>
       <span class="pgrp" role="group" aria-label="Arrange">
         <button type="button" class="pbtn" id="pdup" title="Duplicate — Ctrl+D" disabled><i class="fa-regular fa-clone"></i></button>
@@ -70,6 +96,14 @@
         <button type="button" class="pbtn" id="pimgsize" title="Image size (px/cm/mm)" disabled><i class="fa-solid fa-ruler-combined"></i></button>
       </span>
       <button type="button" class="chip" id="pdel" disabled style="margin-left:auto"><i class="fa-regular fa-trash-can"></i> Delete</button>
+    </div>
+    <div class="geobar" id="geobar" hidden>
+      <span class="gt">Position &amp; size <em>points</em></span>
+      <label>X <input id="gx" type="number" step="0.1" inputmode="decimal"></label>
+      <label>Y <input id="gy" type="number" step="0.1" inputmode="decimal"></label>
+      <label>W <input id="gw" type="number" min="1" step="0.1" inputmode="decimal"></label>
+      <label>H <input id="gh" type="number" min="1" step="0.1" inputmode="decimal"></label>
+      <span class="ghint" id="ghint">Enter applies</span>
     </div>
     <p class="hint" id="help" style="margin:2px 2px 8px"></p>
     <div class="ed-cols">
@@ -88,7 +122,7 @@
         </div>
         <div class="tabpane" id="pane-forms">
           <div id="forms"><p class="empty-sm">No fillable form fields found in this PDF.</p></div>
-          <p class="ed-tip">Values are written when you save. Tick ™Flatten form fields— in the save dialog to lock them.</p>
+          <p class="ed-tip">Values are written when you save. Tick “Flatten form fields” in the save dialog to lock them.</p>
         </div>
         <div class="pgops" id="pgops">
           <button type="button" data-op="rotL" title="Rotate this page anticlockwise"><i class="fa-solid fa-rotate-left"></i> Rotate</button>
@@ -108,7 +142,7 @@
           <div class="stage" id="stage"><canvas id="cv"></canvas><div id="layer"></div></div>
         </div>
         <div class="status" id="status" role="status" aria-live="polite"></div>
-        <p class="ed-tip" id="docTip"><b>Tip:</b> text editing covers the old words rather than deleting them. Use ™Flatten to images— in the save dialog for a secure, permanent result. Everything is processed on this device.</p>
+        <p class="ed-tip" id="docTip"><b>Tip:</b> text editing covers the old words rather than deleting them. Use “Flatten to images” in the save dialog for a secure, permanent result. Everything is processed on this device.</p>
       </div>
     </div>
   </div>
@@ -242,7 +276,7 @@ var TOOLDEF={
 };
 var HELP={
   sel:"Click an item to select it. Drag to move; use the corner square to resize. Double-click text to edit it. Arrow keys nudge (Shift = 10 px). Ctrl+D duplicates, Delete removes.",
-  edit:"Click outlined text to rewrite it. The old words are covered with a colour sampled from the page, so there is no white patch. Use ™Flatten to images— when saving to remove the original text completely.",
+  edit:"Click outlined text to rewrite it. The old words are covered with a colour sampled from the page, so there is no white patch. Use “Flatten to images” when saving to remove the original text completely.",
   text:"Click for a free-flowing text box, or drag a box to wrap text to a width. Use Font, Bold, Italic, Align and Line spacing in the bar above. Escape finishes.",
   hl:"Drag across the words you want to highlight.",
   ul:"Drag under a line of text to underline it. The box snaps to a thin line.",
@@ -250,13 +284,13 @@ var HELP={
   pen:"Draw freehand with a mouse, stylus or finger. Use Colour, Size and Stroke to change the line.",
   line:"Drag from the start point to the end point. Hold Shift to snap to 45°.",
   arrow:"Drag from the tail to the arrow tip. Hold Shift to snap to 45°.",
-  rect:"Drag to draw a rectangle. Tick ™none— on Fill for an outline only; use Stroke for dashed borders.",
-  ell:"Drag to draw an ellipse. Tick ™none— on Fill for an outline only; use Stroke for dashed borders.",
+  rect:"Drag to draw a rectangle. Tick “none” on Fill for an outline only; use Stroke for dashed borders.",
+  ell:"Drag to draw an ellipse. Tick “none” on Fill for an outline only; use Stroke for dashed borders.",
   img:"Choose a PNG, JPG or WebP image to place on the page, then drag and resize it.",
   sig:"Draw a signature with a mouse or finger. It is added as a transparent image you can place anywhere.",
   note:"Click a spot on the page to leave a comment. Comments are also written onto the exported page.",
   wo:"Drag over anything to cover it in white. The content stays underneath unless you flatten on save.",
-  rd:"Drag over sensitive content. It looks black here; choose ™Flatten to images— on save to permanently remove the hidden text underneath."
+  rd:"Drag over sensitive content. It looks black here; choose “Flatten to images” on save to permanently remove the hidden text underneath."
 };
 var SOURCES=[],METAS=[],ANNS={},TEXTS={},FIELDS=[];
 var cur=0,zoom=1,fitMode=true,tool="sel",sel=null,map=null,seq=1,dragging=null,showTok=0,thumbTok=0,renderTask=null,renderDone=null;
@@ -675,6 +709,7 @@ function uiState(){
   $("pgCount").textContent="("+METAS.length+")";
   $("zl").textContent=Math.round(zoom*100)+"%";
   if(map)$("svPages").textContent=METAS.length+" page"+(METAS.length===1?"":"s");
+  syncGeo();
 }
 
 /* ---------------- properties ---------------- */
@@ -715,14 +750,63 @@ function syncProps(){
   $("pc").value=/^#[0-9a-f]{6}$/i.test(src.color||"")?src.color:"#111111";
   $("pf").value=/^#[0-9a-f]{6}$/i.test(D.fill||"")?D.fill:"#ffffff";
   $("pn").checked=!!D.nofill;
-  $("ps").value=Math.round(D.size);$("pv").textContent=Math.round(D.size);
+  $("ps").value=Math.round(D.size*10)/10;$("pv").textContent=Math.round(D.size);
   $("po").value=D.op;$("ov").textContent=D.op;
   $("pfont").value=(D.font in FONTS)?D.font:"helvetica";
   pressed("pb",!!D.bold);pressed("pi",!!D.italic);setAlignUI(D.align);
-  $("plh").value=String(D.lh);$("pdash").value=D.dash||"solid";
-  $("pl").textContent=(a?a.k:"")==="text"?"Size":(a&&["pen","line","arrow"].indexOf(a.k)>=0?"Stroke width":(a&&["rect","ell"].indexOf(a.k)>=0?"Border width":"Thickness"));
+  $("plh").value=String(Math.round((D.lh||LINE)*100)/100);$("pdash").value=D.dash||"solid";
+  $("pl").textContent=(a?a.k:"")==="text"?"Font size":(a&&["pen","line","arrow"].indexOf(a.k)>=0?"Stroke width":(a&&["rect","ell"].indexOf(a.k)>=0?"Border width":"Thickness"));
   $("pdel").disabled=!sel;
   $("pfont").disabled=!!(a&&a.k!=="text");
+  syncGeo();
+}
+function syncGeo(){
+  var bar=$("geobar"),a=sel?byId(sel):null;
+  if(!bar)return;
+  bar.hidden=!a;
+  if(!a)return;
+  function put(id,v){var el=$(id);if(el&&document.activeElement!==el)el.value=Math.round(v*10)/10}
+  put("gx",a.x);put("gy",a.y);
+  $("gw").disabled=a.k==="note";
+  $("gh").disabled=a.k==="note"||a.k==="text";
+  if(a.k==="text"){
+    $("gw").placeholder="auto";
+    $("gw").value=(document.activeElement!==$("gw")&&a.w)?Math.round(a.w*10)/10:"";
+    $("gh").value="";
+    $("ghint").textContent="Width in points · Enter applies";
+  }else{
+    put("gw",a.w);put("gh",a.h);
+    $("gw").placeholder="";$("gh").placeholder="";
+    $("ghint").textContent=a.k==="note"?"Position only · Enter applies":"Enter applies";
+  }
+}
+function applyGeo(){
+  var a=sel?byId(sel):null;
+  if(!a||!map)return;
+  var o={x:a.x,y:a.y,w:a.w,h:a.h,pts:a.pts?a.pts.map(function(q){return q.slice()}):null};
+  var nx=parseFloat($("gx").value),ny=parseFloat($("gy").value);
+  var nw=parseFloat($("gw").value),nh=parseFloat($("gh").value);
+  if(isNaN(nx))nx=o.x;
+  if(isNaN(ny))ny=o.y;
+  nx=clamp(nx,0,map.vp1.width);ny=clamp(ny,0,map.vp1.height);
+  var sx=1,sy=1;
+  if(a.k!=="text"&&a.k!=="note"){
+    if(!isNaN(nw)&&o.w>0)sx=Math.max(1,nw)/o.w;
+    if(!isNaN(nh)&&o.h>0)sy=Math.max(1,nh)/o.h;
+  }
+  if(a.pts&&o.pts){
+    a.pts=o.pts.map(function(p){return [nx+(p[0]-o.x)*sx,ny+(p[1]-o.y)*sy]});
+  }
+  a.x=nx;a.y=ny;
+  if(a.k==="text"){
+    if(!isNaN(nw)&&nw>0)a.w=nw;
+    else if($("gw").value==="")a.w=0;
+  }else if(a.k!=="note"){
+    a.w=Math.max(4,o.w*sx);a.h=Math.max(4,o.h*sy);
+    if(a.k==="img")a.ratio=a.w/a.h;
+  }
+  if(a.pts)setBoxFromPoints(a);
+  render();pushLater(200);
 }
 function updateTextNode(a){
   var d=$("layer").querySelector('[data-id="'+a.id+'"]');if(!d)return;
@@ -769,6 +853,33 @@ $("pdel").onclick=delSel;
 $("pdup").onclick=duplicateSel;
 $("pfront").onclick=function(){arrangeSel(true)};
 $("pback").onclick=function(){arrangeSel(false)};
+
+/* Precise geometry: numeric X/Y/W/H in PDF points. */
+["gx","gy","gw","gh"].forEach(function(id){
+  var el=$(id);if(!el)return;
+  el.addEventListener("change",applyGeo);
+  el.addEventListener("keydown",function(e){
+    if(e.key==="Enter"){e.preventDefault();applyGeo();el.blur()}
+    else if(e.key==="Escape"){e.preventDefault();syncGeo();el.blur()}
+  });
+});
+
+/* Focus preview: collapse side panels and give the page the full width. */
+function setFocusMode(on){
+  var w=document.querySelector(".ed-wrap");if(!w)return;
+  w.classList.toggle("focus-mode",!!on);
+  var b=$("focusBtn");
+  if(b){
+    b.setAttribute("aria-pressed",on?"true":"false");
+    b.innerHTML='<i class="fa-solid '+(on?"fa-compress":"fa-expand")+'"></i> '+(on?"Exit focus":"Focus preview");
+  }
+  if(on)w.scrollIntoView({block:"start",behavior:"smooth"});
+  setTimeout(function(){if(METAS.length&&map)showPage(cur,true)},80);
+}
+if($("focusBtn"))$("focusBtn").onclick=function(){
+  var w=document.querySelector(".ed-wrap");
+  setFocusMode(!(w&&w.classList.contains("focus-mode")));
+};
 
 /* ---------------- text layer ---------------- */
 async function loadText(){
@@ -958,7 +1069,7 @@ function renderComments(){
   });
   $("cmCount").textContent=all.length?"("+all.length+")":"";
   var box=$("comments");
-  if(!all.length){box.innerHTML='<p class="empty-sm">No comments yet. Use the Comment tool or ™New comment—.</p>';return}
+  if(!all.length){box.innerHTML='<p class="empty-sm">No comments yet. Use the Comment tool or “New comment”.</p>';return}
   box.innerHTML=all.map(function(c){
     return '<div class="cmt"><b>Page '+(c.pg+1)+'</b><p>'+PE.esc(c.a.text||"")+'</p><div class="cmt-actions"><button type="button" data-go="'+c.pg+'">View</button><button type="button" data-edit="'+c.a.id+'">Edit</button><button type="button" data-del="'+c.a.id+'">Delete</button></div></div>';
   }).join("");
@@ -1201,7 +1312,11 @@ document.addEventListener("keydown",function(e){
   }
   if(sel&&(e.key==="]"||e.key==="[")){e.preventDefault();arrangeSel(e.key==="]");return}
   if((e.key==="Delete"||e.key==="Backspace")&&sel){e.preventDefault();delSel();return}
-  if(e.key==="Escape"){sel=null;setTool("sel");return}
+  if(e.key==="Escape"){
+    var fw=document.querySelector(".ed-wrap");
+    if(!sel&&fw&&fw.classList.contains("focus-mode")){setFocusMode(false);return}
+    sel=null;setTool("sel");return
+  }
   if(e.key==="PageDown"){e.preventDefault();showPage(cur+1);return}
   if(e.key==="PageUp"){e.preventDefault();showPage(cur-1);return}
   if(e.key==="+"||e.key==="="){e.preventDefault();fitMode=false;zoom=clamp(zoom+.2,.25,3);showPage(cur,true);return}
@@ -1546,7 +1661,7 @@ async function applyAnns(page,vp1,uid2,tot,doc,cache,opts){
     }else if(a.k==="note"){
       if(opts&&opts.comments===false)continue;
       var maxc=34,lns=wrapText(a.text,maxc);
-      var fnt=await embedFont(doc,cache,"h",false);
+      var fnt=await embedFont(doc,cache,"helvetica",false);
       var nw=Math.min(190,Math.max(80,vp1.width-8));
       var nh=Math.max(34,lns.length*11+14);
       var nx=clamp(a.x-4,4,Math.max(4,vp1.width-nw-4));
