@@ -1,10 +1,10 @@
-/* MULTI TOOL HUB — Hub Helper v4.
+/* MULTI TOOL HUB — Hub Assistant v4.
    Runs fully in the browser. No message ever leaves the device.
    Credit: (hank!nd3 p4d4y41! | FAYAS MONU */
 (function(){
   "use strict";
   var script=document.currentScript,base=new URL("../",script.src).href;
-  var LOGO=base+"assets/logo.svg";
+  var LOGO=base+"assets/icon-192.png";
 
   /* ------------------------------------------------------------------ */
   /* Knowledge base                                                      */
@@ -82,7 +82,7 @@
 
   var T=TOOLS;
   var FAQ=[
-    [/^(hi|hello|hey|yo|salam|salaam|hai|hola)\b/i,"Hello! 👋 I’m the Hub Helper. Tell me what you want to do — for example “make this PDF smaller”, “sign a PDF” or “convert to Word” — and I’ll take you to the right tool."],
+    [/^(hi|hello|hey|yo|salam|salaam|hai|hola)\b/i,"Hello! 👋 I’m the Hub Assistant. Tell me what you want to do — for example “make this PDF smaller”, “sign a PDF” or “convert to Word” — and I’ll take you to the right tool."],
     [/what can you do|who are you|your name|help me|^help$|assist/i,"I can:<br>• find the right tool from a plain sentence<br>• explain privacy, formats, size limits and the downloader API honestly<br>• walk you through a task step by step<br>• switch light/dark mode<br>• check a file’s name/type/size and recommend a tool<br>• answer questions about terms, contact and troubleshooting<br><br>Try “merge two PDFs”, “make a scan editable” or “is this private?”."],
     [/free|price|cost|pay|subscription|trial|quota|limit|watermark.*(add|on)|sign.?up|account/i,"Everything is free. There is no account, no trial, no daily limit, and we never add a watermark to your results. Only your device’s memory limits very large files."],
     [/upload|private|privacy|safe|secure|server|store|stored|leav|sent|send.*(file|document)|cloud/i,"Local tools (PDF, images, audio) process files inside your browser. Your files are not uploaded to us and disappear when the tab closes. The two link downloaders send <b>only the public link you paste</b> to Loader.to. The assistant runs locally too — your messages are never sent anywhere. Details: <a href='"+base+"privacy.html'>Privacy Policy</a>."],
@@ -150,7 +150,9 @@
   /* ------------------------------------------------------------------ */
   /* Reply engine                                                        */
   /* ------------------------------------------------------------------ */
-  function contextAware(){try{var p=location.pathname.split("/").pop()||"index.html";var map={"editor.html":"PDF Editor","merge-pdf.html":"Merge PDF","split-pdf.html":"Split PDF","compress-pdf.html":"Compress PDF","jpg-to-pdf.html":"JPG to PDF","pdf-to-word.html":"PDF to Word","pdf-to-text.html":"PDF to Text","watermark.html":"Watermark","crop-pdf.html":"Crop PDF","page-numbers.html":"Page Numbers","organize-pdf.html":"Organize Pages","rotate-pdf.html":"Rotate PDF","pdf-to-jpg.html":"PDF to JPG","image-compressor.html":"Image Compressor","video-to-mp3.html":"Video to MP3","youtube-downloader.html":"YouTube Downloader","instagram-downloader.html":"Instagram Downloader"};var name=map[p]||p;return "You are on: "+name+". Most tools run locally in your browser. The Hub Helper runs entirely in your browser with no external AI/API."; }catch(e){return "";}}`n`n  function reply(input,ctx){ ctx=ctx||{}; if(!ctx.tip)ctx.tip=contextAware();
+  function contextAware(){try{var p=location.pathname.split("/").pop()||"index.html";var map={"editor.html":"PDF Editor","merge-pdf.html":"Merge PDF","split-pdf.html":"Split PDF","compress-pdf.html":"Compress PDF","jpg-to-pdf.html":"JPG to PDF","pdf-to-word.html":"PDF to Word","pdf-to-text.html":"PDF to Text","watermark.html":"Watermark","crop-pdf.html":"Crop PDF","page-numbers.html":"Page Numbers","organize-pdf.html":"Organize Pages","rotate-pdf.html":"Rotate PDF","pdf-to-jpg.html":"PDF to JPG","image-compressor.html":"Image Compressor","video-to-mp3.html":"Video to MP3","youtube-downloader.html":"YouTube Downloader","instagram-downloader.html":"Instagram Downloader"};var name=map[p]||p;return "You are on: "+name+". Most tools run locally in your browser. The Hub Assistant runs entirely in your browser with no external AI/API."; }catch(e){return "";}}
+
+  function reply(input,ctx){ ctx=ctx||{}; if(!ctx.tip)ctx.tip=contextAware();
     var raw=String(input||"").trim(),l=norm(raw);
     ctx=ctx||{};
 
@@ -190,6 +192,13 @@
     }
 
     /* "how do I use/open/..." with a tool match -> guide */
+    /* privacy questions beat tool matching ("is my file uploaded?") */
+    if(/\b(is|are|does|do|will|can|where)\b.*\b(upload(ed|s)?|stored?|saved|sent|private|safe|secure|leave|server|seen)\b/.test(l)&&!/\b(how (do|to) upload|upload (a|my|the) (file|pdf))\b/.test(l))return{b:privacyLine(),c:["About the API","Terms","Find a tool"]};
+    /* exact physical size of images in the PDF Editor */
+    if(/\b(cm|mm|centimet\w*|millimet\w*|inch(es)?|exact size|physical size|real size)\b/.test(l)&&/\b(image|photo|logo|picture|signature|stamp)\b/.test(l)){
+      var ed=T.filter(function(x){return x.id==="editor"})[0];
+      if(ed)return{b:"In the <b>PDF Editor</b>, add an image and a size dialog opens straight away. Choose <b>mm, cm, in or px</b>, type the width and height (the aspect ratio can be locked), and press <b>Apply size</b>. Select an image any time and use the ruler button in the properties bar to change it again. The image is exported at exactly that physical size."+cards([ed]),c:["How do I use it?","Is it private?","Find a tool"]};
+    }
     var hits=findTools(l);
     var wantsGuide=/\b(how|guide|steps|use|using|open|start|tutorial|walk|help)\b/.test(l);
     var wantsFind=/\b(which|what tool|find|recommend|best|need|want|make|convert|merge|split|edit|sign|compress|watermark|rotate|crop|extract|download|turn)\b/.test(l);
@@ -320,15 +329,16 @@
   /* Markup                                                              */
   /* ------------------------------------------------------------------ */
   var fab=document.createElement("button");
-  fab.id="hubfab";fab.type="button";fab.setAttribute("aria-label","Open Hub Helper (Alt + /)");
-  fab.innerHTML='<img src="'+LOGO+'" alt=""><span class="ring"></span><span class="badge"></span>';
+  fab.id="hubfab";fab.type="button";fab.setAttribute("aria-label","Open Hub Assistant (Alt + /)");
+  fab.innerHTML='<img src="'+LOGO+'" alt="Hub Helper"><span class="ring"></span><span class="badge"></span>';
   var tip=document.createElement("div");tip.id="hubtip";tip.textContent="Need a hand? I can find the right tool.";
 
   var box=document.createElement("div");
-  box.id="hubchat";box.setAttribute("role","dialog");box.setAttribute("aria-modal","false");box.setAttribute("aria-label","Hub Helper");
+  box.id="hubchat";box.setAttribute("role","dialog");box.setAttribute("aria-modal","false");box.setAttribute("aria-label","Hub Assistant");
   box.innerHTML=
-   '<div class="h"><img src="'+LOGO+'" alt=""><span class="who"><b>Hub Helper</b><small>Online · runs on this device</small></span>'+
-   '<button type="button" data-x="clear" title="Clear chat" aria-label="Clear chat"><i class="fa-solid fa-rotate-left"></i></button>'+
+   '<div class="h"><button type="button" data-x="back" title="Back" aria-label="Back"><i class="fa-solid fa-arrow-left"></i></button><img src="'+LOGO+'" alt="Gemini"><span class="who"><b>Hub Helper</b><small>Online · runs on this device</small></span>'+
+   '<button type="button" data-x="refresh" title="Refresh" aria-label="Refresh"><i class="fa-solid fa-rotate"></i></button>'+
+   '<button type="button" data-x="clear" title="Clear chat" aria-label="Clear chat"><i class="fa-solid fa-trash"></i></button>'+
    '<button type="button" data-x="close" title="Close" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div>'+
    '<div class="b" id="hb" aria-live="polite" aria-relevant="additions"></div>'+
    '<div class="c" id="hc"></div>'+
@@ -413,7 +423,7 @@
     hist=[];save();$("hb").innerHTML="";start(false);
   }
   function start(greet){
-    if(greet!==false)add("bot","Hi, I’m the <b>Hub Helper</b>. 👋 I can find the right tool, explain privacy and the API honestly, or walk you through a job step by step.",{noSave:false});
+    if(greet!==false)add("bot","Hi, I’m the <b>Hub Assistant</b>. 👋 I can find the right tool, explain privacy and the API honestly, or walk you through a job step by step.",{noSave:false});
     add("bot","What are you working on? You can type a sentence, pick a shortcut below, or attach a file so I can recommend a tool.<br><span class='tiny'>I only read the file’s name, type and size — never its contents.</span>",{noSave:false});
     setChips(defaultChips());
     save();
@@ -435,6 +445,8 @@
     var x=e.target.closest("[data-x]");if(x){
       var k=x.getAttribute("data-x");
       if(k==="close")open(false);
+      else if(k==="back"){try{if(history.length>1)history.back();else open(false);}catch(ex){open(false);}}
+      else if(k==="refresh"){try{location.reload();}catch(ex){clearChat();}}
       else if(k==="clear"){if(confirm("Clear this conversation?"))clearChat()}
       else if(k==="privacy")ask("Is it private?");
       return;
