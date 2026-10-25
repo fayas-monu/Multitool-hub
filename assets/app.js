@@ -185,7 +185,7 @@
     var num=Math.max(1,Math.min(pdf.numPages,opts.page||1));
     var page=await pdf.getPage(num);
     var v1=page.getViewport({scale:1});
-    var maxW=opts.maxW||560, extra=opts.scale||1;
+    var maxW=opts.maxW||680, extra=opts.scale||1;
     var s=(maxW/v1.width)*(opts.fit===false?1:1)*extra;
     s=Math.max(0.15,Math.min(3,s));
     if(opts.zoom)s=opts.zoom;
@@ -287,48 +287,157 @@
     }
   };
 
-  /* Shared branding and theme injection for tool/legal pages */
+  /* Shared branding and theme controls for tool/legal pages */
+  var sunSvg='<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+  var moonSvg='<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M20 14.3A8 8 0 0 1 9.7 4 8.1 8.1 0 1 0 20 14.3Z"/></svg>';
+  function themeIsDark(){
+    var cur=document.documentElement.dataset.theme;
+    return cur==="dark"||(!cur&&window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches);
+  }
+  function paintThemeBtn(btn){
+    if(!btn)return;
+    var dark=themeIsDark();
+    btn.innerHTML=dark?sunSvg:moonSvg;
+    btn.setAttribute("aria-label",dark?"Switch to light theme":"Switch to dark theme");
+    btn.setAttribute("title",dark?"Switch to light theme":"Switch to dark theme");
+    btn.setAttribute("aria-pressed",dark?"true":"false");
+  }
+  function applyTheme(next){
+    document.documentElement.dataset.theme=next;
+    try{localStorage.setItem("theme",next)}catch(e){}
+    try{window.dispatchEvent(new CustomEvent("mth:theme",{detail:next}))}catch(e){}
+    paintThemeBtn(document.getElementById("mthThemeToggle"));
+  }
   function injectBrand(){
     try{
-      // Add theme toggle to header if missing
-      var bars=document.querySelectorAll("header .bar");
-      bars.forEach(function(bar){
-        // Ensure theme toggle exists
-        if(!document.getElementById("mthThemeToggle")&&!bar.querySelector("#themeBtn")){
-          var btn=document.createElement("button");
-          btn.type="button";
-          btn.id="mthThemeToggle";
-          btn.className="back";
-          btn.style.border="1px solid var(--line)";
-          btn.style.background="var(--surface)";
-          btn.setAttribute("aria-label","Toggle theme");
-          btn.innerHTML='<i class="fa-solid fa-circle-half-stroke"></i> Theme';
-          btn.onclick=function(){
-            try{
-              var cur=document.documentElement.dataset.theme;
-              var isDark=cur==="dark"||(!cur&&matchMedia("(prefers-color-scheme:dark)").matches);
-              var next=isDark?"light":"dark";
-              document.documentElement.dataset.theme=next;
-              try{localStorage.setItem("theme",next)}catch(e){}
-              window.dispatchEvent(new CustomEvent("mth:theme",{detail:next}));
-            }catch(e){}
-          };
-          // insert before last child or append
-          bar.appendChild(btn);
-        }
-        // Replace brand logo/text if simple
-        var brands=bar.querySelectorAll(".brand");
-        brands.forEach(function(br){
-          // Ensure logo uses currentColor friendly svg
-          var img=br.querySelector("img");
-          if(img && img.getAttribute("src") && img.getAttribute("src").indexOf("logo.svg")>=0){
-            img.setAttribute("alt","MULTI TOOL HUB logo");
-          }
-        });
+      var bar=document.querySelector("header .bar");
+      if(bar&&!document.getElementById("mthThemeToggle")&&!document.getElementById("themeBtn")){
+        var btn=document.createElement("button");
+        btn.type="button";btn.id="mthThemeToggle";btn.className="theme-toggle";
+        btn.onclick=function(){applyTheme(themeIsDark()?"light":"dark")};
+        bar.appendChild(btn);paintThemeBtn(btn);
+      }
+      var brands=document.querySelectorAll(".brand img");
+      brands.forEach(function(img){
+        if(img.getAttribute("src")&&img.getAttribute("src").indexOf("logo.svg")>=0)img.setAttribute("alt","MULTI TOOL HUB logo");
       });
+      /* Keep the injected control in sync when another control changes the theme. */
+      window.addEventListener("mth:theme",function(){paintThemeBtn(document.getElementById("mthThemeToggle"))});
     }catch(e){}
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",injectBrand);else injectBrand();
+
+  /* ------------------------------------------------------------------ */
+  /* Expandable previews                                                 */
+  /* ------------------------------------------------------------------ */
+  function previewSource(host){
+    if(!host)return null;
+    if(host.tagName==="CANVAS"||host.tagName==="IMG")return host;
+    var pick=host.querySelector("canvas#base,canvas#pv,canvas#out,canvas#preview,canvas#canvas,canvas,img#pv,img#preview,img");
+    return pick||null;
+  }
+  function previewLabel(el){
+    var t=(el.getAttribute&&(el.getAttribute("aria-label")||el.getAttribute("title")||el.getAttribute("alt")))||"";
+    return t||"Preview";
+  }
+  /* Some tools stack a transparent overlay canvas (watermark, page numbers,
+     crop frame) on top of the page canvas. The enlarged preview must show the
+     finished result, so composite every perfectly aligned layer. */
+  function alignedLayers(host,primary){
+    if(!host||!host.querySelectorAll||!primary.getBoundingClientRect)return [primary];
+    var pr=primary.getBoundingClientRect();
+    if(!pr.width||!pr.height)return [primary];
+    var list=[primary];
+    host.querySelectorAll("canvas").forEach(function(c){
+      if(c===primary||!c.width||!c.height||c.getClientRects().length===0)return;
+      var r=c.getBoundingClientRect();
+      if(!r.width||!r.height)return;
+      if(Math.abs(r.left-pr.left)<=2&&Math.abs(r.top-pr.top)<=2&&
+         Math.abs(r.width-pr.width)<=2&&Math.abs(r.height-pr.height)<=2)list.push(c);
+    });
+    return list;
+  }
+  function compositeLayers(list){
+    if(list.length<2)return list[0];
+    var out=document.createElement("canvas");
+    out.width=list[0].width;out.height=list[0].height;
+    var ctx=out.getContext("2d");
+    if(!ctx)return list[0];
+    list.forEach(function(c){
+      var op=parseFloat(getComputedStyle(c).opacity);
+      ctx.globalAlpha=isFinite(op)?op:1;
+      ctx.drawImage(c,0,0,out.width,out.height);
+    });
+    ctx.globalAlpha=1;
+    return out;
+  }
+  function closePreview(modal,returnTo){
+    if(!modal)return;
+    if(modal._mthKey)document.removeEventListener("keydown",modal._mthKey);
+    modal.remove();
+    document.documentElement.style.overflow="";
+    if(returnTo&&returnTo.focus)try{returnTo.focus()}catch(e){}
+  }
+  PE.openPreview=function(el,returnTo){
+    el=el||returnTo;
+    var src=el;
+    if(!src||(src.tagName!=="CANVAS"&&src.tagName!=="IMG"))src=previewSource(el);
+    if(!src){PE.toast("There is no preview to enlarge yet.");return}
+    var url;
+    if(src.tagName==="CANVAS"){
+      if(!src.width||!src.height){PE.toast("The preview is still rendering. Try again in a moment.");return}
+      var host=returnTo&&returnTo!==src?returnTo:null;
+      var merged=compositeLayers(alignedLayers(host,src));
+      try{url=merged.toDataURL("image/png")}catch(e){PE.toast("This preview cannot be enlarged.");return}
+    }else{
+      url=src.currentSrc||src.src;
+      if(!url||/^data:,$/.test(url)){PE.toast("There is no preview to enlarge yet.");return}
+    }
+    var modal=document.createElement("div");
+    modal.className="pv-modal";modal.setAttribute("role","dialog");modal.setAttribute("aria-modal","true");modal.setAttribute("aria-label","Enlarged preview");
+    modal.innerHTML='<div class="box"><button type="button" class="x" aria-label="Close enlarged preview">'+
+      '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>'+
+      '<img alt="'+PE.esc(previewLabel(src))+'"><div class="cap"><span>'+PE.esc(previewLabel(src))+'</span> · <a href="'+url+'" download="multi-tool-hub-preview.png" style="color:var(--accent);font-weight:700;text-decoration:none">Download PNG</a></div></div>';
+    var img=modal.querySelector("img");img.src=url;
+    document.body.appendChild(modal);
+    document.documentElement.style.overflow="hidden";
+    modal.addEventListener("click",function(e){
+      if(e.target===modal||e.target.closest(".x")){closePreview(modal,returnTo)}
+    });
+    modal.querySelector(".x").focus();
+    modal._mthKey=function(e){if(e.key==="Escape"){e.preventDefault();closePreview(modal,returnTo)}};
+    document.addEventListener("keydown",modal._mthKey);
+  };
+  function addPreviewButton(host){
+    if(!host||host.dataset.pvReady)return;
+    if(host.closest(".pv-modal")||host.id==="hubchat"||host.closest("#hubchat"))return;
+    var src=previewSource(host);
+    if(!src)return;
+    host.dataset.pvReady="1";
+    if(getComputedStyle(host).position==="static")host.style.position="relative";
+    var b=document.createElement("button");
+    b.type="button";b.className="pvexpand";b.setAttribute("aria-label","Enlarge this preview");
+    b.innerHTML='<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5"/></svg><span>Expand</span>';
+    b.addEventListener("click",function(e){e.preventDefault();e.stopPropagation();PE.openPreview(src,host)});
+    host.appendChild(b);
+  }
+  PE.enhancePreviews=function(){
+    var hosts=[];
+    document.querySelectorAll(".pvframe,.wm-pv,.pn-wrap,.crop-wrap,.stage,.preview-box,.preview-wrap").forEach(function(h){hosts.push(h)});
+    document.querySelectorAll("canvas#pv,canvas#base,canvas#out,canvas#preview,img#pv,img#preview").forEach(function(el){
+      var host=el.parentElement;
+      if(host&&!host.closest(".pvframe,.wm-pv,.pn-wrap,.crop-wrap,.stage,.preview-box,.preview-wrap"))hosts.push(host);
+    });
+    hosts.forEach(addPreviewButton);
+  };
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",PE.enhancePreviews);else PE.enhancePreviews();
+  try{
+    var pvTimer=null,mo=new MutationObserver(function(){
+      if(pvTimer)return;
+      pvTimer=setTimeout(function(){pvTimer=null;PE.enhancePreviews()},220);
+    });
+    mo.observe(document.body,{childList:true,subtree:true});
+  }catch(e){}
 
   /* Build a ZIP in the background without freezing the page. */
   PE.zip=async function(entries,onProgress){
