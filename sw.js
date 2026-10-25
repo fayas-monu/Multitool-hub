@@ -1,7 +1,7 @@
 /* MULTI TOOL HUB — offline cache & install support.
    Credit: (hank!nd3 p4d4y41! | FAYAS MONU
    Bump CACHE when you ship new files. Old caches are deleted automatically. */
-const CACHE = "mth-v10";
+const CACHE = "mth-v13";
 const OFFLINE_URL = "./offline.html";
 
 /* Everything the app needs to open and work offline. Paths are relative to the
@@ -19,6 +19,7 @@ const PRECACHE = [
   "./assets/chat.js",
   "./assets/pdf.worker.min.js",
   "./assets/logo.svg",
+  "./assets/gemini.svg",
   "./assets/icon-192.png",
   "./assets/icon-512.png",
   "./assets/icon-maskable-512.png",
@@ -114,6 +115,9 @@ self.addEventListener("fetch", event => {
   const url = new URL(request.url);
   const sameOrigin = url.origin === self.location.origin;
   if (!sameOrigin && !LIB_HOSTS.test(url.hostname)) return;
+
+  /* The assistant API must never be cached: connection checks and replies are live. */
+  if (sameOrigin && url.pathname.indexOf("/api/") >= 0) return;
 
   /* Downloads and blobs are handled by the page, not the worker. */
   if (url.protocol === "blob:" || url.protocol === "data:") return;
