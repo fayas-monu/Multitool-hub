@@ -330,14 +330,15 @@
   /* ------------------------------------------------------------------ */
   var fab=document.createElement("button");
   fab.id="hubfab";fab.type="button";fab.setAttribute("aria-label","Open Hub Assistant (Alt + /)");
-  fab.innerHTML='<img src="'+LOGO+'" alt=""><span class="ring"></span><span class="badge"></span>';
+  fab.innerHTML='<img src="'+LOGO+'" alt="Hub Helper"><span class="ring"></span><span class="badge"></span>';
   var tip=document.createElement("div");tip.id="hubtip";tip.textContent="Need a hand? I can find the right tool.";
 
   var box=document.createElement("div");
   box.id="hubchat";box.setAttribute("role","dialog");box.setAttribute("aria-modal","false");box.setAttribute("aria-label","Hub Assistant");
   box.innerHTML=
-   '<div class="h"><img src="'+LOGO+'" alt=""><span class="who"><b>Hub Assistant</b><small>Online · runs on this device</small></span>'+
-   '<button type="button" data-x="clear" title="Clear chat" aria-label="Clear chat"><i class="fa-solid fa-rotate-left"></i></button>'+
+   '<div class="h"><button type="button" data-x="back" title="Back" aria-label="Back"><i class="fa-solid fa-arrow-left"></i></button><img src="'+LOGO+'" alt="Gemini"><span class="who"><b>Hub Helper</b><small>Online · runs on this device</small></span>'+
+   '<button type="button" data-x="refresh" title="Refresh" aria-label="Refresh"><i class="fa-solid fa-rotate"></i></button>'+
+   '<button type="button" data-x="clear" title="Clear chat" aria-label="Clear chat"><i class="fa-solid fa-trash"></i></button>'+
    '<button type="button" data-x="close" title="Close" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div>'+
    '<div class="b" id="hb" aria-live="polite" aria-relevant="additions"></div>'+
    '<div class="c" id="hc"></div>'+
@@ -444,6 +445,8 @@
     var x=e.target.closest("[data-x]");if(x){
       var k=x.getAttribute("data-x");
       if(k==="close")open(false);
+      else if(k==="back"){try{if(history.length>1)history.back();else open(false);}catch(ex){open(false);}}
+      else if(k==="refresh"){try{location.reload();}catch(ex){clearChat();}}
       else if(k==="clear"){if(confirm("Clear this conversation?"))clearChat()}
       else if(k==="privacy")ask("Is it private?");
       return;
