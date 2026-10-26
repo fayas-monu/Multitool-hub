@@ -8,7 +8,7 @@ This file is for whoever maintains the site. The user-facing documentation is in
 ## Shipping checklist
 
 1. Keep `sw.js` in the site root. It must be served over HTTPS (or localhost).
-2. Bump `const CACHE = "mth-v16";` in `sw.js` on every release that changes HTML, CSS or JS.
+2. Bump `const CACHE = "mth-v17";` in `sw.js` on every release that changes HTML, CSS or JS.
    The activate handler deletes every older cache.
 3. Replace `https://multitoolhub.example/` in `sitemap.xml`, `robots.txt` and the canonical/Open Graph tags with the real domain.
 4. Test in a private window so an old service worker does not serve stale files.
@@ -121,7 +121,7 @@ Useful manual checks:
 - Fixed Video to MP3 handling of more than two channels: MP3 is capped at stereo, mono downmix works, and 6-channel WAV remains possible.
 - Fixed Split PDF stale document/selection state after a failed load.
 - Replaced the blocked Loader.to iframes in the YouTube and Instagram downloaders with an external "Open download options" card; invalid links still show an inline error.
-- Updated the service worker cache to `mth-v16`, removed Google Fonts hosts from runtime caching, and corrected the credit.
+- Updated the service worker cache to `mth-v17`, removed Google Fonts hosts from runtime caching, and corrected the credit.
 - Updated the manifest to a white background and navy theme colour, refreshed the description, and regenerated the PWA icons and social cover in the new identity.
 - Made `404.html` and `offline.html` resolve their site root so they work on GitHub Pages project paths.
 - Removed the unreferenced duplicate `tools/chat.js`.
