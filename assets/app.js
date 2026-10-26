@@ -1,5 +1,5 @@
 /* MULTI TOOL HUB — shared helpers.
-   Credit: (hank!nd3 p4d4y41! | FAYAS MONU */
+   Credit: chank!nd3 p4d4y41!.I FAYAS MONU */
 (function(){
   try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t;}catch(e){}
 
@@ -11,8 +11,8 @@
   }catch(e){}
 
   var PE=window.PE={};
-  PE.credit="(hank!nd3 p4d4y41! | FAYAS MONU";
-  PE.version="4.0";
+  PE.credit="chank!nd3 p4d4y41!.I FAYAS MONU";
+  PE.version="4.2";
   var scriptEl=document.currentScript;
   var assetBase=scriptEl&&scriptEl.src?new URL(".",scriptEl.src).href:new URL("assets/",location.href).href;
   PE.asset=function(name){return new URL(name,assetBase).href};
@@ -20,7 +20,13 @@
   /* ---------- basics ---------- */
   PE.$=function(id){return document.getElementById(id)};
   PE.$$=function(sel,root){return Array.prototype.slice.call((root||document).querySelectorAll(sel))};
-  PE.esc=function(s){var d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML};
+  /* Attribute-safe escaping: quotes are escaped too, so this can be used
+     inside HTML attributes as well as in text nodes. */
+  PE.esc=function(s){
+    return String(s==null?"":s).replace(/[&<>"']/g,function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  };
   PE.fmt=function(b){
     if(b==null||isNaN(b))return "0 KB";
     if(b>=1048576)return (b/1048576).toFixed(2)+" MB";
@@ -114,15 +120,18 @@
   /* ---------- page ranges ---------- */
   /* "1-3, 5, 8-" -> sorted unique 0-based indices, or throws a readable error */
   PE.ranges=function(text,n,opts){
-    var zero=(opts&&opts.zeroBased),out=[];
-    function add(v){var k=zero?v-1:v;if(out.indexOf(k)<0)out.push(k)}
+    /* One-based input, zero-based output — every tool consumer expects
+       page indices. `opts.oneBased` is available for the rare display-only
+       caller that needs the original numbers back. */
+    var out=[];
+    function add(v){var k=v-1;if(out.indexOf(k)<0)out.push(k)}
     var parts=String(text||"").split(/[,;]/);
     var any=false;
     parts.forEach(function(part){
       part=part.trim();if(!part){return}
       var m=part.match(/^(\d+)\s*(?:-|–|to)\s*(\d+)$/i),a,b;
       if(m){a=+m[1];b=+m[2]}
-      else if(/^(\d*)\s*-\s*(\d*)$/.test(part)){var mm=part.match(/^(\d*)\s*-\s*(\d*)$/);a=mm[1]?+mm[1]:(zero?1:1);b=mm[2]?+mm[2]:n;var t=a;a=Math.min(t,b);b=Math.max(t,b)}
+      else if(/^(\d*)\s*-\s*(\d*)$/.test(part)){var mm=part.match(/^(\d*)\s*-\s*(\d*)$/);a=mm[1]?+mm[1]:1;b=mm[2]?+mm[2]:n;var t=a;a=Math.min(t,b);b=Math.max(t,b)}
       else if(/^(all|\*)$/.test(part.toLowerCase())){a=1;b=n}
       else if(/^\d+$/.test(part)){a=b=+part}
       else throw new Error("“"+part+"” isn’t a valid page or range. Try 1-3, 5, 8-.");
@@ -132,7 +141,8 @@
       any=true;
     });
     if(!any||!out.length)throw new Error("Enter at least one page number, for example 1-3, 5.");
-    return out.sort(function(x,y){return x-y});
+    out.sort(function(x,y){return x-y});
+    return opts&&opts.oneBased?out.map(function(i){return i+1}):out;
   };
   /* Turn a list of 0-based indices into a compact label: 1-3, 5, 8 */
   PE.rangesText=function(list){
@@ -244,9 +254,13 @@
     if(opts.grayscale){grayscale(x,c.width,c.height)}
     if(opts.brightness||opts.contrast){levels(x,c.width,c.height,opts.brightness||0,opts.contrast||0)}
     if(opts.watermark)stampText(x,c.width,c.height,opts.watermark);
-    var type=/png|keepAlpha|alpha/i.test(opts.type||"")?(opts.jpg?"image/jpeg":"image/png"):"image/jpeg";
-    var mime=(opts.png||opts.keepAlpha)?"image/png":(opts.webp?"image/webp":"image/jpeg");
+    var mime=opts.webp?"image/webp":opts.png?"image/png":opts.keepAlpha?"image/png":"image/jpeg";
     var blob=await new Promise(function(r){c.toBlob(r,mime,opts.quality==null?0.92:opts.quality)});
+    if(!blob&&mime==="image/webp"){
+      mime="image/png";
+      blob=await new Promise(function(r){c.toBlob(r,mime,opts.quality==null?0.92:opts.quality)});
+    }
+    if(!blob)throw new Error("The browser could not encode this image.");
     return {bytes:await blob.arrayBuffer(),blob:blob,w:c.width,h:c.height,original:{w:im.width,h:im.height},type:mime};
   };
   function grayscale(x,w,h){var d=x.getImageData(0,0,w,h),p=d.data;for(var i=0;i<p.length;i+=4){var g=(p[i]*.299+p[i+1]*.587+p[i+2]*.114);p[i]=p[i+1]=p[i+2]=g}x.putImageData(d,0,0)}
@@ -254,7 +268,7 @@
   function stampText(x,w,h,o){
     var t=typeof o==="string"?{text:o}:o;var size=t.size||Math.max(10,w*0.045);
     x.save();x.globalAlpha=t.opacity==null?0.45:t.opacity;x.fillStyle=t.color||"#ffffff";x.strokeStyle="rgba(0,0,0,.35)";x.lineWidth=1;
-    x.font="bold "+size+"px 'Plus Jakarta Sans',Arial,sans-serif";x.textAlign="center";x.textBaseline="middle";
+    x.font="bold "+size+"px var(--font-body)";x.textAlign="center";x.textBaseline="middle";
     x.translate(w/2,h/2);x.rotate((t.angle||0)*Math.PI/180);x.fillText(t.text||"MULTI TOOL HUB",0,0);
     if(t.stroke)x.strokeText(t.text||"",0,0);x.restore();
   }
@@ -371,42 +385,199 @@
     ctx.globalAlpha=1;
     return out;
   }
-  function closePreview(modal,returnTo){
+  var closePreview=function(modal,returnTo){
     if(!modal)return;
     if(modal._mthKey)document.removeEventListener("keydown",modal._mthKey);
+    if(modal._mthResize)window.removeEventListener("resize",modal._mthResize);
+    if(modal._mthRaf)cancelAnimationFrame(modal._mthRaf);
     modal.remove();
     document.documentElement.style.overflow="";
     if(returnTo&&returnTo.focus)try{returnTo.focus()}catch(e){}
+  };
+  function imageInfo(url){
+    return new Promise(function(resolve){
+      var im=new Image();
+      im.onload=function(){resolve({w:im.naturalWidth||im.width,h:im.naturalHeight||im.height})};
+      im.onerror=function(){resolve({w:0,h:0})};
+      im.src=url;
+    });
   }
-  PE.openPreview=function(el,returnTo){
+  function previewPayload(src,host){
+    if(src.tagName==="CANVAS"){
+      if(!src.width||!src.height)return null;
+      var merged=compositeLayers(alignedLayers(host,src));
+      try{
+        return {url:merged.toDataURL("image/png"),w:merged.width,h:merged.height,name:"multi-tool-hub-preview.png"};
+      }catch(e){return null}
+    }
+    var url=src.currentSrc||src.src;
+    if(!url||/^data:,$/.test(url))return null;
+    var mime=(url.match(/^data:(image\/[a-z0-9.+-]+)[;,]/i)||[])[1]||"";
+    var byMime={ "image/png":"png","image/jpeg":"jpg","image/jpg":"jpg","image/webp":"webp","image/gif":"gif","image/svg+xml":"svg" };
+    var ext=byMime[mime.toLowerCase()]||(url.match(/\.(png|jpe?g|webp|gif|svg)(?:[?#]|$)/i)||[,"png"])[1].toLowerCase();
+    return {url:url,w:src.naturalWidth||src.width||0,h:src.naturalHeight||src.height||0,name:"multi-tool-hub-preview."+ext};
+  }
+  PE.openPreview=async function(el,returnTo){
     el=el||returnTo;
     var src=el;
     if(!src||(src.tagName!=="CANVAS"&&src.tagName!=="IMG"))src=previewSource(el);
     if(!src){PE.toast("There is no preview to enlarge yet.");return}
-    var url;
-    if(src.tagName==="CANVAS"){
-      if(!src.width||!src.height){PE.toast("The preview is still rendering. Try again in a moment.");return}
-      var host=returnTo&&returnTo!==src?returnTo:null;
-      var merged=compositeLayers(alignedLayers(host,src));
-      try{url=merged.toDataURL("image/png")}catch(e){PE.toast("This preview cannot be enlarged.");return}
-    }else{
-      url=src.currentSrc||src.src;
-      if(!url||/^data:,$/.test(url)){PE.toast("There is no preview to enlarge yet.");return}
+    var host=returnTo&&returnTo!==src?returnTo:(src.parentElement||null);
+    var info=previewPayload(src,host);
+    if(!info){PE.toast(src.tagName==="CANVAS"?"The preview is still rendering. Try again in a moment.":"This preview cannot be enlarged.");return}
+    if(!info.w||!info.h){
+      var size=await imageInfo(info.url);
+      info.w=size.w;info.h=size.h;
     }
+    if(!info.w||!info.h){PE.toast("This preview has no visible image yet.");return}
+
+    var label=previewLabel(src);
     var modal=document.createElement("div");
-    modal.className="pv-modal";modal.setAttribute("role","dialog");modal.setAttribute("aria-modal","true");modal.setAttribute("aria-label","Enlarged preview");
-    modal.innerHTML='<div class="box"><button type="button" class="x" aria-label="Close enlarged preview">'+
-      '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>'+
-      '<img alt="'+PE.esc(previewLabel(src))+'"><div class="cap"><span>'+PE.esc(previewLabel(src))+'</span> · <a href="'+url+'" download="multi-tool-hub-preview.png" style="color:var(--accent);font-weight:700;text-decoration:none">Download PNG</a></div></div>';
-    var img=modal.querySelector("img");img.src=url;
+    modal.className="pv-modal";
+    modal.setAttribute("role","dialog");modal.setAttribute("aria-modal","true");modal.setAttribute("aria-label","Enlarged preview of "+label);
+    modal.innerHTML=
+      '<div class="pv-box">'+
+        '<div class="pv-head">'+
+          '<div class="pv-title"><b>'+PE.esc(label)+'</b><span class="pv-state" data-pv-state>Fit</span></div>'+
+          '<div class="pv-tools">'+
+            '<button type="button" class="pv-ib" data-pv="out" aria-label="Zoom out" title="Zoom out"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"/></svg></button>'+
+            '<input class="pv-zoom" type="range" min="10" max="400" value="100" step="1" aria-label="Preview zoom percentage">'+
+            '<output class="pv-pct" data-pv-pct>100%</output>'+
+            '<button type="button" class="pv-ib" data-pv="in" aria-label="Zoom in" title="Zoom in"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>'+
+            '<span class="pv-div" aria-hidden="true"></span>'+
+            '<button type="button" class="pv-txt" data-pv="fit" aria-pressed="true" title="Fit the whole preview in the window">Fit</button>'+
+            '<button type="button" class="pv-txt" data-pv="actual" aria-pressed="false" title="Show the image at its native size">1:1</button>'+
+            '<button type="button" class="pv-txt pv-download" data-pv="download" title="Download this preview as an image">Download</button>'+
+            '<button type="button" class="pv-close" data-pv="close" aria-label="Close enlarged preview" title="Close (Esc)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>'+
+          '</div>'+
+        '</div>'+
+        '<div class="pv-stage" data-pv-stage tabindex="0" aria-label="Interactive preview. Drag to pan, scroll to zoom, double-click to switch between fit and actual size.">'+
+          '<img alt="'+PE.esc(label)+'" draggable="false">'+
+        '</div>'+
+        '<div class="pv-foot"><span data-pv-dims>'+info.w+' × '+info.h+' px</span><span class="pv-help">Drag to pan · scroll or pinch to zoom · double-click to fit</span><span class="pv-live">Live preview</span></div>'+
+      '</div>';
     document.body.appendChild(modal);
     document.documentElement.style.overflow="hidden";
-    modal.addEventListener("click",function(e){
-      if(e.target===modal||e.target.closest(".x")){closePreview(modal,returnTo)}
+
+    var stage=modal.querySelector("[data-pv-stage]");
+    var img=modal.querySelector("img");
+    var zoom=modal.querySelector(".pv-zoom");
+    var pct=modal.querySelector("[data-pv-pct]");
+    var stateEl=modal.querySelector("[data-pv-state]");
+    var dims=modal.querySelector("[data-pv-dims]");
+    var fitBtn=modal.querySelector('[data-pv="fit"]');
+    var actualBtn=modal.querySelector('[data-pv="actual"]');
+    var download=modal.querySelector('[data-pv="download"]');
+    var iw=info.w, ih=info.h, scale=1, tx=0, ty=0, mode="fit", dragging=false, lastX=0, lastY=0;
+    var pointers=new Map(), pinchStart=0, pinchScale=1;
+
+    img.src=info.url;
+    img.style.width=iw+"px";img.style.height=ih+"px";
+    download.href=info.url;
+    download.setAttribute("download",info.name);
+
+    function fitScale(){
+      var pad=stage.clientWidth<560?24:48;
+      var s=Math.min((stage.clientWidth-pad)/iw,(stage.clientHeight-pad)/ih,4);
+      return Math.max(0.05,Math.min(4,s));
+    }
+    function clampPan(){
+      var mx=Math.max(0,(iw*scale-stage.clientWidth)/2)+18;
+      var my=Math.max(0,(ih*scale-stage.clientHeight)/2)+18;
+      tx=PE.clamp(tx,-mx,mx);ty=PE.clamp(ty,-my,my);
+    }
+    function paint(){
+      clampPan();
+      img.style.transform="translate(-50%,-50%) translate("+tx+"px,"+ty+"px) scale("+scale+")";
+      var n=Math.round(scale*100);
+      pct.textContent=n+"%";zoom.value=PE.clamp(n,10,400);
+      stateEl.textContent=mode==="fit"?"Fit":(mode==="actual"?"Actual size":"Zoom");
+      fitBtn.setAttribute("aria-pressed",mode==="fit"?"true":"false");
+      actualBtn.setAttribute("aria-pressed",mode==="actual"?"true":"false");
+      dims.textContent=iw+" × "+ih+" px · "+n+"%";
+    }
+    function fit(){
+      mode="fit";tx=0;ty=0;scale=fitScale();paint();
+    }
+    function setZoom(next,px,py){
+      next=PE.clamp(next,0.1,4);
+      if(px==null){px=stage.clientWidth/2;py=stage.clientHeight/2}
+      var ox=(px-stage.clientWidth/2-tx)/scale;
+      var oy=(py-stage.clientHeight/2-ty)/scale;
+      scale=next;mode="manual";
+      tx=px-stage.clientWidth/2-ox*scale;
+      ty=py-stage.clientHeight/2-oy*scale;
+      paint();
+    }
+    function actual(){mode="actual";scale=1;tx=0;ty=0;paint()}
+    fit();
+    modal.querySelector(".pv-tools").addEventListener("click",function(e){
+      var b=e.target.closest("[data-pv]");if(!b)return;
+      var k=b.getAttribute("data-pv");
+      if(k==="in")setZoom(scale*1.25);
+      else if(k==="out")setZoom(scale/1.25);
+      else if(k==="fit")fit();
+      else if(k==="actual")actual();
+      else if(k==="download"){/* the anchor handles it */}
+      else if(k==="close")closePreview(modal,returnTo);
     });
-    modal.querySelector(".x").focus();
-    modal._mthKey=function(e){if(e.key==="Escape"){e.preventDefault();closePreview(modal,returnTo)}};
+    zoom.addEventListener("input",function(){setZoom(+zoom.value/100)});
+    stage.addEventListener("wheel",function(e){
+      e.preventDefault();
+      var r=stage.getBoundingClientRect();
+      setZoom(scale*(e.deltaY<0?1.12:0.892),e.clientX-r.left,e.clientY-r.top);
+    },{passive:false});
+    stage.addEventListener("pointerdown",function(e){
+      if(e.pointerType==="mouse"&&e.button!==0)return;
+      pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+      try{stage.setPointerCapture(e.pointerId)}catch(x){}
+      if(pointers.size===1){dragging=true;lastX=e.clientX;lastY=e.clientY;stage.classList.add("drag")}
+      if(pointers.size===2){
+        var p=Array.from(pointers.values());
+        pinchStart=Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y)||1;
+        pinchScale=scale;dragging=false;
+      }
+    });
+    stage.addEventListener("pointermove",function(e){
+      if(!pointers.has(e.pointerId))return;
+      pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+      if(pointers.size===2&&pinchStart){
+        var p=Array.from(pointers.values());
+        var d=Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y)||1;
+        setZoom(pinchScale*d/pinchStart);
+        return;
+      }
+      if(!dragging)return;
+      tx+=e.clientX-lastX;ty+=e.clientY-lastY;lastX=e.clientX;lastY=e.clientY;
+      mode="manual";paint();
+    });
+    function endPointer(e){
+      pointers.delete(e.pointerId);
+      if(pointers.size<2)pinchStart=0;
+      if(pointers.size===0){dragging=false;stage.classList.remove("drag")}
+    }
+    stage.addEventListener("pointerup",endPointer);
+    stage.addEventListener("pointercancel",endPointer);
+    stage.addEventListener("dblclick",function(){if(mode==="fit")actual();else fit()});
+    modal.addEventListener("click",function(e){if(e.target===modal)closePreview(modal,returnTo)});
+    modal.querySelector(".pv-close").focus();
+    modal._mthKey=function(e){
+      if(e.key==="Escape"){e.preventDefault();closePreview(modal,returnTo);return}
+      if(!stage.contains(document.activeElement)&&document.activeElement!==stage)return;
+      if(e.key==="+"||e.key==="="){e.preventDefault();setZoom(scale*1.25)}
+      else if(e.key==="-"){e.preventDefault();setZoom(scale/1.25)}
+      else if(e.key==="0"){e.preventDefault();fit()}
+      else if(e.key==="1"){e.preventDefault();actual()}
+      else if(e.key.indexOf("Arrow")===0){
+        e.preventDefault();var step=e.shiftKey?60:20;
+        if(e.key==="ArrowLeft")tx-=step;if(e.key==="ArrowRight")tx+=step;
+        if(e.key==="ArrowUp")ty-=step;if(e.key==="ArrowDown")ty+=step;
+        mode="manual";paint();
+      }
+    };
     document.addEventListener("keydown",modal._mthKey);
+    modal._mthResize=function(){if(mode==="fit")fit();else paint()};
+    window.addEventListener("resize",modal._mthResize);
   };
   function addPreviewButton(host){
     if(!host||host.dataset.pvReady)return;
@@ -416,8 +587,8 @@
     host.dataset.pvReady="1";
     if(getComputedStyle(host).position==="static")host.style.position="relative";
     var b=document.createElement("button");
-    b.type="button";b.className="pvexpand";b.setAttribute("aria-label","Enlarge this preview");
-    b.innerHTML='<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5"/></svg><span>Expand</span>';
+    b.type="button";b.className="pvexpand";b.setAttribute("aria-label","Open a large interactive preview");
+    b.innerHTML='<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5"/></svg><span>Large preview</span>';
     b.addEventListener("click",function(e){e.preventDefault();e.stopPropagation();PE.openPreview(src,host)});
     host.appendChild(b);
   }
