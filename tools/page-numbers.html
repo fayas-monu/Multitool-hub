@@ -4,17 +4,14 @@
 <meta charset="UTF-8">
 <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
+<!-- Credit: chank!nd3 p4d4y41!.I FAYAS MONU -->
 <title>Add Page Numbers to PDF — accurate live preview | MULTI TOOL HUB</title>
 <meta name="description" content="Stamp page numbers on a PDF with a live preview. Nine positions, custom formats, start number, page ranges, fonts, bold, colour, opacity, margins and mirrored odd/even placement.">
-<meta name="theme-color" content="#f5f1e8" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#111613" media="(prefers-color-scheme: dark)">
-<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b1220" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/logo-mark.svg" type="image/svg+xml">
 <link rel="manifest" href="../manifest.webmanifest">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
@@ -26,41 +23,20 @@
   .pn-wrap{position:relative;display:inline-block;line-height:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;box-shadow:var(--shadow-lg);max-width:100%}
   .pn-wrap canvas{display:block;max-width:100%;height:auto}
   .pagebar{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;flex-wrap:wrap}
-  .pagebar button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:9px;padding:7px 11px;cursor:pointer;font:700 13px 'Plus Jakarta Sans',sans-serif}
+  .pagebar button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:9px;padding:7px 11px;cursor:pointer;font:700 13px var(--font-body)}
   .pagebar button:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
-  .pagebar input{width:58px;text-align:center;padding:7px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--ink);font:700 13px 'Plus Jakarta Sans',sans-serif}
+  .pagebar input{width:58px;text-align:center;padding:7px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--ink);font:700 13px var(--font-body)}
   .pagebar span{font-size:13px;color:var(--muted);font-weight:600}
   .fmtchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
-  .fmtchips button{font:600 11.5px 'Plus Jakarta Sans',sans-serif;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:7px;padding:5px 9px;cursor:pointer}
+  .fmtchips button{font:600 11.5px var(--font-body);border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:7px;padding:5px 9px;cursor:pointer}
   .fmtchips button:hover{border-color:var(--accent);color:var(--accent)}
-  .sample{font:700 12px 'Plus Jakarta Sans',sans-serif;color:var(--muted);margin-top:7px}
+  .sample{font:700 12px var(--font-body);color:var(--muted);margin-top:7px}
   .sample b{color:var(--ink)}
 </style>
 </head>
 <body>
 <header><div class="bar">
-  <a class="brand" href="../index.html"><svg class="brand-logo" viewBox="0 0 420 110" role="img" aria-label="MULTI TOOL HUB — FILES, HANDLED WELL" focusable="false">
-      <title>MULTI TOOL HUB — FILES, HANDLED WELL</title>
-      <defs>
-        <linearGradient id="mthInk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#26352d"/><stop offset="1" stop-color="#16211b"/></linearGradient>
-        <linearGradient id="mthTool" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1b7a63"/><stop offset="1" stop-color="#156b57"/></linearGradient>
-        <linearGradient id="mthHub" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b4652a"/><stop offset="1" stop-color="#a9571b"/></linearGradient>
-      </defs>
-      <g transform="translate(8 8)">
-        <rect width="94" height="94" rx="22" fill="url(#mthInk)"/>
-        <rect x="0.75" y="0.75" width="92.5" height="92.5" rx="21.4" fill="none" stroke="#43564b" stroke-width="1.5"/>
-        <g fill="none" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 66V41l9 15 9-15v25" stroke="#fffdf8"/>
-            <path d="M40 41h17M48.5 41v25" stroke="#e8c66c"/>
-            <path d="M62 41v25M77 41v25M62 53.5h15" stroke="#fffdf8"/>
-          </g>
-        <circle cx="75" cy="24" r="4" fill="#e8c66c"/>
-      </g>
-      <text x="120" y="50" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="800" font-size="29" fill="currentColor" letter-spacing="-0.4">MULTI <tspan fill="url(#mthTool)">TOOL</tspan></text>
-      <rect x="292" y="25" width="66" height="29" rx="7" fill="url(#mthHub)"/>
-      <text x="325" y="44.8" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="700" font-size="14" fill="#fffdf8" text-anchor="middle" letter-spacing="1.2">HUB</text>
-      <text x="122" y="76" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="600" font-size="10.5" fill="currentColor" opacity=".62" letter-spacing="1.7">FILES, HANDLED WELL</text>
-    </svg></a>
+  <a class="brand" href="../index.html"><img class="brand-logo logo-light" src="../assets/logo.svg" alt="MULTI TOOL HUB" width="440" height="104"><img class="brand-logo logo-dark" src="../assets/logo-dark.svg" alt="" aria-hidden="true" width="440" height="104"></a>
   <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
 </div></header>
 <main>
@@ -150,7 +126,7 @@
 <div class="status" id="status" role="status" aria-live="polite"></div>
 <div class="prog" id="prog"><div></div></div>
 </main>
-<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by chank!nd3 p4d4y41!.I FAYAS MONU</span></div>
 <script src="../assets/app.js"></script>
 <script src="../assets/chat.js"></script>
 <script>

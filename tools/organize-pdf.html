@@ -4,17 +4,14 @@
 <meta charset="UTF-8">
 <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
+<!-- Credit: chank!nd3 p4d4y41!.I FAYAS MONU -->
 <title>Organize PDF Pages — reorder, rotate, duplicate, delete | MULTI TOOL HUB</title>
 <meta name="description" content="See every page as a thumbnail. Drag to reorder, rotate, duplicate, insert blank pages and delete pages in bulk, then download a clean PDF. Your original is untouched.">
-<meta name="theme-color" content="#f5f1e8" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#111613" media="(prefers-color-scheme: dark)">
-<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b1220" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/logo-mark.svg" type="image/svg+xml">
 <link rel="manifest" href="../manifest.webmanifest">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
@@ -28,43 +25,22 @@
   .org-card .thumb{height:152px;display:grid;place-items:center;overflow:hidden;background:#fff;border-radius:7px;cursor:grab;position:relative;line-height:0}
   .org-card img{max-width:100%;max-height:150px;display:block;transition:transform .15s}
   .org-card .blanksheet{width:70%;height:80%;background:#fff;border:1px dashed #c7ccd8;border-radius:4px;display:grid;place-items:center;color:#9aa3b4;font-size:11px}
-  .org-card .no{position:absolute;left:4px;bottom:4px;font:700 10px 'Plus Jakarta Sans',sans-serif;background:rgba(10,12,30,.75);color:#fff;border-radius:5px;padding:1px 5px;z-index:2}
+  .org-card .no{position:absolute;left:4px;bottom:4px;font:700 10px var(--font-body);background:rgba(10,12,30,.75);color:#fff;border-radius:5px;padding:1px 5px;z-index:2}
   .org-card .chk{position:absolute;right:10px;top:10px;z-index:2;width:19px;height:19px;accent-color:var(--accent);cursor:pointer}
   .org-card .bar{display:flex;justify-content:center;gap:3px;margin-top:7px;flex-wrap:wrap}
   .org-card .bar button{width:25px;height:25px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:6px;cursor:pointer;font-size:11px;display:grid;place-items:center;padding:0}
   .org-card .bar button:hover{border-color:var(--accent);color:var(--accent)}
   .org-card .cap{font-size:11px;color:var(--muted);margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .bulkbar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;background:var(--surface-2);border:1px solid var(--line);border-radius:11px;padding:9px 11px;margin-top:12px}
-  .bulkbar button{font:600 12px 'Plus Jakarta Sans',sans-serif;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:8px;padding:6px 10px;cursor:pointer}
+  .bulkbar button{font:600 12px var(--font-body);border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:8px;padding:6px 10px;cursor:pointer}
   .bulkbar button:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
   .bulkbar button:disabled{opacity:.4;cursor:default}
-  .bulkbar .cnt{margin-left:auto;font:700 12px 'Plus Jakarta Sans',sans-serif;color:var(--accent)}
+  .bulkbar .cnt{margin-left:auto;font:700 12px var(--font-body);color:var(--accent)}
 </style>
 </head>
 <body>
 <header><div class="bar">
-  <a class="brand" href="../index.html"><svg class="brand-logo" viewBox="0 0 420 110" role="img" aria-label="MULTI TOOL HUB — FILES, HANDLED WELL" focusable="false">
-      <title>MULTI TOOL HUB — FILES, HANDLED WELL</title>
-      <defs>
-        <linearGradient id="mthInk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#26352d"/><stop offset="1" stop-color="#16211b"/></linearGradient>
-        <linearGradient id="mthTool" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1b7a63"/><stop offset="1" stop-color="#156b57"/></linearGradient>
-        <linearGradient id="mthHub" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b4652a"/><stop offset="1" stop-color="#a9571b"/></linearGradient>
-      </defs>
-      <g transform="translate(8 8)">
-        <rect width="94" height="94" rx="22" fill="url(#mthInk)"/>
-        <rect x="0.75" y="0.75" width="92.5" height="92.5" rx="21.4" fill="none" stroke="#43564b" stroke-width="1.5"/>
-        <g fill="none" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 66V41l9 15 9-15v25" stroke="#fffdf8"/>
-            <path d="M40 41h17M48.5 41v25" stroke="#e8c66c"/>
-            <path d="M62 41v25M77 41v25M62 53.5h15" stroke="#fffdf8"/>
-          </g>
-        <circle cx="75" cy="24" r="4" fill="#e8c66c"/>
-      </g>
-      <text x="120" y="50" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="800" font-size="29" fill="currentColor" letter-spacing="-0.4">MULTI <tspan fill="url(#mthTool)">TOOL</tspan></text>
-      <rect x="292" y="25" width="66" height="29" rx="7" fill="url(#mthHub)"/>
-      <text x="325" y="44.8" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="700" font-size="14" fill="#fffdf8" text-anchor="middle" letter-spacing="1.2">HUB</text>
-      <text x="122" y="76" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="600" font-size="10.5" fill="currentColor" opacity=".62" letter-spacing="1.7">FILES, HANDLED WELL</text>
-    </svg></a>
+  <a class="brand" href="../index.html"><img class="brand-logo logo-light" src="../assets/logo.svg" alt="MULTI TOOL HUB" width="440" height="104"><img class="brand-logo logo-dark" src="../assets/logo-dark.svg" alt="" aria-hidden="true" width="440" height="104"></a>
   <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
 </div></header>
 <main>
@@ -101,12 +77,12 @@
 <div class="status" id="status" role="status" aria-live="polite"></div>
 <div class="prog" id="prog"><div></div></div>
 </main>
-<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by chank!nd3 p4d4y41!.I FAYAS MONU</span></div>
 <script src="../assets/app.js"></script>
 <script src="../assets/chat.js"></script>
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc=PE.asset("pdf.worker.min.js");
-var $=PE.$, file=null, pdf=null, pages=[], thumbs={}, sel={}, hist=[], dragKey=null, uid=0;
+var $=PE.$, $$=PE.$$, file=null, pdf=null, pages=[], thumbs={}, sizes={}, sel={}, hist=[], dragKey=null, uid=0;
 
 function snap(){
   hist.push(pages.map(function(p){return {key:p.key,orig:p.orig,rot:p.rot,del:p.del,blank:p.blank,w:p.w,h:p.h,label:p.label}}));
@@ -118,7 +94,13 @@ function statusCount(){
   $("go").disabled=!live;
 }
 function selectedKeys(){return Object.keys(sel).filter(function(k){return sel[k]})}
+function pruneSel(){
+  var live={};
+  pages.forEach(function(p){if(sel[p.key])live[p.key]=true});
+  sel=live;
+}
 function render(){
+  pruneSel();
   var g=$("grid");
   g.innerHTML=pages.map(function(p,i){
     var rot=p.rot||0;
@@ -212,13 +194,16 @@ $("reset").onclick=function(){
   if(!pdf)return;
   snap();
   pages=[];sel={};
-  for(var i=1;i<=pdf.numPages;i++)pages.push({key:"p"+i,orig:i,rot:0,del:false,blank:false,label:i});
+  for(var i=1;i<=pdf.numPages;i++){
+    var sz=sizes[i]||{w:595.28,h:841.89};
+    pages.push({key:"p"+i,orig:i,rot:0,del:false,blank:false,label:i,w:sz.w,h:sz.h});
+  }
   render();
 };
 
 PE.drop($("zone"),$("fileInput"),/pdf/i,async function(list){
   file=list[0];$("fn").textContent=file.name;$("pc").textContent="· "+PE.fmt(file.size);
-  $("panel").hidden=false;$("grid").innerHTML="";pages=[];thumbs={};sel={};hist=[];
+  $("panel").hidden=false;$("grid").innerHTML="";pages=[];thumbs={};sizes={};sel={};hist=[];
   $("out").value=PE.baseName(file.name)+"-organized.pdf";
   PE.status("Creating thumbnails…");PE.progress(0);
   try{
@@ -228,12 +213,13 @@ PE.drop($("zone"),$("fileInput"),/pdf/i,async function(list){
     for(var i=1;i<=pdf.numPages;i++){
       PE.progress((i-1)/pdf.numPages);
       var pg=await pdf.getPage(i),vp=pg.getViewport({scale:1});
+      sizes[i]={w:vp.width,h:vp.height};
       var s=Math.min(.34,150/vp.width),v=pg.getViewport({scale:s});
       var c=document.createElement("canvas");c.width=Math.max(1,Math.round(v.width));c.height=Math.max(1,Math.round(v.height));
       var x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);
       await pg.render({canvasContext:x,viewport:v}).promise;
       thumbs[i]=c.toDataURL("image/jpeg",.7);
-      pages.push({key:"p"+i,orig:i,rot:0,del:false,blank:false,label:i});
+      pages.push({key:"p"+i,orig:i,rot:0,del:false,blank:false,label:i,w:vp.width,h:vp.height});
       if(i%10===0)await PE.sleep(0);
     }
     $("pc").textContent="· "+pdf.numPages+" pages";

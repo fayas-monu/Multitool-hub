@@ -4,24 +4,21 @@
 <meta charset="UTF-8">
 <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
+<!-- Credit: chank!nd3 p4d4y41!.I FAYAS MONU -->
 <title>Video to MP3 — trim, fade, normalize | MULTI TOOL HUB</title>
 <meta name="description" content="Extract audio from a video in your browser. See the waveform, trim with a drag, add fades, normalize volume, pick MP3 quality or save WAV, and write title/artist tags.">
-<meta name="theme-color" content="#f5f1e8" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#111613" media="(prefers-color-scheme: dark)">
-<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b1220" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/logo-mark.svg" type="image/svg+xml">
 <link rel="manifest" href="../manifest.webmanifest">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.1/lame.min.js"></script>
 <style>
   .wavewrap{position:relative;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);padding:8px;margin-top:8px}
   .wavewrap canvas{display:block;width:100%;height:130px;border-radius:7px;background:var(--surface);cursor:crosshair;touch-action:none}
   .wavebar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
-  .wavebar button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:6px 10px;font:700 12.5px 'Plus Jakarta Sans',sans-serif;cursor:pointer}
+  .wavebar button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:6px 10px;font:700 12.5px var(--font-body);cursor:pointer}
   .wavebar button:hover{border-color:var(--accent);color:var(--accent)}
   .wavebar .t{font:700 12px ui-monospace,Consolas,monospace;color:var(--muted)}
   .trimgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
@@ -32,28 +29,7 @@
 </head>
 <body>
 <header><div class="bar">
-  <a class="brand" href="../index.html"><svg class="brand-logo" viewBox="0 0 420 110" role="img" aria-label="MULTI TOOL HUB — FILES, HANDLED WELL" focusable="false">
-      <title>MULTI TOOL HUB — FILES, HANDLED WELL</title>
-      <defs>
-        <linearGradient id="mthInk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#26352d"/><stop offset="1" stop-color="#16211b"/></linearGradient>
-        <linearGradient id="mthTool" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1b7a63"/><stop offset="1" stop-color="#156b57"/></linearGradient>
-        <linearGradient id="mthHub" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b4652a"/><stop offset="1" stop-color="#a9571b"/></linearGradient>
-      </defs>
-      <g transform="translate(8 8)">
-        <rect width="94" height="94" rx="22" fill="url(#mthInk)"/>
-        <rect x="0.75" y="0.75" width="92.5" height="92.5" rx="21.4" fill="none" stroke="#43564b" stroke-width="1.5"/>
-        <g fill="none" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 66V41l9 15 9-15v25" stroke="#fffdf8"/>
-            <path d="M40 41h17M48.5 41v25" stroke="#e8c66c"/>
-            <path d="M62 41v25M77 41v25M62 53.5h15" stroke="#fffdf8"/>
-          </g>
-        <circle cx="75" cy="24" r="4" fill="#e8c66c"/>
-      </g>
-      <text x="120" y="50" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="800" font-size="29" fill="currentColor" letter-spacing="-0.4">MULTI <tspan fill="url(#mthTool)">TOOL</tspan></text>
-      <rect x="292" y="25" width="66" height="29" rx="7" fill="url(#mthHub)"/>
-      <text x="325" y="44.8" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="700" font-size="14" fill="#fffdf8" text-anchor="middle" letter-spacing="1.2">HUB</text>
-      <text x="122" y="76" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="600" font-size="10.5" fill="currentColor" opacity=".62" letter-spacing="1.7">FILES, HANDLED WELL</text>
-    </svg></a>
+  <a class="brand" href="../index.html"><img class="brand-logo logo-light" src="../assets/logo.svg" alt="MULTI TOOL HUB" width="440" height="104"><img class="brand-logo logo-dark" src="../assets/logo-dark.svg" alt="" aria-hidden="true" width="440" height="104"></a>
   <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
 </div></header>
 <main>
@@ -131,7 +107,7 @@
 </div>
 <div class="status" id="status" role="status" aria-live="polite"></div>
 </main>
-<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by chank!nd3 p4d4y41!.I FAYAS MONU</span></div>
 <script src="../assets/app.js"></script>
 <script src="../assets/chat.js"></script>
 <script>
@@ -334,9 +310,8 @@ $("go").onclick=async function(){
   busy=true;this.disabled=true;stopPlay();PE.progress(.03);
   try{
     var fmt=$("fmt").value, br=+$("br").value;
-    var chPref=+$("ch").value, chansOut=buf.numberOfChannels;
-    if(chPref)chansOut=Math.min(chPref,buf.numberOfChannels);
-    if(chPref===2&&buf.numberOfChannels===1){/* duplicate mono below */}
+    var chPref=+$("ch").value, maxCh=fmt==="mp3"?2:Math.max(1,buf.numberOfChannels);
+    var chansOut=chPref?Math.min(chPref,buf.numberOfChannels,maxCh):Math.min(buf.numberOfChannels,maxCh);
     var srPref=+$("sr").value, sr=srPref||buf.sampleRate;
     if(sr>48000)sr=48000;
     var s0=Math.max(0,Math.floor(start*buf.sampleRate)), s1=Math.min(buf.length,Math.ceil(end*buf.sampleRate));
@@ -358,6 +333,9 @@ $("go").onclick=async function(){
       var mix=new Float32Array(n);
       for(var c3=0;c3<out.length;c3++)for(var i=0;i<n;i++)mix[i]+=out[c3][i]/out.length;
       out=[mix];
+    }else if(out.length>2&&chansOut===2){
+      /* Surround sources: use the front left/right pair for MP3 stereo. */
+      out=[out[0].slice(0),out[1].slice(0)];
     }else if(out.length===1&&chansOut===2){
       out=[out[0].slice(0),out[0].slice(0)];
     }

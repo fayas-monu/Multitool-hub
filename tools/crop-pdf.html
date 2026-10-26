@@ -4,18 +4,15 @@
 <meta charset="UTF-8">
 <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
+<!-- Credit: chank!nd3 p4d4y41!.I FAYAS MONU -->
 <title>Crop PDF — precise 8-way crop frame &amp; live preview | MULTI TOOL HUB</title>
 <meta name="description" content="Crop PDF pages precisely. Drag any of the eight handles, type exact insets in points, millimetres, inches or percent, lock an aspect ratio, auto-trim margins and preview the result. Nothing leaves your device.">
-<meta name="theme-color" content="#f5f1e8" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#111613" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b1220" media="(prefers-color-scheme: dark)">
 <meta name="color-scheme" content="light dark">
-<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="icon" href="../assets/logo-mark.svg" type="image/svg+xml">
 <link rel="manifest" href="../manifest.webmanifest">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
@@ -28,30 +25,30 @@
   .crop-stage{min-width:0;text-align:center}
   .crop-side{min-width:0}
   .crop-block{padding:12px 13px;border:1px solid var(--line);border-radius:10px;background:var(--surface);margin-bottom:10px}
-  .crop-block h3{font:600 14px 'Fraunces',Georgia,serif;letter-spacing:-.01em;margin:0 0 8px;color:var(--ink)}
+  .crop-block h3{font:600 14px var(--font-head);letter-spacing:-.01em;margin:0 0 8px;color:var(--ink)}
   .crop-tools{display:flex;flex-wrap:wrap;gap:5px}
-  .crop-tools button{font:600 11.8px 'Plus Jakarta Sans',sans-serif;border:1px solid var(--line);background:var(--surface-2);color:var(--muted);border-radius:7px;padding:6px 9px;cursor:pointer}
+  .crop-tools button{font:600 11.8px var(--font-body);border:1px solid var(--line);background:var(--surface-2);color:var(--muted);border-radius:7px;padding:6px 9px;cursor:pointer}
   .crop-tools button:hover,.crop-tools button.on{border-color:var(--accent);color:var(--accent);background:color-mix(in srgb,var(--accent) 7%,var(--surface))}
   .crop-unit{display:flex;align-items:center;gap:7px;margin-bottom:8px}
-  .crop-unit label{font:700 10.5px 'Plus Jakarta Sans',sans-serif;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
-  .crop-unit select{flex:1;padding:6px 8px;border:1px solid var(--line);border-radius:7px;background:var(--surface-2);color:var(--ink);font:600 12px 'Plus Jakarta Sans',sans-serif}
+  .crop-unit label{font:700 10.5px var(--font-body);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+  .crop-unit select{flex:1;padding:6px 8px;border:1px solid var(--line);border-radius:7px;background:var(--surface-2);color:var(--ink);font:600 12px var(--font-body)}
   .edge-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-  .edge-grid label{display:block;font:600 10.5px 'Plus Jakarta Sans',sans-serif;color:var(--muted)}
+  .edge-grid label{display:block;font:600 10.5px var(--font-body);color:var(--muted)}
   .edge-grid label span{color:var(--accent);font-weight:800}
-  .edge-grid input{width:100%;margin-top:3px;padding:6px 7px;border:1px solid var(--line);border-radius:7px;background:var(--surface-2);color:var(--ink);font:700 12.5px 'Plus Jakarta Sans',sans-serif;text-align:right}
+  .edge-grid input{width:100%;margin-top:3px;padding:6px 7px;border:1px solid var(--line);border-radius:7px;background:var(--surface-2);color:var(--ink);font:700 12.5px var(--font-body);text-align:right}
   .edge-grid input:focus{border-color:var(--accent);outline:0;box-shadow:var(--ring)}
   .edge-note{font-size:10.5px;color:var(--muted);line-height:1.45;margin-top:7px}
   .pagebar{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:10px;flex-wrap:wrap}
-  .pagebar button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:6px 10px;cursor:pointer;font:700 12.5px 'Plus Jakarta Sans',sans-serif}
+  .pagebar button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:6px 10px;cursor:pointer;font:700 12.5px var(--font-body)}
   .pagebar button:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
-  .pagebar input{width:56px;text-align:center;padding:6px;border:1px solid var(--line);border-radius:7px;background:var(--surface-2);color:var(--ink);font:700 12.5px 'Plus Jakarta Sans',sans-serif}
+  .pagebar input{width:56px;text-align:center;padding:6px;border:1px solid var(--line);border-radius:7px;background:var(--surface-2);color:var(--ink);font:700 12.5px var(--font-body)}
   .pagebar span{font-size:12.5px;color:var(--muted);font-weight:600}
-  .crop-read{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:9px;font:600 11.5px 'Plus Jakarta Sans',sans-serif;color:var(--muted)}
+  .crop-read{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:9px;font:600 11.5px var(--font-body);color:var(--muted)}
   .crop-read span{padding:3px 9px;border:1px solid var(--line);border-radius:20px;background:var(--surface)}
   .crop-read b{color:var(--ink)}
   .crop-result{margin:12px auto 0;display:flex;flex-direction:column;align-items:center;gap:5px}
   .crop-result[hidden]{display:none}
-  .crop-result .lab{font:700 10px 'Plus Jakarta Sans',sans-serif;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+  .crop-result .lab{font:700 10px var(--font-body);text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
   .crop-result canvas{max-width:100%;height:auto;border:1px solid var(--line);border-radius:7px;background:#fff;box-shadow:var(--shadow)}
   .crop-file{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;font-size:13px}
   .crop-file strong{max-width:100%;overflow-wrap:anywhere}
@@ -59,7 +56,7 @@
   .crop-side .row .btn{flex:1 1 100%;justify-content:center}
   .slider-row{margin-bottom:9px}
   .slider-row:last-child{margin-bottom:0}
-  .slider-row label{display:block;font:600 11px 'Plus Jakarta Sans',sans-serif;color:var(--muted);margin-bottom:2px}
+  .slider-row label{display:block;font:600 11px var(--font-body);color:var(--muted);margin-bottom:2px}
   .slider-row input[type=range]{width:100%}
   @media (max-width:900px){
     .crop-layout{grid-template-columns:1fr}
@@ -77,28 +74,7 @@
 <body>
 <header><div class="bar">
   <a class="brand" href="../index.html">
-    <svg class="brand-logo" viewBox="0 0 420 110" role="img" aria-label="MULTI TOOL HUB — FILES, HANDLED WELL" focusable="false">
-      <title>MULTI TOOL HUB — FILES, HANDLED WELL</title>
-      <defs>
-        <linearGradient id="mthInk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#26352d"/><stop offset="1" stop-color="#16211b"/></linearGradient>
-        <linearGradient id="mthTool" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1b7a63"/><stop offset="1" stop-color="#156b57"/></linearGradient>
-        <linearGradient id="mthHub" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b4652a"/><stop offset="1" stop-color="#a9571b"/></linearGradient>
-      </defs>
-      <g transform="translate(8 8)">
-        <rect width="94" height="94" rx="22" fill="url(#mthInk)"/>
-        <rect x="0.75" y="0.75" width="92.5" height="92.5" rx="21.4" fill="none" stroke="#43564b" stroke-width="1.5"/>
-        <g fill="none" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 66V41l9 15 9-15v25" stroke="#fffdf8"/>
-            <path d="M40 41h17M48.5 41v25" stroke="#e8c66c"/>
-            <path d="M62 41v25M77 41v25M62 53.5h15" stroke="#fffdf8"/>
-          </g>
-        <circle cx="75" cy="24" r="4" fill="#e8c66c"/>
-      </g>
-      <text x="120" y="50" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="800" font-size="29" fill="currentColor" letter-spacing="-0.4">MULTI <tspan fill="url(#mthTool)">TOOL</tspan></text>
-      <rect x="292" y="25" width="66" height="29" rx="7" fill="url(#mthHub)"/>
-      <text x="325" y="44.8" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="700" font-size="14" fill="#fffdf8" text-anchor="middle" letter-spacing="1.2">HUB</text>
-      <text x="122" y="76" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="600" font-size="10.5" fill="currentColor" opacity=".62" letter-spacing="1.7">FILES, HANDLED WELL</text>
-    </svg>
+    <img class="brand-logo logo-light" src="../assets/logo.svg" alt="MULTI TOOL HUB" width="440" height="104"><img class="brand-logo logo-dark" src="../assets/logo-dark.svg" alt="" aria-hidden="true" width="440" height="104">
   </a>
   <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
 </div></header>
@@ -203,7 +179,7 @@
 <div class="status" id="status" role="status" aria-live="polite"></div>
 <div class="prog" id="prog"><div></div></div>
 </main>
-<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by chank!nd3 p4d4y41!.I FAYAS MONU</span></div>
 <script src="../assets/app.js"></script>
 <script src="../assets/chat.js"></script>
 <script>
@@ -270,19 +246,19 @@ function draw(){
   }
   x.restore();
   /* border */
-  x.save();x.strokeStyle="#fffdf8";x.lineWidth=2;x.strokeRect(f.x*k,f.y*k,f.w*k,f.h*k);
-  x.strokeStyle="rgba(20,33,27,.6)";x.lineWidth=1;x.strokeRect(f.x*k+1,f.y*k+1,f.w*k-2,f.h*k-2);
+  x.save();x.strokeStyle="#ffffff";x.lineWidth=2;x.strokeRect(f.x*k,f.y*k,f.w*k,f.h*k);
+  x.strokeStyle="rgba(11,31,58,.65)";x.lineWidth=1;x.strokeRect(f.x*k+1,f.y*k+1,f.w*k-2,f.h*k-2);
   /* corner handles */
   var hs=Math.max(7,9*k);
   [[f.x,f.y],[f.x+f.w,f.y],[f.x,f.y+f.h],[f.x+f.w,f.y+f.h]].forEach(function(p){
-    x.fillStyle="#fffdf8";x.fillRect(p[0]*k-hs/2,p[1]*k-hs/2,hs,hs);
-    x.strokeStyle="#16211b";x.lineWidth=1.5;x.strokeRect(p[0]*k-hs/2,p[1]*k-hs/2,hs,hs);
+    x.fillStyle="#ffffff";x.fillRect(p[0]*k-hs/2,p[1]*k-hs/2,hs,hs);
+    x.strokeStyle="#0b1f3a";x.lineWidth=1.5;x.strokeRect(p[0]*k-hs/2,p[1]*k-hs/2,hs,hs);
   });
   /* edge handles */
   var cx=(f.x+f.w/2)*k, cy=(f.y+f.h/2)*k, ew=Math.max(13,20*k), et=Math.max(4,5*k);
   function bar(px,py,bw,bh){
-    x.fillStyle="#fffdf8";x.fillRect(px-bw/2,py-bh/2,bw,bh);
-    x.strokeStyle="#16211b";x.lineWidth=1.5;x.strokeRect(px-bw/2,py-bh/2,bw,bh);
+    x.fillStyle="#ffffff";x.fillRect(px-bw/2,py-bh/2,bw,bh);
+    x.strokeStyle="#0b1f3a";x.lineWidth=1.5;x.strokeRect(px-bw/2,py-bh/2,bw,bh);
   }
   bar(cx,f.y*k,ew,et);
   bar(cx,(f.y+f.h)*k,ew,et);

@@ -4,17 +4,14 @@
 <meta charset="UTF-8">
 <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
+<!-- Credit: chank!nd3 p4d4y41!.I FAYAS MONU -->
 <title>JPG to PDF — photos and scans into one PDF | MULTI TOOL HUB</title>
 <meta name="description" content="Turn JPG, PNG and WebP images into one tidy PDF. Reorder by drag and drop, rotate, choose A4 or Letter, margins, fit mode and metadata.">
-<meta name="theme-color" content="#f5f1e8" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#111613" media="(prefers-color-scheme: dark)">
-<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b1220" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/logo-mark.svg" type="image/svg+xml">
 <link rel="manifest" href="../manifest.webmanifest">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
@@ -32,28 +29,7 @@
 </head>
 <body>
 <header><div class="bar">
-  <a class="brand" href="../index.html"><svg class="brand-logo" viewBox="0 0 420 110" role="img" aria-label="MULTI TOOL HUB — FILES, HANDLED WELL" focusable="false">
-      <title>MULTI TOOL HUB — FILES, HANDLED WELL</title>
-      <defs>
-        <linearGradient id="mthInk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#26352d"/><stop offset="1" stop-color="#16211b"/></linearGradient>
-        <linearGradient id="mthTool" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1b7a63"/><stop offset="1" stop-color="#156b57"/></linearGradient>
-        <linearGradient id="mthHub" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b4652a"/><stop offset="1" stop-color="#a9571b"/></linearGradient>
-      </defs>
-      <g transform="translate(8 8)">
-        <rect width="94" height="94" rx="22" fill="url(#mthInk)"/>
-        <rect x="0.75" y="0.75" width="92.5" height="92.5" rx="21.4" fill="none" stroke="#43564b" stroke-width="1.5"/>
-        <g fill="none" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 66V41l9 15 9-15v25" stroke="#fffdf8"/>
-            <path d="M40 41h17M48.5 41v25" stroke="#e8c66c"/>
-            <path d="M62 41v25M77 41v25M62 53.5h15" stroke="#fffdf8"/>
-          </g>
-        <circle cx="75" cy="24" r="4" fill="#e8c66c"/>
-      </g>
-      <text x="120" y="50" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="800" font-size="29" fill="currentColor" letter-spacing="-0.4">MULTI <tspan fill="url(#mthTool)">TOOL</tspan></text>
-      <rect x="292" y="25" width="66" height="29" rx="7" fill="url(#mthHub)"/>
-      <text x="325" y="44.8" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="700" font-size="14" fill="#fffdf8" text-anchor="middle" letter-spacing="1.2">HUB</text>
-      <text x="122" y="76" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="600" font-size="10.5" fill="currentColor" opacity=".62" letter-spacing="1.7">FILES, HANDLED WELL</text>
-    </svg></a>
+  <a class="brand" href="../index.html"><img class="brand-logo logo-light" src="../assets/logo.svg" alt="MULTI TOOL HUB" width="440" height="104"><img class="brand-logo logo-dark" src="../assets/logo-dark.svg" alt="" aria-hidden="true" width="440" height="104"></a>
   <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
 </div></header>
 <main>
@@ -128,7 +104,7 @@
 </div>
 <div class="status" id="status" role="status" aria-live="polite"></div>
 </main>
-<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by chank!nd3 p4d4y41!.I FAYAS MONU</span></div>
 <script src="../assets/app.js"></script>
 <script src="../assets/chat.js"></script>
 <script>
@@ -138,8 +114,8 @@ var PAPER={a4:[595.28,841.89],letter:[612,792],legal:[612,1008],a5:[419.53,595.2
 function settings(){
   return {size:$("size").value,orient:$("orient").value,fit:$("fit").value,margin:+$("margin").value,q:+$("q").value/100};
 }
-function pageSize(img,j){
-  var s=settings();
+function pageSize(img,j,cfg){
+  var s=cfg||settings();
   if(s.size==="fit")return [img.w,img.h];
   var p=PAPER[s.size].slice();
   var landscape=s.orient==="landscape"||(s.orient==="auto"&&img.w>img.h);
@@ -147,8 +123,8 @@ function pageSize(img,j){
   if(!landscape&&p[0]>p[1])p=[p[1],p[0]];
   return p;
 }
-function place(img,W,H){
-  var s=settings(),m=s.margin,bw=Math.max(1,W-2*m),bh=Math.max(1,H-2*m);
+function place(img,W,H,cfg){
+  var s=cfg||settings(),m=s.margin,bw=Math.max(1,W-2*m),bh=Math.max(1,H-2*m);
   var sc=s.fit==="cover"?Math.max(bw/img.w,bh/img.h):(s.fit==="stretch"?0:Math.min(bw/img.w,bh/img.h));
   var w=s.fit==="stretch"?bw:img.w*sc,h=s.fit==="stretch"?bh:img.h*sc;
   return {x:(W-w)/2,y:(H-h)/2,w:w,h:h};
@@ -158,8 +134,11 @@ function updateMeta(){
   $("cnt").textContent=items.length+" image"+(items.length===1?"":"s");
   var total=items.reduce(function(a,i){return a+i.file.size},0);
   $("total").textContent=items.length?"· "+PE.fmt(total):"";
+  var s=settings();
   $("mv").textContent=$("margin").value;
-  $("mhint").textContent=$("size").value==="fit"?"(margins crop the image; set 0 for a full-bleed page)":"";
+  $("mhint").textContent=s.size==="fit"
+    ? (s.margin>0?"(the page matches the image; margins shrink it inside the page)":"(full-bleed page)")
+    : (s.fit==="cover"?"(cover fit crops edges)":"");
 }
 function renderList(){
   $("panel").hidden=!items.length;
@@ -186,9 +165,11 @@ function drawPreview(){
   x.fillStyle="#fff";x.fillRect(0,0,W,H);
   if(m>0){x.strokeStyle="rgba(61,59,243,.35)";x.setLineDash([3,3]);x.lineWidth=1/k;x.strokeRect(m,m,W-2*m,H-2*m);x.setLineDash([])}
   var p=place({w:w,h:h},W,H);
+  var swap=it.rot%180!==0;
   x.save();x.beginPath();x.rect(0,0,W,H);x.clip();
   x.translate(W/2,H/2);x.rotate(it.rot*Math.PI/180);
-  x.drawImage(it.img,-p.w/2,-p.h/2,p.w,p.h);
+  if(swap)x.drawImage(it.img,-p.h/2,-p.w/2,p.h,p.w);
+  else x.drawImage(it.img,-p.w/2,-p.h/2,p.w,p.h);
   x.restore();
   $("pvinfo").textContent="Page "+(Math.min(cur,items.length-1)+1)+" · "+Math.round(W)+" × "+Math.round(H)+" pt"+(settings().size==="fit"?"":" · "+settings().fit);
 }
@@ -278,7 +259,7 @@ function outName(){
 }
 $("go").onclick=async function(){
   if(!items.length||busy)return;
-  var btn=this,s=settings();busy=true;btn.disabled=true;PE.progress(.02);
+  var btn=this,s=settings(),saveName=outName();busy=true;btn.disabled=true;PE.progress(.02);
   try{
     var doc=await PDFLib.PDFDocument.create();
     var title=$("title").value.trim(),author=$("author").value.trim();
@@ -288,14 +269,14 @@ $("go").onclick=async function(){
     for(var i=0;i<items.length;i++){
       PE.status("Adding image "+(i+1)+" of "+items.length+"…");
       var r=await PE.imageBytes(items[i].file,{rotate:items[i].rot,quality:s.q,maxSide:3200,background:"#fff"});
-      var img=await doc.embedJpg(r.bytes), dims=pageSize({w:r.w,h:r.h},i);
-      var page=doc.addPage(dims),p=place({w:r.w,h:r.h},dims[0],dims[1]);
+      var img=await doc.embedJpg(r.bytes), dims=pageSize({w:r.w,h:r.h},i,s);
+      var page=doc.addPage(dims),p=place({w:r.w,h:r.h},dims[0],dims[1],s);
       page.drawImage(img,{x:p.x,y:p.y,width:p.w,height:p.h});
       PE.progress(.05+.9*((i+1)/items.length));
       await PE.sleep(0);
     }
     var bytes=await doc.save({useObjectStreams:true});
-    PE.download(bytes,outName(),"application/pdf");
+    PE.download(bytes,saveName,"application/pdf");
     PE.progress(1);
     PE.status("Created "+items.length+" page"+(items.length===1?"":"s")+" · "+PE.fmt(bytes.length)+".","ok");PE.toast("Download started");
   }catch(e){

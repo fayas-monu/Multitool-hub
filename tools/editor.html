@@ -4,18 +4,15 @@
 <meta charset="UTF-8">
 <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
+<!-- Credit: chank!nd3 p4d4y41!.I FAYAS MONU -->
 <title>PDF Editor — edit, sign, redact & manage pages | MULTI TOOL HUB</title>
 <meta name="description" content="A full browser PDF editor: edit text, add text, highlight, underline, strike, draw, shapes, lines, arrows, images, signatures, comments and form values. Rotate, reorder, insert, duplicate, extract and merge pages. Your file never leaves your device.">
-<meta name="theme-color" content="#f5f1e8" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#111613" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b1220" media="(prefers-color-scheme: dark)">
 <meta name="color-scheme" content="light dark">
-<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="icon" href="../assets/logo-mark.svg" type="image/svg+xml">
 <link rel="manifest" href="../manifest.webmanifest">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
@@ -23,28 +20,7 @@
 <body>
 <header><div class="bar">
   <a class="brand" href="../index.html">
-    <svg class="brand-logo" viewBox="0 0 420 110" role="img" aria-label="MULTI TOOL HUB — FILES, HANDLED WELL" focusable="false">
-      <title>MULTI TOOL HUB — FILES, HANDLED WELL</title>
-      <defs>
-        <linearGradient id="mthInk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#26352d"/><stop offset="1" stop-color="#16211b"/></linearGradient>
-        <linearGradient id="mthTool" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1b7a63"/><stop offset="1" stop-color="#156b57"/></linearGradient>
-        <linearGradient id="mthHub" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b4652a"/><stop offset="1" stop-color="#a9571b"/></linearGradient>
-      </defs>
-      <g transform="translate(8 8)">
-        <rect width="94" height="94" rx="22" fill="url(#mthInk)"/>
-        <rect x="0.75" y="0.75" width="92.5" height="92.5" rx="21.4" fill="none" stroke="#43564b" stroke-width="1.5"/>
-        <g fill="none" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 66V41l9 15 9-15v25" stroke="#fffdf8"/>
-            <path d="M40 41h17M48.5 41v25" stroke="#e8c66c"/>
-            <path d="M62 41v25M77 41v25M62 53.5h15" stroke="#fffdf8"/>
-          </g>
-        <circle cx="75" cy="24" r="4" fill="#e8c66c"/>
-      </g>
-      <text x="120" y="50" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="800" font-size="29" fill="currentColor" letter-spacing="-0.4">MULTI <tspan fill="url(#mthTool)">TOOL</tspan></text>
-      <rect x="292" y="25" width="66" height="29" rx="7" fill="url(#mthHub)"/>
-      <text x="325" y="44.8" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="700" font-size="14" fill="#fffdf8" text-anchor="middle" letter-spacing="1.2">HUB</text>
-      <text x="122" y="76" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="600" font-size="10.5" fill="currentColor" opacity=".62" letter-spacing="1.7">FILES, HANDLED WELL</text>
-    </svg>
+    <img class="brand-logo logo-light" src="../assets/logo.svg" alt="MULTI TOOL HUB" width="440" height="104"><img class="brand-logo logo-dark" src="../assets/logo-dark.svg" alt="" aria-hidden="true" width="440" height="104">
   </a>
   <div class="header-actions ed-actions">
     <button type="button" class="back" id="chatBtn" aria-label="Open assistant"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px"><path d="M20 11.5a7.5 7.5 0 0 1-11.2 6.5L4 19.5l1.5-4.5A7.5 7.5 0 1 1 20 11.5Z"/><path d="M8.5 10h7M8.5 13.2h4.4"/></svg> Assistant</button>
@@ -223,7 +199,7 @@
   <div class="status" id="svStatus"></div>
 </dialog>
 
-<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by FAYAS MONU</span></div>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by chank!nd3 p4d4y41!.I FAYAS MONU</span></div>
 
 <script src="../assets/app.js"></script>
 <script src="../assets/chat.js"></script>
@@ -309,7 +285,7 @@ var TB=[
 ];
 $("tb").innerHTML=TB.map(function(t){
   if(t==="|")return '<i class="sep"></i>';
-  if(t[0]==="pg")return '<input type="number" id="pn2" min="1" value="1" aria-label="Page number"><b id="pt" style="font:600 12px \'Plus Jakarta Sans\',sans-serif;color:var(--muted)"></b>';
+  if(t[0]==="pg")return '<input type="number" id="pn2" min="1" value="1" aria-label="Page number"><b id="pt" style="font:600 12px var(--font-body);color:var(--muted)"></b>';
   if(t[0]==="zl")return '<b id="zl" title="Click to fit the page">100%</b>';
   return '<button type="button" data-t="'+t[0]+'" title="'+(t[2]||t[0])+'" aria-label="'+(t[2]||t[0])+'"'+(t[0]==="save"?' class="go"':'')+'><i class="fa-solid '+t[1]+'"></i>'+(t[2]?'<span>'+t[2]+'</span>':'')+'</button>';
 }).join("");
@@ -1071,12 +1047,17 @@ function renderComments(){
   var box=$("comments");
   if(!all.length){box.innerHTML='<p class="empty-sm">No comments yet. Use the Comment tool or “New comment”.</p>';return}
   box.innerHTML=all.map(function(c){
-    return '<div class="cmt"><b>Page '+(c.pg+1)+'</b><p>'+PE.esc(c.a.text||"")+'</p><div class="cmt-actions"><button type="button" data-go="'+c.pg+'">View</button><button type="button" data-edit="'+c.a.id+'">Edit</button><button type="button" data-del="'+c.a.id+'">Delete</button></div></div>';
+    return '<div class="cmt"><b>Page '+(c.pg+1)+'</b><p>'+PE.esc(c.a.text||"")+'</p><div class="cmt-actions"><button type="button" data-go="'+c.pg+'" data-note="'+c.a.id+'">View</button><button type="button" data-edit="'+c.a.id+'">Edit</button><button type="button" data-del="'+c.a.id+'">Delete</button></div></div>';
   }).join("");
 }
 $("comments").addEventListener("click",async function(e){
   var b=e.target.closest("button");if(!b)return;
-  if(b.dataset.go!=null){await showPage(+b.dataset.go);var meta=METAS[cur];var list2=ANNS[meta.uid]||[];var n=list2.find(function(a){return a.k==="note"&&a.y<999999});sel=n?n.id:null;render()}
+  if(b.dataset.go!=null){
+    await showPage(+b.dataset.go);
+    var target=b.dataset.note?byId(+b.dataset.note):null;
+    sel=target?target.id:null;render();
+    if(target)PE.toast("Comment selected on page "+(cur+1));
+  }
   if(b.dataset.edit!=null){openNote(+b.dataset.edit)}
   if(b.dataset.del!=null){
     var id=+b.dataset.del;
@@ -1155,6 +1136,7 @@ $("tb").addEventListener("click",function(e){
   if(t==="save"){openSave();return}
 });
 $("tb").addEventListener("change",function(e){if(e.target.id==="pn2")showPage((+e.target.value||1)-1,true)});
+if($("zl"))$("zl").onclick=function(){fitMode=true;showPage(cur,true)};
 
 /* ---------------- pointer editing ---------------- */
 var layer=$("layer");
