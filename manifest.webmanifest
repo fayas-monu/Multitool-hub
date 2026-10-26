@@ -2,14 +2,14 @@
   "id": "./",
   "name": "MULTI TOOL HUB",
   "short_name": "MULTI TOOL HUB",
-  "description": "Free browser-based PDF, image and media tools. Merge, split, compress, edit, sign, watermark and convert — most files never leave your device.",
+  "description": "Free browser-based PDF, image and media tools. Merge, split, compress, edit, sign, watermark and convert — files stay on your device unless you explicitly use a connected service.",
   "start_url": "./index.html?source=pwa",
   "scope": "./",
   "display": "standalone",
   "display_override": ["standalone", "minimal-ui", "browser"],
   "orientation": "any",
-  "background_color": "#f5f1e8",
-  "theme_color": "#f5f1e8",
+  "background_color": "#ffffff",
+  "theme_color": "#0b1f3a",
   "lang": "en",
   "dir": "ltr",
   "categories": ["productivity", "utilities", "photo", "business"],
@@ -33,7 +33,7 @@
       "purpose": "maskable"
     },
     {
-      "src": "assets/logo.svg",
+      "src": "assets/logo-mark.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"

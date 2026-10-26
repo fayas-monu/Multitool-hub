@@ -1,5 +1,5 @@
 # MULTI TOOL HUB — robots.txt
-# Credit: (hank!nd3 p4d4y41! | FAYAS MONU
+# Credit: chank!nd3 p4d4y41!.I FAYAS MONU
 # Replace the host in the Sitemap line (and in sitemap.xml) with your real domain.
 
 User-agent: *

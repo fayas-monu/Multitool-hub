@@ -3,22 +3,42 @@
 <head>
 <meta charset="UTF-8">
 <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<script>
+/* A GitHub Pages 404 is served at the missing path, so root-absolute URLs can
+   point outside a project site. Resolve the site root before any asset links. */
+(function(){
+  var base=null;
+  try{
+    if(navigator.serviceWorker&&navigator.serviceWorker.controller)
+      base=new URL(".",navigator.serviceWorker.controller.scriptURL);
+  }catch(e){}
+  if(!base){
+    if(location.protocol==="file:")base=new URL(".",location.href);
+    else if(/(^|\.)github\.io$/i.test(location.hostname)){
+      var seg=location.pathname.split("/").filter(Boolean)[0]||"";
+      base=new URL("/"+(seg?seg+"/":""),location.origin);
+    }else base=new URL("/",location.origin);
+  }
+  var tag=document.createElement("base");
+  tag.href=base.href;
+  document.head.appendChild(tag);
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Credit: (hank!nd3 p4d4y41! | FAYAS MONU -->
+<!-- Credit: chank!nd3 p4d4y41!.I FAYAS MONU -->
 <title>Page not found — MULTI TOOL HUB</title>
 <meta name="description" content="This page does not exist. Browse the full set of free PDF, image and media tools on MULTI TOOL HUB.">
-<meta name="theme-color" content="#f5f1e8" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#111613" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b1220" media="(prefers-color-scheme: dark)">
 <meta name="robots" content="noindex">
-<link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/assets/icon-192.png">
-<link rel="manifest" href="/manifest.webmanifest">
-<link rel="stylesheet" href="/assets/style.css">
+<link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="assets/style.css">
 <style>
   .lost{max-width:720px;margin:0 auto;padding:56px 22px 76px;text-align:center;width:100%}
-  .lost .code{font-family:'Fraunces',Georgia,serif;font-size:clamp(72px,17vw,140px);line-height:1;letter-spacing:-8px;font-weight:800;
-    background:linear-gradient(110deg,var(--accent),var(--accent-2) 55%,var(--mark));-webkit-background-clip:text;background-clip:text;color:transparent}
-  .lost h1{font-family:'Fraunces',Georgia,serif;font-size:clamp(24px,4vw,34px);letter-spacing:-.7px;margin:4px 0 10px}
+  .lost .code{font-family:var(--font-head);font-size:clamp(72px,17vw,140px);line-height:1;letter-spacing:-6px;font-weight:800;color:var(--accent)}
+  .lost h1{font-family:var(--font-head);font-size:clamp(24px,4vw,34px);letter-spacing:-.7px;margin:4px 0 10px}
   .lost p{color:var(--muted);max-width:50ch;margin:0 auto 8px}
   .lost .actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:24px}
   .lost .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:34px;text-align:left}
@@ -29,51 +49,30 @@
 </head>
 <body>
 <header><div class="bar">
-  <a class="brand" href="/index.html"><svg class="brand-logo" viewBox="0 0 420 110" role="img" aria-label="MULTI TOOL HUB — FILES, HANDLED WELL" focusable="false">
-      <title>MULTI TOOL HUB — FILES, HANDLED WELL</title>
-      <defs>
-        <linearGradient id="mthInk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#26352d"/><stop offset="1" stop-color="#16211b"/></linearGradient>
-        <linearGradient id="mthTool" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1b7a63"/><stop offset="1" stop-color="#156b57"/></linearGradient>
-        <linearGradient id="mthHub" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b4652a"/><stop offset="1" stop-color="#a9571b"/></linearGradient>
-      </defs>
-      <g transform="translate(8 8)">
-        <rect width="94" height="94" rx="22" fill="url(#mthInk)"/>
-        <rect x="0.75" y="0.75" width="92.5" height="92.5" rx="21.4" fill="none" stroke="#43564b" stroke-width="1.5"/>
-        <g fill="none" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 66V41l9 15 9-15v25" stroke="#fffdf8"/>
-            <path d="M40 41h17M48.5 41v25" stroke="#e8c66c"/>
-            <path d="M62 41v25M77 41v25M62 53.5h15" stroke="#fffdf8"/>
-          </g>
-        <circle cx="75" cy="24" r="4" fill="#e8c66c"/>
-      </g>
-      <text x="120" y="50" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="800" font-size="29" fill="currentColor" letter-spacing="-0.4">MULTI <tspan fill="url(#mthTool)">TOOL</tspan></text>
-      <rect x="292" y="25" width="66" height="29" rx="7" fill="url(#mthHub)"/>
-      <text x="325" y="44.8" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="700" font-size="14" fill="#fffdf8" text-anchor="middle" letter-spacing="1.2">HUB</text>
-      <text x="122" y="76" font-family="'Plus Jakarta Sans',Arial,sans-serif" font-weight="600" font-size="10.5" fill="currentColor" opacity=".62" letter-spacing="1.7">FILES, HANDLED WELL</text>
-    </svg></a>
-  <a class="back" href="/index.html">All tools</a>
+  <a class="brand" href="index.html"><img class="brand-logo logo-light" src="assets/logo.svg" alt="MULTI TOOL HUB" width="440" height="104"><img class="brand-logo logo-dark" src="assets/logo-dark.svg" alt="" aria-hidden="true" width="440" height="104"></a>
+  <a class="back" href="index.html">All tools</a>
 </div></header>
 <main class="lost">
   <div class="code">404</div>
   <h1>This page took a wrong turn</h1>
   <p>The link may be old, mistyped, or the tool may have moved. Everything below is one click away.</p>
   <div class="actions">
-    <a class="btn" href="/index.html">Browse all tools</a>
-    <a class="btn ghost" href="/tools/editor.html">Open PDF Editor</a>
+    <a class="btn" href="index.html">Browse all tools</a>
+    <a class="btn ghost" href="tools/editor.html">Open PDF Editor</a>
   </div>
   <div class="grid">
-    <a href="/tools/merge-pdf.html">Merge PDF<span>Combine files</span></a>
-    <a href="/tools/split-pdf.html">Split PDF<span>Extract pages</span></a>
-    <a href="/tools/compress-pdf.html">Compress PDF<span>Make it smaller</span></a>
-    <a href="/tools/pdf-to-word.html">PDF to Word<span>Editable DOCX</span></a>
-    <a href="/tools/pdf-to-text.html">PDF to Text<span>Clean plain text</span></a>
-    <a href="/tools/jpg-to-pdf.html">JPG to PDF<span>Photos to pages</span></a>
-    <a href="/tools/image-compressor.html">Image Compressor<span>JPG, PNG, WebP</span></a>
-    <a href="/tools/video-to-mp3.html">Video to MP3<span>Audio extractor</span></a>
+    <a href="tools/merge-pdf.html">Merge PDF<span>Combine files</span></a>
+    <a href="tools/split-pdf.html">Split PDF<span>Extract pages</span></a>
+    <a href="tools/compress-pdf.html">Compress PDF<span>Make it smaller</span></a>
+    <a href="tools/pdf-to-word.html">PDF to Word<span>Editable DOCX</span></a>
+    <a href="tools/pdf-to-text.html">PDF to Text<span>Clean plain text</span></a>
+    <a href="tools/jpg-to-pdf.html">JPG to PDF<span>Photos to pages</span></a>
+    <a href="tools/image-compressor.html">Image Compressor<span>JPG, PNG, WebP</span></a>
+    <a href="tools/video-to-mp3.html">Video to MP3<span>Audio extractor</span></a>
   </div>
 </main>
-<div class="foot"><a href="/terms.html">Terms &amp; Conditions</a><a href="/privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB</span></div>
-<script src="/assets/app.js"></script>
-<script src="/assets/chat.js"></script>
+<div class="foot"><a href="terms.html">Terms &amp; Conditions</a><a href="privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB &middot; Created by <a href="https://www.instagram.com/____fa_y_as_____" target="_blank" rel="noopener">chank!nd3 p4d4y41!.I FAYAS MONU</a></span></div>
+<script src="assets/app.js"></script>
+<script src="assets/chat.js"></script>
 </body>
 </html>

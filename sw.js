@@ -1,7 +1,7 @@
 /* MULTI TOOL HUB — offline cache & install support.
-   Credit: (hank!nd3 p4d4y41! | FAYAS MONU
+   Credit: chank!nd3 p4d4y41!.I FAYAS MONU
    Bump CACHE when you ship new files. Old caches are deleted automatically. */
-const CACHE = "mth-v13";
+const CACHE = "mth-v16";
 const OFFLINE_URL = "./offline.html";
 
 /* Everything the app needs to open and work offline. Paths are relative to the
@@ -19,6 +19,8 @@ const PRECACHE = [
   "./assets/chat.js",
   "./assets/pdf.worker.min.js",
   "./assets/logo.svg",
+  "./assets/logo-dark.svg",
+  "./assets/logo-mark.svg",
   "./assets/gemini.svg",
   "./assets/icon-192.png",
   "./assets/icon-512.png",
@@ -45,7 +47,7 @@ const PRECACHE = [
 
 /* Third-party libraries are cached after the first successful load. API calls
    (Loader.to, YouTube thumbnails) are deliberately never cached. */
-const LIB_HOSTS = /(^|\.)cdnjs\.cloudflare\.com$|(^|\.)cdn\.jsdelivr\.net$|(^|\.)fonts\.googleapis\.com$|(^|\.)fonts\.gstatic\.com$/;
+const LIB_HOSTS = /(^|\.)cdnjs\.cloudflare\.com$|(^|\.)cdn\.jsdelivr\.net$/;
 
 self.addEventListener("install", event => {
   event.waitUntil((async () => {
