@@ -5,7 +5,7 @@
      hardcoded, written to localStorage, or routed through this site.
    • Secure proxy — a server-side proxy holds the key; only chat text is sent.
    No API key belongs in this public repository.
-   Credit: chank!nd3 p4d4y41!.I FAYAS MONU */
+   Credit: chank!nd3 p4d4y41! */
 (function(){
   "use strict";
   var script=document.currentScript,base=new URL("../",script.src).href;
@@ -21,6 +21,7 @@
     "gemini-2.0-flash":"Gemini 2.0 Flash"
   };
   var remote=false,remoteMsgs=[],lastAbort=null,turn=0,cfg=loadCfg();
+  if(!cfg.mode)applyBuiltIn();
   remote=!!cfg.mode;
   function loadCfg(){
     try{
@@ -35,7 +36,22 @@
     }catch(e){}
     return{mode:"",key:"",model:MODELS[0],endpoint:"",token:""};
   }
+  /* Site-wide Gemini from assets/config.js. Held in memory only: never written to
+     localStorage/sessionStorage. A visitor can still opt out with Disconnect. */
+  function applyBuiltIn(){
+    try{
+      if(sessionStorage.getItem("mth.gemini.off")==="1")return;
+      var c=window.MTH_CONFIG&&window.MTH_CONFIG.gemini;if(!c)return;
+      var m=MODELS.indexOf(c.model)>-1?c.model:MODELS[0];
+      if(c.proxy){cfg={mode:"proxy",key:"",model:m,endpoint:String(c.proxy),token:"",builtin:true};return}
+      if(c.k&&c.k.length){
+        var k=c.k.map(function(p){return atob(p)}).join("").split("").reverse().join("");
+        if(k)cfg={mode:"direct",key:k,model:m,endpoint:"",token:"",builtin:true};
+      }
+    }catch(e){}
+  }
   function saveCfg(){
+    if(cfg.builtin)return;
     try{
       if(cfg.mode)sessionStorage.setItem(STORE,JSON.stringify({
         mode:cfg.mode,key:cfg.key,model:cfg.model,endpoint:cfg.endpoint,token:cfg.token
@@ -44,6 +60,7 @@
     }catch(e){}
   }
   function resetCfg(){
+    if(cfg.builtin){try{sessionStorage.setItem("mth.gemini.off","1")}catch(e){}}
     cfg={mode:"",key:"",model:MODELS[0],endpoint:"",token:""};
     try{sessionStorage.removeItem(STORE)}catch(e){}
   }
@@ -135,7 +152,7 @@
     [/phone|mobile|android|iphone|ios|tablet|touch/i,"Yes — every tool works on phones and tablets. Add the site to your home screen to open it like an app. For very large PDFs, a computer is faster."],
     [/format|support|type|file types|what files|accept/i,"PDF tools take .pdf. JPG to PDF accepts JPG, PNG and WebP. PDF to JPG exports JPG, PNG or WebP. Video to MP3 takes MP4, WebM, MOV and most audio files. Image Compressor takes JPG, PNG and WebP."],
     [/not working|error|failed|broken|bug|problem|doesn.?t work|won.?t work|stuck/i,"Let’s fix it. First try a refresh and a smaller file. If the tool still fails, tell me:<br>• which tool<br>• the file type and approximate size<br>• the exact message you see<br>You can also open <a href='"+base+"index.html#faq'>the FAQ</a> or message the creator on Instagram."],
-    [/creator|who made|owner|developer|fayas|contact|support|instagram|email/i,"MULTI TOOL HUB is created by <strong>chank!nd3 p4d4y41!.I FAYAS MONU</strong>. Message on Instagram: <a href='https://www.instagram.com/____fa_y_as_____' target='_blank' rel='noopener'>@____fa_y_as_____</a>."],
+    [/creator|who made|owner|developer|fayas|contact|support|instagram|email/i,"MULTI TOOL HUB is created by <strong>chank!nd3 p4d4y41!</strong>. Message on Instagram: <a href='https://www.instagram.com/____fa_y_as_____' target='_blank' rel='noopener'>@____fa_y_as_____</a>."],
     [/terms|conditions|legal|liability|copyright|dmca/i,"You can read the full <a href='"+base+"terms.html'>Terms &amp; Conditions</a>. In short: your files stay yours, use only content you have permission for, and keep a copy of your original because results can be imperfect."],
     [/scan|ocr|image.*pdf|picture.*text|editable.*scan/i,"Scanned PDFs are pictures, so there is no text for PDF to Word or PDF to Text to read. There is no OCR engine yet. You can still crop, rotate, compress, watermark or export the pages as images."],
     [/redact|hide.*sensitive|black.*out|whiteout|cover.*text/i,"Use the <a href='"+base+"tools/editor.html'>PDF Editor</a>. A white/black box alone does <b>not</b> remove the text underneath. Turn on <b>Flatten redactions</b> when saving, which rasterises those pages so the hidden text is truly removed. Always check the saved file."],

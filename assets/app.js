@@ -1,5 +1,5 @@
 /* MULTI TOOL HUB — shared helpers.
-   Credit: chank!nd3 p4d4y41!.I FAYAS MONU */
+   Credit: chank!nd3 p4d4y41! */
 (function(){
   try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t;}catch(e){}
 
@@ -7,11 +7,11 @@
   try{
     var th=localStorage.getItem("theme");
     if(th)document.documentElement.dataset.theme=th;
-    else if(matchMedia("(prefers-color-scheme: dark)").matches)document.documentElement.dataset.theme="dark";
+    ;
   }catch(e){}
 
   var PE=window.PE={};
-  PE.credit="chank!nd3 p4d4y41!.I FAYAS MONU";
+  PE.credit="chank!nd3 p4d4y41!";
   PE.version="4.2";
   var scriptEl=document.currentScript;
   var assetBase=scriptEl&&scriptEl.src?new URL(".",scriptEl.src).href:new URL("assets/",location.href).href;
@@ -306,7 +306,7 @@
   var moonSvg='<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M20 14.3A8 8 0 0 1 9.7 4 8.1 8.1 0 1 0 20 14.3Z"/></svg>';
   function themeIsDark(){
     var cur=document.documentElement.dataset.theme;
-    return cur==="dark"||(!cur&&window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches);
+    return cur==="dark"||false;
   }
   function paintThemeBtn(btn){
     if(!btn)return;
