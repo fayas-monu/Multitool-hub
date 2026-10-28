@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Credit: chank!nd3 p4d4y41!.I FAYAS MONU -->
+<!-- Credit: chank!nd3 p4d4y41! -->
 <title>PDF Editor — edit, sign, redact & manage pages | MULTI TOOL HUB</title>
 <meta name="description" content="A full browser PDF editor: edit text, add text, highlight, underline, strike, draw, shapes, lines, arrows, images, signatures, comments and form values. Rotate, reorder, insert, duplicate, extract and merge pages. Your file never leaves your device.">
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
@@ -19,9 +19,7 @@
 </head>
 <body>
 <header><div class="bar">
-  <a class="brand" href="../index.html">
-    <img class="brand-logo logo-light" src="../assets/logo.svg" alt="MULTI TOOL HUB" width="440" height="104"><img class="brand-logo logo-dark" src="../assets/logo-dark.svg" alt="" aria-hidden="true" width="440" height="104">
-  </a>
+  <a class="brand" href="../index.html" aria-label="MULTI TOOL HUB"><svg class="brand-mark" viewBox="0 0 48 48" width="40" height="40" aria-hidden="true" focusable="false"><rect width="48" height="48" rx="11"/><g fill="none" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 31V17l5.5 8L18 17v14"/><path d="M21 17h9M25.5 17v14"/><path d="M33 17v14M33 24h8M41 17v14"/></g><circle cx="41" cy="7" r="2.6"/></svg><span class="brand-word">MULTI <b>TOOL</b> HUB</span></a>
   <div class="header-actions ed-actions">
     <button type="button" class="back" id="chatBtn" aria-label="Open assistant"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px"><path d="M20 11.5a7.5 7.5 0 0 1-11.2 6.5L4 19.5l1.5-4.5A7.5 7.5 0 1 1 20 11.5Z"/><path d="M8.5 10h7M8.5 13.2h4.4"/></svg> Assistant</button>
     <a class="back" href="../index.html" aria-label="All tools"><i class="fa-solid fa-arrow-left"></i> All tools</a>
@@ -199,9 +197,10 @@
   <div class="status" id="svStatus"></div>
 </dialog>
 
-<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by chank!nd3 p4d4y41!.I FAYAS MONU</span></div>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Created by chank!nd3 p4d4y41!</span></div>
 
 <script src="../assets/app.js"></script>
+<script src="../assets/config.js"></script>
 <script src="../assets/chat.js"></script>
 <script>
 try{pdfjsLib.GlobalWorkerOptions.workerSrc=PE.asset('pdf.worker.min.js');}catch(e){try{pdfjsLib.GlobalWorkerOptions.workerSrc='../assets/pdf.worker.min.js';}catch(e2){}}
