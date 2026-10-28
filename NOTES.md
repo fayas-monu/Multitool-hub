@@ -1,7 +1,7 @@
 # Maintainer notes - MULTI TOOL HUB 4.2
 
 Release date: 26 October 2026
-Credit: `chank!nd3 p4d4y41!.I FAYAS MONU`
+Credit: `chank!nd3 p4d4y41!`
 
 This file is for whoever maintains the site. The user-facing documentation is in `README.md`.
 
@@ -15,7 +15,7 @@ This file is for whoever maintains the site. The user-facing documentation is in
 5. Verify the PWA icons exist at the paths listed in `manifest.webmanifest` and match the navy/blue identity.
 6. Open every page once and check DevTools > Console for errors.
 7. If the optional Gemini proxy is used, deploy `server/` over HTTPS and set `GEMINI_API_KEY` in its environment - never in client code.
-8. If a Gemini key has ever been exposed, revoke it before shipping. Never put a key in `assets/chat.js`, HTML, `localStorage` or a commit.
+8. If a Gemini key has ever been exposed, revoke it before shipping. Keys belong only in `assets/config.js` (encoded, referrer-restricted) or, preferably, in the Worker/server secret store. Never put one in `chat.js`, HTML, `localStorage` or a plain-text commit.
 
 ## Testing locally
 
@@ -70,6 +70,14 @@ Useful manual checks:
 - `404.html` and `offline.html` install a `<base>` element before asset links. The base comes from the service worker scope when available, then from a GitHub Pages project-path heuristic, then from the site root. This keeps a GitHub Pages project 404 working at `/repository/missing-path`.
 - The Image Compressor keeps the original file when a "keep format, no resize" re-encode would be larger, so it never hands back a bigger file.
 - The YouTube and Instagram downloaders open the Loader.to card in a new tab. Do not restore the inline iframe: Loader.to sends `X-Frame-Options: SAMEORIGIN`, so embedding it only produces a blocked frame and a console warning. The external card is disclosed in the UI, Privacy Policy and Terms.
+
+## 4.3 release notes
+
+- White (`#FFFFFF`) default theme with neutral gray tokens; dark mode is opt-in only (no OS auto-dark). Tool icon tiles and warning callouts are neutral.
+- New logo: one centered 48-grid vector mark (`.brand-mark`) plus live `.brand-word` text on every page. The old inline mark let the "H" overflow its tile. `logo.svg` / `logo-dark.svg` are no longer used by the pages.
+- Credit text is exactly `chank!nd3 p4d4y41!`. Legal sections renamed "India & UAE jurisdiction and legal framework" (Privacy 22, Terms 23).
+- Added `assets/config.js` (site-wide Gemini, memory-only) and `server/cloudflare-worker.js`. Cache bumped to `mth-v18`.
+- Compress PDF raster presets now retry lighter automatically when the first pass is larger than the source.
 
 ## Known limits (intentional)
 

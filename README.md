@@ -2,7 +2,7 @@
 
 A fast, privacy-first collection of **17 browser tools** for PDFs, images and media. The interface is a clean navy, blue and white workspace built for everyday office work. There is no account, no upload for the local tools, and no watermark added to your output.
 
-> **Credit:** `chank!nd3 p4d4y41!.I FAYAS MONU`
+> **Credit:** `chank!nd3 p4d4y41!`
 > **Instagram:** [@____fa_y_as_____](https://www.instagram.com/____fa_y_as_____)
 
 ![MULTI TOOL HUB](assets/og-cover.png)
@@ -28,7 +28,7 @@ A fast, privacy-first collection of **17 browser tools** for PDFs, images and me
 - **Large, interactive previews** - Watermark, Page Numbers, Crop, PDF to JPG, Image Compressor and Video to MP3 preview before you commit. The expand control opens a viewport-sized modal with zoom, fit, actual size, pan, a live state indicator and a download button. Stacked overlay layers (watermark, page numbers, crop guides) are composited into the enlarged image.
 - **Search built for intent** - word-level matching, plural and stopword handling, exact source-to-target direction (so "pdf to word" never returns "word to pdf"), typo tolerance, category filtering, favourites, recent tools and keyboard navigation.
 - **Hub Assistant** - a local, rule-based assistant that finds the right tool from a plain sentence, explains steps, checks file types and sizes, supports voice input, and can switch the theme. It runs entirely in your browser by default.
-- **Optional Gemini connection** - two explicit modes: a **Browser key** stored only in this tab's `sessionStorage`, or a **Secure proxy** that keeps the key on your server. The local assistant remains the default and the fallback. No API key is hardcoded in this repository.
+- **Optional Gemini connection** - two explicit modes: a **Browser key** stored only in this tab's `sessionStorage`, or a **Secure proxy** that keeps the key on your server. The local assistant remains the default and the fallback. The site-wide Gemini connection is configured in `assets/config.js` (see below).
 - **Installable PWA** - works from the home screen and keeps previously opened pages available offline.
 - **Dark / light theme**, keyboard shortcuts, drag-and-drop, mobile-first layouts, a mobile navigation drawer, reduced-motion support and readable contrast in both themes.
 
@@ -58,7 +58,15 @@ Then visit <http://localhost:8080>.
 
 > The PDF, image and audio engines load from public CDNs (pdf.js, pdf-lib, JSZip, docx, lamejs, Font Awesome). The pdf.js worker is self-hosted (`assets/pdf.worker.min.js`), so rendering keeps working offline. The first visit needs an internet connection for the CDN libraries; afterwards the service worker caches them. The interface itself uses the system font stack - no Google Fonts request is made.
 
-### Connect Gemini (optional)
+### Site-wide Gemini (assets/config.js)
+
+`assets/config.js` is loaded on every page before `chat.js` and gives all visitors the AI assistant without pasting a key.
+
+- **Preferred - private proxy:** deploy `server/cloudflare-worker.js` (`wrangler secret put GEMINI_API_KEY`), then set `gemini.proxy` to the Worker URL and empty `gemini.k`. The key never reaches the browser.
+- **Fallback - static hosting:** `gemini.k` holds the key split, reversed and base64-encoded. This is obfuscation, not secrecy: any key shipped to a browser can be extracted. Restrict it by HTTP referrer to your Pages domain and to the Generative Language API, and set a low quota. Rotate any key that has been shared in chat or committed.
+- The key is kept in memory only. It is never written to `localStorage` or `sessionStorage`. A visitor can press Disconnect to return to local mode for that tab.
+
+### Connect Gemini manually (optional)
 
 The assistant is local by default and needs no account or key. Open **Assistant > Gemini** and choose one mode:
 
@@ -184,7 +192,7 @@ Video to MP3 depends on the browser being able to decode the source codec. If th
 
 Designed and built for **MULTI TOOL HUB** by **FAYAS MONU**.
 
-Credit line: `chank!nd3 p4d4y41!.I FAYAS MONU`
+Credit line: `chank!nd3 p4d4y41!`
 
 Open-source libraries: [pdf.js](https://mozilla.github.io/pdf.js/), [pdf-lib](https://pdf-lib.js.org/), [JSZip](https://stuk.github.io/jszip/), [docx](https://docx.js.org/), [lamejs](https://github.com/zhuker/lamejs), [Font Awesome](https://fontawesome.com/), and the optional [Gemini API](https://ai.google.dev/). The interface uses system fonts; Google Fonts is not loaded.
 
