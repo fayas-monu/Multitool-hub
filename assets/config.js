@@ -1,12 +1,15 @@
-/* MULTI TOOL HUB — runtime configuration.
-   Keep the Groq API key on the server; never place it in this file. */
-window.MTH_CONFIG = {
-  // Set this to your deployed Worker URL, or keep /api/assistant when
-  // serving the bundled Node server from the same origin.
-  groqProxyUrl: "/api/assistant",
-  groq: {
-    // Optional override; when omitted, groqProxyUrl is used.
-    token: "",
-    modelLabel: "Groq · Llama 3.3 70B"
-  }
-};
+/* MULTI TOOL HUB — static frontend configuration.
+   No backend/proxy is required. The user supplies their own Groq API key
+   in the browser when first using the assistant. Never commit API keys. */
+(function () {
+  "use strict";
+  window.MTH_CONFIG = {
+    groq: {
+      endpoint: "https://api.groq.com/openai/v1/chat/completions",
+      model: "llama-3.3-70b-versatile",
+      modelLabel: "Groq · Llama 3.3 70B",
+      temperature: 0.7,
+      maxTokens: 1024
+    }
+  };
+})();
