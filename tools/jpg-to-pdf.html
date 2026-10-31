@@ -25,6 +25,9 @@
   .imglist .sz{font-size:11px;color:var(--muted);white-space:nowrap}
   .imglist .ib{width:26px;height:26px;font-size:11px}
   .dragdot{color:var(--muted);font-size:13px;cursor:grab}
+  .zoomrow{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
+  .zoomrow button{font:600 11.5px var(--font-body);border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:7px;padding:5px 9px;cursor:pointer}
+  .zoomrow button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 </style>
 </head>
 <body>
@@ -52,7 +55,14 @@
     </div>
     <div>
       <label class="f">Layout preview <span class="live">● Live</span></label>
-      <div class="pvframe" style="padding:10px"><canvas id="pv" style="max-width:100%;max-height:480px;height:auto;border-radius:4px;box-shadow:0 8px 20px -10px rgba(10,12,40,.5)" aria-label="Page layout preview"></canvas></div>
+      <div class="zoomrow" aria-label="Preview zoom">
+        <button type="button" data-zoom="50">50%</button>
+        <button type="button" data-zoom="75">75%</button>
+        <button type="button" data-zoom="fit" class="on">Fit</button>
+        <button type="button" data-zoom="125">125%</button>
+        <button type="button" data-zoom="200">200%</button>
+      </div>
+      <div class="pvframe" style="padding:10px"><canvas id="pv" style="height:auto;border-radius:4px;box-shadow:0 8px 20px -10px rgba(10,12,40,.5)" aria-label="Page layout preview"></canvas></div>
       <p class="hint" id="pvinfo" style="text-align:center;margin-top:8px"></p>
     </div>
   </div>
@@ -111,7 +121,7 @@
 <script src="../assets/config.js"></script>
 <script src="../assets/chat.js"></script>
 <script>
-var $=PE.$, items=[], cur=0, dragFrom=-1, busy=false;
+var $=PE.$, items=[], cur=0, dragFrom=-1, busy=false, pvBaseW=0, pvZoom="fit";
 var PAPER={a4:[595.28,841.89],letter:[612,792],legal:[612,1008],a5:[419.53,595.28]};
 
 function settings(){
@@ -156,6 +166,15 @@ function renderList(){
   }).join("");
   updateMeta();drawPreview();
 }
+function applyZoom(){
+  var c=$("pv"); if(!c||!pvBaseW) return;
+  var frame=c.parentElement, fw=frame?frame.clientWidth:0;
+  if(!fw) return;
+  var target = pvZoom==="fit" ? Math.min(pvBaseW, fw-20) : pvBaseW*(parseInt(pvZoom,10)/100);
+  c.style.setProperty("max-width","none","important");
+  c.style.width=Math.round(target)+"px";
+  c.style.height="auto";
+}
 function drawPreview(){
   if(!items.length)return;
   var it=items[Math.min(cur,items.length-1)];if(!it||!it.img)return;
@@ -163,7 +182,9 @@ function drawPreview(){
   var dims=pageSize({w:w,h:h}),W=dims[0],H=dims[1],m=settings().margin;
   var c=$("pv"),maxW=720,maxH=460,k=Math.min(maxW/W,maxH/H);
   var dpr=Math.min(2,window.devicePixelRatio||1);
-  c.width=Math.round(W*k*dpr);c.height=Math.round(H*k*dpr);c.style.width=Math.round(W*k)+"px";c.style.height=Math.round(H*k)+"px";
+  c.width=Math.round(W*k*dpr);c.height=Math.round(H*k*dpr);
+  pvBaseW=Math.round(W*k);
+  c.style.height=Math.round(H*k)+"px";
   var x=c.getContext("2d");x.setTransform(dpr*k,0,0,dpr*k,0,0);
   x.fillStyle="#fff";x.fillRect(0,0,W,H);
   if(m>0){x.strokeStyle="rgba(61,59,243,.35)";x.setLineDash([3,3]);x.lineWidth=1/k;x.strokeRect(m,m,W-2*m,H-2*m);x.setLineDash([])}
@@ -175,6 +196,7 @@ function drawPreview(){
   else x.drawImage(it.img,-p.w/2,-p.h/2,p.w,p.h);
   x.restore();
   $("pvinfo").textContent="Page "+(Math.min(cur,items.length-1)+1)+" · "+Math.round(W)+" × "+Math.round(H)+" pt"+(settings().size==="fit"?"":" · "+settings().fit);
+  applyZoom();
 }
 function sync(){updateMeta();drawPreview();}
 
@@ -254,7 +276,13 @@ $("clear").onclick=function(){
 ["size","orient","fit"].forEach(function(id){$(id).addEventListener("change",sync)});
 $("margin").addEventListener("input",sync);
 $("q").addEventListener("input",function(){$("qv").textContent=this.value});
-window.addEventListener("resize",PE.debounce(drawPreview,200));
+document.querySelectorAll(".zoomrow [data-zoom]").forEach(function(b){
+  b.addEventListener("click",function(){
+    document.querySelectorAll(".zoomrow [data-zoom]").forEach(function(x){x.classList.toggle("on",x===b)});
+    pvZoom=b.dataset.zoom; applyZoom();
+  });
+});
+window.addEventListener("resize",PE.debounce(function(){drawPreview();applyZoom();},200));
 
 function outName(){
   var n=($("name").value||"images").trim().replace(/\.pdf$/i,"");
