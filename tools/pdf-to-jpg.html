@@ -5,8 +5,8 @@
 <script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Credit: chank!nd3 p4d4y41! -->
-<title>PDF to JPG, PNG or WebP — any resolution | MULTI TOOL HUB</title>
-<meta name="description" content="Export PDF pages as sharp JPG, PNG or WebP images. Pick pages, resolution and quality, preview the first page, then download a ZIP or individual images.">
+<title>PDF to JPG, PNG or WebP — any resolution, batch multiple PDFs | MULTI TOOL HUB</title>
+<meta name="description" content="Export PDF pages as sharp JPG, PNG or WebP images. Batch multiple PDFs at once, pick pages, resolution and quality, preview with zoom/fit, then download a ZIP or individual images.">
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0b1220" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="../assets/logo-mark.svg" type="image/svg+xml">
@@ -23,6 +23,16 @@
   .outcard .sz{font-size:11px;color:var(--muted)}
   .outcard button{margin-top:6px;width:100%;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:7px;padding:5px;font:700 11.5px var(--font-body);cursor:pointer}
   .outcard button:hover{border-color:var(--accent);color:var(--accent)}
+  .filelist{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+  .filechip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface-2);border-radius:99px;padding:6px 10px;font-size:12px;cursor:pointer;max-width:100%}
+  .filechip.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 6%,var(--surface))}
+  .filechip .nm{max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+  .filechip small{color:var(--muted);white-space:nowrap}
+  .filechip .filex{border:0;background:none;color:var(--muted);cursor:pointer;padding:2px;font-size:11px}
+  .filechip .filex:hover{color:var(--err)}
+  .zoomrow{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
+  .zoomrow button{font:600 11.5px var(--font-body);border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:7px;padding:5px 9px;cursor:pointer}
+  .zoomrow button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 </style>
 </head>
 <body>
@@ -32,18 +42,26 @@
 </div></header>
 <main>
 <h1>PDF to JPG</h1>
-<p class="lead">Turn pages into crisp images. Choose JPG, PNG or WebP, control the resolution, and take one ZIP or only the pages you need.</p>
+<p class="lead">Turn PDF pages into crisp images — one PDF or many at once. Choose JPG, PNG or WebP, control the resolution, preview with zoom/fit, then take one ZIP or only the pages you need.</p>
 
-<label class="drop" id="zone"><i class="fa-solid fa-file-image" aria-hidden="true"></i><strong>Choose a PDF or drop it here</strong><span>Nothing is uploaded · works offline on your device</span>
-<input type="file" id="fileInput" accept="application/pdf,.pdf"></label>
+<label class="drop" id="zone"><i class="fa-solid fa-file-image" aria-hidden="true"></i><strong>Choose PDFs or drop them here</strong><span>Add one or several PDFs · nothing is uploaded</span>
+<input type="file" id="fileInput" accept="application/pdf,.pdf" multiple></label>
 
 <div class="panel" id="panel" hidden>
   <p style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><strong id="fn"></strong> <span id="meta" style="color:var(--muted)"></span></p>
+  <div class="filelist" id="fileList" hidden></div>
 
   <div class="g2">
     <div>
       <label class="f">Page preview <span class="live">● Live</span></label>
-      <div class="pvframe" style="padding:8px"><canvas id="pv" style="max-width:100%;max-height:460px;height:auto;border-radius:6px;box-shadow:0 8px 20px -10px rgba(10,12,40,.5)" aria-label="First page preview"></canvas></div>
+      <div class="zoomrow" aria-label="Preview zoom">
+        <button type="button" data-zoom="50">50%</button>
+        <button type="button" data-zoom="75">75%</button>
+        <button type="button" data-zoom="fit" class="on">Fit</button>
+        <button type="button" data-zoom="125">125%</button>
+        <button type="button" data-zoom="200">200%</button>
+      </div>
+      <div class="pvframe" style="padding:8px"><canvas id="pv" style="height:auto;border-radius:6px;box-shadow:0 8px 20px -10px rgba(10,12,40,.5)" aria-label="First page preview"></canvas></div>
       <p class="hint" id="dims" style="text-align:center;margin-top:8px"></p>
     </div>
     <div>
@@ -72,7 +90,7 @@
         <input type="range" id="q" min="40" max="100" step="1" value="92" style="width:100%">
       </div>
 
-      <label class="f" for="rangeMode">Pages</label>
+      <label class="f" for="rangeMode">Pages (per PDF)</label>
       <select class="in" id="rangeMode"><option value="all" selected>All pages</option><option value="range">Only selected pages</option></select>
       <input class="in" id="rg" placeholder="For example 1-3, 7" style="margin-top:8px" hidden>
     </div>
@@ -84,7 +102,7 @@
     <button class="btn ghost" id="zip" hidden><i class="fa-solid fa-file-zipper"></i> Download ZIP</button>
     <button class="btn ghost" id="all" hidden>Download each</button>
   </div>
-  <p class="hint" id="hint">The preview shows page 1. Images are made on your device at the resolution you choose; nothing is uploaded.</p>
+  <p class="hint" id="hint">Every loaded PDF is converted using the settings above. Images are made on your device at the resolution you choose; nothing is uploaded.</p>
   <div id="outWrap" hidden>
     <div class="statgrid" style="grid-template-columns:repeat(auto-fit,minmax(110px,1fr))">
       <div class="stat"><b id="sOut">0</b><span>Images</span></div>
@@ -103,17 +121,13 @@
 <script src="../assets/config.js"></script>
 <script src="../assets/chat.js"></script>
 <script>
-var $=PE.$, file=null, info=null, results=[], busy=false;
+var $=PE.$, infos=[], active=0, results=[], busy=false, previewDoc=null, pvBaseW=0, pvZoom="fit";
 var EXT={"image/jpeg":"jpg","image/png":"png","image/webp":"webp"};
 
-function dpi(){
-  var v=$("dpiSel").value;
-  return v==="custom"?+$("dpi").value:+v;
-}
-function selPages(){
-  if(!info)return [];
-  if($("rangeMode").value==="all")return Array.from({length:info.pages},function(_,i){return i});
-  try{return PE.ranges($("rg").value,info.pages)}catch(e){return null}
+function dpi(){ var v=$("dpiSel").value; return v==="custom"?+$("dpi").value:+v; }
+function selPagesFor(n){
+  if($("rangeMode").value==="all") return Array.from({length:n},function(_,i){return i});
+  try{ return PE.ranges($("rg").value, n); }catch(e){ return null; }
 }
 function sync(){
   var f=$("fmt").value, custom=$("dpiSel").value==="custom";
@@ -121,13 +135,31 @@ function sync(){
   $("rg").hidden=$("rangeMode").value==="all";
   $("qWrap").hidden=f==="image/png";
   $("sFmt").textContent=EXT[f].toUpperCase();
-  if(info){
-    var v=info.pw/72*dpi(),h=info.ph/72*dpi();
+  var info=infos[active];
+  if(info&&info.pw){
+    var v=info.pw/72*dpi(), h=info.ph/72*dpi();
     $("dims").textContent="Page 1 at "+dpi()+" DPI → "+Math.round(v)+" × "+Math.round(h)+" px";
   }
 }
-function fmtName(i){
-  return PE.baseName(file?file.name:"document")+"-page-"+String(i+1).padStart(3,"0")+"."+EXT[$("fmt").value];
+function applyZoom(){
+  var c=$("pv"); if(!c||!pvBaseW) return;
+  var frame=c.parentElement, fw=frame?frame.clientWidth:0;
+  if(!fw) return;
+  var target = pvZoom==="fit" ? Math.min(pvBaseW, fw-16) : pvBaseW*(parseInt(pvZoom,10)/100);
+  c.style.setProperty("max-width","none","important");
+  c.style.width=Math.round(target)+"px";
+  c.style.height="auto";
+}
+function renderFileList(){
+  var el=$("fileList");
+  el.hidden=infos.length===0;
+  el.innerHTML=infos.map(function(it,i){
+    return '<div class="filechip'+(i===active?" on":"")+'" data-fi="'+i+'">'+
+      '<span class="nm" title="'+PE.esc(it.file.name)+'">'+PE.esc(it.file.name)+'</span>'+
+      '<small>'+it.pages+'p · '+PE.fmt(it.file.size)+'</small>'+
+      '<button type="button" class="filex" data-rm="'+i+'" aria-label="Remove file"><i class="fa-solid fa-xmark"></i></button>'+
+    '</div>';
+  }).join("");
 }
 function renderResult(){
   $("outWrap").hidden=!results.length;
@@ -145,67 +177,107 @@ $("out").addEventListener("click",function(e){
   PE.download(r.blob,r.name);
 });
 async function preview(){
-  if(!file)return;
+  if(!infos[active]) return;
   try{
-    var ni=await PE.preview(file,$("pv"),{page:1,maxW:720});
-    if(info&&info.pdf&&info.pdf!==ni.pdf){try{info.pdf.destroy()}catch(e){}}
-    info=ni;
-    $("meta").textContent="· "+PE.fmt(file.size)+" · "+ni.pages+" page"+(ni.pages===1?"":"s");
-    PE.status("Ready — "+ni.pages+" page"+(ni.pages===1?"":"s")+" loaded. Choose a format and resolution, then convert.","ok");
-    sync();
+    if(previewDoc){ try{previewDoc.destroy();}catch(e){} previewDoc=null; }
+    var ni=await PE.preview(infos[active].file,$("pv"),{page:1,maxW:720});
+    previewDoc=ni.pdf;
+    infos[active].pw=ni.pw; infos[active].ph=ni.ph; infos[active].pages=ni.pages;
+    pvBaseW=parseFloat($("pv").style.width)||ni.vp.width;
+    $("fn").textContent=infos[active].file.name;
+    $("meta").textContent="· "+PE.fmt(infos[active].file.size)+" · "+ni.pages+" page"+(ni.pages===1?"":"s");
+    sync(); applyZoom();
+    PE.status("Ready — "+infos.length+" PDF"+(infos.length===1?"":"s")+" loaded.","ok");
   }catch(e){
     PE.status(/password|encrypt/i.test(e.message||"")?"This PDF is password-protected. Remove the password first, then try again.":"Could not read this PDF: "+(e.message||e),"err");
   }
 }
-PE.drop($("zone"),$("fileInput"),/pdf/i,function(list){
-  file=list[0];
-  results.forEach(function(r){try{URL.revokeObjectURL(r.url)}catch(e){}});
-  results=[];renderResult();
-  $("fn").textContent=file.name;$("panel").hidden=false;$("meta").textContent="· reading…";
-  PE.status("Reading the PDF…");preview();
+PE.drop($("zone"),$("fileInput"),/pdf/i,async function(list){
+  for(var i=0;i<list.length;i++){
+    try{
+      var n=await PE.pageCount(list[i]);
+      infos.push({file:list[i],pages:n,pw:0,ph:0});
+    }catch(e){ PE.toast(list[i].name+" could not be read","err"); }
+  }
+  if(!infos.length){ PE.status("No readable PDFs were added.","err"); return; }
+  active=Math.min(active,infos.length-1);
+  $("panel").hidden=false;
+  results.forEach(function(r){try{URL.revokeObjectURL(r.url)}catch(e){}}); results=[]; renderResult();
+  renderFileList(); preview();
 });
-["fmt","dpiSel","rangeMode"].forEach(function(id){$(id).addEventListener("change",sync)});
-$("dpi").addEventListener("input",function(){$("dpiv").textContent=this.value;sync()});
-$("q").addEventListener("input",function(){$("qv").textContent=this.value});
+$("fileList").addEventListener("click",function(e){
+  var rm=e.target.closest("[data-rm]");
+  if(rm){
+    e.stopPropagation();
+    var i=+rm.dataset.rm;
+    infos.splice(i,1);
+    if(active>=infos.length) active=Math.max(0,infos.length-1);
+    if(previewDoc){try{previewDoc.destroy()}catch(x){}previewDoc=null;}
+    results.forEach(function(r){try{URL.revokeObjectURL(r.url)}catch(e){}}); results=[]; renderResult();
+    if(!infos.length){ $("panel").hidden=true; $("fn").textContent=""; $("meta").textContent=""; renderFileList(); return; }
+    renderFileList(); preview(); return;
+  }
+  var chip=e.target.closest("[data-fi]");
+  if(chip){ active=+chip.dataset.fi; renderFileList(); preview(); }
+});
+document.querySelectorAll(".zoomrow [data-zoom]").forEach(function(b){
+  b.addEventListener("click",function(){
+    document.querySelectorAll(".zoomrow [data-zoom]").forEach(function(x){x.classList.toggle("on",x===b)});
+    pvZoom=b.dataset.zoom; applyZoom();
+  });
+});
+["fmt","dpiSel","rangeMode"].forEach(function(id){$(id).addEventListener("change",function(){sync();applyZoom();});});
+$("dpi").addEventListener("input",function(){$("dpiv").textContent=this.value;sync();});
+$("q").addEventListener("input",function(){$("qv").textContent=this.value;});
+window.addEventListener("resize",PE.debounce(function(){sync();applyZoom();},200));
 
 $("go").onclick=async function(){
-  if(!file||busy)return;
-  var list=selPages();
-  if(!list||!list.length){PE.status("Choose at least one page to convert.","err");return}
-  busy=true;this.disabled=true;$("zip").hidden=true;$("all").hidden=true;
-  results.forEach(function(r){URL.revokeObjectURL(r.url)});results=[];
+  if(!infos.length||busy)return;
+  busy=true;this.disabled=true;
+  results.forEach(function(r){try{URL.revokeObjectURL(r.url)}catch(e){}}); results=[];
   var type=$("fmt").value,ext=EXT[type],q=+$("q").value/100,scale=dpi()/72;
-  PE.progress(.02);PE.status("Preparing…");
+  PE.progress(.02);
   try{
-    var pdf=await PE.openPdf(file), canvas=document.createElement("canvas"), totalBytes=0;
-    for(var k=0;k<list.length;k++){
-      var i=list[k], page=await pdf.getPage(i+1), vp=page.getViewport({scale:scale});
-      var maxPix=32e6;
-      if(vp.width*vp.height>maxPix){var f=Math.sqrt(maxPix/(vp.width*vp.height));vp=page.getViewport({scale:scale*f})}
-      canvas.width=Math.max(1,Math.round(vp.width));canvas.height=Math.max(1,Math.round(vp.height));
-      var cx=canvas.getContext("2d");
-      if(type==="image/jpeg"){cx.fillStyle="#fff";cx.fillRect(0,0,canvas.width,canvas.height)}
-      await page.render({canvasContext:cx,viewport:vp,background:"rgba(255,255,255,0)"}).promise;
-      var blob=await new Promise(function(r){canvas.toBlob(r,type,type==="image/png"?undefined:q)});
-      if(!blob)throw new Error("The browser could not create a "+ext.toUpperCase()+" for page "+(i+1)+".");
-      totalBytes+=blob.size;
-      results.push({name:fmtName(i),blob:blob,url:URL.createObjectURL(blob),w:canvas.width,h:canvas.height});
-      canvas.width=canvas.height=0;
-      PE.progress(.05+.9*((k+1)/list.length));
-      PE.status("Rendering page "+(i+1)+" — "+results.length+" of "+list.length+" done…");
-      await PE.sleep(0);
+    var canvas=document.createElement("canvas"),totalBytes=0;
+    for(var fi=0; fi<infos.length; fi++){
+      var it=infos[fi];
+      var list=selPagesFor(it.pages);
+      if(!list){ throw new Error("Check the page range for "+it.file.name+"."); }
+      if(!list.length) continue;
+      var pdf=await PE.openPdf(it.file), base=PE.baseName(it.file.name);
+      for(var k=0;k<list.length;k++){
+        var i=list[k];
+        var page=await pdf.getPage(i+1), vp=page.getViewport({scale:scale});
+        var maxPix=32e6;
+        if(vp.width*vp.height>maxPix){var f=Math.sqrt(maxPix/(vp.width*vp.height));vp=page.getViewport({scale:scale*f})}
+        canvas.width=Math.max(1,Math.round(vp.width));canvas.height=Math.max(1,Math.round(vp.height));
+        var cx=canvas.getContext("2d");
+        if(type==="image/jpeg"){cx.fillStyle="#fff";cx.fillRect(0,0,canvas.width,canvas.height)}
+        await page.render({canvasContext:cx,viewport:vp,background:"rgba(255,255,255,0)"}).promise;
+        var blob=await new Promise(function(r){canvas.toBlob(r,type,type==="image/png"?undefined:q)});
+        if(!blob)throw new Error("The browser could not create a "+ext.toUpperCase()+" for "+it.file.name+" page "+(i+1)+".");
+        totalBytes+=blob.size;
+        results.push({
+          name: base+"-page-"+String(i+1).padStart(3,"0")+"."+ext,
+          blob: blob, url: URL.createObjectURL(blob),
+          w: canvas.width, h: canvas.height
+        });
+        canvas.width=canvas.height=0;
+        PE.progress(.05+.9*((fi + (k+1)/list.length)/infos.length));
+        PE.status("Rendering "+(fi+1)+"/"+infos.length+" · "+it.file.name+" page "+(i+1)+"…");
+        await PE.sleep(0);
+      }
+      try{pdf.destroy()}catch(e){}
     }
-    try{pdf.destroy()}catch(e){}
-    PE.progress(1);
-    renderResult();
-    PE.status("Converted "+results.length+" page"+(results.length===1?"":"s")+" ("+PE.fmt(totalBytes)+"). Download the ZIP or save pages individually.","ok");
+    if(!results.length) throw new Error("No pages were converted. Check the page range and that the PDFs contain pages.");
+    PE.progress(1); renderResult();
+    PE.status("Converted "+results.length+" image"+(results.length===1?"":"s")+" from "+infos.length+" PDF"+(infos.length===1?"":"s")+" ("+PE.fmt(totalBytes)+"). Download the ZIP or save pages individually.","ok");
     PE.toast("Images ready");
   }catch(e){
     PE.progress(null);
-    PE.status("Could not convert this PDF: "+(e.message||e),"err");
+    PE.status("Could not convert: "+(e.message||e),"err");
   }finally{busy=false;this.disabled=false;setTimeout(function(){PE.progress(null)},600)}
 };
-
 $("zip").onclick=async function(){
   if(!results.length)return;
   var btn=this;btn.disabled=true;
@@ -213,7 +285,7 @@ $("zip").onclick=async function(){
     PE.status("Packing ZIP…");
     var entries=results.map(function(r){return {name:r.name,data:r.blob}});
     var blob=await PE.zip(entries,function(p){PE.progress(p)});
-    PE.download(blob,PE.baseName(file.name)+"-images.zip");
+    PE.download(blob,"pdf-images.zip");
     PE.progress(1);PE.status("ZIP ready — "+results.length+" images, "+PE.fmt(blob.size)+".","ok");PE.toast("Download started");
   }catch(e){PE.status("Could not build the ZIP: "+(e.message||e),"err")}
   finally{btn.disabled=false;setTimeout(function(){PE.progress(null)},700)}
