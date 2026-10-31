@@ -1,7 +1,7 @@
 /* MULTI TOOL HUB — Venom web cursor engine.
-   Draws an elastic black web mesh that extends from a hovered interactive
-   element toward the pointer. Idle elsewhere on the page: no trail, no
-   random mouse-chasing. Skips touch devices and prefers-reduced-motion.
+   Draws an elastic black web mesh that extends from the Hub Assistant button
+   toward the pointer. Idle everywhere else on the page: no random trail, no
+   chase, no ambient noise. Skips touch devices and prefers-reduced-motion.
    Developed by chank!nd3 p4d4y41! l FAYAS MONU */
 (function () {
   "use strict";
@@ -9,15 +9,14 @@
   if (window.matchMedia && window.matchMedia("(pointer: coarse)").matches) return;
   if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-  var SELECTOR =
-    'a, button, .btn, .card, .tool-card, [role="button"], input[type="submit"], ' +
-    '.icobtn, .chip, .nav a, label.upload, .drop, select, .logo-container';
+  // The elastic web only triggers while hovering the floating assistant FAB.
+  var SELECTOR = ".mth-fab";
 
   var canvas, ctx, W = 0, H = 0, dpr = 1;
   var mouse = { x: -999, y: -999, tx: -999, ty: -999 };
   var activeEl = null;
   var strands = [];
-  var fade = 0; // 0..1 intensity, eases in on hover / out on leave
+  var fade = 0;
 
   function build() {
     canvas = document.createElement("canvas");
@@ -113,7 +112,6 @@
         ctx.stroke();
       });
 
-      // cross-links between adjacent strand tips for a mesh feel
       ctx.strokeStyle = "rgba(0,0,0," + (0.18 * fade).toFixed(3) + ")";
       ctx.lineWidth = 0.8;
       for (var i = 0; i < strands.length; i++) {
