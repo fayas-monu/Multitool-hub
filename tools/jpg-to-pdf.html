@@ -14,6 +14,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="../assets/style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
   .imglist{list-style:none;display:grid;gap:7px;margin-top:10px}
   .imglist li{display:flex;align-items:center;gap:9px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:6px 8px;cursor:grab}
@@ -25,7 +27,7 @@
   .imglist .sz{font-size:11px;color:var(--muted);white-space:nowrap}
   .imglist .ib{width:26px;height:26px;font-size:11px}
   .dragdot{color:var(--muted);font-size:13px;cursor:grab}
-  .zoomrow{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
+  .pvframe{max-height:560px;overflow:auto;overscroll-behavior:contain;max-width:100%}\n  .pvframe{max-height:560px;overflow:auto;overscroll-behavior:contain;max-width:100%}\n  .zoomrow{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
   .zoomrow button{font:600 11.5px var(--font-body);border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:7px;padding:5px 9px;cursor:pointer}
   .zoomrow button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 </style>
@@ -108,8 +110,12 @@
     </div>
   </details>
 
+  <label style="display:flex;gap:9px;align-items:flex-start;margin:12px 0;font-size:13px">
+    <input type="checkbox" id="separatePdfs" style="margin-top:4px">
+    <span><strong>Create a separate PDF for each image</strong><br><small style="color:var(--muted)">Batch mode: downloads all individual PDFs together in one ZIP. Leave unchecked to create one multi-page PDF.</small></span>
+  </label>
   <div class="prog" id="prog"><div></div></div>
-  <div class="row"><button class="btn" id="go"><i class="fa-solid fa-file-pdf"></i> Create PDF</button></div>
+  <div class="row"><button class="btn" id="go"><i class="fa-solid fa-file-pdf"></i> Create PDF batch</button></div>
   <p class="hint" id="hint">Drag the rows to change page order. Click a row to preview it. Images stay on your device.</p>
 </div>
 <div class="status" id="status" role="status" aria-live="polite"></div>
@@ -170,7 +176,10 @@ function applyZoom(){
   var c=$("pv"); if(!c||!pvBaseW) return;
   var frame=c.parentElement, fw=frame?frame.clientWidth:0;
   if(!fw) return;
-  var target = pvZoom==="fit" ? Math.min(pvBaseW, fw-20) : pvBaseW*(parseInt(pvZoom,10)/100);
+  var fitH=Math.max(160,Math.min(520,(frame.clientHeight||560)-20));
+  var fitW=Math.max(120,fw-20);
+  var fitScale=Math.min(fitW/Math.max(1,c.width),fitH/Math.max(1,c.height));
+  var target=pvZoom==="fit"?Math.max(1,Math.round(c.width*fitScale)):pvBaseW*(parseInt(pvZoom,10)/100);
   c.style.setProperty("max-width","none","important");
   c.style.width=Math.round(target)+"px";
   c.style.height="auto";
@@ -290,31 +299,54 @@ function outName(){
 }
 $("go").onclick=async function(){
   if(!items.length||busy)return;
-  var btn=this,s=settings(),saveName=outName();busy=true;btn.disabled=true;PE.progress(.02);
+  var btn=this,s=settings(),saveName=outName(),separate=$("separatePdfs").checked;
+  busy=true;btn.disabled=true;PE.progress(.02);
   try{
-    var doc=await PDFLib.PDFDocument.create();
     var title=$("title").value.trim(),author=$("author").value.trim();
-    if(title)doc.setTitle(title);
-    if(author)doc.setAuthor(author);
-    doc.setCreator("MULTI TOOL HUB");doc.setProducer("MULTI TOOL HUB");
-    for(var i=0;i<items.length;i++){
-      PE.status("Adding image "+(i+1)+" of "+items.length+"…");
-      var r=await PE.imageBytes(items[i].file,{rotate:items[i].rot,quality:s.q,maxSide:3200,background:"#fff"});
-      var img=await doc.embedJpg(r.bytes), dims=pageSize({w:r.w,h:r.h},i,s);
-      var page=doc.addPage(dims),p=place({w:r.w,h:r.h},dims[0],dims[1],s);
-      page.drawImage(img,{x:p.x,y:p.y,width:p.w,height:p.h});
-      PE.progress(.05+.9*((i+1)/items.length));
-      await PE.sleep(0);
+    if(separate){
+      if(typeof JSZip==="undefined")throw new Error("Batch ZIP library did not load. Refresh the page and try again.");
+      var zip=new JSZip();
+      for(var i=0;i<items.length;i++){
+        PE.status("Creating PDF "+(i+1)+" of "+items.length+"…");
+        var doc=await PDFLib.PDFDocument.create();
+        if(title)doc.setTitle(title);if(author)doc.setAuthor(author);
+        doc.setCreator("MULTI TOOL HUB");doc.setProducer("MULTI TOOL HUB");
+        var r=await PE.imageBytes(items[i].file,{rotate:items[i].rot,quality:s.q,maxSide:3200,background:"#fff"});
+        var img=await doc.embedJpg(r.bytes),dims=pageSize({w:r.w,h:r.h},0,s);
+        var page=doc.addPage(dims),pos=place({w:r.w,h:r.h},dims[0],dims[1],s);
+        page.drawImage(img,{x:pos.x,y:pos.y,width:pos.w,height:pos.h});
+        var bytes=await doc.save({useObjectStreams:true});
+        var zipBase=PE.csrfSafeName(PE.baseName(items[i].file.name));
+        var zipName=zipBase+".pdf",suffix=2;
+        while(zip.file(zipName)) zipName=zipBase+"-"+(suffix++)+".pdf";
+        zip.file(zipName,bytes);
+        PE.progress(.05+.85*((i+1)/items.length));await PE.sleep(0);
+      }
+      var archive=await zip.generateAsync({type:"blob",compression:"DEFLATE"});
+      PE.download(archive,saveName.replace(/\.pdf$/i,"")+"-batch.zip","application/zip");
+      PE.progress(1);PE.status("Created "+items.length+" individual PDFs in one ZIP ("+PE.fmt(archive.size)+").","ok");
+    }else{
+      var doc=await PDFLib.PDFDocument.create();
+      if(title)doc.setTitle(title);if(author)doc.setAuthor(author);
+      doc.setCreator("MULTI TOOL HUB");doc.setProducer("MULTI TOOL HUB");
+      for(var j=0;j<items.length;j++){
+        PE.status("Adding image "+(j+1)+" of "+items.length+"…");
+        var rr=await PE.imageBytes(items[j].file,{rotate:items[j].rot,quality:s.q,maxSide:3200,background:"#fff"});
+        var embedded=await doc.embedJpg(rr.bytes),pageDims=pageSize({w:rr.w,h:rr.h},j,s);
+        var pg=doc.addPage(pageDims),placeAt=place({w:rr.w,h:rr.h},pageDims[0],pageDims[1],s);
+        pg.drawImage(embedded,{x:placeAt.x,y:placeAt.y,width:placeAt.w,height:placeAt.h});
+        PE.progress(.05+.85*((j+1)/items.length));await PE.sleep(0);
+      }
+      var result=await doc.save({useObjectStreams:true});
+      PE.download(result,saveName,"application/pdf");
+      PE.progress(1);PE.status("Created one PDF with "+items.length+" page"+(items.length===1?"":"s")+" · "+PE.fmt(result.length)+".","ok");
     }
-    var bytes=await doc.save({useObjectStreams:true});
-    PE.download(bytes,saveName,"application/pdf");
-    PE.progress(1);
-    PE.status("Created "+items.length+" page"+(items.length===1?"":"s")+" · "+PE.fmt(bytes.length)+".","ok");PE.toast("Download started");
+    PE.toast("PDF conversion complete");
   }catch(e){
-    PE.progress(null);
-    PE.status("Could not create the PDF: "+(e.message||e),"err");
+    PE.progress(null);PE.status("Could not create PDF batch: "+(e.message||e),"err");
   }finally{busy=false;btn.disabled=false;setTimeout(function(){PE.progress(null)},700)}
 };
+
 updateMeta();
 </script>
 </body>
