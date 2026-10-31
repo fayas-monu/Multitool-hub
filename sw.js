@@ -1,7 +1,7 @@
 /* MULTI TOOL HUB — offline cache & install support.
    Credit: chank!nd3 p4d4y41!
    Bump CACHE when you ship new files. Old caches are deleted automatically. */
-const CACHE = "mth-v19";
+const CACHE = "mth-v18";
 const OFFLINE_URL = "./offline.html";
 
 /* Everything the app needs to open and work offline. Paths are relative to the
