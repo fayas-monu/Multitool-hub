@@ -7,18 +7,18 @@
      - server/cloudflare-worker.js  (recommended — wrangler secret put GROQ_API_KEY)
      - server/server.js             (Node — copy server/.env.example to server/.env)
 
-   Both `groq.proxy` and the legacy `groqProxyUrl` alias are accepted. When
-   neither is set, the assistant talks to the same-origin `/api/assistant`
-   endpoint served by the bundled Node server. */
+   Both the modern `groq.proxy` key and the legacy `groqProxyUrl` alias are
+   honoured by chat.js, so either form works. The default `/api/assistant`
+   works out of the box with the bundled Node server (server/server.js). */
 window.MTH_CONFIG = {
   groq: {
     // e.g. "https://mth-assistant.YOUR-SUBDOMAIN.workers.dev"
-    // or "/api/assistant" for the bundled Node proxy (default).
+    // or, same-origin Node deploy: "/api/assistant"
     proxy: "/api/assistant",
     // Optional: only needed if your proxy sets CLIENT_TOKEN.
     token: "",
     modelLabel: "Groq · Llama 3.3 70B"
   },
-  // Back-compat alias for older configs:
+  // Back-compat alias honoured by assets/chat.js:
   groqProxyUrl: "/api/assistant"
 };
