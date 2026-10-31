@@ -10,11 +10,14 @@
 (function () {
   "use strict";
 
-  var globalCfg = window.MTH_CONFIG || {};
-  var cfg = globalCfg.groq || {};
-  var ENDPOINT = cfg.proxy || globalCfg.groqProxyUrl || "/api/assistant";
-  var TOKEN = cfg.token || "";
-  var MODEL_LABEL = cfg.modelLabel || "Groq · Llama 3.3 70B";
+  var globalCfg = window.MTH_CONFIG && typeof window.MTH_CONFIG === "object" ? window.MTH_CONFIG : {};
+  var cfg = globalCfg.groq && typeof globalCfg.groq === "object" ? globalCfg.groq : {};
+  // Accept both supported config shapes without ever stringifying an object.
+  var configuredEndpoint = cfg.proxy || globalCfg.groqProxyUrl || "/api/assistant";
+  var ENDPOINT = typeof configuredEndpoint === "string" ? configuredEndpoint.trim() : "/api/assistant";
+  var TOKEN = typeof cfg.token === "string" ? cfg.token.trim() : "";
+  var MODEL_LABEL = typeof cfg.modelLabel === "string" && cfg.modelLabel.trim()
+    ? cfg.modelLabel.trim() : "Groq · Llama 3.3 70B";
   var STORE_KEY = "mth.hub.chat.history.v1";
 
   var root, panel, list, form, input, sendBtn, statusEl, fab;

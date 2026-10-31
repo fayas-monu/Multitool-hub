@@ -20,20 +20,19 @@
   }
 
   function ensureFooterCredit() {
-    // Belt-and-braces: if any footer/credit node is missing the mandated
-    // text (e.g. a page added later without it), append it automatically.
-    var candidates = document.querySelectorAll(
-      "footer, .site-foot, .foot, .drawer-foot"
-    );
-    candidates.forEach(function (el) {
-      if (el.textContent.indexOf("FAYAS MONU") === -1) {
-        var tag = document.createElement("span");
-        tag.className = "mth-credit-auto";
-        tag.style.cssText =
+    document.querySelectorAll("footer, .site-foot, .foot, .drawer-foot").forEach(function (el) {
+      // Keep the authored footer credit when it is already exact; otherwise
+      // enforce one dedicated, exact credit node without duplicating it.
+      if (el.textContent.indexOf(FOOTER_TEXT) !== -1) return;
+      var credit = el.querySelector(".mth-credit-auto");
+      if (!credit) {
+        credit = document.createElement("span");
+        credit.className = "mth-credit-auto";
+        credit.style.cssText =
           "display:block;font-family:Arial,sans-serif;font-size:11px;color:#666;margin-top:6px;";
-        tag.textContent = FOOTER_TEXT;
-        el.appendChild(tag);
+        el.appendChild(credit);
       }
+      credit.textContent = FOOTER_TEXT;
     });
   }
 
