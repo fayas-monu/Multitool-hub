@@ -1,38 +1,38 @@
 /* MULTI TOOL HUB — shared design system and components.
-   Corporate utility interface. Credit: chank!nd3 p4d4y41! */
+   Corporate monochrome utility interface. Credit: chank!nd3 p4d4y41! l FAYAS MONU */
 :root{
   --text-color:var(--ink);
-  --font-head:Inter,"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
-  --font-body:Inter,"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+  --font-head:Arial,"Helvetica Neue",Helvetica,sans-serif;
+  --font-body:Arial,"Helvetica Neue",Helvetica,sans-serif;
   --bg:#ffffff;
   --surface:#ffffff;
-  --surface-2:#f3f4f6;
-  --ink:#0b1f3a;
-  --muted:#475467;
-  --line:#e5e7eb;
-  --accent:#155eef;
+  --surface-2:#FAFAFA;
+  --ink:#000000;
+  --muted:#5a5a5a;
+  --line:#EAEAEA;
+  --accent:#000000;
   --accent-ink:#ffffff;
-  --accent-2:#0e7490;
-  --mark:#dbeafe;
-  --ok:#0f766e;
-  --warn:#b45309;
+  --accent-2:#1A1A1A;
+  --mark:#F0F0F0;
+  --ok:#0f6b3f;
+  --warn:#8a5a00;
   --err:#b91c1c;
-  --r:10px;
-  --shadow:0 1px 2px rgba(15,31,58,.04),0 4px 14px -8px rgba(15,31,58,.12);
-  --shadow-lg:0 24px 56px -28px rgba(15,31,58,.34);
-  --ring:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent);
+  --r:12px;
+  --shadow:0 4px 12px rgba(0,0,0,0.03);
+  --shadow-lg:0 24px 56px -28px rgba(0,0,0,.28);
+  --ring:0 0 0 3px rgba(0,0,0,0.12);
 }
 :root[data-theme="dark"]{
-  --bg:#08111f;
-  --surface:#0f1b2e;
-  --surface-2:#14243c;
-  --ink:#e8eef8;
-  --muted:#9fb0c7;
-  --line:#243650;
-  --accent:#6ea0ff;
-  --accent-ink:#06132a;
-  --accent-2:#67d4e8;
-  --mark:#17345f;
+  --bg:#0A0A0A;
+  --surface:#111111;
+  --surface-2:#1A1A1A;
+  --ink:#F5F5F5;
+  --muted:#A3A3A3;
+  --line:#2A2A2A;
+  --accent:#FFFFFF;
+  --accent-ink:#000000;
+  --accent-2:#E5E5E5;
+  --mark:#262626;
   --ok:#5eead4;
   --warn:#fbbf24;
   --err:#fca5a5;

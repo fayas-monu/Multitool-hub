@@ -177,6 +177,32 @@
       throw new Error(file.name+" could not be read. It may be damaged, or it is not a PDF.");
     }
   };
+  /* Opens a PDF with pdf.js, optionally supplying a password. Throws
+     {needsPassword:true} when the file is protected and no password (or
+     the wrong one) was given, so callers can prompt and retry. Used by the
+     PDF Password Unlocker — it never guesses or brute-forces a password,
+     only decrypts with the one the visitor supplies. */
+  PE.openPdfWithPassword=async function(file,password){
+    var data;
+    if(file&&typeof file.arrayBuffer==="function")data=new Uint8Array(await file.arrayBuffer());
+    else if(file instanceof Uint8Array)data=file;
+    else if(file instanceof ArrayBuffer)data=new Uint8Array(file);
+    else throw new Error("Choose a PDF file first.");
+    var opts={data:data};
+    if(password)opts.password=password;
+    try{
+      return await PE.pdfjs().getDocument(opts).promise;
+    }catch(e){
+      var isPwd=e&&(e.name==="PasswordException"||/password/i.test(e.message||""));
+      if(isPwd){
+        var err=new Error(password?"That password is incorrect.":"This PDF is password-protected.");
+        err.needsPassword=true;
+        err.incorrect=!!password;
+        throw err;
+      }
+      throw e;
+    }
+  };
   PE.pageCount=async function(file){
     var pdf=await PE.openPdf(file);
     var n=pdf.numPages;

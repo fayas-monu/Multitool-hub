@@ -1,19 +1,21 @@
-/* MULTI TOOL HUB - runtime configuration. Credit: chank!nd3 p4d4y41!
-   Gemini assistant settings, loaded before assets/chat.js.
+/* MULTI TOOL HUB — runtime configuration. Credit: chank!nd3 p4d4y41! l FAYAS MONU
+   Groq assistant settings, loaded before assets/chat.js.
 
-   PREFERRED (truly private): deploy server/cloudflare-worker.js, then set
-     proxy: "https://your-worker.your-name.workers.dev"
-   and empty the k array. The key then lives only in the Worker's secret store.
+   The Groq API key NEVER goes here and never ships to the browser. Deploy
+   one of the two proxies in /server and put its URL below:
 
-   FALLBACK (works on plain GitHub Pages): k holds the key split, reversed and
-   base64-encoded. That only keeps it out of plain-text search and casual
-   copy/paste - ANY key shipped to a browser can be read by a determined visitor.
-   Restrict it by HTTP referrer (your Pages domain) and to the Generative Language
-   API in Google AI Studio / Cloud Console, and set a low quota. */
-window.MTH_CONFIG={
-  gemini:{
-    proxy:"",
-    model:"gemini-2.5-flash",
-    k:["Z2J4YXNucHlVQzc=","OTEzVWZBV3VROUI=","ZklMWktWSXJTYy0=","dnExcVhKdG12UUk=","Nk5SOGJBLlFB"]
+     - server/cloudflare-worker.js  (recommended — wrangler secret put GROQ_API_KEY)
+     - server/server.js             (Node — copy server/.env.example to server/.env)
+
+   Until you deploy a proxy and set the URL, the assistant stays visible but
+   shows a short "not configured yet" notice instead of a broken call. */
+window.MTH_CONFIG = {
+  groq: {
+    // e.g. "https://mth-assistant.YOUR-SUBDOMAIN.workers.dev"
+    // or, same-origin Node deploy: "/api/assistant"
+    proxy: "",
+    // Optional: only needed if your proxy sets CLIENT_TOKEN.
+    token: "",
+    modelLabel: "Groq · Llama 3.3 70B"
   }
 };
