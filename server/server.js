@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 /**
- * MULTI TOOL HUB - optional assistant proxy
+ * MULTI TOOL HUB - assistant proxy (Groq)
+ * Developed by chank!nd3 p4d4y41! l FAYAS MONU
  *
  * Runs two jobs with nothing but Node's standard library:
  *   1. Serves the static site (so the app and API share an origin).
- *   2. Proxies chat text to Gemini with the API key kept on the server.
+ *   2. Proxies chat text to Groq with the API key kept on the server.
  *
- * The browser never sees GEMINI_API_KEY. Uploaded files never reach this
+ * The browser never sees GROQ_API_KEY. Uploaded files never reach this
  * server: only the chat text the visitor explicitly sends is forwarded.
+ * Supports both a single-response reply and a streamed SSE passthrough
+ * (POST body {stream:true}) for the floating Hub Assistant widget.
  *
  * Requires Node.js 18 or newer (built-in fetch).
  */
@@ -44,8 +47,9 @@ const { URL } = require("node:url");
 const PORT = toInt(process.env.PORT, 8787);
 const HOST = process.env.HOST || "127.0.0.1";
 const ROOT = path.resolve(__dirname, "..");
-const API_KEY = (process.env.GEMINI_API_KEY || "").trim();
-const MODEL = (process.env.GEMINI_MODEL || "gemini-2.5-flash").trim();
+const API_KEY = (process.env.GROQ_API_KEY || "").trim();
+const MODEL = (process.env.GROQ_MODEL || "llama-3.3-70b-versatile").trim();
+const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 const CLIENT_TOKEN = (process.env.CLIENT_TOKEN || "").trim();
 const RATE_LIMIT = Math.max(1, toInt(process.env.RATE_LIMIT, 20));
 const RATE_WINDOW_MS = Math.max(1000, toInt(process.env.RATE_WINDOW_SECONDS, 60) * 1000);
@@ -61,12 +65,14 @@ const ALLOWED_ORIGINS = String(process.env.ALLOWED_ORIGINS || "")
 
 const SYSTEM_PROMPT = [
   "You are the MULTI TOOL HUB assistant: a calm, practical guide to a private, browser-based file toolkit.",
-  "The hub has 17 tools: Merge PDF, Split PDF, Compress PDF, PDF Editor, Crop PDF, Rotate PDF, Organize Pages,",
-  "Page Numbers, Watermark PDF, JPG to PDF, PDF to JPG, PDF to Word, PDF to Text, Image Compressor, Video to MP3,",
-  "YouTube Downloader and Instagram Downloader.",
+  "The hub has 18 tools: Merge PDF, Split PDF, Compress PDF, PDF Editor, Crop PDF, Rotate PDF, Organize Pages,",
+  "Page Numbers, Watermark PDF, JPG to PDF, PDF to JPG, PDF to Word, PDF to Text, PDF Password Unlocker,",
+  "Image Compressor, Video to MP3, YouTube Downloader and Instagram Downloader.",
   "Most PDF and image tools run entirely on the visitor's device; files are not uploaded. The two link downloaders",
-  "send only the pasted public URL to Loader.to. When the visitor explicitly connects this proxy, only their chat",
-  "text is sent to Gemini. Never claim to have opened, read, stored or seen a file.",
+  "send only the pasted public URL to Loader.to. The PDF Password Unlocker only removes protection when the",
+  "visitor supplies the correct password themselves — never suggest or imply a way to bypass or crack a password",
+  "you don't know. Every chat sent here goes only to Groq as text; never claim to have opened, read, stored or",
+  "seen a file.",
   "Answer in short, clear paragraphs. Use plain language. Give numbered steps for procedures. If a question is",
   "outside file tools, say briefly that you focus on MULTI TOOL HUB and offer the closest relevant tool.",
   "Never invent a feature that does not exist. Do not ask for passwords, payment details or personal data.",
@@ -182,26 +188,39 @@ function cleanMessages(input) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Gemini request                                                      */
+/* Groq request                                                        */
 /* ------------------------------------------------------------------ */
-function askGemini(messages) {
+function groqPayload(messages, stream) {
+  return JSON.stringify({
+    model: MODEL,
+    messages: [
+      { role: "system", content: SYSTEM_PROMPT },
+      ...messages.map((m) => ({ role: m.role === "model" ? "assistant" : "user", content: m.text })),
+    ],
+    temperature: 0.55,
+    max_tokens: 1200,
+    stream: !!stream,
+  });
+}
+
+function friendlyGroqError(status) {
+  if (status === 429) return "Groq is receiving too many requests. Please wait a moment and try again.";
+  if (status === 400 || status === 401 || status === 403) return "Groq rejected the request. Check the server's API key and model name.";
+  return "Groq could not answer right now. Please try again.";
+}
+
+function askGroq(messages) {
   return new Promise((resolve, reject) => {
-    const url = new URL(
-      `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(MODEL)}:generateContent`
-    );
-    url.searchParams.set("key", API_KEY);
-    const payload = JSON.stringify({
-      systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-      contents: messages.map((m) => ({ role: m.role, parts: [{ text: m.text }] })),
-      generationConfig: { temperature: 0.55, topP: 0.95, maxOutputTokens: 1200 },
-    });
+    const url = new URL(GROQ_URL);
+    const payload = groqPayload(messages, false);
     const req = https.request(
       {
         method: "POST",
         hostname: url.hostname,
-        path: url.pathname + url.search,
+        path: url.pathname,
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${API_KEY}`,
           "Content-Length": Buffer.byteLength(payload),
         },
         timeout: UPSTREAM_TIMEOUT,
@@ -209,51 +228,73 @@ function askGemini(messages) {
       (res) => {
         let raw = "";
         res.setEncoding("utf8");
-        res.on("data", (d) => {
-          if (raw.length < 512 * 1024) raw += d;
-        });
+        res.on("data", (d) => { if (raw.length < 512 * 1024) raw += d; });
         res.on("end", () => {
           let data = {};
-          try {
-            data = JSON.parse(raw || "{}");
-          } catch {
-            /* handled below */
-          }
+          try { data = JSON.parse(raw || "{}"); } catch { /* handled below */ }
           if (res.statusCode !== 200) {
-            const status = res.statusCode === 429 ? 429 : 502;
-            const msg =
-              res.statusCode === 429
-                ? "Gemini is receiving too many requests. Please wait a moment and try again."
-                : res.statusCode === 400 || res.statusCode === 403
-                  ? "Gemini rejected the request. Check the server's API key and model name."
-                  : "Gemini could not answer right now. Please try again.";
-            reject(Object.assign(new Error(msg), { status }));
+            reject(Object.assign(new Error(friendlyGroqError(res.statusCode)), { status: res.statusCode === 429 ? 429 : 502 }));
             return;
           }
-          const candidate = data.candidates && data.candidates[0];
-          const parts = (candidate && candidate.content && candidate.content.parts) || [];
-          const text = parts.map((p) => p.text || "").join("").trim();
+          const text = data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
           if (!text) {
-            const blocked = data.promptFeedback && data.promptFeedback.blockReason;
-            reject(
-              Object.assign(
-                new Error(blocked ? "Gemini declined that request (" + blocked + ")." : "Gemini sent an empty reply."),
-                { status: 502 }
-              )
-            );
+            reject(Object.assign(new Error("Groq sent an empty reply."), { status: 502 }));
             return;
           }
-          resolve({ text, model: MODEL });
+          resolve({ text: String(text).trim(), model: MODEL });
         });
       }
     );
-    req.on("timeout", () => req.destroy(Object.assign(new Error("Gemini took too long to answer."), { status: 504 })));
+    req.on("timeout", () => req.destroy(Object.assign(new Error("Groq took too long to answer."), { status: 504 })));
     req.on("error", (err) => {
       if (err.status) reject(err);
-      else reject(Object.assign(new Error("Could not reach Gemini from the server."), { status: 502 }));
+      else reject(Object.assign(new Error("Could not reach Groq from the server."), { status: 502 }));
     });
     req.end(payload);
   });
+}
+
+/* Streams Groq's raw SSE chunks straight through to the client response,
+   which chat.js parses incrementally to render markdown as it arrives. */
+function streamGroq(messages, res, corsHdrs) {
+  const url = new URL(GROQ_URL);
+  const payload = groqPayload(messages, true);
+  const upstream = https.request(
+    {
+      method: "POST",
+      hostname: url.hostname,
+      path: url.pathname,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${API_KEY}`,
+        "Content-Length": Buffer.byteLength(payload),
+      },
+      timeout: UPSTREAM_TIMEOUT,
+    },
+    (upRes) => {
+      if (upRes.statusCode !== 200) {
+        let raw = "";
+        upRes.on("data", (d) => (raw += d));
+        upRes.on("end", () => {
+          sendJson(res, 502, { ok: false, error: friendlyGroqError(upRes.statusCode) });
+        });
+        return;
+      }
+      res.writeHead(200, {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive",
+        ...corsHdrs,
+      });
+      upRes.pipe(res);
+    }
+  );
+  upstream.on("timeout", () => upstream.destroy());
+  upstream.on("error", () => {
+    if (!res.headersSent) sendJson(res, 502, { ok: false, error: "Could not reach Groq from the server." });
+    else res.end();
+  });
+  upstream.end(payload);
 }
 
 /* ------------------------------------------------------------------ */
@@ -348,7 +389,7 @@ const server = http.createServer(async (req, res) => {
     return sendJson(res, 400, { ok: false, error: "Bad request." }, origin);
   }
 
-  /* Health / connection probe used by "Connect Gemini". */
+  /* Health / connection probe used by the Hub Assistant widget. */
   if (pathname === "/api/assistant" && req.method === "GET") {
     if (!tokenMatches((req.headers.authorization || "").replace(/^Bearer\s+/i, ""))) {
       return sendJson(res, 401, { ok: false, error: "The access token is missing or incorrect." }, origin);
@@ -357,14 +398,15 @@ const server = http.createServer(async (req, res) => {
       return sendJson(
         res,
         503,
-        { ok: false, error: "The server is running but GEMINI_API_KEY is not set." },
+        { ok: false, error: "The server is running but GROQ_API_KEY is not set." },
         origin
       );
     }
     return sendJson(res, 200, { ok: true, service: "MULTI TOOL HUB assistant", model: MODEL }, origin);
   }
 
-  /* Chat completion. */
+  /* Chat completion — buffered reply, or a streamed SSE passthrough when
+     the client sends {stream:true}. */
   if (pathname === "/api/assistant" && req.method === "POST") {
     if (!tokenMatches((req.headers.authorization || "").replace(/^Bearer\s+/i, ""))) {
       return sendJson(res, 401, { ok: false, error: "The access token is missing or incorrect." }, origin);
@@ -373,7 +415,7 @@ const server = http.createServer(async (req, res) => {
       return sendJson(
         res,
         503,
-        { ok: false, error: "The server is running but GEMINI_API_KEY is not set." },
+        { ok: false, error: "The server is running but GROQ_API_KEY is not set." },
         origin
       );
     }
@@ -396,8 +438,11 @@ const server = http.createServer(async (req, res) => {
     } catch (err) {
       return sendJson(res, err.status || 400, { ok: false, error: err.message }, origin);
     }
+    if (payload && payload.stream) {
+      return streamGroq(messages, res, corsHeaders(origin));
+    }
     try {
-      const answer = await askGemini(messages);
+      const answer = await askGroq(messages);
       return sendJson(res, 200, { ok: true, reply: answer.text, text: answer.text, model: answer.model }, origin);
     } catch (err) {
       return sendJson(res, err.status || 502, { ok: false, error: err.message || "The assistant is unavailable." }, origin);
@@ -423,7 +468,7 @@ server.on("clientError", (err, socket) => {
 server.listen(PORT, HOST, () => {
   console.log(`MULTI TOOL HUB server: http://${HOST}:${PORT}`);
   console.log(`Static root: ${ROOT}`);
-  if (!API_KEY) console.log("Assistant: disabled (set GEMINI_API_KEY to enable Gemini)");
+  if (!API_KEY) console.log("Assistant: disabled (set GROQ_API_KEY in server/.env to enable the Hub Assistant)");
   else console.log(`Assistant: enabled · model ${MODEL}`);
   console.log(`Access token: ${CLIENT_TOKEN ? "required" : "not set (only do this on a trusted network)"}`);
   console.log(`Allowed origins: ${ALLOWED_ORIGINS.length ? ALLOWED_ORIGINS.join(", ") : "same origin only"}`);

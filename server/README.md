@@ -2,23 +2,23 @@
 
 MULTI TOOL HUB works completely without this folder. The assistant is local by
 default. This small server is only needed when you want the optional
-**Connect Gemini** experience.
+floating **Hub Assistant** chat widget.
 
 It does two things:
 
 1. Serves the static site, so the app and API share an origin.
-2. Proxies chat text to Gemini while the API key stays on the server.
+2. Proxies chat text to Groq while the API key stays on the server (streaming or buffered).
 
 **Local file tools never touch this server.** PDFs, images, signatures and audio
 are processed in the visitor's browser. This proxy only receives the chat
-messages a visitor chooses to send after connecting Gemini.
+messages a visitor sends to the Hub Assistant.
 
 ---
 
 ## Requirements
 
 - Node.js 18 or newer (uses the built-in `fetch` and `node:` modules)
-- A Gemini API key from [Google AI Studio](https://aistudio.google.com/apikey)
+- A Groq API key from [console.groq.com/keys](https://console.groq.com/keys)
 
 No npm install is required.
 
@@ -27,7 +27,7 @@ No npm install is required.
 ```bash
 cd server
 cp .env.example .env
-# edit .env and set GEMINI_API_KEY
+# edit .env and set GROQ_API_KEY
 node server.js
 ```
 
@@ -41,7 +41,7 @@ node server.js
 ```
 
 Open <http://127.0.0.1:8787>. The whole site is served from there, including the
-tools. Click **Assistant → Connect Gemini**, leave the server address as:
+tools. The assistant works automatically once assets/config.js points at this server:
 
 ```
 http://127.0.0.1:8787/api/assistant
@@ -57,10 +57,10 @@ open the matching address.
 | Method | Path | Purpose |
 | --- | --- | --- |
 | `GET` | `/api/assistant` | Connection check used by the Connect dialog |
-| `POST` | `/api/assistant` | Sends chat text to Gemini and returns `{ ok, reply, model }` |
+| `POST` | `/api/assistant` | Sends chat text to Groq. `{stream:false}` (default) returns `{ ok, reply, model }`; `{stream:true}` returns a forwarded `text/event-stream`. |
 | `GET` | everything else | Static files from the project root |
 
-`GET /api/assistant` returns `503` when `GEMINI_API_KEY` is missing, so the UI can
+`GET /api/assistant` returns `503` when `GROQ_API_KEY` is missing, so the UI can
 explain the problem instead of failing silently.
 
 The POST body is intentionally small:
@@ -143,7 +143,7 @@ curl -i -H "Authorization: Bearer YOUR_TOKEN" http://127.0.0.1:8787/api/assistan
 
 ## Privacy and legal
 
-When Gemini is connected, the chat text is processed by Google's Gemini API
+The chat text sent to the Hub Assistant is processed by Groq's API
 under Google's terms. Do not send confidential documents, personal data,
 passwords or payment details. The assistant is a convenience feature, not
 professional advice. See the site's [Privacy Policy](../privacy.html) and

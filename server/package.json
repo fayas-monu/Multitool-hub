@@ -2,7 +2,7 @@
   "name": "multi-tool-hub-server",
   "version": "1.0.0",
   "private": true,
-  "description": "Optional static host and secure Gemini proxy for MULTI TOOL HUB",
+  "description": "Static host and secure Groq proxy for MULTI TOOL HUB",
   "main": "server.js",
   "engines": {
     "node": ">=18"
