@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Credit: chank!nd3 p4d4y41! l FAYAS MONU -->
+<title>PDF Password Unlocker — remove a known password | MULTI TOOL HUB</title>
+<meta name="description" content="Unlock a password-protected PDF by entering its password. The file is decrypted entirely in your browser and never uploaded. We don't crack or bypass unknown passwords.">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0A0A0A" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/logo-mark.svg" type="image/svg+xml">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<style>
+  .pwd-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
+  .pwd-row input[type="password"],.pwd-row input[type="text"]{flex:1;min-width:220px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font:inherit}
+  .eye{background:none;border:1px solid var(--line);border-radius:10px;width:40px;height:40px;cursor:pointer;color:var(--muted)}
+  .note-box{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:13px;color:var(--muted);margin-top:14px;line-height:1.6}
+  .note-box b{color:var(--ink)}
+  .lockstate{display:flex;align-items:center;gap:10px;font-size:14px;margin-top:4px}
+  .lockstate i{font-size:18px}
+  .lockstate.locked i{color:var(--err)}
+  .lockstate.open i{color:var(--ok)}
+  .empty-note{color:var(--muted);font-size:13.5px;text-align:center;padding:30px 10px}
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <a class="brand" href="../index.html" aria-label="MULTI TOOL HUB"><svg class="brand-mark" viewBox="0 0 48 48" width="40" height="40" aria-hidden="true" focusable="false"><rect width="48" height="48" rx="11"/><g fill="none" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 31V17l5.5 8L18 17v14"/><path d="M21 17h9M25.5 17v14"/><path d="M33 17v14M33 24h8M41 17v14"/></g><circle cx="41" cy="7" r="2.6"/></svg><span class="brand-word">MULTI <b>TOOL</b> HUB</span></a>
+  <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
+</div></header>
+<main>
+<h1>PDF Password Unlocker</h1>
+<p class="lead">Enter the PDF's existing password and we'll produce a copy that opens without one. Everything happens on your device — the file and the password are never sent anywhere.</p>
+
+<div class="note-box">
+  <b>What this tool does and doesn't do.</b> It removes password protection only when you supply the <b>correct, known password</b>. It does not crack, guess or bypass a password you don't know — if you've genuinely lost access to a file, you'll need the password from whoever created or last secured it. Decrypted pages are rebuilt into a clean, unencrypted PDF image-for-image; this guarantees it opens password-free everywhere, though the text layer is flattened (no longer selectable/searchable) in the output.
+</div>
+
+<label class="drop" id="zone"><i class="fa-solid fa-lock" aria-hidden="true"></i><strong>Choose a protected PDF or drop it here</strong><span>Nothing is uploaded · works offline on your device</span>
+<input type="file" id="fileInput" accept="application/pdf,.pdf"></label>
+
+<div class="panel" id="panel" hidden>
+  <p style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><strong id="fn"></strong> <span id="meta" style="color:var(--muted)"></span></p>
+  <div class="lockstate locked" id="lockstate"><i class="fa-solid fa-lock"></i> <span>Checking protection…</span></div>
+
+  <div class="pwd-row" id="pwdRow" hidden>
+    <input type="password" id="pwd" placeholder="Enter the PDF's password" autocomplete="off">
+    <button type="button" class="eye" id="eye" title="Show/hide password" aria-label="Show or hide password"><i class="fa-solid fa-eye"></i></button>
+    <button class="btn" id="unlockBtn" type="button"><i class="fa-solid fa-unlock"></i> Unlock PDF</button>
+  </div>
+
+  <div class="thumbs" id="thumbs"></div>
+  <div class="prog" id="prog"><div></div></div>
+  <div class="row" id="dlRow" hidden><button class="btn" id="go"><i class="fa-solid fa-download"></i> Download unlocked PDF</button></div>
+</div>
+<div class="status" id="status" role="status" aria-live="polite"></div>
+</main>
+<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Developed by chank!nd3 p4d4y41! l FAYAS MONU</span></div>
+<script src="../assets/app.js"></script>
+<script src="../assets/brand.js" defer></script>
+<script src="../assets/cursor.js" defer></script>
+<script src="../assets/config.js"></script>
+<script src="../assets/chat.js"></script>
+<script>
+var $=PE.$, file=null, unlockedBytes=null, busy=false;
+
+function setLockState(kind,text){
+  var el=$("lockstate");
+  el.className="lockstate "+(kind==="open"?"open":"locked");
+  el.innerHTML='<i class="fa-solid fa-'+(kind==="open"?"lock-open":"lock")+'"></i> <span>'+text+"</span>";
+}
+
+async function probe(f){
+  file=f;unlockedBytes=null;
+  $("panel").hidden=false;$("fn").textContent=f.name;$("meta").textContent="· "+PE.fmt(f.size);
+  $("pwdRow").hidden=true;$("dlRow").hidden=true;$("thumbs").innerHTML="";
+  setLockState("locked","Checking whether this PDF is password-protected…");
+  try{
+    var pdf=await PE.openPdfWithPassword(f,"");
+    try{pdf.destroy()}catch(e){}
+    setLockState("open","This PDF isn't password-protected — nothing to unlock. You can still use the other PDF tools on it directly.");
+    PE.status("No password detected on this file.","ok");
+  }catch(e){
+    if(e.needsPassword){
+      setLockState("locked","Password-protected. Enter the password below to unlock it.");
+      $("pwdRow").hidden=false;$("pwd").focus();
+      PE.status("Enter the PDF's password, then press Unlock PDF.");
+    }else{
+      setLockState("locked","Could not read this file.");
+      PE.status("Could not read this PDF: "+(e.message||e),"err");
+    }
+  }
+}
+
+PE.drop($("zone"),$("fileInput"),/pdf/i,function(list){probe(list[0])});
+
+$("eye").onclick=function(){
+  var i=$("pwd");i.type=i.type==="password"?"text":"password";
+  this.innerHTML='<i class="fa-solid fa-'+(i.type==="password"?"eye":"eye-slash")+'"></i>';
+};
+$("pwd").addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();$("unlockBtn").click()}});
+
+$("unlockBtn").onclick=async function(){
+  if(!file||busy)return;
+  var password=$("pwd").value;
+  if(!password){PE.status("Enter the password first.","err");return}
+  busy=true;this.disabled=true;PE.progress(.04);
+  setLockState("locked","Decrypting…");
+  $("thumbs").innerHTML='<p class="empty-note"><span class="spin"></span> Decrypting and rebuilding pages…</p>';
+  try{
+    var pdf=await PE.openPdfWithPassword(file,password);
+    var n=pdf.numPages;
+    var out=await PDFLib.PDFDocument.create();
+    for(var i=1;i<=n;i++){
+      var pg=await pdf.getPage(i);
+      var v1=pg.getViewport({scale:1});
+      var scale=Math.min(2.2,Math.max(1,1600/Math.max(v1.width,v1.height)));
+      var vp=pg.getViewport({scale:scale});
+      var c=document.createElement("canvas");
+      c.width=Math.max(1,Math.round(vp.width));c.height=Math.max(1,Math.round(vp.height));
+      var cx=c.getContext("2d");cx.fillStyle="#fff";cx.fillRect(0,0,c.width,c.height);
+      await pg.render({canvasContext:cx,viewport:vp}).promise;
+      var jpg=c.toDataURL("image/jpeg",.92);
+      var img=await out.embedJpg(jpg);
+      var page=out.addPage([v1.width,v1.height]);
+      page.drawImage(img,{x:0,y:0,width:v1.width,height:v1.height});
+      c.width=c.height=0;
+      PE.progress(.05+.85*(i/n));
+      if(i%3===0)await PE.sleep(0);
+    }
+    try{pdf.destroy()}catch(e){}
+    PE.progress(.95);
+    unlockedBytes=await out.save({useObjectStreams:true});
+    PE.progress(1);
+    $("thumbs").innerHTML="";
+    $("dlRow").hidden=false;
+    setLockState("open","Unlocked — "+n+" page"+(n===1?"":"s")+" rebuilt without a password.");
+    PE.status("Ready. "+PE.fmt(file.size)+" → "+PE.fmt(unlockedBytes.length)+". Click Download to save it.","ok");
+    PE.toast("PDF unlocked");
+  }catch(e){
+    PE.progress(null);
+    $("thumbs").innerHTML="";
+    if(e.incorrect){
+      setLockState("locked","That password didn't work.");
+      PE.status("That password is incorrect. Double-check it and try again.","err");
+    }else{
+      setLockState("locked","Could not unlock this file.");
+      PE.status("Could not unlock this PDF: "+(e.message||e),"err");
+    }
+  }finally{
+    busy=false;this.disabled=false;setTimeout(function(){PE.progress(null)},700);
+  }
+};
+
+$("go").onclick=function(){
+  if(!unlockedBytes||!file)return;
+  PE.download(unlockedBytes,PE.baseName(file.name)+"-unlocked.pdf","application/pdf");
+  PE.toast("Download started");
+};
+</script>
+</body>
+</html>
