@@ -1,9 +1,19 @@
-# Maintainer notes - MULTI TOOL HUB 4.2
+# Maintainer notes - MULTI TOOL HUB 4.3
 
-Release date: 26 October 2026
-Credit: `chank!nd3 p4d4y41!`
+Release date: 31 October 2026
+Credit: `Developed by chank!nd3 p4d4y41! l FAYAS MONU`
 
 This file is for whoever maintains the site. The user-facing documentation is in `README.md`.
+
+## 4.3 — Monochrome rebuild, Groq assistant, PDF Password Unlocker
+
+- Design system switched to pure black/white/Arial (`assets/style.css` root tokens), per the brand spec. Dark theme remapped to match.
+- Mandatory MTH SVG logo now injected into every page's header by `assets/brand.js`, with the exact mandated footer credit text enforced on every page (also auto-repaired if a future page forgets it).
+- New `assets/cursor.js`: Venom-style elastic web mesh that only extends while hovering an interactive element (buttons, links, cards); idle/invisible everywhere else. Skips touch devices and `prefers-reduced-motion`.
+- AI assistant moved from Gemini to **Groq** (`llama-3.3-70b-versatile`). The old dual-mode client (browser-held key *or* proxy) was removed entirely — there is now only a secure server-side proxy mode, so a Groq key can never be shipped to the browser. `server/cloudflare-worker.js` and `server/server.js` both rewritten for Groq, both supporting a streamed SSE reply and a buffered fallback. New floating `assets/chat.js` widget renders markdown as it streams in.
+- Added **PDF Password Unlocker** (`tools/unlock-pdf.html`). It removes protection only when the visitor supplies the PDF's correct, known password — it does not attempt to crack, guess or bypass an unknown password. Implementation note: pdf-lib cannot truly decrypt PDF content streams even with `ignoreEncryption:true`, so the unlocker decrypts with pdf.js (which supports real password-based decryption) and rebuilds a clean, unencrypted PDF page-by-page as high-resolution images via pdf-lib. This guarantees the output opens password-free everywhere; the trade-off is that the output's text layer is flattened (no longer selectable/searchable). Documented clearly in the tool's own UI.
+- Privacy Policy and Terms rewritten wherever they described the old Gemini / browser-key flow, to accurately describe the Groq / proxy-only flow.
+- Service worker cache bumped to `mth-v19` to force-refresh the above on existing installs.
 
 ## Shipping checklist
 
@@ -14,8 +24,8 @@ This file is for whoever maintains the site. The user-facing documentation is in
 4. Test in a private window so an old service worker does not serve stale files.
 5. Verify the PWA icons exist at the paths listed in `manifest.webmanifest` and match the navy/blue identity.
 6. Open every page once and check DevTools > Console for errors.
-7. If the optional Gemini proxy is used, deploy `server/` over HTTPS and set `GEMINI_API_KEY` in its environment - never in client code.
-8. If a Gemini key has ever been exposed, revoke it before shipping. Keys belong only in `assets/config.js` (encoded, referrer-restricted) or, preferably, in the Worker/server secret store. Never put one in `chat.js`, HTML, `localStorage` or a plain-text commit.
+7. Deploy `server/cloudflare-worker.js` or `server/server.js` over HTTPS and set `GROQ_API_KEY` only in its environment / secret store — never in client code — then point `assets/config.js` -> `groq.proxy` at it.
+8. If a Groq key has ever been exposed, revoke it in the Groq console before shipping. The key belongs only in the Worker secret store or `server/.env`. Never put one in `chat.js`, `config.js`, HTML, `localStorage` or a plain-text commit.
 
 ## Testing locally
 

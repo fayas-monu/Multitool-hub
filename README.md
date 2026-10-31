@@ -1,8 +1,8 @@
 # MULTI TOOL HUB
 
-A fast, privacy-first collection of **17 browser tools** for PDFs, images and media. The interface is a clean navy, blue and white workspace built for everyday office work. There is no account, no upload for the local tools, and no watermark added to your output.
+A fast, privacy-first collection of **18 browser tools** for PDFs, images and media. The interface is a clean corporate black-and-white workspace built for everyday office work, with a floating Groq-powered Hub Assistant. There is no account, no upload for the local tools, and no watermark added to your output.
 
-> **Credit:** `chank!nd3 p4d4y41!`
+> **Credit:** `Developed by chank!nd3 p4d4y41! l FAYAS MONU`
 > **Instagram:** [@____fa_y_as_____](https://www.instagram.com/____fa_y_as_____)
 
 ![MULTI TOOL HUB](assets/og-cover.png)
@@ -27,8 +27,7 @@ A fast, privacy-first collection of **17 browser tools** for PDFs, images and me
 - **PDF to Word** - builds a real `.docx` with headings, paragraphs, lists and tables. It uses the correct page viewport, so text lands in the right place, and warns you when a page is scanned instead of silently producing an empty file.
 - **Large, interactive previews** - Watermark, Page Numbers, Crop, PDF to JPG, Image Compressor and Video to MP3 preview before you commit. The expand control opens a viewport-sized modal with zoom, fit, actual size, pan, a live state indicator and a download button. Stacked overlay layers (watermark, page numbers, crop guides) are composited into the enlarged image.
 - **Search built for intent** - word-level matching, plural and stopword handling, exact source-to-target direction (so "pdf to word" never returns "word to pdf"), typo tolerance, category filtering, favourites, recent tools and keyboard navigation.
-- **Hub Assistant** - a local, rule-based assistant that finds the right tool from a plain sentence, explains steps, checks file types and sizes, supports voice input, and can switch the theme. It runs entirely in your browser by default.
-- **Optional Gemini connection** - two explicit modes: a **Browser key** stored only in this tab's `sessionStorage`, or a **Secure proxy** that keeps the key on your server. The local assistant remains the default and the fallback. The site-wide Gemini connection is configured in `assets/config.js` (see below).
+- **Hub Assistant, powered by Groq** - a floating chat widget with streaming markdown replies (`llama-3.3-70b-versatile`). It talks only to a secure server-side proxy you deploy; the Groq API key is never present in the browser. Configured in `assets/config.js` (see below).
 - **Installable PWA** - works from the home screen and keeps previously opened pages available offline.
 - **Dark / light theme**, keyboard shortcuts, drag-and-drop, mobile-first layouts, a mobile navigation drawer, reduced-motion support and readable contrast in both themes.
 
@@ -58,36 +57,19 @@ Then visit <http://localhost:8080>.
 
 > The PDF, image and audio engines load from public CDNs (pdf.js, pdf-lib, JSZip, docx, lamejs, Font Awesome). The pdf.js worker is self-hosted (`assets/pdf.worker.min.js`), so rendering keeps working offline. The first visit needs an internet connection for the CDN libraries; afterwards the service worker caches them. The interface itself uses the system font stack - no Google Fonts request is made.
 
-### Site-wide Gemini (assets/config.js)
+### Hub Assistant proxy (assets/config.js)
 
-`assets/config.js` is loaded on every page before `chat.js` and gives all visitors the AI assistant without pasting a key.
+`assets/config.js` is loaded on every page before `chat.js` and points the floating Hub Assistant at your proxy. There is no browser-key mode — the Groq key is never shipped to the browser, by design.
 
-- **Preferred - private proxy:** deploy `server/cloudflare-worker.js` (`wrangler secret put GEMINI_API_KEY`), then set `gemini.proxy` to the Worker URL and empty `gemini.k`. The key never reaches the browser.
-- **Fallback - static hosting:** `gemini.k` holds the key split, reversed and base64-encoded. This is obfuscation, not secrecy: any key shipped to a browser can be extracted. Restrict it by HTTP referrer to your Pages domain and to the Generative Language API, and set a low quota. Rotate any key that has been shared in chat or committed.
-- The key is kept in memory only. It is never written to `localStorage` or `sessionStorage`. A visitor can press Disconnect to return to local mode for that tab.
+1. Deploy one of the two included proxies:
+   - **`server/cloudflare-worker.js`** (recommended) — `wrangler secret put GROQ_API_KEY`, deploy, then set `groq.proxy` in `assets/config.js` to the Worker URL.
+   - **`server/server.js`** (Node 18+) — copy `server/.env.example` to `server/.env`, set `GROQ_API_KEY`, run `npm start`, then set `groq.proxy` to `/api/assistant` (same-origin) or the server's public URL.
+2. Get a Groq API key at [console.groq.com/keys](https://console.groq.com/keys).
+3. Optionally set `CLIENT_TOKEN` on the proxy and the matching `groq.token` in `assets/config.js` to require a shared secret.
 
-### Connect Gemini manually (optional)
+The proxy exposes `GET /api/assistant` for a health check and `POST /api/assistant` for chat, with `{stream:true}` for a Server-Sent-Events stream the widget renders as markdown in real time, and a non-streaming fallback if the stream fails. See `server/README.md` for deployment, origin allow-listing, rate limits and security notes.
 
-The assistant is local by default and needs no account or key. Open **Assistant > Gemini** and choose one mode:
-
-**Browser key**
-
-1. Create a key in [Google AI Studio](https://aistudio.google.com/apikey).
-2. Paste it into the Browser key field and press **Connect**.
-3. The key is kept in `sessionStorage` for this tab only and sent directly to `https://generativelanguage.googleapis.com/v1beta`. It is never written to `localStorage`, the page source or this repository.
-4. Press **Forget key** or close the tab to remove it. A key rejected by Google (HTTP 401/403) is cleared automatically.
-5. To reduce risk, restrict the key in Google Cloud/AI Studio and never reuse a key that has been shared or committed.
-
-**Secure proxy**
-
-1. Deploy the small proxy in `server/` (Node.js 18+).
-2. Set `GEMINI_API_KEY` in its environment; never in client code.
-3. In the app, choose **Secure proxy**, enter the proxy URL (for example `https://api.example.com/api/assistant`) and an access token if configured.
-4. The key stays on the server. Only chat text is sent. Local mode remains available if the proxy fails.
-
-The proxy exposes `GET /api/assistant` for a connection check and `POST /api/assistant` for chat. See `server/README.md` for deployment, origin allow-listing, rate limits and security notes.
-
-> **Security:** never commit an API key. If a key is ever exposed in a screenshot, chat, issue or commit, revoke it in Google AI Studio and create a new one. The Browser key mode is convenient, but a proxy is the stronger option for a public deployment.
+> **Security:** never commit an API key. If a key is ever exposed in a screenshot, chat, issue or commit, revoke it in the Groq console and create a new one.
 
 ---
 
@@ -113,12 +95,12 @@ The site is plain HTML, CSS and JavaScript - no build step.
 
 - **Local tools** read files with the browser's File API and process them in memory. Nothing is uploaded.
 - **YouTube and Instagram helpers** are the only tools that contact a third party. They send the public link you paste to the **Loader.to** API to fetch download options. This is disclosed on the pages, in the assistant and in the Privacy Policy.
-- **Gemini is opt-in.** If you connect it, your chat text, the page path and normal request metadata are sent to Google. In Browser key mode the key goes from your browser to Google; in proxy mode it stays on your server. No file is ever sent. If you never connect, the assistant stays fully local.
+- **The assistant sends nothing until you message it.** Once you type and send a message, your chat text and normal request metadata are sent to Groq through your own server-side proxy. The Groq key always stays on your server. No file is ever sent.
 - **Site files** (HTML, CSS, JS, icons) are served by your host or CDN, which will see normal request data such as IP address and user agent.
 - **No analytics, no advertising, no accounts, no tracking pixels** are included.
-- Chat history, favourites, theme and recent tools are stored in `localStorage` on your device. The Gemini key and proxy token are stored only in `sessionStorage` and cleared when the tab closes or you press **Forget key** / **Disconnect**. Legal pages list every key used.
+- Chat history, favourites, theme and recent tools are stored in `localStorage` on your device. The current Hub Assistant conversation is stored only in `sessionStorage` and cleared when the tab closes. The Groq key never touches browser storage at all — it lives only on your server. Legal pages list every key used.
 
-The legal pages cover India (DPDP Act 2023, IT Act and rules, Consumer Protection Act) and the UAE (PDPL and consumer-protection rules), including the optional Gemini connection. They are detailed templates, not legal advice.
+The legal pages cover India (DPDP Act 2023, IT Act and rules, Consumer Protection Act) and the UAE (PDPL and consumer-protection rules), including the Hub Assistant / Groq data flow. They are detailed templates, not legal advice.
 
 The full text is in [privacy.html](privacy.html) and [terms.html](terms.html).
 
@@ -137,7 +119,6 @@ robots.txt / sitemap.xml    Search-engine files
 assets/
   logo.svg                  Light-theme MULTI TOOL HUB lockup
   logo-dark.svg             Dark-theme lockup (white wordmark, blue mark)
-  gemini.svg                Gemini mark used in the assistant
   icon-192.png              Home-screen icon
   icon-512.png              Large icon
   icon-maskable-512.png     Android adaptive icon
@@ -145,12 +126,14 @@ assets/
   style.css                 Design system and shared components
   app.js                    Shared helpers (PE.*) and preview compositor
   pdf.worker.min.js         Self-hosted pdf.js worker (works offline)
-  chat.js                   Hub Assistant (local rules + optional Gemini client)
+  chat.js                   Hub Assistant (floating widget; Groq via the proxy only)
+  cursor.js                 Venom web cursor trail (hover-only, interactive elements)
+  brand.js                  Injects the mandatory MTH logo + footer credit on every page
 tools/                      One self-contained HTML file per tool
-server/                     Optional Node.js static host + secure Gemini proxy
+server/                     Optional Node.js static host + secure Groq proxy
   server.js                 No dependencies; key stays in the server env
   README.md                 Deployment and security notes
-  .env.example              Copy to .env and add GEMINI_API_KEY
+  .env.example              Copy to .env and add GROQ_API_KEY
 ```
 
 `assets/app.js` exposes small helpers used by every tool:
@@ -194,7 +177,7 @@ Designed and built for **MULTI TOOL HUB** by **FAYAS MONU**.
 
 Credit line: `chank!nd3 p4d4y41!`
 
-Open-source libraries: [pdf.js](https://mozilla.github.io/pdf.js/), [pdf-lib](https://pdf-lib.js.org/), [JSZip](https://stuk.github.io/jszip/), [docx](https://docx.js.org/), [lamejs](https://github.com/zhuker/lamejs), [Font Awesome](https://fontawesome.com/), and the optional [Gemini API](https://ai.google.dev/). The interface uses system fonts; Google Fonts is not loaded.
+Open-source libraries: [pdf.js](https://mozilla.github.io/pdf.js/), [pdf-lib](https://pdf-lib.js.org/), [JSZip](https://stuk.github.io/jszip/), [docx](https://docx.js.org/), [lamejs](https://github.com/zhuker/lamejs), [Font Awesome](https://fontawesome.com/), and the [Groq API](https://groq.com/) for the Hub Assistant. The interface uses the Arial system font stack; Google Fonts is not loaded.
 
 ---
 

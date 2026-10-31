@@ -95,7 +95,7 @@
 <h2 id="local">7. How processing works</h2>
 <p>Local tools run in your browser. Your file is read into your device’s memory, processed there, and offered back to you as a download. It is not uploaded to a server operated by us. Closing the tab or refreshing the page clears the working data, although your browser may keep a downloaded copy in your downloads folder.</p>
 <p>API tools are different. When you use the YouTube or Instagram helper, the public link you paste is sent to <strong>Loader.to</strong> so that it can return download options. No file is sent to that API. The API may see your IP address, browser information and the link. We do not control the API, its availability, its content or its own privacy practices. See <a href="#thirdparty">section 10</a> and our <a href="privacy.html">Privacy Policy</a>.</p>
-<p><strong>Optional AI assistant.</strong> The Hub Assistant is local by default. If you explicitly choose <em>Connect Gemini</em> and send a message, that chat text (and the current page path) is sent to Google's Gemini API — either directly using your own browser key, or through an optional assistant proxy operated by the site owner. Files are never sent. A browser key is held only in this tab's session storage, is never written into the site's code or local storage, and is removed when you press <strong>Forget key</strong> or close the tab. Do not enter a key on a shared or public computer. You are responsible for what you type; do not submit confidential information, personal data, passwords or payment details. AI replies can be inaccurate, incomplete or inappropriate, and must be checked before you rely on them. See the optional AI terms in <a href="#thirdparty">section 10</a>.</p>
+<p><strong>AI assistant (Hub Assistant).</strong> When you send a message to the Hub Assistant, that chat text is sent to Groq's API through a server-side proxy operated by the site owner (see <code>server/</code> in the source) — never directly from your browser, and never with an API key in your browser. Files are never sent. You are responsible for what you type; do not submit confidential information, personal data, passwords or payment details. AI replies can be inaccurate, incomplete or inappropriate, and must be checked before you rely on them. See the AI terms in <a href="#thirdparty">section 10</a>.</p>
 <p>The Service may use your browser’s local storage to remember preferences, favourites, recent tools, chat history and theme choice. That information stays on your device and can be cleared through your browser settings.</p>
 
 <h2 id="acceptable">8. Acceptable use</h2>
@@ -136,7 +136,7 @@
     <tr><td>System UI fonts</td><td>Rendered by your device; no font service request</td><td>Nothing</td></tr>
     <tr><td>Font Awesome (cdnjs)</td><td>Delivers interface icons</td><td>Your IP address and browser headers</td></tr>
     <tr><td>Loader.to</td><td>Returns download options for YouTube and Instagram links</td><td>The public link you paste, your IP address and browser information</td></tr>
-    <tr><td>Google Gemini API</td><td>Generates replies only when you explicitly connect the optional Gemini assistant</td><td>Your chat messages, the current page path, your IP address and standard request metadata; never your files</td></tr>
+    <tr><td>Groq API</td><td>Generates Hub Assistant replies, via the site owner's server-side proxy</td><td>Your chat messages, your IP address as seen by the proxy and standard request metadata; never your files, never an API key</td></tr>
   </tbody>
 </table>
 </div>
@@ -144,10 +144,10 @@
 
 <h3>Optional AI assistant terms</h3>
 <ul>
-  <li><strong>Opt-in only.</strong> Gemini is not contacted unless you open the connection dialog, choose a connection mode, complete the connection test, and send a message. The assistant works locally without it, and you can disconnect or forget the key at any time.</li>
+  <li><strong>Sent only when you message it.</strong> Groq is not contacted until you type a message in the Hub Assistant and press send. The chat panel can be closed at any time and nothing is sent while it is closed.</li>
   <li><strong>No professional advice.</strong> AI replies are general information about using the site. They are not legal, medical, financial, tax, security or other professional advice, and they may be wrong, outdated or incomplete. Verify important facts independently.</li>
   <li><strong>Your responsibility.</strong> Do not use the AI assistant to create unlawful content, infringe rights, harass anyone, or process data you are not allowed to disclose. You must have the right to send any text you submit.</li>
-  <li><strong>Third-party processing.</strong> Chat text is processed by Google under its Gemini API terms and privacy policy, which may involve processing outside your country. We do not control Google's models, availability, outputs or retention. In browser-key mode the key you enter is sent directly to Google with your requests and is stored only in this tab's session memory; it never passes through this site's own code or any site server. In proxy mode the self-hosted proxy keeps the API key server-side. Neither mode makes Google a party to these Terms.</li>
+  <li><strong>Third-party processing.</strong> Chat text is processed by Groq under its API terms and privacy policy, which may involve processing outside your country. We do not control Groq's models, availability, outputs or retention. The API key used to call Groq is held only in the site owner's server-side environment variables or secret store, never in your browser. This does not make Groq a party to these Terms.</li>
   <li><strong>Availability and cost.</strong> The optional connection may be unavailable, rate-limited or withdrawn. If you use your own browser key or run your own proxy, you are responsible for API usage costs, quota, access controls, logging and compliance. Do not share a key, commit it to a repository, or use one that you are not authorised to use.</li>
   <li><strong>No confidentiality.</strong> Chat is not a confidential channel. Do not send documents, secrets or personal data about yourself or anyone else.</li>
 </ul>
@@ -192,7 +192,7 @@
 <p>To the extent permitted by law, you agree to defend, indemnify and hold harmless the creator and any contributors from claims, damages, losses, liabilities, costs and reasonable legal fees arising out of: (a) your Content or Output; (b) your breach of these Terms; (c) your infringement of another person’s rights; or (d) your misuse of the Service or a Third-Party Service. We will notify you of a claim and may participate in its defence. This obligation does not apply to the extent the claim is caused by our own unlawful conduct.</p>
 
 <h2 id="privacy">18. Privacy</h2>
-<p>Our <a href="privacy.html">Privacy Policy</a> explains what data is and is not processed, what stays on your device, what the API tools share, and the rights you may have. It forms part of these Terms. In summary: local tools do not upload your files; the Service does not require an account and does not run advertising analytics; API tools send only the public link you paste to Loader.to; the optional Gemini assistant sends chat text only after you explicitly connect it; and hosting and CDN providers may receive ordinary technical request data such as your IP address.</p>
+<p>Our <a href="privacy.html">Privacy Policy</a> explains what data is and is not processed, what stays on your device, what the API tools share, and the rights you may have. It forms part of these Terms. In summary: local tools do not upload your files; the Service does not require an account and does not run advertising analytics; API tools send only the public link you paste to Loader.to; the Hub Assistant sends chat text only after you type and send a message; and hosting and CDN providers may receive ordinary technical request data such as your IP address.</p>
 
 <h2 id="termination">19. Suspension and termination</h2>
 <p>You may stop using the Service at any time. We may suspend or restrict access to all or part of the Service if we reasonably believe you have breached these Terms, created a security or legal risk, or used the Service in a way that could harm another person or the project. Where practical, we will explain the reason. Sections that by their nature should survive termination — including ownership, disclaimers, limitation of liability, indemnity and governing law — will continue to apply.</p>
@@ -221,14 +221,14 @@
 <h3>India</h3>
 <ul>
   <li><strong>Information Technology Act, 2000.</strong> The Service is a utility that processes files in your browser. Where we act as an intermediary under section 79 of the IT Act and the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, we act on valid notices about unlawful content and publish a grievance contact (below). We do not host, publish or store user content.</li>
-  <li><strong>Digital Personal Data Protection Act, 2023.</strong> File contents stay on your device and are not collected. The small amount of personal data that may be processed (technical request data, a link you paste into a downloader, and chat text you choose to send through the optional Gemini connection) is handled as described in the <a href="privacy.html#regional">Privacy Policy</a>, including notice, purpose limitation, data minimisation and your rights of access, correction, erasure and grievance redressal. You may withhold consent to AI processing by staying in local assistant mode.</li>
+  <li><strong>Digital Personal Data Protection Act, 2023.</strong> File contents stay on your device and are not collected. The small amount of personal data that may be processed (technical request data, a link you paste into a downloader, and chat text you choose to send to the Hub Assistant) is handled as described in the <a href="privacy.html#regional">Privacy Policy</a>, including notice, purpose limitation, data minimisation and your rights of access, correction, erasure and grievance redressal. You may withhold consent to AI processing by simply not sending a message to the assistant.</li>
   <li><strong>Consumer Protection Act, 2019 and the Consumer Protection (E-Commerce) Rules, 2020.</strong> The Service is free. Nothing in these Terms removes consumer rights that cannot lawfully be excluded, including the right to be told the truth about what the Service does and does not do.</li>
   <li><strong>Copyright Act, 1957.</strong> Do not use the downloaders or any other tool to copy, convert or distribute works you have no right to use. Infringement notices are handled under section 9.</li>
   <li><strong>Grievance Officer.</strong> Complaints can be sent to the creator, FAYAS MONU, using the contact in section 22. We acknowledge a complaint within 24 hours where practicable and aim to resolve it within 15 days, as the 2021 Rules expect.</li>
 </ul>
 <h3>United Arab Emirates</h3>
 <ul>
-  <li><strong>Federal Decree-Law No. 45 of 2021 (Personal Data Protection Law).</strong> We process personal data lawfully, fairly and transparently, only for stated purposes, in the smallest amount needed, and we do not sell it. You may ask us to access, correct, delete or restrict personal data we hold. Chat text sent through the optional Gemini connection may be processed outside the UAE by Google; stay in local mode if you do not wish that transfer. Free-zone regimes (for example DIFC and ADGM) apply separately where they cover the activity.</li>
+  <li><strong>Federal Decree-Law No. 45 of 2021 (Personal Data Protection Law).</strong> We process personal data lawfully, fairly and transparently, only for stated purposes, in the smallest amount needed, and we do not sell it. You may ask us to access, correct, delete or restrict personal data we hold. Chat text sent to the Hub Assistant may be processed outside the UAE by Groq; do not send a message if you do not wish that transfer. Free-zone regimes (for example DIFC and ADGM) apply separately where they cover the activity.</li>
   <li><strong>Federal Decree-Law No. 34 of 2021 (Combatting Rumours and Cybercrimes).</strong> You must not use the Service to access systems unlawfully, to spread unlawful content, to invade another person&rsquo;s privacy, or to process files that you are not entitled to handle.</li>
   <li><strong>Federal Decree-Law No. 15 of 2020 (Consumer Protection).</strong> Nothing in these Terms limits the mandatory rights of consumers in the UAE.</li>
   <li><strong>Federal Decree-Law No. 38 of 2021 (Copyright and Neighbouring Rights).</strong> You are responsible for having the rights to any material you convert, download or edit.</li>
@@ -241,6 +241,8 @@
 </main>
 <div class="foot"><a href="terms.html">Terms &amp; Conditions</a><a href="privacy.html">Privacy Policy</a><a href="index.html">All tools</a><span>&copy; 2026 MULTI TOOL HUB</span></div>
 <script src="assets/app.js"></script>
+<script src="assets/brand.js" defer></script>
+<script src="assets/cursor.js" defer></script>
 <script src="assets/config.js"></script>
 <script src="assets/chat.js"></script>
 </body>

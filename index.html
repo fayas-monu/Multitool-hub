@@ -315,7 +315,7 @@ mark{background:color-mix(in srgb,var(--mark) 48%,transparent);color:inherit;bor
     <a href="#privacy">Privacy &amp; data</a>
     <button type="button" onclick="closeDrawer();openHubChat()">Ask the assistant <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
   </div>
-  <div class="drawer-foot">Created by <a href="https://www.instagram.com/____fa_y_as_____" target="_blank" rel="noopener">chank!nd3 p4d4y41!</a></div>
+  <div class="drawer-foot">Developed by chank!nd3 p4d4y41! l FAYAS MONU</div>
 </aside>
 
 <section class="hero">
@@ -419,7 +419,7 @@ mark{background:color-mix(in srgb,var(--mark) 48%,transparent);color:inherit;bor
   <details><summary>Can I edit an existing PDF like in Acrobat?</summary><p>The <a href="tools/editor.html">PDF Editor</a> lets you edit existing text, add text, highlight, underline, strike through, draw, add lines, arrows, boxes, ellipses, images, signatures, comments and form values. It also supports page insert, delete, duplicate, rotate, merging another PDF, and true flattening for redaction. Works on rotated pages too.</p></details>
   <details><summary>Why does PDF to Word sometimes change the layout?</summary><p>A PDF stores text as positioned fragments, not as sentences. We rebuild headings, paragraphs, lists and simple tables, but a complex magazine layout can still shift. You can preview the result before downloading and choose whether each PDF page starts a new Word page.</p></details>
   <details><summary>Can I use it on my phone?</summary><p>Yes. Every page is responsive and touch-friendly, with larger tap targets and a mobile menu. Add the site to your home screen to open it like an app; local tools keep working offline after the first visit.</p></details>
-  <details><summary>Does the assistant use an AI service?</summary><p>By default the assistant is a local, rule-based helper: your messages never leave the device. You can optionally connect Gemini from the assistant header. In browser-key mode your own API key is kept only in this tab’s session memory and requests go directly to Google; a site owner can also provide a secure proxy endpoint. Only chat text is sent — never your files. The local assistant always remains available as a fallback. <a href="privacy.html">Details in the Privacy Policy</a>.</p></details>
+  <details><summary>Does the assistant use an AI service?</summary><p>The Hub Assistant is powered by Groq, reached through a secure server-side proxy — no API key is ever stored in your browser. Nothing is sent until you type a message and press send. Only chat text is sent — never your files. <a href="privacy.html">Details in the Privacy Policy</a>.</p></details>
 </section>
 
 <footer class="site-foot">
@@ -451,7 +451,7 @@ mark{background:color-mix(in srgb,var(--mark) 48%,transparent);color:inherit;bor
   </div>
   <div class="foot-base">
     <div class="wrap">
-      <span>&copy; 2026 MULTI TOOL HUB · Created by <a class="creator" href="https://www.instagram.com/____fa_y_as_____" target="_blank" rel="noopener">chank!nd3 p4d4y41!</a></span>
+      <span>&copy; 2026 MULTI TOOL HUB · Developed by chank!nd3 p4d4y41! l FAYAS MONU</span>
       <div class="social"><a href="https://www.instagram.com/____fa_y_as_____" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a><a href="mailto:?subject=MULTI%20TOOL%20HUB" aria-label="Share by email"><i class="fa-solid fa-envelope" aria-hidden="true"></i></a></div>
     </div>
   </div>
@@ -488,6 +488,7 @@ const TOOLS=[
   {t:"Crop PDF",d:"Drag any edge or corner, type exact margins, lock an aspect ratio and apply to one page, a range or all pages.",c:"edit",i:"fa-crop-simple",u:"tools/crop-pdf.html",m:"Trim margins",badge:"Live",live:1,k:"crop trim margins edges cut frame aspect"},
   {t:"Page Numbers",d:"Nine positions, custom formats, fonts, ranges and an accurate live preview.",c:"edit",i:"fa-list-ol",u:"tools/page-numbers.html",m:"Number pages",badge:"Live",live:1,k:"page numbers numbering footer header number pages"},
   {t:"Watermark",d:"Text, logo, tiled, rotated and positioned with a real-time preview, page by page.",c:"edit",i:"fa-certificate",u:"tools/watermark.html",m:"Brand or protect",badge:"Live",live:1,k:"watermark stamp confidential draft logo overlay brand protect copyright"},
+  {t:"Password Unlocker",d:"Enter a PDF's known password to remove it and get an unlocked copy, decrypted entirely on your device.",c:"edit",i:"fa-unlock",u:"tools/unlock-pdf.html",m:"Remove a known password",badge:"Live",live:1,k:"unlock password protected pdf remove decrypt security"},
   {t:"Image Compressor",d:"Compress, resize, convert and rotate JPG, PNG and WebP images with a visual before/after.",c:"images",i:"fa-compress",u:"tools/image-compressor.html",m:"Smaller images",badge:"New",new:1,k:"compress image resize convert webp png jpg photo smaller image optimizer"},
   {t:"Video to MP3",d:"Extract MP3 from video, trim with an audio preview, choose bitrate and normalize volume.",c:"media",i:"fa-file-audio",u:"tools/video-to-mp3.html",m:"Audio extraction",badge:"Local",k:"mp3 audio extract video music sound wav trim convert"},
   {t:"YouTube Downloader",d:"Paste a public link and get download options in a clear, explained workflow.",c:"media",i:"fa-youtube",b:1,u:"tools/youtube-downloader.html",m:"Loader.to API",badge:"API",k:"youtube yt download video audio mp4 mp3 link"},
@@ -790,6 +791,8 @@ renderDrawer();
 refresh();
 </script>
 <script src="assets/app.js"></script>
+<script src="assets/brand.js" defer></script>
+<script src="assets/cursor.js" defer></script>
 <script src="assets/config.js"></script>
 <script src="assets/chat.js"></script>
 </body>
