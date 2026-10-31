@@ -2,16 +2,17 @@
    Developed by chank!nd3 p4d4y41! l FAYAS MONU
 
    The browser never holds a Groq API key. Every request goes to the proxy
-   address configured in assets/config.js (window.MTH_CONFIG.groq.proxy) —
-   either the included Cloudflare Worker (server/cloudflare-worker.js) or the
-   included Node server (server/server.js). Streams markdown as it arrives,
+   address configured in assets/config.js (window.MTH_CONFIG.groq.proxy,
+   with a fallback to the legacy window.MTH_CONFIG.groqProxyUrl, and a
+   final default of /api/assistant). Streams markdown as it arrives,
    with automatic fallback to a plain (non-streaming) request if the stream
    fails partway, so the assistant stays usable on flaky connections. */
 (function () {
   "use strict";
 
-  var cfg = (window.MTH_CONFIG && window.MTH_CONFIG.groq) || {};
-  var ENDPOINT = cfg.proxy || "";
+  var globalCfg = window.MTH_CONFIG || {};
+  var cfg = globalCfg.groq || {};
+  var ENDPOINT = cfg.proxy || globalCfg.groqProxyUrl || "/api/assistant";
   var TOKEN = cfg.token || "";
   var MODEL_LABEL = cfg.modelLabel || "Groq · Llama 3.3 70B";
   var STORE_KEY = "mth.hub.chat.history.v1";
