@@ -6,7 +6,7 @@
    ========================================================================== */
 "use strict";
 
-var VERSION = "mth-v5.0.0";
+var VERSION = "mth-v5.1.0";
 var SHELL_CACHE = VERSION + "-shell";
 var RUNTIME_CACHE = VERSION + "-runtime";
 
@@ -24,6 +24,7 @@ var SHELL = [
   "./assets/css/legal.css",
 
   "./assets/js/core.js",
+  "./assets/js/assistant.js",
   "./assets/js/registry.js",
   "./assets/js/pages/home.js",
   "./assets/js/tools/shared.js",
