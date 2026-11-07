@@ -1,6 +1,6 @@
 /* ==========================================================================
    MULTI TOOL HUB — design tokens
-   A restrained evergreen + brass system with warm neutrals.
+   Corporate navy + steel-blue system with cool neutrals.
    ========================================================================== */
 :root {
   color-scheme: light;
@@ -10,38 +10,38 @@
   --font-serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
   --font-mono: "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 
-  --bg: #f5f2ea;
-  --bg-deep: #ece7db;
-  --surface: #fffdf8;
-  --surface-2: #f0ece2;
-  --surface-3: #e6e0d3;
-  --ink: #17201c;
-  --ink-soft: #2b3731;
-  --muted: #626b63;
-  --muted-strong: #47524a;
-  --line: #d8d2c4;
-  --line-strong: #bdb4a2;
-  --accent: #17463b;
-  --accent-hover: #0e352c;
-  --accent-soft: #dce8e1;
-  --accent-ink: #f8f5ed;
-  --brass: #a8782e;
-  --brass-soft: #ead9b8;
-  --brass-ink: #3b2a0f;
-  --ok: #1e6b4a;
-  --ok-soft: #d9eadf;
+  --bg: #f3f5f8;
+  --bg-deep: #e8ecf1;
+  --surface: #ffffff;
+  --surface-2: #eef1f5;
+  --surface-3: #e1e6ed;
+  --ink: #0f1b2d;
+  --ink-soft: #22324a;
+  --muted: #5b6779;
+  --muted-strong: #3f4c60;
+  --line: #d5dbe4;
+  --line-strong: #b3bccb;
+  --accent: #0b3a6e;
+  --accent-hover: #082c55;
+  --accent-soft: #e1ebf7;
+  --accent-ink: #ffffff;
+  --brass: #2f6fb3;
+  --brass-soft: #dbe8f6;
+  --brass-ink: #0b2a4d;
+  --ok: #1b6b47;
+  --ok-soft: #d8ece2;
   --warn: #8a5a00;
-  --warn-soft: #f3e7c9;
-  --err: #a1332b;
-  --err-soft: #f2ddd9;
-  --mark: #ead9b8;
+  --warn-soft: #f4e8cc;
+  --err: #a52a2a;
+  --err-soft: #f4dcdc;
+  --mark: #dbe8f6;
 
-  --shadow-xs: 0 1px 2px rgba(23, 32, 28, .06);
-  --shadow-sm: 0 1px 2px rgba(23, 32, 28, .05), 0 10px 28px -22px rgba(23, 32, 28, .45);
-  --shadow-md: 0 1px 0 rgba(255, 255, 255, .65) inset, 0 20px 44px -30px rgba(23, 32, 28, .48);
-  --shadow-lg: 0 30px 80px -40px rgba(23, 32, 28, .55);
-  --ring: 0 0 0 3px rgba(23, 70, 59, .18);
-  --ring-brass: 0 0 0 3px rgba(168, 120, 46, .22);
+  --shadow-xs: 0 1px 2px rgba(15, 27, 45, .06);
+  --shadow-sm: 0 1px 2px rgba(15, 27, 45, .05), 0 10px 28px -22px rgba(15, 27, 45, .45);
+  --shadow-md: 0 1px 0 rgba(255, 255, 255, .65) inset, 0 20px 44px -30px rgba(15, 27, 45, .48);
+  --shadow-lg: 0 30px 80px -40px rgba(15, 27, 45, .55);
+  --ring: 0 0 0 3px rgba(11, 58, 110, .22);
+  --ring-brass: 0 0 0 3px rgba(47, 111, 179, .25);
 
   --r-xs: 6px;
   --r-sm: 9px;
@@ -62,38 +62,38 @@
 :root[data-theme="dark"] {
   color-scheme: dark;
 
-  --bg: #0b100e;
-  --bg-deep: #070b09;
-  --surface: #121a16;
-  --surface-2: #18221d;
-  --surface-3: #1e2b25;
-  --ink: #f1eee4;
-  --ink-soft: #d8d4c8;
-  --muted: #9da79e;
-  --muted-strong: #c0c8c1;
-  --line: #29342e;
-  --line-strong: #3b483f;
-  --accent: #d6b36b;
-  --accent-hover: #e6c581;
-  --accent-soft: #2d281d;
-  --accent-ink: #131a16;
-  --brass: #d6b36b;
-  --brass-soft: #3a3020;
-  --brass-ink: #f4dfb6;
-  --ok: #70c39a;
-  --ok-soft: #172a21;
+  --bg: #0a1220;
+  --bg-deep: #060b15;
+  --surface: #101a2c;
+  --surface-2: #16223a;
+  --surface-3: #1d2c48;
+  --ink: #eaf0f8;
+  --ink-soft: #cbd6e6;
+  --muted: #93a1b8;
+  --muted-strong: #b9c5d8;
+  --line: #233352;
+  --line-strong: #33476b;
+  --accent: #5aa2ee;
+  --accent-hover: #7bb6f4;
+  --accent-soft: #142a4a;
+  --accent-ink: #06101f;
+  --brass: #5aa2ee;
+  --brass-soft: #16294a;
+  --brass-ink: #cfe3fb;
+  --ok: #6fcf9f;
+  --ok-soft: #12291f;
   --warn: #e5b65c;
   --warn-soft: #2e2617;
-  --err: #e58b82;
-  --err-soft: #2e1b1a;
-  --mark: #3a3020;
+  --err: #ee8f8f;
+  --err-soft: #301a1a;
+  --mark: #16294a;
 
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, .4);
   --shadow-sm: 0 1px 0 #1f2b25, 0 12px 30px -22px rgba(0, 0, 0, .9);
   --shadow-md: 0 1px 0 #25332b inset, 0 22px 48px -32px rgba(0, 0, 0, .95);
   --shadow-lg: 0 34px 90px -44px rgba(0, 0, 0, .98);
-  --ring: 0 0 0 3px rgba(214, 179, 107, .22);
-  --ring-brass: 0 0 0 3px rgba(214, 179, 107, .28);
+  --ring: 0 0 0 3px rgba(90, 162, 238, .22);
+  --ring-brass: 0 0 0 3px rgba(90, 162, 238, .28);
 }
 
 @media (prefers-reduced-motion: reduce) {
