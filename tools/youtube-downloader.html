@@ -2,181 +2,165 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<script>try{var t=localStorage.getItem("mth.theme");if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Credit: chank!nd3 p4d4y41! -->
-<title>YouTube Downloader — clear, explained workflow | MULTI TOOL HUB</title>
-<meta name="description" content="Paste a public YouTube link and get video or audio download options. The process, the third-party API and your privacy are explained before anything happens.">
-<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0b1220" media="(prefers-color-scheme: dark)">
+<title>YouTube Downloader &mdash; MULTI TOOL HUB</title>
+<meta name="description" content="Paste a public YouTube link, confirm the exact video, then open the Loader.to download card in a new tab. The workflow is explained before anything happens.">
+<meta name="theme-color" content="#f5f2ea">
+<meta name="color-scheme" content="light dark">
 <link rel="icon" href="../assets/logo-mark.svg" type="image/svg+xml">
+<link rel="icon" href="../assets/icons/favicon-64.png" sizes="64x64" type="image/png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <link rel="manifest" href="../manifest.webmanifest">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="../assets/style.css">
-<style>
-  .vid{display:flex;gap:14px;align-items:center;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:10px;margin-top:14px}
-  .vid img{width:132px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;background:#0d1020;flex:none}
-  .vid .info{min-width:0}
-  .vid .info b{display:block;font-size:14px;word-break:break-word}
-  .vid .info span{display:block;font-size:12px;color:var(--muted);word-break:break-all;margin-top:3px}
-  .vid .info a{font-size:12px;font-weight:700;color:var(--accent)}
-  @media (max-width:520px){.vid img{width:100px}}
-  .steps{counter-reset:s;display:grid;gap:8px;margin-top:12px}
-  .steps li{list-style:none;position:relative;padding-left:32px;font-size:13.5px;color:var(--muted)}
-  .steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:0;width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font:700 12px/22px var(--font-body);text-align:center}
-  .recent{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
-  .recent a,.recent button{font:600 12px var(--font-body);border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 10px;color:var(--muted);text-decoration:none;cursor:pointer;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .recent a:hover{border-color:var(--accent);color:var(--accent)}
-  .recent button:hover{border-color:var(--err);color:var(--err)}
-  .dlcard{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:16px;margin-top:12px}
-  .dlcard .di{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--accent);font-size:17px}
-  .dlcard strong{display:block;font-size:14.5px}
-  .dlcard p{margin:4px 0 0;font-size:13px;line-height:1.55;color:var(--muted)}
-  .dlcard .btn{margin-top:12px}
-  @media (max-width:520px){.dlcard{grid-template-columns:1fr}.dlcard .di{width:34px;height:34px}}
-  .apinote{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start}
-  .apinote i{color:var(--accent);font-size:17px;margin-top:2px}
-</style>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MULTI TOOL HUB">
+<meta property="og:title" content="YouTube Downloader &mdash; MULTI TOOL HUB">
+<meta property="og:description" content="Paste a public YouTube link, confirm the exact video, then open the Loader.to download card in a new tab. The workflow is explained before anything happens.">
+<meta property="og:image" content="../assets/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/tool.css">
 </head>
-<body>
-<header><div class="bar">
-  <a class="brand" href="../index.html" aria-label="MULTI TOOL HUB"><svg class="brand-mark" viewBox="0 0 48 48" width="40" height="40" aria-hidden="true" focusable="false"><rect width="48" height="48" rx="11"/><g fill="none" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 31V17l5.5 8L18 17v14"/><path d="M21 17h9M25.5 17v14"/><path d="M33 17v14M33 24h8M41 17v14"/></g><circle cx="41" cy="7" r="2.6"/></svg><span class="brand-word">MULTI <b>TOOL</b> HUB</span></a>
-  <a class="back" href="../index.html"><i class="fa-solid fa-arrow-left"></i> All tools</a>
-</div></header>
-<main>
-<h1>YouTube Downloader</h1>
-<p class="lead">Paste a public YouTube link. We check it, show you exactly which video it points to, and only then open the download options from our API partner.</p>
-
-<div class="panel">
-  <label class="f" for="u">YouTube link</label>
-  <div style="display:flex;gap:8px;flex-wrap:wrap">
-    <input class="in" id="u" type="url" placeholder="https://www.youtube.com/watch?v=…" autocomplete="off" spellcheck="false" style="flex:1;min-width:200px">
-    <button class="btn ghost sm" type="button" id="paste"><i class="fa-regular fa-clipboard"></i> Paste</button>
-  </div>
-  <div class="row">
-    <button class="btn" id="go"><i class="fa-solid fa-download"></i> Check link &amp; show options</button>
-    <button class="btn ghost" id="openTab" hidden>Open in a new tab</button>
-  </div>
-  <p class="hint" id="hint">Works with regular videos, Shorts, live replays and youtu.be links. Playlists and private videos are not supported.</p>
-
-  <div class="vid" id="vid" hidden>
-    <img id="thumb" alt="Video thumbnail" loading="lazy">
-    <div class="info">
-      <b id="vtitle">YouTube video</b>
-      <span id="vidid"></span>
-      <a id="watch" href="#" target="_blank" rel="noopener">Open on YouTube <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+<body data-tool-id="youtube-downloader">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="../index.html" aria-label="MULTI TOOL HUB home">
+      <svg class="brand-mark" viewBox="0 0 64 64" role="img" aria-hidden="true" focusable="false"><rect width="64" height="64" rx="14"/><g fill="none" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 46V20l7.5 10.5L26 20v26"/><path d="M32 21h12"/><path d="M38 21v25"/><path d="M48 21v25"/><path d="M58 21v25"/><path d="M48 33.5h10"/></g><circle cx="56" cy="9" r="3"/></svg>
+      <span class="brand-copy">
+        <span class="brand-name">MULTI TOOL HUB</span>
+        <span class="brand-tag">Media Tools &amp; PDF Tools</span>
+      </span>
+    </a>
+    <nav class="header-nav" aria-label="Primary">
+      <a href="../index.html#pdf">PDF Studio</a>
+      <a href="../index.html#image">Image Lab</a>
+      <a href="../index.html#media">Media Desk</a>
+      <a href="../index.html#download">Downloaders</a>
+      <a href="../index.html#focus">Focus Room</a>
+    </nav>
+    <div class="header-actions">
+      <a class="header-link" href="../index.html#tools">All tools</a>
+      <button class="icon-btn icon-btn--sm" type="button" data-theme-toggle aria-label="Toggle colour theme"></button>
+      <button class="icon-btn icon-btn--sm menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
     </div>
   </div>
-
-  <div id="recentWrap" hidden>
-    <label class="f">Recent links on this device</label>
-    <div class="recent" id="recent"></div>
-  </div>
-</div>
-
-<div class="panel" id="box" hidden>
-  <h2>Download options</h2>
-  <p class="hint" style="margin-top:2px">Choose a format and quality in the Loader.to card. The card opens in a new tab because the provider blocks embedding on other websites.</p>
-  <div class="dlcard">
-    <span class="di" aria-hidden="true"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
-    <div>
-      <strong>Open the secure download card</strong>
-      <p>Loader.to prepares the video or audio and your browser saves the file. Nothing else leaves this page.</p>
-      <a class="btn" id="cardLink" href="#" target="_blank" rel="noopener"><i class="fa-solid fa-up-right-from-square"></i> Open download options</a>
+  <div class="mobile-nav" id="mobile-nav" data-mobile-nav>
+    <div class="shell">
+      <a href="../index.html#pdf">PDF Studio <span aria-hidden="true">&rarr;</span></a>
+      <a href="../index.html#image">Image Lab <span aria-hidden="true">&rarr;</span></a>
+      <a href="../index.html#media">Media Desk <span aria-hidden="true">&rarr;</span></a>
+      <a href="../index.html#download">Downloaders <span aria-hidden="true">&rarr;</span></a>
+      <a href="../index.html#focus">Focus Room <span aria-hidden="true">&rarr;</span></a>
+      <div class="mnav-sep"></div>
+      <a href="../index.html#tools">All tools <span aria-hidden="true">&rarr;</span></a>
+      <a href="../legal/terms.html">Terms &amp; Conditions <span aria-hidden="true">&rarr;</span></a>
+      <a href="../legal/privacy.html">Privacy Policy <span aria-hidden="true">&rarr;</span></a>
     </div>
   </div>
-</div>
+</header>
+<main id="main" class="tool-page">
+  <div class="shell">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="../index.html">Home</a><span class="sep" aria-hidden="true">/</span>
+      <a href="../index.html#download">Downloaders</a><span class="sep" aria-hidden="true">/</span>
+      <span aria-current="page">YouTube Downloader</span>
+    </nav>
 
-<div class="callout">
-  <div class="apinote"><i class="fa-solid fa-circle-info"></i><div>
-    <strong>How this works — and what leaves your device.</strong>
-    The YouTube tool is the one exception to our “everything stays local” rule. Your public link (and nothing else — no file, no account) is sent to <strong>Loader.to</strong>, which returns the download card you see above. Loader.to may see your IP address and may set its own cookies. We do not run the download servers and cannot control their availability. Please download only videos you own or have permission to save, and follow YouTube's terms.
-  </div></div>
-</div>
+    <header class="tool-hero">
+      <div class="tool-hero-main">
+        <div class="eyebrow"><b>04 / Downloaders</b> &mdash; Browser-native</div>
+        <h1>YouTube <span class="serif-em">downloader</span></h1>
+        <p class="tool-deck">Paste a public YouTube link, confirm the exact video, then open the Loader.to download card in a new tab. The workflow is explained before anything happens.</p>
+        <div class="tool-tags"><span class="tag">Public links</span><span class="tag">Shorts</span><span class="tag">Loader.to</span><span class="tag tag--brass">Partner API</span></div>
+      </div>
+      <div class="tool-emblem" data-icon="youtube" data-icon-size="54" aria-hidden="true"></div>
+    </header>
 
-<div class="panel">
-  <h2 style="font-size:16px">If the card does not load</h2>
-  <ol class="steps">
-    <li>Check that the video is public and still available. Private, age-restricted and removed videos usually fail.</li>
-    <li>Press “Open in a new tab”. Some browsers block cross-site frames or third-party downloads.</li>
-    <li>Turn off strict tracking protection or an ad blocker for this page, then try again.</li>
-    <li>The Loader.to service can be busy. Wait a minute and retry.</li>
-  </ol>
-  <p class="hint">Prefer a fully local tool? Use <a href="video-to-mp3.html">Video to MP3</a> on a video file you already have. It never uploads anything.</p>
-</div>
-<div class="status" id="status" role="status" aria-live="polite"></div>
+    <div class="tool-layout">
+      <div class="tool-stage" id="tool" aria-live="polite">
+        <div class="skeleton"><span class="spinner"></span><span>Loading the local workspace&hellip;</span></div>
+        <noscript><div class="notice notice--err"><strong>JavaScript is required.</strong> This tool runs entirely in your browser; enable JavaScript and reload the page.</div></noscript>
+      </div>
+    <aside class="tool-aside" aria-label="Tool information">
+      <section class="aside-card">
+  <span class="aside-kicker">Third-party step</span>
+  <h2>The link leaves your device</h2>
+  <p>The public link is sent to Loader.to so it can prepare the download card. No file and no account are shared.</p>
+  <ul class="aside-list">
+    <li>Only public links can be fetched by the partner API.</li>
+    <li>Loader.to may see your IP address and use its own cookies.</li>
+    <li>Save only content you own or have permission to keep.</li>
+  </ul>
+</section>
+      <section class="aside-card">
+        <span class="aside-kicker">Before you start</span>
+        <h2>Best results</h2>
+        <ul class="aside-list">
+          <li>Keep a copy of the original until you are happy with the result.</li>
+          <li>Large files need more memory; close other heavy tabs if a run stalls.</li>
+          <li>The status line always explains the next step if something fails.</li>
+        </ul>
+      </section>
+      <section class="aside-card">
+        <span class="aside-kicker">Keep exploring</span>
+        <h2>Related tools</h2>
+        <div class="related-list" data-related="download"></div>
+      </section>
+    </aside>
+    </div>
+  </div>
 </main>
-<div class="foot"><a href="../terms.html">Terms &amp; Conditions</a><a href="../privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB · Developed by chank!nd3 p4d4y41! l FAYAS MONU</span></div>
-<script src="../assets/app.js"></script>
-<script src="../assets/brand.js" defer></script>
-<script src="../assets/cursor.js" defer></script>
-<script src="../assets/config.js"></script>
-<script src="../assets/chat.js"></script>
-<script>
-var $=PE.$, current=null;
-function parse(u){
-  u=String(u||"").trim();
-  if(!u)return null;
-  if(/^[\w-]{11}$/.test(u))return {id:u,url:"https://www.youtube.com/watch?v="+u};
-  var id=null,m;
-  if((m=u.match(/(?:youtu\.be\/)([\w-]{11})/)))id=m[1];
-  else if((m=u.match(/[?&]v=([\w-]{11})/)))id=m[1];
-  else if((m=u.match(/(?:youtube\.com\/|youtube-nocookie\.com\/)(?:embed|shorts|live|v)\/([\w-]{11})/)))id=m[1];
-  if(!id)return null;
-  var host="";
-  try{host=new URL(u).hostname}catch(e){}
-  if(host&&!/(^|\.)(youtube\.com|youtu\.be|youtube-nocookie\.com)$/.test(host))return null;
-  return {id:id,url:"https://www.youtube.com/watch?v="+id};
-}
-function getRecent(){try{return JSON.parse(localStorage.getItem("mth.yt.recent")||"[]")}catch(e){return []}}
-function setRecent(list){try{localStorage.setItem("mth.yt.recent",JSON.stringify(list.slice(0,6)))}catch(e){}}
-function renderRecent(){
-  var list=getRecent();
-  $("recentWrap").hidden=!list.length;
-  $("recent").innerHTML=list.map(function(x){
-    return '<a href="#" data-u="'+PE.esc(x.id)+'" title="'+PE.esc(x.url)+'"><i class="fa-solid fa-clock-rotate-left"></i> '+PE.esc(x.id)+'</a>';
-  }).join("")+(list.length?'<button type="button" id="clrRecent">Clear</button>':"");
-  var c=$("clrRecent");
-  if(c)c.onclick=function(){setRecent([]);renderRecent()};
-}
-$("recent").addEventListener("click",function(e){
-  var a=e.target.closest("a[data-u]");if(!a)return;
-  e.preventDefault();$("u").value="https://www.youtube.com/watch?v="+a.dataset.u;run();
-});
-function run(){
-  var p=parse($("u").value);
-  if(!p){
-    $("vid").hidden=true;$("box").hidden=true;$("openTab").hidden=true;
-    PE.status("That does not look like a YouTube video link. Use a youtube.com/watch?v=…, youtu.be/… or /shorts/… link.","err");
-    return;
-  }
-  current=p;
-  $("u").value=p.url;
-  $("vid").hidden=false;
-  $("thumb").src="https://i.ytimg.com/vi/"+p.id+"/hqdefault.jpg";
-  $("thumb").onerror=function(){this.style.visibility="hidden"};
-  $("thumb").onload=function(){this.style.visibility="visible"};
-  $("vidid").textContent="Video ID: "+p.id;
-  $("watch").href=p.url;
-  $("vtitle").textContent="YouTube video "+p.id;
 
-  var list=getRecent().filter(function(x){return x.id!==p.id});
-  list.unshift({id:p.id,url:p.url,at:Date.now()});
-  setRecent(list);renderRecent();
-
-  $("box").hidden=false;$("openTab").hidden=false;
-  $("openTab").onclick=function(){window.open(p.url,"_blank","noopener")};
-  $("cardLink").href="https://loader.to/api/card/?url="+encodeURIComponent(p.url);
-  PE.status("Link checked. Open the download card in a new tab to choose a format.","ok");
-  $("box").scrollIntoView({behavior:"smooth",block:"start"});
-}
-$("go").onclick=run;
-$("u").addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();run()}});
-$("paste").onclick=async function(){
-  try{var t=await navigator.clipboard.readText();$("u").value=t.trim();if(t.trim())run()}
-  catch(e){PE.status("Your browser did not allow clipboard access. Paste the link with Ctrl+V.","err");$("u").focus()}
-};
-renderRecent();
-</script>
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="../index.html" aria-label="MULTI TOOL HUB home">
+          <svg class="brand-mark" viewBox="0 0 64 64" role="img" aria-hidden="true" focusable="false"><rect width="64" height="64" rx="14"/><g fill="none" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 46V20l7.5 10.5L26 20v26"/><path d="M32 21h12"/><path d="M38 21v25"/><path d="M48 21v25"/><path d="M58 21v25"/><path d="M48 33.5h10"/></g><circle cx="56" cy="9" r="3"/></svg>
+          <span class="brand-copy">
+            <span class="brand-name">MULTI TOOL HUB</span>
+            <span class="brand-tag">Media Tools &amp; PDF Tools</span>
+          </span>
+        </a>
+        <p>A browser-native utility suite for PDF, image and media work. Files stay on your device: no account, no upload, no server.</p>
+      </div>
+      <div class="footer-col">
+        <h3>Products</h3>
+        <a href="../index.html#tools">All tools</a>
+        <a href="../index.html#pdf">PDF Studio</a>
+        <a href="../index.html#image">Image Lab</a>
+        <a href="../index.html#media">Media Desk</a>
+        <a href="../index.html#download">Downloaders</a>
+        <a href="../index.html#focus">Focus Room</a>
+      </div>
+      <div class="footer-col">
+        <h3>Popular</h3>
+        <a href="../tools/viewer.html">Viewer &amp; Editor</a>
+        <a href="../tools/merge.html">Merge PDF</a>
+        <a href="../tools/compress.html">Compress PDF</a>
+        <a href="../tools/pdf-to-word.html">PDF to Word</a>
+        <a href="../tools/image-compress.html">Image Compressor</a>
+        <a href="../tools/video-to-audio.html">Video to Audio</a>
+      </div>
+      <div class="footer-col">
+        <h3>Legal</h3>
+        <a href="../legal/terms.html">Terms &amp; Conditions</a>
+        <a href="../legal/privacy.html">Privacy Policy</a>
+        <a href="../legal/privacy.html#local">Client-side processing</a>
+        <a href="../legal/terms.html#third-party">Third-party services</a>
+      </div>
+    </div>
+    <div class="footer-base">
+      <span class="credit" data-credit-copy title="Copy developer credit">© 2026 MULTI TOOL HUB · Developed by chank!nd3 p4d4y41! & Fayaz Mon.</span>
+      <span class="footer-meta">Static build &middot; v5.0 &middot; 2026</span>
+    </div>
+  </div>
+</footer>
+<script src="../assets/js/core.js"></script>
+<script src="../assets/js/registry.js"></script>
+<script src="../assets/js/tools/shared.js"></script>
+<script src="../assets/js/tools/youtube-downloader.js"></script>
 </body>
 </html>
