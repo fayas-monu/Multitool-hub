@@ -1,139 +1,192 @@
-/* MULTI TOOL HUB — offline cache & install support.
-   Credit: chank!nd3 p4d4y41!
-   Bump CACHE when you ship new files. Old caches are deleted automatically. */
-const CACHE = "mth-v18";
-const OFFLINE_URL = "./offline.html";
+/* ==========================================================================
+   MULTI TOOL HUB — service worker
+   Caches the static app shell, vendored engines and every tool page so the
+   local tools keep working without a connection. Your files are never cached:
+   they live in memory inside the page and are not fetched by this worker.
+   ========================================================================== */
+"use strict";
 
-/* Everything the app needs to open and work offline. Paths are relative to the
-   service-worker scope, so the site works in a sub-folder as well as at root. */
-const PRECACHE = [
+var VERSION = "mth-v5.0.0";
+var SHELL_CACHE = VERSION + "-shell";
+var RUNTIME_CACHE = VERSION + "-runtime";
+
+var SHELL = [
   "./",
   "./index.html",
   "./offline.html",
   "./404.html",
-  "./terms.html",
-  "./privacy.html",
   "./manifest.webmanifest",
-  "./assets/style.css",
-  "./assets/app.js",
-  "./assets/chat.js",
-  "./assets/config.js",
-  "./assets/pdf.worker.min.js",
-  "./assets/logo.svg",
-  "./assets/logo-dark.svg",
+
+  "./assets/css/tokens.css",
+  "./assets/css/base.css",
+  "./assets/css/home.css",
+  "./assets/css/tool.css",
+  "./assets/css/legal.css",
+
+  "./assets/js/core.js",
+  "./assets/js/registry.js",
+  "./assets/js/pages/home.js",
+  "./assets/js/tools/shared.js",
+
   "./assets/logo-mark.svg",
-  "./assets/icon-192.png",
-  "./assets/icon-512.png",
-  "./assets/icon-maskable-512.png",
   "./assets/og-cover.png",
-  "./tools/editor.html",
-  "./tools/merge-pdf.html",
-  "./tools/split-pdf.html",
-  "./tools/compress-pdf.html",
-  "./tools/organize-pdf.html",
-  "./tools/rotate-pdf.html",
-  "./tools/crop-pdf.html",
-  "./tools/page-numbers.html",
-  "./tools/watermark.html",
-  "./tools/pdf-to-word.html",
-  "./tools/pdf-to-text.html",
-  "./tools/pdf-to-jpg.html",
-  "./tools/jpg-to-pdf.html",
-  "./tools/image-compressor.html",
-  "./tools/video-to-mp3.html",
-  "./tools/youtube-downloader.html",
-  "./tools/instagram-downloader.html"
+  "./assets/icons/favicon-64.png",
+  "./assets/icons/icon-192.png",
+  "./assets/icons/icon-512.png",
+  "./assets/apple-touch-icon.png",
+
+  "./legal/terms.html",
+  "./legal/privacy.html"
 ];
 
-/* Third-party libraries are cached after the first successful load. API calls
-   (Loader.to, YouTube thumbnails) are deliberately never cached. */
-const LIB_HOSTS = /(^|\.)cdnjs\.cloudflare\.com$|(^|\.)cdn\.jsdelivr\.net$/;
+var TOOL_PAGES = [
+  "background-remove",
+  "compress",
+  "crop",
+  "focus-studio",
+  "image-compress",
+  "image-convert",
+  "images-to-pdf",
+  "instagram-downloader",
+  "merge",
+  "organize",
+  "page-numbers",
+  "pdf-to-excel",
+  "pdf-to-images",
+  "pdf-to-text",
+  "pdf-to-word",
+  "rotate",
+  "split",
+  "unlock",
+  "video-compress",
+  "video-to-audio",
+  "viewer",
+  "watermark",
+  "youtube-downloader"
+];
 
-self.addEventListener("install", event => {
-  event.waitUntil((async () => {
-    const cache = await caches.open(CACHE);
-    /* addAll fails the whole install if one file is missing, so add individually. */
-    await Promise.all(PRECACHE.map(url =>
-      cache.add(new Request(url, { cache: "reload" })).catch(() => null)
-    ));
-    await self.skipWaiting();
-  })());
+var TOOL_SCRIPTS = TOOL_PAGES.map(function (id) {
+  return "./assets/js/tools/" + id + ".js";
 });
 
-self.addEventListener("activate", event => {
-  event.waitUntil((async () => {
-    const keys = await caches.keys();
-    await Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key)));
-    if (self.registration.navigationPreload) {
-      try { await self.registration.navigationPreload.disable(); } catch (e) {}
-    }
-    await self.clients.claim();
-  })());
+SHELL = SHELL.concat(
+  TOOL_PAGES.map(function (id) { return "./tools/" + id + ".html"; }),
+  TOOL_SCRIPTS
+);
+
+/* Vendored engines are large. They are cached on first use instead of during
+   install so the very first visit is not punished, then served cache-first. */
+var VENDOR = [
+  "./assets/vendor/pdfjs/pdf.min.js",
+  "./assets/vendor/pdfjs/pdf.worker.min.js",
+  "./assets/vendor/pdf-lib.min.js",
+  "./assets/vendor/jszip.min.js",
+  "./assets/vendor/docx.umd.js",
+  "./assets/vendor/xlsx.full.min.js",
+  "./assets/vendor/lame.min.js"
+];
+
+self.addEventListener("install", function (event) {
+  event.waitUntil(
+    caches.open(SHELL_CACHE).then(function (cache) {
+      return cache.addAll(SHELL).catch(function (error) {
+        console.warn("[MTH] Shell precache incomplete", error);
+      });
+    }).then(function () { return self.skipWaiting(); })
+  );
 });
 
-function cachePut(request, response) {
-  if (!response) return response;
-  const cacheable = response.ok || response.type === "opaque";
-  if (!cacheable) return response;
-  const copy = response.clone();
-  caches.open(CACHE).then(cache => cache.put(request, copy)).catch(() => {});
-  return response;
+self.addEventListener("activate", function (event) {
+  event.waitUntil(
+    caches.keys().then(function (keys) {
+      return Promise.all(keys.map(function (key) {
+        if (key !== SHELL_CACHE && key !== RUNTIME_CACHE) return caches.delete(key);
+        return null;
+      }));
+    }).then(function () { return self.clients.claim(); })
+  );
+});
+
+function isSameOrigin(url) {
+  try { return new URL(url, self.location.href).origin === self.location.origin; }
+  catch (e) { return false; }
 }
 
-async function networkFirst(request) {
-  try {
-    const response = await fetch(request);
-    if (response && response.ok) return cachePut(request, response);
-    return response;
-  } catch (e) {
-    const cached = await caches.match(request, { ignoreSearch: true });
-    if (cached) return cached;
-    if (request.mode === "navigate") {
-      const offline = await caches.match(OFFLINE_URL);
-      /* Redirect to the real offline page so its relative CSS/logo links resolve
-         correctly, even when the requested page was deep inside /tools/. */
-      if (offline) return Response.redirect(new URL(OFFLINE_URL, self.registration.scope).href, 302);
-      const home = await caches.match("./index.html");
-      if (home) return home;
-    }
-    return new Response("You are offline and this file is not cached yet.", {
-      status: 503,
-      headers: { "Content-Type": "text/plain; charset=utf-8" }
+function cacheFirst(request, cacheName) {
+  return caches.open(cacheName).then(function (cache) {
+    return cache.match(request).then(function (hit) {
+      if (hit) return hit;
+      return fetch(request).then(function (response) {
+        if (response && response.ok) cache.put(request, response.clone());
+        return response;
+      });
     });
-  }
+  });
 }
 
-async function cacheFirst(request) {
-  const cached = await caches.match(request, { ignoreSearch: true });
-  if (cached) return cached;
-  const response = await fetch(request);
-  return cachePut(request, response);
+function staleWhileRevalidate(request, cacheName) {
+  return caches.open(cacheName).then(function (cache) {
+    return cache.match(request).then(function (hit) {
+      var network = fetch(request).then(function (response) {
+        if (response && response.ok) cache.put(request, response.clone());
+        return response;
+      }).catch(function () { return hit; });
+      return hit || network;
+    });
+  });
 }
 
-self.addEventListener("fetch", event => {
-  const request = event.request;
+function networkFirstNavigation(request) {
+  return fetch(request).then(function (response) {
+    if (response && response.ok) {
+      var copy = response.clone();
+      caches.open(RUNTIME_CACHE).then(function (cache) { cache.put(request, copy); });
+    }
+    return response;
+  }).catch(function () {
+    return caches.match(request).then(function (hit) {
+      if (hit) return hit;
+      return caches.match("./offline.html").then(function (offline) {
+        return offline || new Response(
+          "<!doctype html><meta charset=\"utf-8\"><title>Offline</title>" +
+          "<h1>You are offline</h1><p>Reconnect once so MULTI TOOL HUB can cache its app shell.</p>",
+          { status: 503, headers: { "Content-Type": "text/html; charset=utf-8" } }
+        );
+      });
+    });
+  });
+}
+
+self.addEventListener("fetch", function (event) {
+  var request = event.request;
   if (request.method !== "GET") return;
 
-  const url = new URL(request.url);
-  const sameOrigin = url.origin === self.location.origin;
-  if (!sameOrigin && !LIB_HOSTS.test(url.hostname)) return;
+  var url;
+  try { url = new URL(request.url); } catch (e) { return; }
 
-  /* The assistant API must never be cached: connection checks and replies are live. */
-  if (sameOrigin && url.pathname.indexOf("/api/") >= 0) return;
-
-  /* Downloads and blobs are handled by the page, not the worker. */
-  if (url.protocol === "blob:" || url.protocol === "data:") return;
+  /* Third-party requests (YouTube thumbnails, Loader.to) are never cached or
+     intercepted. Only same-origin static files are handled here. */
+  if (url.origin !== self.location.origin) return;
 
   if (request.mode === "navigate") {
-    event.respondWith(networkFirst(request));
+    event.respondWith(networkFirstNavigation(request));
     return;
   }
 
-  /* HTML, JS, CSS and the manifest change most often: try the network first. */
-  const fresh = sameOrigin && /\.(?:html|js|css|webmanifest)$/i.test(url.pathname);
-  event.respondWith(fresh ? networkFirst(request) : cacheFirst(request));
+  if (/\/assets\/vendor\//.test(url.pathname)) {
+    event.respondWith(cacheFirst(request, RUNTIME_CACHE));
+    return;
+  }
+
+  if (/\.(css|js|svg|png|jpe?g|webp|woff2?|ttf|webmanifest)$/.test(url.pathname)) {
+    event.respondWith(staleWhileRevalidate(request, RUNTIME_CACHE));
+    return;
+  }
+
+  event.respondWith(staleWhileRevalidate(request, RUNTIME_CACHE));
 });
 
-self.addEventListener("message", event => {
-  if (event.data === "skip-waiting") self.skipWaiting();
+self.addEventListener("message", function (event) {
+  var data = event.data || {};
+  if (data.type === "SKIP_WAITING") self.skipWaiting();
 });

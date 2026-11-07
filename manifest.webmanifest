@@ -1,81 +1,51 @@
 {
   "id": "./",
-  "name": "MULTI TOOL HUB",
+  "name": "MULTI TOOL HUB — Media Tools & PDF Tools",
   "short_name": "MULTI TOOL HUB",
-  "description": "Free browser-based PDF, image and media tools. Merge, split, compress, edit, sign, watermark and convert — files stay on your device unless you explicitly use a connected service.",
-  "start_url": "./index.html?source=pwa",
-  "scope": "./",
-  "display": "standalone",
-  "display_override": ["standalone", "minimal-ui", "browser"],
-  "orientation": "any",
-  "background_color": "#ffffff",
-  "theme_color": "#0b1f3a",
+  "description": "Twenty-three browser-native tools for PDF, image, media and focus work. Files stay on your device.",
   "lang": "en",
   "dir": "ltr",
-  "categories": ["productivity", "utilities", "photo", "business"],
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "browser"],
+  "orientation": "any",
+  "background_color": "#f5f2ea",
+  "theme_color": "#17463b",
+  "categories": ["productivity", "utilities", "photo", "video"],
   "icons": [
-    {
-      "src": "assets/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "assets/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "assets/icon-maskable-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "assets/logo-mark.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "assets/og-cover.png",
-      "sizes": "1200x630",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "MULTI TOOL HUB home page"
-    }
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
   "shortcuts": [
     {
-      "name": "PDF Editor",
-      "short_name": "Edit PDF",
-      "description": "Add text, highlights, shapes, signatures, images and redactions to a PDF",
-      "url": "./tools/editor.html",
-      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+      "name": "PDF Viewer & Editor",
+      "short_name": "Viewer",
+      "description": "Open the flagship PDF reading and annotation workspace.",
+      "url": "./tools/viewer.html",
+      "icons": [{ "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
     },
     {
       "name": "Merge PDF",
       "short_name": "Merge",
-      "description": "Combine PDFs and reorder pages",
-      "url": "./tools/merge-pdf.html",
-      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+      "description": "Combine PDFs in the order you choose.",
+      "url": "./tools/merge.html",
+      "icons": [{ "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
     },
     {
-      "name": "Compress PDF",
+      "name": "Image Compressor",
       "short_name": "Compress",
-      "description": "Shrink PDFs with lossless or raster compression",
-      "url": "./tools/compress-pdf.html",
-      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+      "description": "Batch-compress images to a quality or target size.",
+      "url": "./tools/image-compress.html",
+      "icons": [{ "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
     },
     {
-      "name": "PDF to Word",
-      "short_name": "PDF → Word",
-      "description": "Turn a PDF into an editable Word document",
-      "url": "./tools/pdf-to-word.html",
-      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+      "name": "Focus Studio",
+      "short_name": "Focus",
+      "description": "Timer, checklist and a fast number-grid game.",
+      "url": "./tools/focus-studio.html",
+      "icons": [{ "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
     }
   ]
 }

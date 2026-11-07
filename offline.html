@@ -2,76 +2,148 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
-<script>
-/* Keep the offline page working from a project subpath or a custom domain. */
-(function(){
-  var base=null;
-  try{
-    if(navigator.serviceWorker&&navigator.serviceWorker.controller)
-      base=new URL(".",navigator.serviceWorker.controller.scriptURL);
-  }catch(e){}
-  if(!base){
-    if(location.protocol==="file:")base=new URL(".",location.href);
-    else if(/(^|\.)github\.io$/i.test(location.hostname)){
-      var seg=location.pathname.split("/").filter(Boolean)[0]||"";
-      base=new URL("/"+(seg?seg+"/":""),location.origin);
-    }else base=new URL("/",location.origin);
-  }
-  var tag=document.createElement("base");
-  tag.href=base.href;
-  document.head.appendChild(tag);
-})();
-</script>
+<script>try{var t=localStorage.getItem("mth.theme");if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Credit: chank!nd3 p4d4y41! -->
-<title>You are offline — MULTI TOOL HUB</title>
-<meta name="description" content="MULTI TOOL HUB is offline. Open a page you have already visited, or reconnect to keep working.">
-<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0b1220" media="(prefers-color-scheme: dark)">
-<meta name="robots" content="noindex">
+<title>Offline &mdash; MULTI TOOL HUB</title>
+<meta name="description" content="You are offline. Cached MULTI TOOL HUB pages and local file tools may still work; the downloaders need an internet connection.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#f5f2ea">
+<meta name="color-scheme" content="light dark">
 <link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="assets/icon-192.png">
-<link rel="stylesheet" href="assets/style.css">
-<style>
-  .offline{max-width:620px;margin:0 auto;padding:64px 22px 80px;text-align:center;width:100%}
-  .offline .art{width:92px;height:92px;margin:0 auto 22px;display:grid;place-items:center;border-radius:26px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-lg)}
-  .offline .art img{width:62px;height:62px}
-  .offline h1{font-family:var(--font-head);font-size:clamp(28px,5vw,40px);letter-spacing:-1px;margin-bottom:10px}
-  .offline p{color:var(--muted);margin:0 auto 10px;max-width:46ch}
-  .offline .actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:24px}
-  .offline .links{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:center;margin-top:26px;font-size:14px}
-  .offline .links a{color:var(--accent);font-weight:600;text-decoration:none}
-  .offline .links a:hover{text-decoration:underline}
-  .offline .tip{margin-top:28px;font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:18px}
-</style>
+<link rel="icon" href="assets/icons/favicon-64.png" sizes="64x64" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/home.css">
 </head>
 <body>
-<header><div class="bar">
-  <a class="brand" href="index.html" aria-label="MULTI TOOL HUB"><svg class="brand-mark" viewBox="0 0 48 48" width="40" height="40" aria-hidden="true" focusable="false"><rect width="48" height="48" rx="11"/><g fill="none" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 31V17l5.5 8L18 17v14"/><path d="M21 17h9M25.5 17v14"/><path d="M33 17v14M33 24h8M41 17v14"/></g><circle cx="41" cy="7" r="2.6"/></svg><span class="brand-word">MULTI <b>TOOL</b> HUB</span></a>
-  <a class="back" href="index.html">Home</a>
-</div></header>
-<main class="offline">
-  <div class="art"><img src="assets/logo-mark.svg" alt="MULTI TOOL HUB mark" width="104" height="104"></div>
-  <h1>You&rsquo;re offline</h1>
-  <p>The page you asked for isn&rsquo;t in the offline cache yet. Your internet connection may have dropped, or the site could not be reached.</p>
-  <p>Reconnect and try again, or open a tool you have used before.</p>
-  <div class="actions">
-    <button class="btn" type="button" onclick="location.reload()">Try again</button>
-    <a class="btn ghost" href="index.html">Go to home</a>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="index.html" aria-label="MULTI TOOL HUB home">
+      <svg class="brand-mark" viewBox="0 0 64 64" role="img" aria-hidden="true" focusable="false"><rect width="64" height="64" rx="14"/><g fill="none" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 46V20l7.5 10.5L26 20v26"/><path d="M32 21h12"/><path d="M38 21v25"/><path d="M48 21v25"/><path d="M58 21v25"/><path d="M48 33.5h10"/></g><circle cx="56" cy="9" r="3"/></svg>
+      <span class="brand-copy">
+        <span class="brand-name">MULTI TOOL HUB</span>
+        <span class="brand-tag">Media Tools &amp; PDF Tools</span>
+      </span>
+    </a>
+    <nav class="header-nav" aria-label="Primary">
+      <a href="index.html#pdf">PDF Studio</a>
+      <a href="index.html#image">Image Lab</a>
+      <a href="index.html#media">Media Desk</a>
+      <a href="index.html#download">Downloaders</a>
+      <a href="index.html#focus">Focus Room</a>
+    </nav>
+    <div class="header-actions">
+      <a class="header-link" href="index.html#tools">All tools</a>
+      <button class="icon-btn icon-btn--sm" type="button" data-theme-toggle aria-label="Toggle colour theme"></button>
+      <button class="icon-btn icon-btn--sm menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    </div>
   </div>
-  <div class="links">
-    <a href="tools/editor.html">PDF Editor</a>
-    <a href="tools/merge-pdf.html">Merge PDF</a>
-    <a href="tools/compress-pdf.html">Compress PDF</a>
-    <a href="tools/pdf-to-word.html">PDF to Word</a>
+  <div class="mobile-nav" id="mobile-nav" data-mobile-nav>
+    <div class="shell">
+      <a href="index.html#pdf">PDF Studio <span aria-hidden="true">&rarr;</span></a>
+      <a href="index.html#image">Image Lab <span aria-hidden="true">&rarr;</span></a>
+      <a href="index.html#media">Media Desk <span aria-hidden="true">&rarr;</span></a>
+      <a href="index.html#download">Downloaders <span aria-hidden="true">&rarr;</span></a>
+      <a href="index.html#focus">Focus Room <span aria-hidden="true">&rarr;</span></a>
+      <div class="mnav-sep"></div>
+      <a href="index.html#tools">All tools <span aria-hidden="true">&rarr;</span></a>
+      <a href="legal/terms.html">Terms &amp; Conditions <span aria-hidden="true">&rarr;</span></a>
+      <a href="legal/privacy.html">Privacy Policy <span aria-hidden="true">&rarr;</span></a>
+    </div>
   </div>
-  <p class="tip">Tip: once a page has loaded successfully it is saved for offline use. Files are still processed on your device.</p>
+</header>
+
+<main id="main">
+  <section class="home-hero">
+    <div class="shell hero-grid">
+      <div class="hero-copy">
+        <div class="eyebrow"><b>Offline</b> &mdash; Local tools still work</div>
+        <h1>The network is gone.<br><span class="serif-em">The files are not.</span></h1>
+        <p class="lead">MULTI TOOL HUB caches its interface and local engines in your browser. If you have visited before, most PDF, image and focus tools can keep working without a connection. The YouTube and Instagram downloaders need the internet because Loader.to performs the fetch.</p>
+        <div class="row" style="margin-top:26px">
+          <a class="btn" href="index.html">Open the cached hub</a>
+          <button class="btn btn--ghost" type="button" onclick="location.reload()">Try again</button>
+        </div>
+        <p class="hint" style="margin-top:16px">If the cached page is missing, reconnect once and reload to let the service worker install the app shell.</p>
+      </div>
+      <aside class="hero-panel" aria-label="What works offline">
+        <div class="hp-head">
+          <span class="hp-mark">MTH</span>
+          <div><b>Offline capability</b><small>Based on what your browser has cached</small></div>
+          <span class="hp-live">Local</span>
+        </div>
+        <div class="hp-body">
+          <div class="hp-row"><span class="hp-ic" data-icon="viewer" data-icon-size="17"></span><div><b>PDF tools</b><small>Viewer, merge, split, crop, convert</small></div><span class="hp-state hp-state--ok">Works</span></div>
+          <div class="hp-row"><span class="hp-ic" data-icon="image" data-icon-size="17"></span><div><b>Image tools</b><small>Compress, convert, remove background</small></div><span class="hp-state hp-state--ok">Works</span></div>
+          <div class="hp-row"><span class="hp-ic" data-icon="audio" data-icon-size="17"></span><div><b>Media tools</b><small>Video compression and audio extraction</small></div><span class="hp-state hp-state--ok">Works</span></div>
+          <div class="hp-row"><span class="hp-ic" data-icon="external" data-icon-size="17"></span><div><b>Downloaders</b><small>Require Loader.to and a connection</small></div><span class="hp-state">Online</span></div>
+        </div>
+        <div class="hp-foot"><span>No files were uploaded.</span><b>Offline mode</b></div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="home-section">
+    <div class="shell">
+      <div class="empty-state">
+        <strong>Nothing is lost.</strong>
+        <p>Files you already opened were processed in this tab only. If the tab was closed, the working copy is gone; saved downloads remain wherever you put them. Reconnect and reload when you need the downloader tools.</p>
+        <p style="margin-top:14px"><a class="btn btn--sm btn--ghost" href="index.html#tools">Browse local tools</a> <a class="btn btn--sm btn--ghost" href="legal/privacy.html">Privacy Policy</a></p>
+      </div>
+    </div>
+  </section>
 </main>
-<div class="foot"><a href="terms.html">Terms &amp; Conditions</a><a href="privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB &middot; Developed by chank!nd3 p4d4y41! l FAYAS MONU</span></div>
-<script src="assets/app.js"></script>
-<script src="assets/brand.js" defer></script>
-<script src="assets/cursor.js" defer></script>
+
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="index.html" aria-label="MULTI TOOL HUB home">
+          <svg class="brand-mark" viewBox="0 0 64 64" role="img" aria-hidden="true" focusable="false"><rect width="64" height="64" rx="14"/><g fill="none" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 46V20l7.5 10.5L26 20v26"/><path d="M32 21h12"/><path d="M38 21v25"/><path d="M48 21v25"/><path d="M58 21v25"/><path d="M48 33.5h10"/></g><circle cx="56" cy="9" r="3"/></svg>
+          <span class="brand-copy">
+            <span class="brand-name">MULTI TOOL HUB</span>
+            <span class="brand-tag">Media Tools &amp; PDF Tools</span>
+          </span>
+        </a>
+        <p>A browser-native utility suite for PDF, image and media work. Files stay on your device: no account, no upload, no server.</p>
+      </div>
+      <div class="footer-col">
+        <h3>Products</h3>
+        <a href="index.html#tools">All tools</a>
+        <a href="index.html#pdf">PDF Studio</a>
+        <a href="index.html#image">Image Lab</a>
+        <a href="index.html#media">Media Desk</a>
+        <a href="index.html#download">Downloaders</a>
+        <a href="index.html#focus">Focus Room</a>
+      </div>
+      <div class="footer-col">
+        <h3>Popular</h3>
+        <a href="tools/viewer.html">Viewer &amp; Editor</a>
+        <a href="tools/merge.html">Merge PDF</a>
+        <a href="tools/compress.html">Compress PDF</a>
+        <a href="tools/pdf-to-word.html">PDF to Word</a>
+        <a href="tools/image-compress.html">Image Compressor</a>
+        <a href="tools/video-to-audio.html">Video to Audio</a>
+      </div>
+      <div class="footer-col">
+        <h3>Legal</h3>
+        <a href="legal/terms.html">Terms &amp; Conditions</a>
+        <a href="legal/privacy.html">Privacy Policy</a>
+        <a href="legal/privacy.html#local">Client-side processing</a>
+        <a href="legal/terms.html#third-party">Third-party services</a>
+      </div>
+    </div>
+    <div class="footer-base">
+      <span class="credit" data-credit-copy title="Copy developer credit">© 2026 MULTI TOOL HUB · Developed by chank!nd3 p4d4y41! & Fayaz Mon.</span>
+      <span class="footer-meta">Static build &middot; v5.0 &middot; 2026</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/core.js"></script>
+<script src="assets/js/registry.js"></script>
 </body>
 </html>
-

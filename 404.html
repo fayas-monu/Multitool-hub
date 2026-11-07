@@ -2,80 +2,146 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
-<script>
-/* A GitHub Pages 404 is served at the missing path, so root-absolute URLs can
-   point outside a project site. Resolve the site root before any asset links. */
-(function(){
-  var base=null;
-  try{
-    if(navigator.serviceWorker&&navigator.serviceWorker.controller)
-      base=new URL(".",navigator.serviceWorker.controller.scriptURL);
-  }catch(e){}
-  if(!base){
-    if(location.protocol==="file:")base=new URL(".",location.href);
-    else if(/(^|\.)github\.io$/i.test(location.hostname)){
-      var seg=location.pathname.split("/").filter(Boolean)[0]||"";
-      base=new URL("/"+(seg?seg+"/":""),location.origin);
-    }else base=new URL("/",location.origin);
-  }
-  var tag=document.createElement("base");
-  tag.href=base.href;
-  document.head.appendChild(tag);
-})();
-</script>
+<script>try{var t=localStorage.getItem("mth.theme");if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Credit: chank!nd3 p4d4y41! -->
-<title>Page not found — MULTI TOOL HUB</title>
-<meta name="description" content="This page does not exist. Browse the full set of free PDF, image and media tools on MULTI TOOL HUB.">
-<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0b1220" media="(prefers-color-scheme: dark)">
-<meta name="robots" content="noindex">
+<title>Page not found &mdash; MULTI TOOL HUB</title>
+<meta name="description" content="That page is not in the MULTI TOOL HUB catalogue. Return to the tools, search the catalogue, or open a popular PDF tool.">
+<meta name="robots" content="noindex, follow">
+<meta name="theme-color" content="#f5f2ea">
+<meta name="color-scheme" content="light dark">
 <link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="assets/icon-192.png">
+<link rel="icon" href="assets/icons/favicon-64.png" sizes="64x64" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="assets/style.css">
-<style>
-  .lost{max-width:720px;margin:0 auto;padding:56px 22px 76px;text-align:center;width:100%}
-  .lost .code{font-family:var(--font-head);font-size:clamp(72px,17vw,140px);line-height:1;letter-spacing:-6px;font-weight:800;color:var(--accent)}
-  .lost h1{font-family:var(--font-head);font-size:clamp(24px,4vw,34px);letter-spacing:-.7px;margin:4px 0 10px}
-  .lost p{color:var(--muted);max-width:50ch;margin:0 auto 8px}
-  .lost .actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:24px}
-  .lost .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:34px;text-align:left}
-  .lost .grid a{display:block;padding:13px 15px;border:1px solid var(--line);border-radius:12px;background:var(--surface);text-decoration:none;font-weight:700;font-size:14px;box-shadow:var(--shadow);transition:transform .12s,border-color .12s}
-  .lost .grid a:hover{transform:translateY(-2px);border-color:var(--accent)}
-  .lost .grid span{display:block;font-weight:500;font-size:12.5px;color:var(--muted);margin-top:2px}
-</style>
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/home.css">
 </head>
 <body>
-<header><div class="bar">
-  <a class="brand" href="index.html" aria-label="MULTI TOOL HUB"><svg class="brand-mark" viewBox="0 0 48 48" width="40" height="40" aria-hidden="true" focusable="false"><rect width="48" height="48" rx="11"/><g fill="none" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 31V17l5.5 8L18 17v14"/><path d="M21 17h9M25.5 17v14"/><path d="M33 17v14M33 24h8M41 17v14"/></g><circle cx="41" cy="7" r="2.6"/></svg><span class="brand-word">MULTI <b>TOOL</b> HUB</span></a>
-  <a class="back" href="index.html">All tools</a>
-</div></header>
-<main class="lost">
-  <div class="code">404</div>
-  <h1>This page took a wrong turn</h1>
-  <p>The link may be old, mistyped, or the tool may have moved. Everything below is one click away.</p>
-  <div class="actions">
-    <a class="btn" href="index.html">Browse all tools</a>
-    <a class="btn ghost" href="tools/editor.html">Open PDF Editor</a>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="index.html" aria-label="MULTI TOOL HUB home">
+      <svg class="brand-mark" viewBox="0 0 64 64" role="img" aria-hidden="true" focusable="false"><rect width="64" height="64" rx="14"/><g fill="none" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 46V20l7.5 10.5L26 20v26"/><path d="M32 21h12"/><path d="M38 21v25"/><path d="M48 21v25"/><path d="M58 21v25"/><path d="M48 33.5h10"/></g><circle cx="56" cy="9" r="3"/></svg>
+      <span class="brand-copy">
+        <span class="brand-name">MULTI TOOL HUB</span>
+        <span class="brand-tag">Media Tools &amp; PDF Tools</span>
+      </span>
+    </a>
+    <nav class="header-nav" aria-label="Primary">
+      <a href="index.html#pdf">PDF Studio</a>
+      <a href="index.html#image">Image Lab</a>
+      <a href="index.html#media">Media Desk</a>
+      <a href="index.html#download">Downloaders</a>
+      <a href="index.html#focus">Focus Room</a>
+    </nav>
+    <div class="header-actions">
+      <a class="header-link" href="index.html#tools">All tools</a>
+      <button class="icon-btn icon-btn--sm" type="button" data-theme-toggle aria-label="Toggle colour theme"></button>
+      <button class="icon-btn icon-btn--sm menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    </div>
   </div>
-  <div class="grid">
-    <a href="tools/merge-pdf.html">Merge PDF<span>Combine files</span></a>
-    <a href="tools/split-pdf.html">Split PDF<span>Extract pages</span></a>
-    <a href="tools/compress-pdf.html">Compress PDF<span>Make it smaller</span></a>
-    <a href="tools/pdf-to-word.html">PDF to Word<span>Editable DOCX</span></a>
-    <a href="tools/pdf-to-text.html">PDF to Text<span>Clean plain text</span></a>
-    <a href="tools/jpg-to-pdf.html">JPG to PDF<span>Photos to pages</span></a>
-    <a href="tools/image-compressor.html">Image Compressor<span>JPG, PNG, WebP</span></a>
-    <a href="tools/video-to-mp3.html">Video to MP3<span>Audio extractor</span></a>
+  <div class="mobile-nav" id="mobile-nav" data-mobile-nav>
+    <div class="shell">
+      <a href="index.html#pdf">PDF Studio <span aria-hidden="true">&rarr;</span></a>
+      <a href="index.html#image">Image Lab <span aria-hidden="true">&rarr;</span></a>
+      <a href="index.html#media">Media Desk <span aria-hidden="true">&rarr;</span></a>
+      <a href="index.html#download">Downloaders <span aria-hidden="true">&rarr;</span></a>
+      <a href="index.html#focus">Focus Room <span aria-hidden="true">&rarr;</span></a>
+      <div class="mnav-sep"></div>
+      <a href="index.html#tools">All tools <span aria-hidden="true">&rarr;</span></a>
+      <a href="legal/terms.html">Terms &amp; Conditions <span aria-hidden="true">&rarr;</span></a>
+      <a href="legal/privacy.html">Privacy Policy <span aria-hidden="true">&rarr;</span></a>
+    </div>
   </div>
+</header>
+
+<main id="main">
+  <section class="home-hero">
+    <div class="shell hero-grid">
+      <div class="hero-copy">
+        <div class="eyebrow"><b>404</b> &mdash; Not in the catalogue</div>
+        <h1>This page went<br><span class="serif-em">missing.</span></h1>
+        <p class="lead">The address may be mistyped, the tool may have moved, or an old bookmark may point at a page that no longer exists. The files on your device are untouched.</p>
+        <div class="row" style="margin-top:26px">
+          <a class="btn" href="index.html">Back to the hub</a>
+          <a class="btn btn--ghost" href="index.html#tools">Browse all 23 tools</a>
+        </div>
+      </div>
+      <aside class="hero-panel" aria-label="Useful destinations">
+        <div class="hp-head">
+          <span class="hp-mark">MTH</span>
+          <div><b>Useful destinations</b><small>Every link below is local to this build</small></div>
+        </div>
+        <div class="hp-body">
+          <div class="hp-row"><span class="hp-ic" data-icon="viewer" data-icon-size="17"></span><div><b>PDF Viewer &amp; Editor</b><small>The flagship reading workspace</small></div><a class="tag" href="tools/viewer.html">Open</a></div>
+          <div class="hp-row"><span class="hp-ic" data-icon="merge" data-icon-size="17"></span><div><b>Merge PDF</b><small>Combine documents in order</small></div><a class="tag" href="tools/merge.html">Open</a></div>
+          <div class="hp-row"><span class="hp-ic" data-icon="compress" data-icon-size="17"></span><div><b>Compress PDF</b><small>Shrink a file without a server</small></div><a class="tag" href="tools/compress.html">Open</a></div>
+          <div class="hp-row"><span class="hp-ic" data-icon="image" data-icon-size="17"></span><div><b>Image Compressor</b><small>Target a quality or file size</small></div><a class="tag" href="tools/image-compress.html">Open</a></div>
+        </div>
+        <div class="hp-foot"><span>Nothing was uploaded.</span><b>Error 404</b></div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="home-section">
+    <div class="shell">
+      <div class="empty-state">
+        <strong>Looking for something specific?</strong>
+        <p>Search the catalogue by task, or use the address bar to return to a known tool. Keyboard search is available on the home page with Ctrl + K.</p>
+        <p style="margin-top:14px"><a class="btn btn--sm btn--ghost" href="legal/terms.html">Terms &amp; Conditions</a> <a class="btn btn--sm btn--ghost" href="legal/privacy.html">Privacy Policy</a></p>
+      </div>
+    </div>
+  </section>
 </main>
-<div class="foot"><a href="terms.html">Terms &amp; Conditions</a><a href="privacy.html">Privacy Policy</a><span>&copy; 2026 MULTI TOOL HUB &middot; Developed by chank!nd3 p4d4y41! l FAYAS MONU</span></div>
-<script src="assets/app.js"></script>
-<script src="assets/brand.js" defer></script>
-<script src="assets/cursor.js" defer></script>
-<script src="assets/config.js"></script>
-<script src="assets/chat.js"></script>
+
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="index.html" aria-label="MULTI TOOL HUB home">
+          <svg class="brand-mark" viewBox="0 0 64 64" role="img" aria-hidden="true" focusable="false"><rect width="64" height="64" rx="14"/><g fill="none" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 46V20l7.5 10.5L26 20v26"/><path d="M32 21h12"/><path d="M38 21v25"/><path d="M48 21v25"/><path d="M58 21v25"/><path d="M48 33.5h10"/></g><circle cx="56" cy="9" r="3"/></svg>
+          <span class="brand-copy">
+            <span class="brand-name">MULTI TOOL HUB</span>
+            <span class="brand-tag">Media Tools &amp; PDF Tools</span>
+          </span>
+        </a>
+        <p>A browser-native utility suite for PDF, image and media work. Files stay on your device: no account, no upload, no server.</p>
+      </div>
+      <div class="footer-col">
+        <h3>Products</h3>
+        <a href="index.html#tools">All tools</a>
+        <a href="index.html#pdf">PDF Studio</a>
+        <a href="index.html#image">Image Lab</a>
+        <a href="index.html#media">Media Desk</a>
+        <a href="index.html#download">Downloaders</a>
+        <a href="index.html#focus">Focus Room</a>
+      </div>
+      <div class="footer-col">
+        <h3>Popular</h3>
+        <a href="tools/viewer.html">Viewer &amp; Editor</a>
+        <a href="tools/merge.html">Merge PDF</a>
+        <a href="tools/compress.html">Compress PDF</a>
+        <a href="tools/pdf-to-word.html">PDF to Word</a>
+        <a href="tools/image-compress.html">Image Compressor</a>
+        <a href="tools/video-to-audio.html">Video to Audio</a>
+      </div>
+      <div class="footer-col">
+        <h3>Legal</h3>
+        <a href="legal/terms.html">Terms &amp; Conditions</a>
+        <a href="legal/privacy.html">Privacy Policy</a>
+        <a href="legal/privacy.html#local">Client-side processing</a>
+        <a href="legal/terms.html#third-party">Third-party services</a>
+      </div>
+    </div>
+    <div class="footer-base">
+      <span class="credit" data-credit-copy title="Copy developer credit">© 2026 MULTI TOOL HUB · Developed by chank!nd3 p4d4y41! & Fayaz Mon.</span>
+      <span class="footer-meta">Static build &middot; v5.0 &middot; 2026</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/core.js"></script>
+<script src="assets/js/registry.js"></script>
 </body>
 </html>
