@@ -1,0 +1,101 @@
+/* ==========================================================================
+   MULTI TOOL HUB — design tokens
+   A restrained evergreen + brass system with warm neutrals.
+   ========================================================================== */
+:root {
+  color-scheme: light;
+
+  --font-display: "Segoe UI Variable Display", "Segoe UI", Inter, "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Segoe UI Variable Text", "Segoe UI", Inter, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --font-mono: "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+
+  --bg: #f5f2ea;
+  --bg-deep: #ece7db;
+  --surface: #fffdf8;
+  --surface-2: #f0ece2;
+  --surface-3: #e6e0d3;
+  --ink: #17201c;
+  --ink-soft: #2b3731;
+  --muted: #626b63;
+  --muted-strong: #47524a;
+  --line: #d8d2c4;
+  --line-strong: #bdb4a2;
+  --accent: #17463b;
+  --accent-hover: #0e352c;
+  --accent-soft: #dce8e1;
+  --accent-ink: #f8f5ed;
+  --brass: #a8782e;
+  --brass-soft: #ead9b8;
+  --brass-ink: #3b2a0f;
+  --ok: #1e6b4a;
+  --ok-soft: #d9eadf;
+  --warn: #8a5a00;
+  --warn-soft: #f3e7c9;
+  --err: #a1332b;
+  --err-soft: #f2ddd9;
+  --mark: #ead9b8;
+
+  --shadow-xs: 0 1px 2px rgba(23, 32, 28, .06);
+  --shadow-sm: 0 1px 2px rgba(23, 32, 28, .05), 0 10px 28px -22px rgba(23, 32, 28, .45);
+  --shadow-md: 0 1px 0 rgba(255, 255, 255, .65) inset, 0 20px 44px -30px rgba(23, 32, 28, .48);
+  --shadow-lg: 0 30px 80px -40px rgba(23, 32, 28, .55);
+  --ring: 0 0 0 3px rgba(23, 70, 59, .18);
+  --ring-brass: 0 0 0 3px rgba(168, 120, 46, .22);
+
+  --r-xs: 6px;
+  --r-sm: 9px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --r-xl: 22px;
+  --r-pill: 999px;
+
+  --shell: 1320px;
+  --shell-narrow: 1080px;
+  --header-h: 78px;
+
+  --ease: cubic-bezier(.22, .74, .24, 1);
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --dur: .22s;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #0b100e;
+  --bg-deep: #070b09;
+  --surface: #121a16;
+  --surface-2: #18221d;
+  --surface-3: #1e2b25;
+  --ink: #f1eee4;
+  --ink-soft: #d8d4c8;
+  --muted: #9da79e;
+  --muted-strong: #c0c8c1;
+  --line: #29342e;
+  --line-strong: #3b483f;
+  --accent: #d6b36b;
+  --accent-hover: #e6c581;
+  --accent-soft: #2d281d;
+  --accent-ink: #131a16;
+  --brass: #d6b36b;
+  --brass-soft: #3a3020;
+  --brass-ink: #f4dfb6;
+  --ok: #70c39a;
+  --ok-soft: #172a21;
+  --warn: #e5b65c;
+  --warn-soft: #2e2617;
+  --err: #e58b82;
+  --err-soft: #2e1b1a;
+  --mark: #3a3020;
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, .4);
+  --shadow-sm: 0 1px 0 #1f2b25, 0 12px 30px -22px rgba(0, 0, 0, .9);
+  --shadow-md: 0 1px 0 #25332b inset, 0 22px 48px -32px rgba(0, 0, 0, .95);
+  --shadow-lg: 0 34px 90px -44px rgba(0, 0, 0, .98);
+  --ring: 0 0 0 3px rgba(214, 179, 107, .22);
+  --ring-brass: 0 0 0 3px rgba(214, 179, 107, .28);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur: .01ms; }
+}
