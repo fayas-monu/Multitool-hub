@@ -1002,3 +1002,5 @@
     return { version: MTH.version, theme: MTH.theme.current(), tools: (MTH.tools || []).length, online: navigator.onLine, memory: performance && performance.memory ? Math.round(performance.memory.usedJSHeapSize / 1048576) + " MB" : "n/a" };
   };
 })();
+
+;(function(){var s=document.createElement("script");s.src=MTH.asset("js/assistant.js");s.defer=true;document.head.appendChild(s);})();
