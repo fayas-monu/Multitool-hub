@@ -1,4 +1,4 @@
-/* Focus Studio — timer, checklist and Schulte grid */
+/* Focus Studio — timer, checklist and deliberate break rituals */
 (function () {
   "use strict";
   var MTH = window.MTH;
@@ -10,8 +10,7 @@
     timer: { minutes: 25, remaining: 25 * 60, running: false, endAt: 0, mode: "focus" },
     tick: null,
     audioCtx: null,
-    tasks: [],
-    game: { size: 5, next: 1, running: false, startedAt: 0, mistakes: 0, timer: null, values: [] }
+    tasks: []
   };
 
   function stage() { return MTH.tool.stage(); }
@@ -21,7 +20,6 @@
     var m = Math.floor(sec / 60), s = sec % 60;
     return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
   }
-  function fmtMs(ms) { return (ms / 1000).toFixed(1) + " s"; }
 
   function shell() {
     MTH.tool.mount(
@@ -29,7 +27,7 @@
       '<div class="focus-tabs" role="tablist" aria-label="Focus Studio sections">' +
       '<button type="button" class="on" data-tab="timer" role="tab" aria-selected="true">' + MTH.ui.icon("timer") + " Timer</button>" +
       '<button type="button" data-tab="tasks" role="tab" aria-selected="false">' + MTH.ui.icon("check") + " Checklist</button>" +
-      '<button type="button" data-tab="game" role="tab" aria-selected="false">' + MTH.ui.icon("grid") + " Number Grid</button>" +
+      '<button type="button" data-tab="breaks" role="tab" aria-selected="false">' + MTH.ui.icon("spark") + " Breaks</button>" +
       "</div>" +
       '<div class="focus-panel on" data-panel="timer" role="tabpanel">' +
       '<div class="timer-wrap">' +
@@ -66,22 +64,35 @@
       '<div class="task-progress"><div class="progress show"><span data-task-bar></span></div><div class="progress-label"><span data-task-count>0 of 0 complete</span><button class="btn btn--sm btn--subtle" data-clear-done>Clear completed</button></div></div>' +
       '<div class="empty-state" data-task-empty><strong>Nothing on the list yet</strong><p>Add the next small step. A short, concrete task is easier to start than a large one.</p></div>' +
       "</div>" +
-      '<div class="focus-panel" data-panel="game" role="tabpanel">' +
-      '<div class="game-head"><div><div class="settings-title" style="margin-bottom:4px"><h3>Schulte number grid</h3></div><p class="small muted">Click the numbers in order as fast as you can. It trains visual search and peripheral attention.</p></div>' +
-      '<div class="inline"><select class="select" data-game-size style="width:150px" aria-label="Grid size"><option value="3">3 × 3 · warm up</option><option value="4">4 × 4</option><option value="5" selected>5 × 5 · classic</option><option value="6">6 × 6 · hard</option></select><button class="btn" data-game-start>' + MTH.ui.icon("play") + "Start</button></div></div>" +
-      '<div class="game-stats" style="margin-top:16px">' +
-      MTH.ui.stat("Next", "—") + MTH.ui.stat("Time", "0.0 s") + MTH.ui.stat("Best", "—") + MTH.ui.stat("Mistakes", "0") +
+      '<div class="focus-panel" data-panel="breaks" role="tabpanel">' +
+      '<div class="break-hero">' +
+      '<span class="eyebrow">After hours, on purpose</span>' +
+      '<h3>Step away properly</h3>' +
+      '<p>A break is not a failure of focus. It is the reset that makes the next block possible. Choose a short ritual below, or open the After Hours room for soundscapes, breathing and colour work.</p>' +
+      '<div class="break-actions">' +
+      '<button class="btn" type="button" data-break-min="5">' + MTH.ui.icon("timer") + " Five-minute reset</button>" +
+      '<button class="btn btn--ghost" type="button" data-break-min="10">' + MTH.ui.icon("timer") + " Ten-minute break</button>" +
+      '<a class="btn btn--ghost" href="' + MTH.esc(MTH.sitePath("entertainment.html#ambient")) + '">' + MTH.ui.icon("audio") + " Open Ambient Studio</a>" +
+      "</div></div>" +
+      '<div class="break-grid">' +
+      '<a class="break-card" href="' + MTH.esc(MTH.sitePath("entertainment.html#ambient")) + '"><span class="break-ico" data-icon="audio" data-icon-size="23"></span><strong>Ambient Studio</strong><span>Layer rain, ocean, forest or a warm night hum while you work or rest.</span><em>Open soundscapes</em></a>' +
+      '<a class="break-card" href="' + MTH.esc(MTH.sitePath("entertainment.html#breathing")) + '"><span class="break-ico" data-icon="spark" data-icon-size="23"></span><strong>Breathing Room</strong><span>Follow a paced box-breath or 4-7-8 rhythm for two quiet minutes.</span><em>Start breathing</em></a>' +
+      '<a class="break-card" href="' + MTH.esc(MTH.sitePath("entertainment.html#chromatic")) + '"><span class="break-ico" data-icon="palette" data-icon-size="23"></span><strong>Chromatic Lab</strong><span>Build a calm palette or a gradient board when your eyes need something else.</span><em>Explore colour</em></a>' +
       "</div>" +
-      '<div class="game-grid" data-game-grid aria-label="Number grid"></div>' +
-      '<div class="status" data-game-status></div>' +
+      '<div class="break-notes">' +
+      '<div><span class="break-kicker">20 · 20 · 20</span><p>Every twenty minutes, look at something twenty feet away for twenty seconds. It is the cheapest screen break there is.</p></div>' +
+      '<div><span class="break-kicker">Move before you scroll</span><p>Stand, roll your shoulders and take five slow breaths before opening another tab. Motion first, feed second.</p></div>' +
+      '<div><span class="break-kicker">Leave the desk</span><p>A real break changes your posture. Water, daylight and a short walk beat another short video.</p></div>' +
+      "</div>" +
       "</div>" +
       "</section>"
     );
 
+    MTH.ui.hydrateIcons(stage());
     bindTabs();
     bindTimer();
     bindTasks();
-    bindGame();
+    bindBreaks();
     restore();
   }
 
@@ -93,6 +104,7 @@
     });
   }
   function setTab(tab) {
+    if (["timer", "tasks", "breaks"].indexOf(tab) === -1) tab = "timer";
     state.tab = tab;
     MTH.store.set("focus.tab", tab);
     MTH.$$("[data-tab]", stage()).forEach(function (b) {
@@ -101,7 +113,6 @@
       b.setAttribute("aria-selected", on ? "true" : "false");
     });
     MTH.$$("[data-panel]", stage()).forEach(function (p) { p.classList.toggle("on", p.dataset.panel === tab); });
-    if (tab === "game") renderGame();
   }
 
   /* ---------------- timer ---------------- */
@@ -135,6 +146,17 @@
         var v = MTH.clamp(+e.target.value || 25, 1, 180);
         setTimer(v, "focus", false);
       }
+    });
+  }
+
+  function bindBreaks() {
+    stage().querySelectorAll("[data-break-min]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var mins = MTH.clamp(+btn.dataset.breakMin || 5, 1, 60);
+        setTimer(mins, "break", true);
+        setTab("timer");
+        MTH.toast("Break started. Leave the desk if you can.", "ok", 2600);
+      });
     });
   }
 
@@ -339,119 +361,10 @@
     if (list) list.hidden = state.tasks.length === 0;
   }
 
-  /* ---------------- game ---------------- */
-  function bindGame() {
-    stage().querySelector("[data-game-size]").addEventListener("change", function (e) {
-      state.game.size = +e.target.value || 5;
-      MTH.store.set("focus.grid", state.game.size);
-      resetGame();
-    });
-    stage().querySelector("[data-game-start]").addEventListener("click", startGame);
-    stage().querySelector("[data-game-grid]").addEventListener("click", function (e) {
-      var cell = e.target.closest("[data-num]");
-      if (!cell || !state.game.running) return;
-      var num = +cell.dataset.num;
-      if (num === state.game.next) {
-        cell.classList.add("hit");
-        cell.classList.remove("miss");
-        cell.disabled = true;
-        state.game.next++;
-        paintGameStats();
-        if (state.game.next > state.game.size * state.game.size) finishGame();
-      } else {
-        state.game.mistakes++;
-        cell.classList.add("miss");
-        setTimeout(function () { cell.classList.remove("miss"); }, 400);
-        paintGameStats();
-      }
-    });
-  }
-
-  function resetGame() {
-    if (state.game.timer) { clearInterval(state.game.timer); state.game.timer = null; }
-    state.game.running = false;
-    state.game.next = 1;
-    state.game.mistakes = 0;
-    state.game.startedAt = 0;
-    stage().querySelector("[data-game-status]").textContent = "";
-    renderGame();
-    paintGameStats();
-  }
-
-  function shuffled(size) {
-    var total = size * size;
-    var values = [];
-    for (var i = 1; i <= total; i++) values.push(i);
-    for (var k = values.length - 1; k > 0; k--) {
-      var j = Math.floor(Math.random() * (k + 1));
-      var tmp = values[k]; values[k] = values[j]; values[j] = tmp;
-    }
-    return values;
-  }
-
-  function renderGame() {
-    var grid = stage().querySelector("[data-game-grid]");
-    if (!grid) return;
-    var size = state.game.size;
-    if (!state.game.values.length || state.game.values.length !== size * size) state.game.values = shuffled(size);
-    grid.style.gridTemplateColumns = "repeat(" + size + ", minmax(0, 1fr))";
-    grid.innerHTML = state.game.values.map(function (n) {
-      return '<button type="button" class="game-cell" data-num="' + n + '">' + n + "</button>";
-    }).join("");
-  }
-
-  function startGame() {
-    if (state.game.timer) clearInterval(state.game.timer);
-    state.game.size = +stage().querySelector("[data-game-size]").value || 5;
-    state.game.values = shuffled(state.game.size);
-    state.game.running = true;
-    state.game.next = 1;
-    state.game.mistakes = 0;
-    state.game.startedAt = performance.now();
-    renderGame();
-    paintGameStats();
-    stage().querySelector("[data-game-status]").textContent = "Find 1 first. The timer is running.";
-    state.game.timer = setInterval(function () {
-      if (!state.game.running) return;
-      var t = (performance.now() - state.game.startedAt) / 1000;
-      var stats = MTH.$$(".game-stats .stat b", stage());
-      if (stats[1]) stats[1].textContent = t.toFixed(1) + " s";
-    }, 80);
-  }
-
-  function finishGame() {
-    state.game.running = false;
-    if (state.game.timer) { clearInterval(state.game.timer); state.game.timer = null; }
-    var elapsed = performance.now() - state.game.startedAt;
-    var key = "grid" + state.game.size;
-    var best = MTH.store.get("focus.best", {});
-    if (!best || typeof best !== "object") best = {};
-    var isBest = !best[key] || elapsed < best[key];
-    if (isBest) { best[key] = elapsed; MTH.store.set("focus.best", best); }
-    paintGameStats();
-    var msg = "Complete in " + fmtMs(elapsed) + " with " + state.game.mistakes + " mistake" + (state.game.mistakes === 1 ? "" : "s") + "." + (isBest ? " New personal best!" : "");
-    stage().querySelector("[data-game-status]").textContent = msg;
-    MTH.toast(isBest ? "New best time!" : "Grid complete", "ok", 3600);
-    beep(false);
-  }
-
-  function paintGameStats() {
-    var host = stage();
-    if (!host) return;
-    var stats = MTH.$$(".game-stats .stat b", host);
-    if (!stats.length) return;
-    stats[0].textContent = state.game.running ? state.game.next : "—";
-    if (!state.game.running) stats[1].textContent = "0.0 s";
-    stats[3].textContent = state.game.mistakes;
-    var best = MTH.store.get("focus.best", {});
-    var key = "grid" + state.game.size;
-    stats[2].textContent = best && best[key] ? fmtMs(best[key]) : "—";
-  }
-
   /* ---------------- restore ---------------- */
   function restore() {
     var tab = MTH.store.get("focus.tab", "timer");
-    if (["timer", "tasks", "game"].indexOf(tab) === -1) tab = "timer";
+    if (["timer", "tasks", "breaks"].indexOf(tab) === -1) tab = "timer";
     state.tasks = MTH.store.get("focus.tasks", []);
     if (!Array.isArray(state.tasks)) state.tasks = [];
     renderTasks();
@@ -476,16 +389,9 @@
         state.timer.remaining = MTH.clamp(t.remaining || state.timer.minutes * 60, 0, state.timer.minutes * 60);
       }
     }
-    var size = MTH.store.get("focus.grid", 5);
-    if ([3, 4, 5, 6].indexOf(size) === -1) size = 5;
-    state.game.size = size;
-    var sizeSelect = stage().querySelector("[data-game-size]");
-    if (sizeSelect) sizeSelect.value = String(size);
     setTab(tab);
     paintTimer();
     paintStats();
-    renderGame();
-    paintGameStats();
   }
 
   function init() { shell(); }

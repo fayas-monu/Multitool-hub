@@ -20,6 +20,12 @@
     fs: 18,
     opacity: 1,
     selected: null,
+    selectedPage: null,
+    font: "Helvetica",
+    align: "left",
+    bold: false,
+    italic: false,
+    lineHeight: 1.32,
     history: [],
     future: [],
     dirty: false,
@@ -72,11 +78,18 @@
     var tools = [
       ["select", "select", "Select & move"],
       ["text", "type", "Text note"],
+      ["note", "note", "Sticky comment"],
+      ["underline", "underline", "Underline"],
+      ["strike", "strike", "Strike-through"],
       ["rect", "shape", "Rectangle"],
       ["ellipse", "shape", "Ellipse"],
       ["line", "arrow-right", "Line / arrow"],
       ["highlight", "highlight", "Highlight"],
       ["ink", "pen", "Freehand ink"],
+      ["redact", "redact", "Redaction block"],
+      ["whiteout", "eraser", "Whiteout"],
+      ["replace", "replace", "Replace text"],
+      ["signature", "signature", "Draw signature"],
       ["image", "image-plus", "Image stamp"],
       ["watermark", "watermark", "Watermark"]
     ];
@@ -118,6 +131,7 @@
     html.push('<button class="btn btn--sm btn--ghost" type="button" data-op-extract data-needs-write>' + ic("split", 13) + " Extract</button>");
     html.push('<button class="btn btn--sm btn--ghost" type="button" data-op-split data-needs-write>' + ic("split", 13) + " Split</button>");
     html.push('<button class="btn btn--sm btn--ghost" type="button" data-op-merge data-needs-write>' + ic("merge", 13) + " Merge</button>");
+    html.push('<button class="btn btn--sm btn--ghost" type="button" data-op-blank data-needs-write>' + ic("plus", 13) + " Blank page</button>");
     html.push("</div></section>");
 
     html.push('<section class="panel"><div class="panel-head"><div><h3>Annotation style</h3><p>Applies to new marks and the selected mark.</p></div></div><div class="panel-body viewer-style">');
@@ -126,10 +140,28 @@
     html.push('<label class="field"><span>Stroke</span><span class="range-wrap"><input type="range" min="1" max="14" value="2" data-style-width><span class="range-val" data-width-val>2 pt</span></span></label>');
     html.push('<label class="field"><span>Text size</span><span class="range-wrap"><input type="range" min="8" max="72" value="18" data-style-size><span class="range-val" data-size-val>18 pt</span></span></label></div>');
     html.push('<label class="check-line"><input type="checkbox" data-style-fill> Fill shapes with the same colour</label>');
+    html.push('<div class="viewer-typo"><label class="field"><span>Font</span><select class="select" data-style-font>' +
+      '<option value="Helvetica">Helvetica / Arial</option>' +
+      '<option value="Georgia">Georgia</option>' +
+      '<option value="Times">Times New Roman</option>' +
+      '<option value="Courier">Courier</option>' +
+      '<option value="Verdana">Verdana</option></select></label>' +
+      '<div class="field"><span>Type style</span><div class="type-row" role="group" aria-label="Text style">' +
+        '<button type="button" class="type-btn" data-style-bold title="Bold" aria-label="Bold" aria-pressed="false"><b>B</b></button>' +
+        '<button type="button" class="type-btn" data-style-italic title="Italic" aria-label="Italic" aria-pressed="false"><i>I</i></button>' +
+        '<span class="type-sep" aria-hidden="true"></span>' +
+        '<button type="button" class="type-btn" data-style-align="left" title="Align left" aria-label="Align left" aria-pressed="true">' + ic("left", 13) + '</button>' +
+        '<button type="button" class="type-btn" data-style-align="center" title="Align centre" aria-label="Align centre" aria-pressed="false">' + ic("menu", 13) + '</button>' +
+        '<button type="button" class="type-btn" data-style-align="right" title="Align right" aria-label="Align right" aria-pressed="false">' + ic("right", 13) + '</button>' +
+      '</div></div>' +
+      '<label class="field"><span>Line height</span><select class="select" data-style-lineheight>' +
+        '<option value="1">Tight · 1.0</option><option value="1.15">1.15</option><option value="1.32" selected>Normal · 1.32</option><option value="1.5">1.5</option><option value="1.8">Airy · 1.8</option>' +
+      '</select></label></div>');
     html.push('<div class="viewer-tool-hint" data-tool-hint>' + ic("select") + " <span>Select a mark to move it, or drag its corner to resize. Double-click text to edit.</span></div>");
     html.push("</div></section>");
 
     html.push('<section class="panel"><div class="panel-head"><div><h3>Marks on this page</h3><p data-anno-summary>No marks yet.</p></div></div><div class="panel-body panel-body--flush"><div class="annot-list" data-anno-list></div></div></section>');
+    html.push('<section class="panel"><div class="panel-head"><div><h3>Comments</h3><p data-comment-summary>No comments yet.</p></div><div class="panel-actions"><button class="btn btn--sm btn--ghost" type="button" data-notes-export title="Download a summary of every annotation">' + ic("download", 13) + ' Notes</button></div></div><div class="panel-body panel-body--flush"><div class="comment-list" data-comment-list></div></div></section>');
     html.push('<section class="panel viewer-help"><div class="panel-body"><p class="eyebrow">Good to know</p><ul class="aside-list"><li>The viewer keeps the original pages intact. Annotations are burned into an overlay only when you export.</li><li>Scanned PDFs have no text layer. This viewer annotates them but cannot turn pixels into editable words.</li><li>Password-protected files open read-only because saving requires an unencrypted source. Use <a href="' + MTH.esc(MTH.sitePath("tools/unlock.html")) + '">Unlock PDF</a> first.</li></ul></div></section>');
     html.push("</aside></div></div>");
 
@@ -145,6 +177,8 @@
     els.pageSummary = q("[data-page-summary]");
     els.annoList = q("[data-anno-list]");
     els.annoSummary = q("[data-anno-summary]");
+    els.commentList = q("[data-comment-list]");
+    els.commentSummary = q("[data-comment-summary]");
     els.zoomLabel = q("[data-zoom-label]");
     els.statusNote = q("[data-status-note]");
     els.status = q("[data-status]");
@@ -161,6 +195,7 @@
     syncHistoryButtons();
     syncTool();
     saveStateLabel();
+    refreshComments();
   }
 
   function bindToolbar() {
@@ -187,6 +222,8 @@
     q("[data-undo]").addEventListener("click", undo);
     q("[data-redo]").addEventListener("click", redo);
     qa("[data-op-merge]").forEach(function (b) { b.addEventListener("click", mergePdf); });
+    q("[data-op-blank]").addEventListener("click", insertBlankPage);
+    q("[data-notes-export]").addEventListener("click", exportNotes);
     q("[data-op-rotate]").addEventListener("click", function () { rotatePage(state.active, 1); });
     q("[data-op-rotate-all]").addEventListener("click", rotateAll);
     q("[data-op-up]").addEventListener("click", function () { movePage(state.active, -1); });
@@ -229,6 +266,36 @@
     });
     var fill = q("[data-style-fill]");
     fill.addEventListener("change", function () { state.fill = fill.checked; applyStyle({ fill: state.fill }); });
+
+    var font = q("[data-style-font]");
+    if (font) font.addEventListener("change", function () { state.font = font.value; applyStyle({ font: state.font }); });
+    var bold = q("[data-style-bold]");
+    if (bold) bold.addEventListener("click", function () {
+      state.bold = !state.bold;
+      bold.classList.toggle("on", state.bold);
+      bold.setAttribute("aria-pressed", state.bold ? "true" : "false");
+      applyStyle({ bold: state.bold });
+    });
+    var italic = q("[data-style-italic]");
+    if (italic) italic.addEventListener("click", function () {
+      state.italic = !state.italic;
+      italic.classList.toggle("on", state.italic);
+      italic.setAttribute("aria-pressed", state.italic ? "true" : "false");
+      applyStyle({ italic: state.italic });
+    });
+    qa("[data-style-align]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        state.align = b.dataset.styleAlign || "left";
+        qa("[data-style-align]").forEach(function (x) {
+          var on = x === b;
+          x.classList.toggle("on", on);
+          x.setAttribute("aria-pressed", on ? "true" : "false");
+        });
+        applyStyle({ align: state.align });
+      });
+    });
+    var lh = q("[data-style-lineheight]");
+    if (lh) lh.addEventListener("change", function () { state.lineHeight = Number(lh.value) || 1.32; applyStyle({ lineHeight: state.lineHeight }); });
   }
 
   function bindKeys() {
@@ -260,20 +327,28 @@
       b.setAttribute("aria-pressed", on ? "true" : "false");
     });
     var hints = {
-      select: "Select a mark to move it, or drag its corner to resize. Double-click text to edit.",
+      select: "Select a mark to move it, or drag its corner to resize. Double-click text or a comment to edit it.",
       text: "Click anywhere on a page to place a text note. A dialogue asks for the words.",
+      note: "Click to drop a sticky comment. Comments are listed in the sidebar and can be resolved.",
+      underline: "Drag beneath a line of text to underline it. The mark is a visual annotation.",
+      strike: "Drag across a line of text to strike through it.",
       rect: "Drag to draw a rectangle. Hold Shift for a square.",
       ellipse: "Drag to draw an ellipse. Hold Shift for a circle.",
       line: "Drag to draw an arrow from start to end.",
       highlight: "Drag across an area to lay down a translucent highlight.",
       ink: "Draw freehand on the page. Release to finish the stroke.",
+      redact: "Drag to cover sensitive content with an opaque black block. Use Flatten on export for true content removal.",
+      whiteout: "Drag to cover an area with opaque white. Useful for cleaning scans and removing stray marks.",
+      replace: "Drag over the text you want to replace, then type the new wording. The original area is covered first.",
+      signature: "Draw a signature in the pad, then place and resize it on the page.",
       image: "Pick an image file, then click the page to place it.",
       watermark: "Add a tiled text watermark to the current page."
     };
-    if (els.hint) els.hint.innerHTML = ic(name === "select" ? "select" : name === "text" ? "type" : name === "watermark" ? "watermark" : "pen") + " <span>" + hints[name] + "</span>";
+    var hintIcons = { select: "select", text: "type", note: "note", underline: "underline", strike: "strike", rect: "shape", ellipse: "shape", line: "arrow-right", highlight: "highlight", ink: "pen", redact: "redact", whiteout: "eraser", replace: "replace", signature: "signature", image: "image-plus", watermark: "watermark" };
+    if (els.hint) els.hint.innerHTML = ic(hintIcons[name] || "pen") + " <span>" + (hints[name] || "") + "</span>";
     qa(".annot-canvas").forEach(function (c) {
       c.classList.toggle("select-mode", name === "select");
-      c.classList.toggle("text-mode", name === "text" || name === "watermark");
+      c.classList.toggle("text-mode", name === "text" || name === "watermark" || name === "note" || name === "replace");
     });
   }
 
@@ -458,6 +533,7 @@
     }
     refreshPageList();
     refreshAnnoList();
+    refreshComments();
     saveStateLabel();
     if (!state.scrollBound) { window.addEventListener("scroll", onScroll, { passive: true }); state.scrollBound = true; }
     onScroll();
@@ -715,14 +791,14 @@
     var annos = p ? (p.annos || []) : [];
     if (els.annoSummary) els.annoSummary.textContent = annos.length ? annos.length + " mark" + (annos.length === 1 ? "" : "s") + " on page " + (state.active + 1) : "No marks yet.";
     if (!annos.length) {
-      els.annoList.innerHTML = '<div class="editor-empty">Choose a tool above, then draw on the page.<br>Text, shapes, highlights, ink, images and watermarks are supported.</div>';
+      els.annoList.innerHTML = '<div class="editor-empty">Choose a tool above, then draw on the page.<br>Text, comments, shapes, highlights, redaction, signatures, ink, images and watermarks are supported.</div>';
       return;
     }
     els.annoList.innerHTML = annos.map(function (a) {
-      var label = { text: "Text", rect: "Rectangle", ellipse: "Ellipse", line: "Line", highlight: "Highlight", ink: "Ink", image: "Image", watermark: "Watermark" }[a.type] || a.type;
+      var label = annotationLabel(a);
       var preview = a.text ? a.text.replace(/\s+/g, " ").slice(0, 46) : a.type === "image" ? "Image stamp" : label;
-      return '<div class="annot-item' + (state.selected === a ? " is-selected" : "") + '" data-anno="' + MTH.esc(a.id) + '">' +
-        '<span class="ai-type">' + label + '</span><span class="ai-text">' + MTH.esc(preview) + '</span>' +
+      return '<div class="annot-item' + (state.selected === a ? " is-selected" : "") + (a.resolved ? " is-resolved" : "") + '" data-anno="' + MTH.esc(a.id) + '">' +
+        '<span class="ai-type">' + MTH.esc(label) + '</span><span class="ai-text">' + MTH.esc(preview) + '</span>' +
         '<button type="button" data-anno-del title="Delete mark" aria-label="Delete ' + MTH.esc(label) + '">' + ic("trash", 11) + '</button></div>';
     }).join("");
     els.annoList.onclick = function (e) {
@@ -736,11 +812,12 @@
     };
   }
 
-  function selectAnno(anno) {
+  function selectAnno(anno, page) {
     state.selected = anno || null;
-    state.selectedPage = anno ? currentPage() : null;
+    state.selectedPage = anno ? (page || currentPage()) : null;
     qa(".annot-canvas").forEach(function (c) { c.classList.toggle("select-mode", state.tool === "select"); });
     refreshAnnoList();
+    refreshComments();
     paintAllOverlays();
     if (anno) syncStyleFromAnno(anno);
   }
@@ -757,6 +834,22 @@
     if (a.fs != null && fs) { fs.value = Math.round(a.fs); q("[data-size-val]").textContent = Math.round(a.fs) + " pt"; state.fs = a.fs; }
     var fill = q("[data-style-fill]");
     if (fill) { fill.checked = !!a.fill; state.fill = !!a.fill; }
+    var font = q("[data-style-font]");
+    if (a.font && font) { font.value = a.font; state.font = a.font; }
+    state.bold = !!a.bold;
+    var bold = q("[data-style-bold]");
+    if (bold) { bold.classList.toggle("on", state.bold); bold.setAttribute("aria-pressed", state.bold ? "true" : "false"); }
+    state.italic = !!a.italic;
+    var italic = q("[data-style-italic]");
+    if (italic) { italic.classList.toggle("on", state.italic); italic.setAttribute("aria-pressed", state.italic ? "true" : "false"); }
+    state.align = a.align || "left";
+    qa("[data-style-align]").forEach(function (b) {
+      var on = b.dataset.styleAlign === state.align;
+      b.classList.toggle("on", on);
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    var lh = q("[data-style-lineheight]");
+    if (a.lineHeight && lh) { lh.value = String(a.lineHeight); state.lineHeight = a.lineHeight; }
   }
 
   function applyStyle(patch) {
@@ -824,6 +917,7 @@
       setActive(state.active);
       goPage(state.active, false);
     }
+    refreshComments();
     saveStateLabel();
   }
 
@@ -880,9 +974,10 @@
       remember();
       var a = {
         id: MTH.uid(), type: "text", text: text,
-        x: MTH.clamp(nx, 0.01, 0.78), y: MTH.clamp(ny, 0.01, 0.9),
+        x: MTH.clamp(nx, 0.01, 0.52), y: MTH.clamp(ny, 0.01, 0.9),
         w: 0.46, h: 0.12, color: state.color, lw: state.lw, fs: state.fs,
-        opacity: state.opacity, fill: false, angle: 0, ar: 1
+        opacity: state.opacity, fill: false, angle: 0, ar: 1,
+        font: state.font, align: state.align, bold: state.bold, italic: state.italic, lineHeight: state.lineHeight
       };
       p.annos.push(a);
       state.dirty = true;
@@ -945,6 +1040,271 @@
     }
   }
 
+  function addStickyNote(nx, ny) {
+    askText("", "Add a comment", "This note is pinned to the page and listed in the sidebar. Comments are stored only in this browser session until you export notes.").then(function (text) {
+      if (!text) return;
+      var p = currentPage();
+      if (!p) return;
+      remember();
+      var a = {
+        id: MTH.uid(), type: "note", text: text,
+        x: MTH.clamp(nx, 0.005, 0.96), y: MTH.clamp(ny, 0.005, 0.96),
+        w: 0.038, h: 0.038, color: state.color, lw: 1, fs: 12,
+        opacity: 1, fill: true, angle: 0, ar: 1, resolved: false, created: Date.now()
+      };
+      p.annos.push(a);
+      state.dirty = true;
+      state.selected = a;
+      state.selectedPage = p;
+      setTool("select");
+      refreshAnnoList();
+      refreshComments();
+      paintAllOverlays();
+      saveStateLabel();
+      MTH.toast("Comment added. Open the Comments panel to review or resolve it.", "ok", 3200);
+    });
+  }
+
+  function openSignaturePad() {
+    var m = MTH.modal({
+      title: "Draw a signature",
+      subtitle: "Sign with a mouse, stylus or finger. The signature is placed as a transparent image stamp.",
+      size: "md",
+      body: '<div class="sig-pad-wrap"><canvas class="sig-pad" data-sig-pad aria-label="Signature pad"></canvas><span class="sig-baseline" aria-hidden="true"></span></div>' +
+        '<div class="sig-tools"><label class="sig-color"><span>Ink</span><input type="color" value="#0b1a33" data-sig-color></label>' +
+        '<button class="btn btn--sm btn--ghost" type="button" data-sig-clear>' + ic("reset", 13) + ' Clear</button>' +
+        '<span class="small muted" data-sig-hint>Draw above the line. The empty space is cropped automatically.</span></div>',
+      actions: '<button class="btn btn--sm btn--ghost" data-sig-cancel>Cancel</button><button class="btn btn--sm" data-sig-use>' + ic("signature", 14) + ' Place signature</button>'
+    });
+    var canvas = m.body.querySelector("[data-sig-pad]");
+    var ctx = canvas && canvas.getContext("2d");
+    var color = m.body.querySelector("[data-sig-color]");
+    var hint = m.body.querySelector("[data-sig-hint]");
+    var use = m.actions.querySelector("[data-sig-use]");
+    if (!ctx) { m.close(); MTH.toast("This browser could not open the signature pad.", "err"); return; }
+    var drawing = false, last = null, dpr = 1;
+
+    function setup() {
+      var r = canvas.getBoundingClientRect();
+      dpr = Math.min(2, window.devicePixelRatio || 1);
+      canvas.width = Math.max(320, Math.round((r.width || 480) * dpr));
+      canvas.height = Math.max(150, Math.round((r.height || 180) * dpr));
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.lineWidth = 2.6;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.strokeStyle = color.value;
+      canvas.dataset.dirty = "";
+      hint.textContent = "Draw above the line. The empty space is cropped automatically.";
+    }
+    function point(e) {
+      var r = canvas.getBoundingClientRect();
+      return { x: e.clientX - r.left, y: e.clientY - r.top };
+    }
+    function down(e) {
+      drawing = true;
+      last = point(e);
+      canvas.setPointerCapture && canvas.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    }
+    function move(e) {
+      if (!drawing) return;
+      var p = point(e);
+      ctx.strokeStyle = color.value;
+      ctx.beginPath();
+      ctx.moveTo(last.x, last.y);
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+      last = p;
+      canvas.dataset.dirty = "1";
+      e.preventDefault();
+    }
+    function up(e) {
+      drawing = false;
+      try { if (canvas.hasPointerCapture && canvas.hasPointerCapture(e.pointerId)) canvas.releasePointerCapture(e.pointerId); } catch (err) {}
+    }
+    canvas.addEventListener("pointerdown", down);
+    canvas.addEventListener("pointermove", move);
+    canvas.addEventListener("pointerup", up);
+    canvas.addEventListener("pointercancel", up);
+    color.addEventListener("input", function () { ctx.strokeStyle = color.value; });
+    m.body.querySelector("[data-sig-clear]").addEventListener("click", function () {
+      ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.restore();
+      canvas.dataset.dirty = "";
+    });
+    m.actions.querySelector("[data-sig-cancel]").addEventListener("click", function () { m.close(); });
+    setTimeout(setup, 40);
+
+    use.addEventListener("click", function () {
+      if (!canvas.dataset.dirty) { hint.textContent = "Draw your signature first."; hint.style.color = "var(--err)"; return; }
+      var sw = canvas.width, sh = canvas.height;
+      var src = canvas.getContext("2d").getImageData(0, 0, sw, sh).data;
+      var minX = sw, minY = sh, maxX = 0, maxY = 0, found = false;
+      for (var y = 0; y < sh; y++) {
+        for (var x = 0; x < sw; x++) {
+          if (src[(y * sw + x) * 4 + 3] > 8) {
+            found = true;
+            if (x < minX) minX = x; if (x > maxX) maxX = x;
+            if (y < minY) minY = y; if (y > maxY) maxY = y;
+          }
+        }
+      }
+      if (!found) { hint.textContent = "Draw your signature first."; hint.style.color = "var(--err)"; return; }
+      var pad = Math.max(8, Math.round(6 * dpr));
+      minX = Math.max(0, minX - pad); minY = Math.max(0, minY - pad);
+      maxX = Math.min(sw - 1, maxX + pad); maxY = Math.min(sh - 1, maxY + pad);
+      var out = document.createElement("canvas");
+      out.width = Math.max(1, maxX - minX + 1);
+      out.height = Math.max(1, maxY - minY + 1);
+      out.getContext("2d").drawImage(canvas, minX, minY, out.width, out.height, 0, 0, out.width, out.height);
+      var dataUrl = out.toDataURL("image/png");
+      var p = currentPage();
+      m.close();
+      if (!p) return;
+      loadImageSrc(dataUrl).then(function (img) {
+        var dim = visualSize(p);
+        var w = 0.34;
+        var ar = img.width / img.height;
+        var h = Math.min(0.4, (w * dim.w / ar) / dim.h);
+        remember();
+        var a = {
+          id: MTH.uid(), type: "image", src: dataUrl, text: "Signature",
+          x: Math.round((0.5 - w / 2) * 1000) / 1000, y: Math.round(MTH.clamp(0.86 - h, 0.02, 0.9) * 1000) / 1000,
+          w: w, h: h, color: "#000000", lw: 1, fs: 0, opacity: 1, fill: false, angle: 0, ar: ar
+        };
+        p.annos.push(a);
+        state.dirty = true;
+        state.selected = a;
+        state.selectedPage = p;
+        setTool("select");
+        refreshAnnoList();
+        paintAllOverlays();
+        saveStateLabel();
+        MTH.toast("Signature placed. Drag it into position, or resize from the corner.", "ok", 3400);
+      }).catch(function (e) { MTH.toast(MTH.friendlyError(e), "err"); });
+    });
+  }
+
+  /* ---------- blank page ---------- */
+  async function insertBlankPage() {
+    if (!state.pages.length || state.readOnly || state.busy) return;
+    state.busy = true;
+    saveStateLabel();
+    setStatus("Inserting a blank page…");
+    try {
+      var ref = currentPage();
+      var dim = ref ? visualSize(ref) : { w: 595.28, h: 841.89 };
+      var doc = await PDFLib.PDFDocument.create();
+      doc.addPage([dim.w, dim.h]);
+      var bytes = await doc.save({ useObjectStreams: true });
+      var pdfjs = await MTH.pdf.openWithPrompt(bytes);
+      var lib = await PDFLib.PDFDocument.load(bytes, { updateMetadata: false });
+      var key = MTH.uid();
+      var src = { key: key, name: "Blank page", bytes: bytes, pdfjs: pdfjs, lib: lib, meta: {}, count: 1 };
+      state.sources[key] = src;
+      await readMeta(src);
+      remember();
+      var at = Math.min(state.pages.length, state.active + 1);
+      state.pages.splice(at, 0, { id: MTH.uid(), key: key, index: 0, rotate: 0, annos: [] });
+      state.dirty = true;
+      state.active = at;
+      buildPageShells();
+      setActive(at);
+      goPage(at, false);
+      setStatus("Blank page inserted at position " + (at + 1) + ".", "ok");
+      MTH.toast("Blank page inserted", "ok");
+    } catch (e) {
+      setStatus(MTH.friendlyError(e), "err");
+      MTH.reportError(e, "viewer-blank-page");
+    } finally {
+      state.busy = false;
+      saveStateLabel();
+    }
+  }
+
+  /* ---------- comments & notes ---------- */
+  function commentsAll() {
+    var out = [];
+    state.pages.forEach(function (p, pi) {
+      (p.annos || []).forEach(function (a) { if (a.type === "note") out.push({ anno: a, page: p, pageIndex: pi }); });
+    });
+    return out;
+  }
+
+  function refreshComments() {
+    if (!els.commentList) return;
+    var comments = commentsAll();
+    var open = comments.filter(function (c) { return !c.anno.resolved; }).length;
+    if (els.commentSummary) els.commentSummary.textContent = comments.length ? open + " open · " + comments.length + " total" : "No comments yet.";
+    if (!comments.length) {
+      els.commentList.innerHTML = '<div class="editor-empty">Choose the sticky-comment tool and click a page to leave feedback.<br>Comments stay with this session and can be exported as notes.</div>';
+      return;
+    }
+    els.commentList.innerHTML = comments.map(function (c) {
+      var a = c.anno;
+      var excerpt = String(a.text || "").replace(/\s+/g, " ").slice(0, 70);
+      return '<div class="comment-item' + (a.resolved ? " is-resolved" : "") + (state.selected === a ? " is-selected" : "") + '" data-comment="' + MTH.esc(a.id) + '">' +
+        '<button type="button" class="comment-main" data-comment-go title="Go to page ' + (c.pageIndex + 1) + '">' +
+          '<span class="comment-page">p.' + (c.pageIndex + 1) + '</span>' +
+          '<span class="comment-text">' + MTH.esc(excerpt || "Comment") + '</span>' +
+        '</button>' +
+        '<button type="button" class="comment-resolve' + (a.resolved ? " on" : "") + '" data-comment-resolve title="' + (a.resolved ? "Reopen comment" : "Mark resolved") + '" aria-label="' + (a.resolved ? "Reopen comment" : "Mark resolved") + '" aria-pressed="' + (a.resolved ? "true" : "false") + '">' + ic("check", 12) + '</button>' +
+        '<button type="button" class="comment-del" data-comment-del title="Delete comment" aria-label="Delete comment">' + ic("trash", 12) + '</button></div>';
+    }).join("");
+    els.commentList.onclick = function (e) {
+      var resolve = e.target.closest("[data-comment-resolve]");
+      var del = e.target.closest("[data-comment-del]");
+      var go = e.target.closest("[data-comment-go]");
+      var item = e.target.closest("[data-comment]");
+      if (!item) return;
+      var found = commentsAll().filter(function (c) { return c.anno.id === item.dataset.comment; })[0];
+      if (!found) return;
+      if (resolve) {
+        remember();
+        found.anno.resolved = !found.anno.resolved;
+        state.dirty = true;
+        refreshComments();
+        paintAllOverlays();
+        saveStateLabel();
+        return;
+      }
+      if (del) { removeAnnotation(found.anno); return; }
+      if (go) {
+        goPage(found.pageIndex);
+        setTool("select");
+        selectAnno(found.anno, found.page);
+      }
+    };
+  }
+
+  function annotationLabel(a) {
+    return ({ text: a && a.cover ? "Replaced text" : "Text note", note: "Comment", rect: "Rectangle", ellipse: "Ellipse", line: "Line / arrow", highlight: "Highlight", ink: "Freehand ink", image: a && a.text === "Signature" ? "Signature" : "Image", watermark: "Watermark", redact: "Redaction", whiteout: "Whiteout", underline: "Underline", strike: "Strike-through" })[a && a.type] || (a && a.type) || "Mark";
+  }
+
+  function exportNotes() {
+    var rows = allAnnotations();
+    if (!rows.length) { MTH.toast("There are no annotations to export yet.", "warn"); return; }
+    var lines = [
+      "MULTI TOOL HUB — Annotation notes",
+      "Document: " + (state.docName || "Untitled PDF"),
+      "Exported: " + new Date().toLocaleString(),
+      "Pages: " + state.pages.length + " · Annotations: " + rows.length,
+      "Developed by chank!nd3 p4d4y41! l FAYAS MONU",
+      ""
+    ];
+    rows.forEach(function (r) {
+      var a = r.anno;
+      lines.push("Page " + (r.pageIndex + 1) + " · " + annotationLabel(a) + (a.resolved ? " · resolved" : ""));
+      if (a.text) String(a.text).split(/\r?\n/).forEach(function (t) { lines.push("    " + t); });
+      if (a.type === "note" && a.created) lines.push("    Created: " + new Date(a.created).toLocaleString());
+      if (a.x != null) lines.push("    Position: " + Math.round(a.x * 100) + "%, " + Math.round(a.y * 100) + "%");
+      lines.push("");
+    });
+    var name = MTH.baseName(state.docName || "document") + "-notes.txt";
+    MTH.download(lines.join("\r\n"), name, "text/plain;charset=utf-8");
+    MTH.toast("Annotation notes downloaded", "ok");
+  }
+
   function removeAnnotation(anno) {
     var found = null;
     state.pages.forEach(function (p) {
@@ -959,6 +1319,7 @@
     refreshAnnoList();
     paintAllOverlays();
     refreshPageList();
+    refreshComments();
     saveStateLabel();
   }
 
@@ -1006,6 +1367,10 @@
     return out;
   }
 
+  function contextLines(ctx, lines, x, lh) {
+    lines.forEach(function (line, i) { if (line) ctx.fillText(line, x, i * lh); });
+  }
+
   function paintAnno(ctx, a, Wv, Hv, unit, selection) {
     if (!a || !Wv || !Hv) return;
     ctx.save();
@@ -1019,15 +1384,30 @@
 
     if (a.type === "text") {
       var px = Math.max(4, (a.fs || 18) * unit);
-      var lh = px * 1.32;
+      var lh = px * (a.lineHeight || 1.32);
+      var families = {
+        Helvetica: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+        Georgia: 'Georgia, "Times New Roman", serif',
+        Times: '"Times New Roman", Times, serif',
+        Courier: '"Courier New", Courier, monospace',
+        Verdana: 'Verdana, Geneva, sans-serif'
+      };
+      var family = families[a.font] || families.Helvetica;
+      var weight = (a.italic ? "italic " : "") + (a.bold ? "700 " : "400 ");
       ctx.translate(x, y);
       if (a.angle) ctx.rotate(a.angle * Math.PI / 180);
       ctx.globalAlpha = alpha;
-      ctx.font = (a.bold ? "700 " : "400 ") + px + 'px "Helvetica Neue", Arial, sans-serif';
+      if (a.cover) {
+        ctx.fillStyle = a.coverColor || "#ffffff";
+        ctx.fillRect(0, 0, Math.abs(w), Math.abs(h));
+      }
+      ctx.font = weight + px + "px " + family;
       ctx.textBaseline = "top";
+      ctx.textAlign = a.align === "center" ? "center" : a.align === "right" ? "right" : "left";
       ctx.fillStyle = a.color || "#111111";
+      var anchorX = a.align === "center" ? Math.abs(w) / 2 : a.align === "right" ? Math.abs(w) : 0;
       var lines = wrapLines(ctx, a.text || "", Math.max(12, Math.abs(w)));
-      lines.forEach(function (line, i) { if (line) ctx.fillText(line, 0, i * lh); });
+      contextLines(ctx, lines, anchorX, lh);
     } else if (a.type === "rect") {
       if (a.fill) { ctx.globalAlpha = alpha * 0.18; ctx.fillRect(x, y, w, h); }
       ctx.globalAlpha = alpha;
@@ -1057,6 +1437,41 @@
       ctx.globalAlpha = alpha * 0.34;
       ctx.fillStyle = a.color || "#f2d16b";
       ctx.fillRect(x, y, w, h);
+    } else if (a.type === "underline" || a.type === "strike") {
+      var lineY = a.type === "underline" ? y + Math.abs(h) : y + Math.abs(h) / 2;
+      ctx.globalAlpha = alpha;
+      ctx.lineWidth = lw;
+      ctx.beginPath();
+      ctx.moveTo(x, lineY);
+      ctx.lineTo(x + w, lineY);
+      ctx.stroke();
+    } else if (a.type === "redact" || a.type === "whiteout") {
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = a.type === "redact" ? "#000000" : "#ffffff";
+      ctx.fillRect(x, y, w, h);
+    } else if (a.type === "note") {
+      var ns = Math.max(12, 16 * unit);
+      ctx.globalAlpha = 1;
+      ctx.translate(x, y);
+      ctx.fillStyle = a.resolved ? "#2f855a" : (a.color || "#b08832");
+      ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(0, 0, ns, ns, ns * 0.22);
+      else ctx.rect(0, 0, ns, ns);
+      ctx.fill();
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = Math.max(1, ns * 0.085);
+      ctx.beginPath();
+      ctx.moveTo(ns * 0.26, ns * 0.30); ctx.lineTo(ns * 0.74, ns * 0.30);
+      ctx.moveTo(ns * 0.26, ns * 0.50); ctx.lineTo(ns * 0.64, ns * 0.50);
+      ctx.moveTo(ns * 0.26, ns * 0.70); ctx.lineTo(ns * 0.56, ns * 0.70);
+      ctx.stroke();
+      if (a.resolved) {
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = Math.max(1.2, ns * 0.1);
+        ctx.beginPath();
+        ctx.moveTo(ns * 0.74, ns * 0.76); ctx.lineTo(ns * 0.82, ns * 0.86); ctx.lineTo(ns * 1.0, ns * 0.62);
+        ctx.stroke();
+      }
     } else if (a.type === "ink") {
       var pts = a.points || [];
       ctx.globalAlpha = alpha;
@@ -1178,16 +1593,21 @@
     }
 
     if (tool === "text") { addText(pt.x, pt.y); return; }
+    if (tool === "note") { addStickyNote(pt.x, pt.y); return; }
     if (tool === "watermark") { addWatermark(); return; }
     if (tool === "image") { addImage(pt.x, pt.y); return; }
+    if (tool === "signature") { openSignaturePad(); return; }
 
     beginGesture();
+    var isReplace = tool === "replace";
     var a = {
-      id: MTH.uid(), type: tool, text: "",
+      id: MTH.uid(), type: isReplace ? "text" : tool, text: "",
       x: pt.x, y: pt.y, w: 0, h: 0,
-      color: tool === "highlight" ? (state.color === "#b08832" ? "#f2d16b" : state.color) : state.color,
+      color: tool === "highlight" ? (state.color === "#b08832" ? "#f2d16b" : state.color) : tool === "redact" ? "#000000" : tool === "whiteout" ? "#ffffff" : state.color,
       lw: state.lw, fs: state.fs, opacity: tool === "highlight" ? Math.min(1, state.opacity + .15) : state.opacity,
-      fill: state.fill, angle: 0, ar: 1, points: tool === "ink" ? [[pt.x, pt.y]] : null
+      fill: isReplace ? true : state.fill, angle: 0, ar: 1, points: tool === "ink" ? [[pt.x, pt.y]] : null,
+      font: state.font, align: state.align, bold: state.bold, italic: state.italic, lineHeight: state.lineHeight,
+      cover: isReplace, coverColor: "#ffffff", replacePending: isReplace
     };
     p.annos.push(a);
     state.selected = a;
@@ -1266,10 +1686,43 @@
       refreshPageList();
       saveStateLabel();
     }
+    var pendingReplace = !bad && d.anno.replacePending;
+    var replaceAnno = d.anno;
     state.draw = null;
     setTool("select");
     refreshAnnoList();
+    refreshComments();
     paintOverlay(i);
+    if (pendingReplace) {
+      delete replaceAnno.replacePending;
+      askText("", "Replace text", "Type the replacement wording. The covered area is painted white with the new text on top, so it moves as one mark.").then(function (text) {
+        if (!text || !text.trim()) {
+          var page = null;
+          state.pages.forEach(function (p) { if ((p.annos || []).indexOf(replaceAnno) !== -1) page = p; });
+          if (page) {
+            var at = page.annos.indexOf(replaceAnno);
+            if (at !== -1) page.annos.splice(at, 1);
+          }
+          if (state.selected === replaceAnno) { state.selected = null; state.selectedPage = null; }
+          state.dirty = true;
+          refreshAnnoList();
+          refreshPageList();
+          refreshComments();
+          paintAllOverlays();
+          saveStateLabel();
+          MTH.toast("Text replacement cancelled", "info", 1800);
+          return;
+        }
+        replaceAnno.text = text.trim();
+        state.dirty = true;
+        state.selected = replaceAnno;
+        refreshAnnoList();
+        refreshPageList();
+        paintAllOverlays();
+        saveStateLabel();
+        MTH.toast("Text replaced. Use the style panel to adjust the font or size.", "ok", 3200);
+      });
+    }
   }
 
   function overlayDouble(e, i) {
@@ -1281,14 +1734,16 @@
     if (!p) return;
     var hit = hitTest(p, pt.x, pt.y, rec.info.width, rec.info.height);
     if (!hit) return;
-    if (hit.type !== "text" && hit.type !== "watermark") return;
+    if (hit.type !== "text" && hit.type !== "watermark" && hit.type !== "note") return;
     e.preventDefault();
-    askText(hit.text || "", hit.type === "watermark" ? "Edit watermark" : "Edit text note").then(function (text) {
+    var title = hit.type === "watermark" ? "Edit watermark" : hit.type === "note" ? "Edit comment" : hit.cover ? "Edit replacement text" : "Edit text note";
+    askText(hit.text || "", title).then(function (text) {
       if (!text || !text.trim()) return;
       remember();
       hit.text = text.trim();
       state.dirty = true;
       refreshAnnoList();
+      refreshComments();
       paintAllOverlays();
       saveStateLabel();
     });
