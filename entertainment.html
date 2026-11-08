@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>try{var t=localStorage.getItem("mth.theme");if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>After Hours &mdash; Ambient Studio, Chromatic Lab &amp; Breathing Room | MULTI TOOL HUB</title>
+<meta name="description" content="Optional high-craft downtime: live Web Audio soundscapes, a serious colour-palette studio and a paced breathing reset. No accounts, no uploads.">
+<meta name="theme-color" content="#0f172a">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml">
+<link rel="icon" href="assets/icons/favicon-64.png" sizes="64x64" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MULTI TOOL HUB">
+<meta property="og:title" content="After Hours &mdash; MULTI TOOL HUB">
+<meta property="og:description" content="Ambient soundscapes, a colour-palette studio and a guided breathing reset. Optional, local and beautifully made.">
+<meta property="og:image" content="assets/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/v6.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="index.html" aria-label="MULTI TOOL HUB home">
+      <span class="brand-mark brand-mark--v6" role="img" aria-label="MTH">MTH</span>
+      <span class="brand-copy">
+        <span class="brand-name">MULTI TOOL HUB</span>
+        <span class="brand-tag">Local-first productivity suite</span>
+      </span>
+    </a>
+    <nav class="header-nav" aria-label="Primary">
+      <a href="index.html#pdf">PDF Studio</a>
+      <a href="index.html#image">Image Lab</a>
+      <a href="index.html#media">Media Desk</a>
+      <a href="index.html#download">Downloaders</a>
+      <a href="entertainment.html" aria-current="page">After Hours</a>
+    </nav>
+    <div class="header-actions">
+      <button class="header-ai-btn" type="button" data-ai-open aria-label="Open Hub Assistant"><span class="ai-dot" aria-hidden="true"></span><span data-icon="spark" data-icon-size="14"></span><span class="ai-label">Assistant</span></button>
+      <a class="header-link" href="index.html#tools">All tools</a>
+      <button class="icon-btn icon-btn--sm" type="button" data-theme-toggle aria-label="Toggle colour theme"></button>
+      <button class="icon-btn icon-btn--sm menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    </div>
+  </div>
+  <div class="mobile-nav" id="mobile-nav" data-mobile-nav>
+    <div class="shell">
+      <a href="index.html#pdf">PDF Studio <span aria-hidden="true">&rarr;</span></a>
+      <a href="index.html#image">Image Lab <span aria-hidden="true">&rarr;</span></a>
+      <a href="index.html#media">Media Desk <span aria-hidden="true">&rarr;</span></a>
+      <a href="index.html#download">Downloaders <span aria-hidden="true">&rarr;</span></a>
+      <a href="entertainment.html">After Hours <span aria-hidden="true">&rarr;</span></a>
+      <div class="mnav-sep"></div>
+      <a href="index.html#tools">All tools <span aria-hidden="true">&rarr;</span></a>
+      <a href="legal/terms.html">Terms &amp; Conditions <span aria-hidden="true">&rarr;</span></a>
+      <a href="legal/privacy.html">Privacy Policy <span aria-hidden="true">&rarr;</span></a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="ent-hero">
+    <div class="shell">
+      <span class="v6-eyebrow"><i class="v6-dot" aria-hidden="true"></i> After Hours &middot; Optional by design</span>
+      <h1>End the day<br><span class="serif-em">with better inputs.</span></h1>
+      <p>Three considered experiences for the space after work. They run entirely on this device, keep no score, send no notifications and are always one click away &mdash; never in the way.</p>
+      <nav class="ent-nav" aria-label="After Hours sections">
+        <a href="#ambient">Ambient Studio</a>
+        <a href="#chromatic">Chromatic Lab</a>
+        <a href="#reset">Breathing Room</a>
+        <a href="tools/focus-studio.html">Focus Studio</a>
+      </nav>
+    </div>
+  </section>
+
+  <section class="ent-section" id="ambient">
+    <div class="shell">
+      <div class="ent-head">
+        <div>
+          <div class="eyebrow">01 &middot; Soundscape</div>
+          <h2>Ambient Studio</h2>
+        </div>
+        <p>Five generative beds built with filtered noise and oscillators. Nothing streams, nothing repeats &mdash; every minute is synthesised here in your browser.</p>
+      </div>
+
+      <div class="ent-card">
+        <div class="ent-toolbar">
+          <span class="v6-lights" aria-hidden="true"><i></i><i></i><i></i></span>
+          <b style="font-size:.76rem">Live synthesis</b>
+          <span class="ent-hint" data-ambient-state-label>Idle &middot; press play</span>
+        </div>
+        <div class="ambient-stage">
+          <div class="ambient-visual">
+            <canvas data-ambient-canvas aria-hidden="true"></canvas>
+            <div class="ambient-orb">
+              <div class="amb-ring"><div class="amb-core" data-ambient-core>Calm</div></div>
+              <b data-ambient-name>Deep Focus</b>
+              <small data-ambient-sub>Brown noise &middot; soft rain layer</small>
+            </div>
+          </div>
+          <div class="ambient-controls">
+            <span class="panel-label">Soundscape</span>
+            <div class="preset-grid" data-ambient-presets>
+              <button class="preset-btn on" type="button" data-preset="focus"><span data-icon="spark" data-icon-size="13"></span> Deep Focus</button>
+              <button class="preset-btn" type="button" data-preset="rain"><span data-icon="audio" data-icon-size="13"></span> Rain</button>
+              <button class="preset-btn" type="button" data-preset="ocean"><span data-icon="wave" data-icon-size="13"></span> Ocean</button>
+              <button class="preset-btn" type="button" data-preset="forest"><span data-icon="leaf" data-icon-size="13"></span> Forest</button>
+              <button class="preset-btn" type="button" data-preset="night"><span data-icon="moon" data-icon-size="13"></span> Night</button>
+            </div>
+            <label class="field"><span>Volume</span><span class="range-wrap"><input type="range" min="0" max="100" value="62" data-ambient-volume aria-label="Volume"><span class="range-val" data-ambient-volume-val>62%</span></span></label>
+            <label class="field"><span>Fade-out timer</span><span class="ambient-timer"><input class="input" type="number" min="0" max="180" value="30" data-ambient-fade aria-label="Fade timer in minutes"><span>min</span><b data-ambient-countdown>30:00</b></span></label>
+            <div class="ambient-actions">
+              <button class="btn" type="button" data-ambient-toggle><span data-icon="play" data-icon-size="14"></span> Play</button>
+              <button class="btn btn--ghost" type="button" data-ambient-stop><span data-icon="stop" data-icon-size="14"></span> Stop</button>
+            </div>
+            <div class="ambient-status" data-ambient-status>Audio begins only after you press play.</div>
+            <p class="tiny muted" style="margin:0;line-height:1.55">Headphones recommended. Keep the volume low and take breaks &mdash; long exposure to any soundscape should stay comfortable.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ent-section" id="chromatic">
+    <div class="shell">
+      <div class="ent-head">
+        <div>
+          <div class="eyebrow">02 &middot; Colour study</div>
+          <h2>Chromatic Lab</h2>
+        </div>
+        <p>A working palette tool for decks, brands and interfaces. Choose a seed, pick a harmony, then copy the CSS or export a clean PNG board.</p>
+      </div>
+
+      <div class="ent-card">
+        <div class="chroma-body">
+          <div class="chroma-main">
+            <div class="chroma-swatches" data-chroma-swatches aria-label="Generated palette"></div>
+            <div class="chroma-gradient" data-chroma-gradient aria-label="Gradient preview"></div>
+            <div class="chroma-code" data-chroma-code></div>
+          </div>
+          <div class="chroma-side">
+            <label class="field"><span>Seed colour</span><span class="range-wrap"><input type="color" value="#1e63c4" data-chroma-seed aria-label="Seed colour"><input class="input" value="#1E63C4" data-chroma-hex aria-label="Seed hex value" style="min-width:0"></span></label>
+            <label class="field"><span>Harmony</span><select class="select" data-chroma-harmony><option value="analogous">Analogous</option><option value="complementary">Complementary</option><option value="triadic">Triadic</option><option value="split">Split complementary</option><option value="mono" selected>Monochrome ramp</option></select></label>
+            <label class="field"><span>Gradient angle</span><span class="range-wrap"><input type="range" min="0" max="360" value="118" data-chroma-angle aria-label="Gradient angle"><span class="range-val" data-chroma-angle-val>118°</span></span></label>
+            <div class="chroma-actions">
+              <button class="btn btn--sm" type="button" data-chroma-copy>Copy CSS</button>
+              <button class="btn btn--sm btn--ghost" type="button" data-chroma-png>Export PNG</button>
+            </div>
+            <button class="btn btn--sm btn--ghost" type="button" data-chroma-save>Save palette</button>
+            <div>
+              <span class="panel-label">Saved palettes</span>
+              <div class="chroma-saved" data-chroma-saved style="margin-top:8px"></div>
+            </div>
+            <p class="tiny muted" style="margin:0;line-height:1.55">Palettes are stored in this browser. Exported PNG boards are 1600 &times; 900 and contain no watermark.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ent-section" id="reset">
+    <div class="shell">
+      <div class="ent-head">
+        <div>
+          <div class="eyebrow">03 &middot; Reset ritual</div>
+          <h2>Breathing Room</h2>
+        </div>
+        <p>A simple paced-breathing guide with four rhythms. No score, no streak, no account. Use it to close a session or settle before the next one.</p>
+      </div>
+
+      <div class="breath-card">
+        <div class="breath-copy">
+          <h2>One minute is enough.</h2>
+          <p>Follow the orb: it expands on the inhale, holds, contracts on the exhale and rests. Keep your shoulders soft and breathe through the nose if you can.</p>
+          <div class="breath-controls">
+            <select data-breath-rhythm aria-label="Breathing rhythm">
+              <option value="box" selected>Box &middot; 4-4-4-4</option>
+              <option value="calm">Calm &middot; 4-2-6-2</option>
+              <option value="extended">Extended exhale &middot; 4-0-8-0</option>
+              <option value="coherent">Coherent &middot; 5-0-5-0</option>
+            </select>
+            <button class="btn" type="button" data-breath-toggle><span data-icon="play" data-icon-size="14"></span> Begin</button>
+            <button class="btn btn--ghost" type="button" data-breath-stop>Stop</button>
+          </div>
+        </div>
+        <div class="breath-stage">
+          <div class="breath-orb" data-breath-orb><span data-breath-label>Ready</span></div>
+          <span class="breath-count" data-breath-count>0 breaths</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ent-section">
+    <div class="shell">
+      <div class="ent-head">
+        <div>
+          <div class="eyebrow">Keep working, gently</div>
+          <h2>Focus Studio</h2>
+        </div>
+        <p>A quiet Pomodoro timer and persistent checklist. Pair a focus block with a break in Ambient Studio, or use the breathing room between sessions.</p>
+      </div>
+      <div class="notice" style="margin-top:22px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <span data-icon="timer" data-icon-size="16"></span>
+        <span style="flex:1">Your timer, tasks and session history are stored on this device and survive a refresh.</span>
+        <a class="btn btn--sm" href="tools/focus-studio.html">Open Focus Studio</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="index.html" aria-label="MULTI TOOL HUB home">
+          <span class="brand-mark brand-mark--v6" role="img" aria-label="MTH">MTH</span>
+          <span class="brand-copy">
+            <span class="brand-name">MULTI TOOL HUB</span>
+            <span class="brand-tag">Local-first productivity suite</span>
+          </span>
+        </a>
+        <p>A browser-native utility suite for PDF, image and media work. Files stay on your device: no account, no upload, no server.</p>
+      </div>
+      <div class="footer-col">
+        <h3>Products</h3>
+        <a href="index.html#tools">All tools</a>
+        <a href="index.html#pdf">PDF Studio</a>
+        <a href="index.html#image">Image Lab</a>
+        <a href="index.html#media">Media Desk</a>
+        <a href="index.html#download">Downloaders</a>
+        <a href="entertainment.html">After Hours</a>
+      </div>
+      <div class="footer-col">
+        <h3>After Hours</h3>
+        <a href="entertainment.html#ambient">Ambient Studio</a>
+        <a href="entertainment.html#chromatic">Chromatic Lab</a>
+        <a href="entertainment.html#reset">Breathing Room</a>
+        <a href="tools/focus-studio.html">Focus Studio</a>
+      </div>
+      <div class="footer-col">
+        <h3>Legal</h3>
+        <a href="legal/terms.html">Terms &amp; Conditions</a>
+        <a href="legal/privacy.html">Privacy Policy</a>
+        <a href="legal/privacy.html#local">Client-side processing</a>
+        <a href="legal/terms.html#third-party">Third-party services</a>
+      </div>
+    </div>
+    <div class="footer-base">
+      <span class="credit" data-credit-copy title="Copy developer credit">&#169; 2026 MULTI TOOL HUB &#183; Developed by chank!nd3 p4d4y41! l FAYAS MONU</span>
+      <span class="footer-meta">Static build &#183; v6.0 &#183; 2026</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/core.js"></script>
+<script src="assets/js/registry.js"></script>
+<script src="assets/js/entertainment.js"></script>
+<script src="assets/js/v6.js"></script>
+</body>
+</html>

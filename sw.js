@@ -6,13 +6,14 @@
    ========================================================================== */
 "use strict";
 
-var VERSION = "mth-v5.1.0";
+var VERSION = "mth-v6.0.0";
 var SHELL_CACHE = VERSION + "-shell";
 var RUNTIME_CACHE = VERSION + "-runtime";
 
 var SHELL = [
   "./",
   "./index.html",
+  "./entertainment.html",
   "./offline.html",
   "./404.html",
   "./manifest.webmanifest",
@@ -22,12 +23,15 @@ var SHELL = [
   "./assets/css/home.css",
   "./assets/css/tool.css",
   "./assets/css/legal.css",
+  "./assets/css/v6.css",
 
   "./assets/js/core.js",
   "./assets/js/assistant.js",
   "./assets/js/registry.js",
   "./assets/js/pages/home.js",
   "./assets/js/tools/shared.js",
+  "./assets/js/v6.js",
+  "./assets/js/entertainment.js",
 
   "./assets/logo-mark.svg",
   "./assets/og-cover.png",
@@ -37,7 +41,8 @@ var SHELL = [
   "./assets/apple-touch-icon.png",
 
   "./legal/terms.html",
-  "./legal/privacy.html"
+  "./legal/privacy.html",
+  "./entertainment.html"
 ];
 
 var TOOL_PAGES = [

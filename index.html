@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <script>try{var t=localStorage.getItem("mth.theme");if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MULTI TOOL HUB &mdash; Media Tools &amp; PDF Tools, entirely in your browser</title>
-<meta name="description" content="Twenty-three browser-native tools for PDF, image, media and focus work. Merge, compress, convert, annotate and extract without uploading a single file.">
-<meta name="theme-color" content="#f5f2ea">
+<title>MULTI TOOL HUB &mdash; Local-first PDF, image, media and focus suite</title>
+<meta name="description" content="A corporate-grade, browser-native utility suite. Edit PDFs, compress images, convert media and run focused work without uploading a single file.">
+<meta name="theme-color" content="#0f172a">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml">
 <link rel="icon" href="assets/icons/favicon-64.png" sizes="64x64" type="image/png">
@@ -14,23 +14,24 @@
 <link rel="manifest" href="manifest.webmanifest">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MULTI TOOL HUB">
-<meta property="og:title" content="MULTI TOOL HUB &mdash; Media Tools &amp; PDF Tools">
-<meta property="og:description" content="Twenty-three browser-native tools for PDF, image, media and focus work. No uploads, no accounts, no server.">
+<meta property="og:title" content="MULTI TOOL HUB &mdash; Local-first utility suite">
+<meta property="og:description" content="PDF, image, media and focus tools that run entirely inside your browser. No uploads, no accounts, no server.">
 <meta property="og:image" content="assets/og-cover.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="assets/css/tokens.css">
 <link rel="stylesheet" href="assets/css/base.css">
 <link rel="stylesheet" href="assets/css/home.css">
+<link rel="stylesheet" href="assets/css/v6.css">
 </head>
-<body>
+<body class="v6-home">
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header">
   <div class="shell header-inner">
     <a class="brand" href="index.html" aria-label="MULTI TOOL HUB home">
-      <svg class="brand-mark" viewBox="0 0 64 64" role="img" aria-hidden="true" focusable="false"><rect width="64" height="64" rx="14"/><g fill="none" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 46V20l7.5 10.5L26 20v26"/><path d="M32 21h12"/><path d="M38 21v25"/><path d="M48 21v25"/><path d="M58 21v25"/><path d="M48 33.5h10"/></g><circle cx="56" cy="9" r="3"/></svg>
+      <span class="brand-mark brand-mark--v6" role="img" aria-label="MTH">MTH</span>
       <span class="brand-copy">
         <span class="brand-name">MULTI TOOL HUB</span>
-        <span class="brand-tag">Media Tools &amp; PDF Tools</span>
+        <span class="brand-tag">Local-first productivity suite</span>
       </span>
     </a>
     <nav class="header-nav" aria-label="Primary">
@@ -38,9 +39,10 @@
       <a href="index.html#image">Image Lab</a>
       <a href="index.html#media">Media Desk</a>
       <a href="index.html#download">Downloaders</a>
-      <a href="index.html#focus">Focus Room</a>
+      <a href="entertainment.html">After Hours</a>
     </nav>
     <div class="header-actions">
+      <button class="header-ai-btn" type="button" data-ai-open aria-label="Open Hub Assistant"><span class="ai-dot" aria-hidden="true"></span><span data-icon="spark" data-icon-size="14"></span><span class="ai-label">Assistant</span></button>
       <a class="header-link" href="index.html#tools">All tools</a>
       <button class="icon-btn icon-btn--sm" type="button" data-theme-toggle aria-label="Toggle colour theme"></button>
       <button class="icon-btn icon-btn--sm menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
@@ -52,7 +54,7 @@
       <a href="index.html#image">Image Lab <span aria-hidden="true">&rarr;</span></a>
       <a href="index.html#media">Media Desk <span aria-hidden="true">&rarr;</span></a>
       <a href="index.html#download">Downloaders <span aria-hidden="true">&rarr;</span></a>
-      <a href="index.html#focus">Focus Room <span aria-hidden="true">&rarr;</span></a>
+      <a href="entertainment.html">After Hours <span aria-hidden="true">&rarr;</span></a>
       <div class="mnav-sep"></div>
       <a href="index.html#tools">All tools <span aria-hidden="true">&rarr;</span></a>
       <a href="legal/terms.html">Terms &amp; Conditions <span aria-hidden="true">&rarr;</span></a>
@@ -62,63 +64,58 @@
 </header>
 
 <main id="main">
-  <section class="home-hero">
-    <div class="shell hero-grid">
-      <div class="hero-copy">
-        <div class="eyebrow"><b>Vol. 05</b> &mdash; Browser-native utility suite</div>
-        <h1>Everyday file work,<br><span class="serif-em">beautifully local.</span></h1>
-        <p class="lead">PDF, image and media tools that run inside this tab. <strong>No uploads, no accounts, no waiting rooms</strong> &mdash; just a quiet workspace that respects the file you brought.</p>
-        <div class="hero-search" data-search-box>
-          <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg>
-          <input type="search" data-search placeholder="Search 23 tools &mdash; try &ldquo;merge pdf&rdquo;" aria-label="Search tools" autocomplete="off" spellcheck="false">
+  <section class="v6-hero">
+    <div class="shell v6-hero-grid">
+      <div>
+        <span class="v6-eyebrow"><i class="v6-dot" aria-hidden="true"></i> Vol. 06 &middot; The local-first suite</span>
+        <h1 class="v6-title">Serious file work,<br><span class="grad">kept on your desk.</span></h1>
+        <p class="lead">A complete editorial workspace for documents, images and media. <strong>No uploads, no accounts, no queues</strong> &mdash; every engine runs inside this tab, on your machine, under your control.</p>
+
+        <div class="v6-hero-search" data-search-box>
+          <span data-icon="search" data-icon-size="19"></span>
+          <input type="search" data-search placeholder="Search tools &mdash; try &ldquo;merge pdf&rdquo;" aria-label="Search tools" autocomplete="off" spellcheck="false">
           <span class="kbd">Ctrl K</span>
           <button class="search-clear" type="button" data-search-clear aria-label="Clear search"><span data-icon="close" data-icon-size="15"></span></button>
         </div>
-        <div class="quick-links" aria-label="Popular searches">
+        <div class="v6-quick" aria-label="Popular searches">
           <button type="button" data-quick="merge pdf">Merge PDF</button>
           <button type="button" data-quick="compress pdf">Compress PDF</button>
-          <button type="button" data-quick="pdf to word">PDF to Word</button>
+          <button type="button" data-quick="edit pdf">Edit PDF</button>
           <button type="button" data-quick="remove background">Remove background</button>
           <button type="button" data-quick="video to audio">Video to MP3</button>
         </div>
-        <div class="hero-metrics">
-          <div><b>23</b><span>Local tools</span></div>
+        <div class="v6-stats">
+          <div><b data-total-tools>23</b><span>Local tools</span></div>
           <div><b>0</b><span>Uploads</span></div>
           <div><b>100%</b><span>In-browser</span></div>
-          <div><b>5</b><span>Workspaces</span></div>
+          <div><b data-total-workspaces>5</b><span>Workspaces</span></div>
         </div>
       </div>
 
-      <aside class="hero-panel" aria-label="How the workspace behaves">
-        <div class="hp-head">
-          <span class="hp-mark">MTH</span>
-          <div><b>Local operations</b><small>This tab only &middot; no server in the loop</small></div>
-          <span class="hp-live">Ready</span>
+      <aside class="v6-deck" aria-label="Command deck">
+        <div class="v6-deck-head">
+          <span class="v6-lights" aria-hidden="true"><i></i><i></i><i></i></span>
+          <b>MTH Command Deck</b>
+          <span class="v6-live">Ready</span>
         </div>
-        <div class="hp-body">
-          <div class="hp-row">
-            <span class="hp-ic" data-icon="viewer" data-icon-size="17"></span>
-            <div><b>Viewer &amp; Editor</b><small>Annotate, reorder and export</small></div>
-            <span class="hp-state hp-state--ok">Flagship</span>
+        <div class="v6-deck-body">
+          <div class="v6-ai-card">
+            <div class="v6-orb" aria-hidden="true"><span>AI</span></div>
+            <div>
+              <b>Hub Assistant</b>
+              <small>Remembers your name, tools and preferences. Finds the right tool, does the maths, drafts the words.</small>
+            </div>
+            <span class="v6-ai-tag">On device</span>
           </div>
-          <div class="hp-row">
-            <span class="hp-ic" data-icon="merge" data-icon-size="17"></span>
-            <div><b>Merge PDF</b><small>Combine pages in your order</small></div>
-            <span class="hp-state">Local</span>
-          </div>
-          <div class="hp-row">
-            <span class="hp-ic" data-icon="compress" data-icon-size="17"></span>
-            <div><b>Image Compressor</b><small>Target a quality or file size</small></div>
-            <span class="hp-state">Batch</span>
-          </div>
-          <div class="hp-row">
-            <span class="hp-ic" data-icon="timer" data-icon-size="17"></span>
-            <div><b>Focus Studio</b><small>Timer, checklist and a game</small></div>
-            <span class="hp-state">Saved</span>
+          <div class="v6-command-list">
+            <button class="v6-cmd" type="button" data-ai-open data-ai-prompt="What can you do?"><span class="k">01</span><span class="t">Show me what the assistant can do</span><span class="a">&rarr;</span></button>
+            <button class="v6-cmd" type="button" data-quick="edit pdf"><span class="k">02</span><span class="t">Open the PDF viewer &amp; editor</span><span class="a">&rarr;</span></button>
+            <button class="v6-cmd" type="button" data-quick="compress pdf"><span class="k">03</span><span class="t">Compress a document for sending</span><span class="a">&rarr;</span></button>
+            <button class="v6-cmd" type="button" data-ai-open data-ai-prompt="convert 1200 px to cm"><span class="k">04</span><span class="t">Quick unit and size conversion</span><span class="a">&rarr;</span></button>
+            <button class="v6-cmd" type="button" data-quick="focus"><span class="k">05</span><span class="t">Start a focus session</span><span class="a">&rarr;</span></button>
           </div>
         </div>
-        <div class="hp-foot"><span>Files stay on this device.</span><b>v5.0 &middot; 2026</b></div>
-        <div class="hp-stamp"><span>PRIVATE<br>BY<br>DEFAULT</span></div>
+        <div class="v6-deck-foot"><span>Files stay on this device.</span><b>v6.0 &middot; 2026</b></div>
       </aside>
     </div>
   </section>
@@ -129,27 +126,27 @@
       <span id="image" class="sr-only">Image Lab</span>
       <span id="media" class="sr-only">Media Desk</span>
       <span id="download" class="sr-only">Downloaders</span>
-      <span id="focus" class="sr-only">Focus Room</span>
+      <span id="focus" class="sr-only">After Hours</span>
       <div class="section-head">
         <div>
           <div class="eyebrow">The catalogue</div>
-          <h2>Five rooms, <span class="serif-em">twenty-three tools.</span></h2>
+          <h2>Five rooms, <span class="serif-em">every tool you need.</span></h2>
         </div>
-        <p>Filter by room, search by task, or save the tools you use most. Everything below opens in this same local workspace.</p>
+        <p>Filter by room, search by task, or save the tools you use most. Every result opens in this same local workspace.</p>
       </div>
 
       <div class="home-layout">
         <aside class="category-rail" aria-label="Filter tools by category">
           <span class="rail-label">Workspaces</span>
-          <button class="rail-btn" type="button" data-cat="all" aria-pressed="true"><span>All tools</span><span class="count">23</span></button>
+          <button class="rail-btn" type="button" data-cat="all" aria-pressed="true"><span>All tools</span><span class="count" data-total-tools>23</span></button>
           <button class="rail-btn" type="button" data-cat="pdf" aria-pressed="false"><span>PDF Studio</span><span class="count" data-count-cat="pdf">15</span></button>
           <button class="rail-btn" type="button" data-cat="image" aria-pressed="false"><span>Image Lab</span><span class="count" data-count-cat="image">3</span></button>
           <button class="rail-btn" type="button" data-cat="media" aria-pressed="false"><span>Media Desk</span><span class="count" data-count-cat="media">2</span></button>
           <button class="rail-btn" type="button" data-cat="download" aria-pressed="false"><span>Downloaders</span><span class="count" data-count-cat="download">2</span></button>
-          <button class="rail-btn" type="button" data-cat="focus" aria-pressed="false"><span>Focus Room</span><span class="count" data-count-cat="focus">1</span></button>
+          <button class="rail-btn" type="button" data-cat="focus" aria-pressed="false"><span>After Hours</span><span class="count" data-count-cat="focus">3</span></button>
           <div class="rail-note">
             <b>Quick keys</b>
-            Press <kbd>Ctrl</kbd> + <kbd>K</kbd> or <kbd>/</kbd> to jump to search. Your favourites and recent tools stay in this browser.
+            Press <kbd>Ctrl</kbd> + <kbd>K</kbd> or <kbd>/</kbd> to jump to search. Favourites and recent tools stay in this browser.
           </div>
         </aside>
 
@@ -179,72 +176,105 @@
     </div>
   </section>
 
-  <section class="home-section">
+  <section class="v6-section" id="assistant">
     <div class="shell">
-      <div class="section-head">
+      <div class="v6-section-head">
         <div>
-          <div class="eyebrow">The method</div>
-          <h2>Three steps. <span class="serif-em">No detours.</span></h2>
+          <div class="eyebrow">Hub Assistant</div>
+          <h2>An assistant with <span class="serif-em">actual recall.</span></h2>
         </div>
-        <p>No sign-up, no upload progress bar, no file sitting in someone else's queue. The work happens as you watch it.</p>
+        <p>Not a chatbot bolted to a footer. It knows the catalogue, remembers your context between sessions and can calculate, convert, draft, explain and open the right workspace.</p>
       </div>
-      <div class="process-grid">
-        <div class="process-step">
-          <div class="num">01</div>
-          <h3>Pick the right room</h3>
-          <p>PDF Studio handles documents, Image Lab cleans up pictures, Media Desk re-encodes video and Focus Room keeps the day moving.</p>
+      <div class="v6-ai-grid">
+        <div class="v6-ai-demo">
+          <div class="v6-ai-demo-head"><span class="v6-orb" style="width:30px;height:30px;border-radius:8px;font-size:.5rem" aria-hidden="true"><span>AI</span></span><b>Hub Assistant</b><span>Memory on</span></div>
+          <div class="v6-chat">
+            <div class="v6-bubble user">I need to send a contract but the scan is 18 MB.</div>
+            <div class="v6-bubble assistant"><b>Compress PDF</b> will shrink it without uploading. For a contract that still needs to be read, use the balanced mode first &mdash; it keeps the text layer intact.</div>
+            <div class="v6-bubble user">Open it and remember that I prefer A4.</div>
+            <div class="v6-bubble assistant">Opening <b>Compress PDF</b>. Noted: A4 is your default page size. I will keep that for page setup suggestions.</div>
+          </div>
+          <div style="padding:0 16px 16px"><button class="btn btn--sm" type="button" data-ai-open data-ai-prompt="What can you do?"><span data-icon="spark" data-icon-size="14"></span> Start a conversation</button></div>
         </div>
-        <div class="process-step">
-          <div class="num">02</div>
-          <h3>Drop the file in</h3>
-          <p>Your browser reads the file with the File API. Nothing is transmitted. Large jobs may take a moment because your own device is doing the work.</p>
-        </div>
-        <div class="process-step">
-          <div class="num">03</div>
-          <h3>Take the result away</h3>
-          <p>Download a single file or a ZIP. Close the tab and the working copy is gone. Keep the original until the output looks right.</p>
+        <div class="v6-ai-points">
+          <div class="v6-ai-point"><span class="ico" data-icon="shield" data-icon-size="17"></span><div><b>Local memory, clearly editable</b><small>Your name, preferences and favourite tools live in this browser. Inspect or forget any of it from the memory panel.</small></div></div>
+          <div class="v6-ai-point"><span class="ico" data-icon="search" data-icon-size="17"></span><div><b>Intent-aware tool routing</b><small>Ask for a task, not a tool name. It ranks the catalogue by what you are trying to do and opens the result.</small></div></div>
+          <div class="v6-ai-point"><span class="ico" data-icon="wand" data-icon-size="17"></span><div><b>Genuine utility, not filler</b><small>Calculations, conversions, date maths, text cleanup, passwords, UUIDs, hashing and aspect-ratio planning.</small></div></div>
+          <div class="v6-ai-point"><span class="ico" data-icon="lock" data-icon-size="17"></span><div><b>Optional model connection</b><small>Bring your own API key if you want a hosted model. Everything else works offline, with no key at all.</small></div></div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="home-section">
+  <section class="v6-section" id="after-hours">
     <div class="shell">
-      <div class="privacy-band">
+      <div class="v6-section-head">
         <div>
-          <div class="eyebrow">The promise</div>
-          <h2>Your files never <span class="serif-em">leave the room.</span></h2>
+          <div class="eyebrow">After Hours</div>
+          <h2>Downtime, <span class="serif-em">designed properly.</span></h2>
+        </div>
+        <p>Optional, high-craft experiences for the end of the day. No streak pressure, no notifications, no miniature games &mdash; just tools that help you reset.</p>
+      </div>
+      <div class="v6-after-grid">
+        <article class="v6-exp" data-exp="ambient">
+          <div class="v6-exp-visual"><div class="v6-rings" aria-hidden="true"><i></i><i></i><i></i><span>RAIN</span></div></div>
+          <div class="v6-exp-body">
+            <span class="v6-exp-kicker">01 &middot; Soundscape</span>
+            <h3>Ambient Studio</h3>
+            <p>Rain, ocean, forest and deep-focus beds generated live with Web Audio. A visualiser, volume control and a fade-out sleep timer.</p>
+            <div class="v6-exp-foot"><a href="entertainment.html#ambient">Enter studio <span aria-hidden="true">&rarr;</span></a><small>Web Audio</small></div>
+          </div>
+        </article>
+        <article class="v6-exp" data-exp="chromatic">
+          <div class="v6-exp-visual"><div class="v6-rings" aria-hidden="true"><i></i><i></i><i></i><span>COL</span></div></div>
+          <div class="v6-exp-body">
+            <span class="v6-exp-kicker">02 &middot; Colour study</span>
+            <h3>Chromatic Lab</h3>
+            <p>Build harmonious palettes from any seed colour, preview gradients and export the board as CSS or a presentation-ready PNG.</p>
+            <div class="v6-exp-foot"><a href="entertainment.html#chromatic">Open the lab <span aria-hidden="true">&rarr;</span></a><small>Canvas export</small></div>
+          </div>
+        </article>
+        <article class="v6-exp" data-exp="focus">
+          <div class="v6-exp-visual"><div class="v6-rings" aria-hidden="true"><i></i><i></i><i></i><span>CALM</span></div></div>
+          <div class="v6-exp-body">
+            <span class="v6-exp-kicker">03 &middot; Reset ritual</span>
+            <h3>Breathing Room</h3>
+            <p>A paced breathing guide with four rhythms, a soft visual cue and no score. Close the loop on a working session.</p>
+            <div class="v6-exp-foot"><a href="entertainment.html#reset">Begin reset <span aria-hidden="true">&rarr;</span></a><small>Guided</small></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="v6-section">
+    <div class="shell">
+      <div class="v6-trust">
+        <div>
+          <div class="eyebrow v6-trust-eyebrow">The promise</div>
+          <h2>Your files never <span style="color:#fff">leave the room.</span></h2>
           <p>Most tools on the web upload first and explain later. MULTI TOOL HUB does the opposite. PDF.js, pdf-lib, Canvas and Web Audio run here, in your browser, on your device.</p>
-          <p style="margin-top:16px"><a class="btn btn--brass" href="legal/privacy.html">Read the privacy policy</a></p>
+          <a class="btn" href="legal/privacy.html">Read the privacy policy</a>
         </div>
-        <div class="privacy-points">
-          <div class="privacy-point">
-            <span class="pp-ic" data-icon="shield" data-icon-size="15"></span>
-            <div><b>Zero file uploads</b><small>Documents, images and media are opened locally and never posted to a server.</small></div>
-          </div>
-          <div class="privacy-point">
-            <span class="pp-ic" data-icon="folder" data-icon-size="15"></span>
-            <div><b>No account, no profile</b><small>Favourites, recents and focus progress live in this browser's local storage.</small></div>
-          </div>
-          <div class="privacy-point">
-            <span class="pp-ic" data-icon="external" data-icon-size="15"></span>
-            <div><b>Two honest exceptions</b><small>The YouTube and Instagram downloaders send the public link to Loader.to. That is disclosed before use.</small></div>
-          </div>
+        <div class="v6-trust-points">
+          <div class="v6-trust-point"><span class="ico" data-icon="shield" data-icon-size="15"></span><div><b>Zero file uploads</b><small>Documents, images and media are opened locally and never posted to a server.</small></div></div>
+          <div class="v6-trust-point"><span class="ico" data-icon="folder" data-icon-size="15"></span><div><b>No account, no profile</b><small>Favourites, recents and focus progress live in this browser's local storage.</small></div></div>
+          <div class="v6-trust-point"><span class="ico" data-icon="external" data-icon-size="15"></span><div><b>Two honest exceptions</b><small>The YouTube and Instagram downloaders send the public link to Loader.to. That is disclosed before use.</small></div></div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="home-section">
+  <section class="v6-section">
     <div class="shell">
-      <div class="section-head">
+      <div class="v6-section-head">
         <div>
           <div class="eyebrow">Questions, answered</div>
           <h2>The small print, <span class="serif-em">in plain words.</span></h2>
         </div>
         <p>Everything you might reasonably want to know before handing us a file. Short answers, no legal fog.</p>
       </div>
-      <div class="faq-list">
+      <div class="faq-list v6-faq">
         <details class="faq-item" open>
           <summary>Are my files uploaded to a server?</summary>
           <p>No. File-based tools read the file in your browser and write the result in your browser. There is no upload endpoint in this build. The only tools that contact a third party are the YouTube and Instagram downloaders, and they send only the public link you paste.</p>
@@ -279,10 +309,10 @@
     <div class="footer-grid">
       <div class="footer-brand">
         <a class="brand" href="index.html" aria-label="MULTI TOOL HUB home">
-          <svg class="brand-mark" viewBox="0 0 64 64" role="img" aria-hidden="true" focusable="false"><rect width="64" height="64" rx="14"/><g fill="none" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 46V20l7.5 10.5L26 20v26"/><path d="M32 21h12"/><path d="M38 21v25"/><path d="M48 21v25"/><path d="M58 21v25"/><path d="M48 33.5h10"/></g><circle cx="56" cy="9" r="3"/></svg>
+          <span class="brand-mark brand-mark--v6" role="img" aria-label="MTH">MTH</span>
           <span class="brand-copy">
             <span class="brand-name">MULTI TOOL HUB</span>
-            <span class="brand-tag">Media Tools &amp; PDF Tools</span>
+            <span class="brand-tag">Local-first productivity suite</span>
           </span>
         </a>
         <p>A browser-native utility suite for PDF, image and media work. Files stay on your device: no account, no upload, no server.</p>
@@ -294,7 +324,7 @@
         <a href="index.html#image">Image Lab</a>
         <a href="index.html#media">Media Desk</a>
         <a href="index.html#download">Downloaders</a>
-        <a href="index.html#focus">Focus Room</a>
+        <a href="entertainment.html">After Hours</a>
       </div>
       <div class="footer-col">
         <h3>Popular</h3>
@@ -314,8 +344,8 @@
       </div>
     </div>
     <div class="footer-base">
-      <span class="credit" data-credit-copy title="Copy developer credit">© 2026 MULTI TOOL HUB · Developed by chank!nd3 p4d4y41! & Fayaz Mon.</span>
-      <span class="footer-meta">Static build &middot; v5.0 &middot; 2026</span>
+      <span class="credit" data-credit-copy title="Copy developer credit">&#169; 2026 MULTI TOOL HUB &#183; Developed by chank!nd3 p4d4y41! l FAYAS MONU</span>
+      <span class="footer-meta">Static build &#183; v6.0 &#183; 2026</span>
     </div>
   </div>
 </footer>
@@ -323,5 +353,6 @@
 <script src="assets/js/core.js"></script>
 <script src="assets/js/registry.js"></script>
 <script src="assets/js/pages/home.js"></script>
+<script src="assets/js/v6.js"></script>
 </body>
 </html>
