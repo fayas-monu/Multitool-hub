@@ -10,7 +10,7 @@
     { id: "image", name: "Image Lab", kicker: "02", href: "index.html#image", desc: "Compress, convert and clean up images locally." },
     { id: "media", name: "Media Desk", kicker: "03", href: "index.html#media", desc: "Re-encode video and extract audio in the browser." },
     { id: "download", name: "Downloaders", kicker: "04", href: "index.html#download", desc: "Check a public YouTube or Instagram link, then open the partner download card." },
-    { id: "focus", name: "Focus Room", kicker: "05", href: "index.html#focus", desc: "Small, useful rituals for a clearer working day." }
+    { id: "focus", name: "After Hours", kicker: "05", href: "index.html#focus", desc: "Optional, high-craft downtime: ambient soundscapes, colour studies and calm focus rituals." }
   ];
 
   MTH.tools = [
@@ -170,10 +170,24 @@
     },
     {
       id: "focus-studio", title: "Focus Studio", short: "Focus Studio", cat: "focus", icon: "timer",
-      href: "tools/focus-studio.html", badge: "New",
-      desc: "A quiet productivity timer, a persistent task checklist and a fast number-grid game — all saved on this device.",
-      tags: ["Timer", "Tasks", "Game"],
-      aliases: "focus timer pomodoro productivity checklist tasks game break habit"
+      href: "tools/focus-studio.html", badge: "Updated",
+      desc: "A quiet Pomodoro timer and a persistent task checklist, paired with a direct path into Ambient Studio for your break.",
+      tags: ["Timer", "Tasks", "Ritual"],
+      aliases: "focus timer pomodoro productivity checklist tasks break habit deep work"
+    },
+    {
+      id: "ambient-studio", title: "Ambient Studio", short: "Ambient Studio", cat: "focus", icon: "audio",
+      href: "entertainment.html#ambient", badge: "New",
+      desc: "Generate rain, ocean, forest and deep-focus soundscapes with Web Audio, a live visualiser and a fade-out sleep timer.",
+      tags: ["Audio", "Focus", "Local"],
+      aliases: "ambient sound rain ocean forest noise soundscape relax sleep timer focus music background"
+    },
+    {
+      id: "chromatic", title: "Chromatic Lab", short: "Chromatic Lab", cat: "focus", icon: "wand",
+      href: "entertainment.html#chromatic",
+      desc: "Build polished palettes and gradients from any seed colour, then copy the CSS or export a presentation-ready PNG board.",
+      tags: ["Colour", "Palette", "Export"],
+      aliases: "colour color palette gradient generator design brand hex css png moodboard swatch harmony"
     }
   ];
 

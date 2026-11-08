@@ -10,8 +10,8 @@
   var assetsBase = scriptEl ? new URL("../", scriptEl.src).href : new URL("/assets/", location.href).href;
   var rootBase = scriptEl ? new URL("../../", scriptEl.src).href : new URL("/", location.href).href;
 
-  MTH.version = "5.0";
-  MTH.credit = "\u00A9 2026 MULTI TOOL HUB \u00B7 Developed by chank!nd3 p4d4y41! & Fayaz Mon.";
+  MTH.version = "6.0";
+  MTH.credit = "\u00A9 2026 MULTI TOOL HUB \u00B7 Developed by chank!nd3 p4d4y41! l FAYAS MONU";
   MTH.assets = assetsBase;
   MTH.root = rootBase;
   MTH.asset = function (path) { return new URL(path, assetsBase).href; };
@@ -207,6 +207,11 @@
     shape: '<rect x="3" y="5" width="12" height="9" rx="1"/><circle cx="17" cy="17" r="4"/>',
     type: '<path d="M4 6V4h16v2M12 4v16M8 20h8"/>',
     highlight: '<path d="m4 20 4-1 11-11-3-3L5 16z"/><path d="M3 22h18"/>',
+    underline: '<path d="M7 4v7a5 5 0 0 0 10 0V4"/><path d="M5 21h14"/>',
+    strike: '<path d="M4 12h16"/><path d="M8 7a4.5 4.5 0 0 1 8-1M8 17a4.5 4.5 0 0 0 8 1"/>',
+    note: '<path d="M4 4h16v11l-5 5H4z"/><path d="M20 15h-5v5"/><path d="M8 8h8M8 11h5"/>',
+    signature: '<path d="M3 17c2.5-6 4.5-8 5.5-7s-.5 7 1.5 7 2.5-8 4.5-8 1 5 2 5 2-1.5 4-2"/><path d="M3 21h18"/>',
+    replace: '<path d="M4 7h10M10 3l4 4-4 4"/><path d="M20 17H10M14 13l-4 4 4 4"/>',
     redact: '<rect x="4" y="7" width="16" height="10" rx="1"/><path d="M4 7V4M20 7V4M4 20v-3M20 20v-3"/>',
     'image-plus': '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 8v8M8 12h8"/>',
     alert: '<path d="M12 3 2 21h20z"/><path d="M12 9v5M12 17h.01"/>',
