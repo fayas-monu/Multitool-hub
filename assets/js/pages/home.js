@@ -96,12 +96,14 @@
     if (!grid) return;
     var list = filtered();
     grid.innerHTML = list.map(function (t, i) { return card(t, i + 1); }).join("");
+    try { document.dispatchEvent(new CustomEvent("mth:tools-rendered")); } catch (e) {}
     if (empty) empty.classList.toggle("show", !list.length);
     if (count) count.textContent = list.length + (list.length === 1 ? " tool" : " tools");
     if (title) {
       var cat = MTH.categories.filter(function (c) { return c.id === state.cat; })[0];
       title.textContent = state.favOnly ? "Saved favourites" : state.query ? "Search results" : cat ? cat.name : "All tools";
     }
+    MTH.$$("[data-total-tools]").forEach(function (el) { el.textContent = MTH.tools.length; });
     // Rail state
     MTH.$$("[data-cat]").forEach(function (btn) {
       btn.setAttribute("aria-pressed", btn.dataset.cat === state.cat ? "true" : "false");
